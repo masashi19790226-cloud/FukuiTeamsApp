@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.MockData
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.ui.components.TeamBadge
@@ -188,7 +189,7 @@ private fun MatchHeaderCard(game: Game) {
                     modifier = Modifier.width(100.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TeamBadge(game.team, size = 64.dp, fontSize = androidx.compose.ui.unit.sp(24))
+                    TeamBadge(game.team, size = 64.dp, fontSize = 24.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(game.team.displayName, style = MaterialTheme.typography.labelMedium, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
                 }
