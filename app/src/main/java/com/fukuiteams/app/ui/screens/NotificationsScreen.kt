@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -98,7 +99,7 @@ fun NotificationsScreen() {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                    TeamBadge(team, size = 28.dp, fontSize = androidx.compose.ui.unit.sp(12))
+                                    TeamBadge(team, size = 28.dp, fontSize = 12.sp)
                                     Text(team.displayName, style = MaterialTheme.typography.bodyLarge)
                                 }
                                 val checked = teamSwitches.value[team] ?: true
