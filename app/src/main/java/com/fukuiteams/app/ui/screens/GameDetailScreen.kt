@@ -123,10 +123,14 @@ fun GameDetailScreen(
                     Text("販売状況:${game.ticketStatus}・一般販売開始 ${game.ticketSaleStart}", style = MaterialTheme.typography.bodyMedium, color = InkSoft)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Button(
-                            onClick = { /* TODO: 公式チケットページを開く */ },
+                            onClick = {
+                                val url = game.team.officialSiteUrl
+                                    ?: "https://www.google.com/search?q=" + URLEncoder.encode("${game.team.displayName} チケット", "UTF-8")
+                                openUrl(context, url)
+                            },
                             colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Ink),
                             modifier = Modifier.weight(1f)
-                        ) { Text("公式販売ページを開く") }
+                        ) { Text("公式サイトを開く") }
                         OutlinedButton(onClick = { /* TODO: 通知登録 */ }) { Text("販売開始を通知") }
                     }
                 }
