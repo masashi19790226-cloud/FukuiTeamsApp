@@ -1,5 +1,8 @@
 package com.fukuiteams.app.ui.screens
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.MockData
@@ -44,6 +48,7 @@ import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
+import java.net.URLEncoder
 
 @Composable
 fun GameDetailScreen(
@@ -52,6 +57,9 @@ fun GameDetailScreen(
     onOpenInvitations: () -> Unit
 ) {
     val game = MockData.upcomingGames.firstOrNull { it.id == gameId } ?: MockData.upcomingGames.first()
+    val context = LocalContext.current
+    val searchKeyword = "${game.team.displayName} ${game.dateLabel} 譲"
+    val encodedKeyword = URLEncoder.encode(searchKeyword, "UTF-8")
 
     Scaffold(
         topBar = {
@@ -128,12 +136,18 @@ fun GameDetailScreen(
                 color = InkSoft
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf("Xで探す", "メルカリ", "ジモティー").forEach { label ->
-                    OutlinedButton(
-                        onClick = { /* TODO: 外部検索結果ページを開く */ },
-                        modifier = Modifier.weight(1f)
-                    ) { Text(label) }
-                }
+                OutlinedButton(
+                    onClick = { openUrl(context, "https://x.com/search?q=$encodedKeyword&f=live") },
+                    modifier = Modifier.weight(1f)
+                ) { Text("Xで探す") }
+                OutlinedButton(
+                    onClick = { openUrl(context, "https://jp.mercari.com/search?keyword=$encodedKeyword") },
+                    modifier = Modifier.weight(1f)
+                ) { Text("メルカリ") }
+                OutlinedButton(
+                    onClick = { openUrl(context, "https://www.google.com/search?q=site:jmty.jp+$encodedKeyword") },
+                    modifier = Modifier.weight(1f)
+                ) { Text("ジモティー") }
             }
             Box(
                 modifier = Modifier
@@ -227,4 +241,9 @@ private fun MatchHeaderCard(game: Game) {
 @Composable
 private fun SectionTitle(text: String) {
     Text(text, style = MaterialTheme.typography.titleSmall)
+}
+
+private fun openUrl(context: Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    context.startActivity(intent)
 }
