@@ -28,7 +28,9 @@ data class Game(
     val venue: String,
     val hasInvitation: Boolean,
     val ticketStatus: String,
-    val ticketSaleStart: String
+    val ticketSaleStart: String,
+    val isHome: Boolean = true,
+    val sortKey: String
 )
 
 enum class InvitationSource(val label: String) {
