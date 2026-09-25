@@ -97,7 +97,7 @@ fun GameDetailScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(MockData.upcomingGames) { g ->
+                items(MockData.upcomingGames.sortedBy { it.sortKey }) { g ->
                     val selected = g.id == selectedGameId
                     Row(
                         modifier = Modifier
@@ -195,7 +195,7 @@ fun GameDetailScreen(
                         )
                     },
                     modifier = Modifier.weight(1f)
-                ) { Text("Instagram広告を探す") }
+                ) { Text("SNS広告を探す(Meta広告ライブラリ)") }
             }
             Box(
                 modifier = Modifier
@@ -229,7 +229,7 @@ private fun MatchHeaderCard(game: Game) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "${game.team.displayName}・ホーム戦",
+                    "${game.team.displayName}・${if (game.isHome) "ホーム戦" else "アウェイ戦"}",
                     color = InkSoft,
                     style = MaterialTheme.typography.bodySmall
                 )
