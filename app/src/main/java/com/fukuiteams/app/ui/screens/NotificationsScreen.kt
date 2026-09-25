@@ -20,14 +20,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fukuiteams.app.data.NotificationPrefsKeys
+import com.fukuiteams.app.data.notificationDataStore
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -35,27 +41,40 @@ import com.fukuiteams.app.ui.theme.DividerGray
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
+import androidx.datastore.preferences.core.edit
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
-private data class NotificationKind(val id: String, val label: String)
+private data class NotificationKind(val id: String, val label: String, val defaultOn: Boolean)
+
+private val kindDefs = listOf(
+    NotificationKind("invite", "無料招待の新着", true),
+    NotificationKind("news", "ニュース", false),
+    NotificationKind("gamestart", "試合開始前", true),
+    NotificationKind("ticketsale", "公式チケット販売開始", true)
+)
 
 @Composable
 fun NotificationsScreen() {
-    // TODO: 実装時は DataStore 等で永続化する。ここは画面確認用のローカル state。
-    val teamSwitches = remember {
-        mutableStateOf(Team.values().associateWith { true })
-    }
-    val kinds = remember {
-        listOf(
-            NotificationKind("invite", "無料招待の新着"),
-            NotificationKind("news", "ニュース"),
-            NotificationKind("gamestart", "試合開始前"),
-            NotificationKind("ticketsale", "公式チケット販売開始")
-        )
-    }
-    val kindSwitches = remember {
-        mutableStateOf(mapOf("invite" to true, "news" to false, "gamestart" to true, "ticketsale" to true))
-    }
+    // ON/OFFとキーワードは端末に保存され、アプリを閉じても消えない(DataStore)。
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val teamPrefs by context.notificationDataStore.data
+        .map { prefs -> Team.values().associateWith { prefs[NotificationPrefsKeys.teamKey(it.name)] ?: true } }
+        .collectAsState(initial = Team.values().associateWith { true })
+
+    val kindPrefs by context.notificationDataStore.data
+        .map { prefs -> kindDefs.associate { it.id to (prefs[NotificationPrefsKeys.kindKey(it.id)] ?: it.defaultOn) } }
+        .collectAsState(initial = kindDefs.associate { it.id to it.defaultOn })
+
     var keyword by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        keyword = context.notificationDataStore.data
+            .map { it[NotificationPrefsKeys.KEYWORD] ?: "" }
+            .first()
+    }
 
     Scaffold(
         topBar = {
@@ -105,10 +124,15 @@ fun NotificationsScreen() {
                                     TeamBadge(team, size = 28.dp, fontSize = 12.sp)
                                     Text(team.displayName, style = MaterialTheme.typography.bodyLarge)
                                 }
-                                val checked = teamSwitches.value[team] ?: true
                                 Switch(
-                                    checked = checked,
-                                    onCheckedChange = { teamSwitches.value = teamSwitches.value + (team to it) },
+                                    checked = teamPrefs[team] ?: true,
+                                    onCheckedChange = { newValue ->
+                                        scope.launch {
+                                            context.notificationDataStore.edit {
+                                                it[NotificationPrefsKeys.teamKey(team.name)] = newValue
+                                            }
+                                        }
+                                    },
                                     colors = SwitchDefaults.colors(checkedTrackColor = Accent)
                                 )
                             }
@@ -126,7 +150,7 @@ fun NotificationsScreen() {
                     border = BorderStroke(1.dp, LineGray)
                 ) {
                     Column {
-                        kinds.forEachIndexed { index, kind ->
+                        kindDefs.forEachIndexed { index, kind ->
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -135,14 +159,19 @@ fun NotificationsScreen() {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(kind.label, style = MaterialTheme.typography.bodyLarge)
-                                val checked = kindSwitches.value[kind.id] ?: false
                                 Switch(
-                                    checked = checked,
-                                    onCheckedChange = { kindSwitches.value = kindSwitches.value + (kind.id to it) },
+                                    checked = kindPrefs[kind.id] ?: kind.defaultOn,
+                                    onCheckedChange = { newValue ->
+                                        scope.launch {
+                                            context.notificationDataStore.edit {
+                                                it[NotificationPrefsKeys.kindKey(kind.id)] = newValue
+                                            }
+                                        }
+                                    },
                                     colors = SwitchDefaults.colors(checkedTrackColor = Accent)
                                 )
                             }
-                            if (index != kinds.lastIndex) Divider(color = DividerGray)
+                            if (index != kindDefs.lastIndex) Divider(color = DividerGray)
                         }
                     }
                 }
@@ -152,7 +181,14 @@ fun NotificationsScreen() {
                 Text("キーワード通知(任意)", style = MaterialTheme.typography.labelMedium, color = InkSoft)
                 OutlinedTextField(
                     value = keyword,
-                    onValueChange = { keyword = it },
+                    onValueChange = { newValue ->
+                        keyword = newValue
+                        scope.launch {
+                            context.notificationDataStore.edit {
+                                it[NotificationPrefsKeys.KEYWORD] = newValue
+                            }
+                        }
+                    },
                     placeholder = { Text("例:ペア 招待") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
