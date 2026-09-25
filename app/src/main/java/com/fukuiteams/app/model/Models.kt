@@ -14,7 +14,7 @@ enum class Team(val displayName: String, val initial: String, val color: Color, 
 data class NewsItem(
     val team: Team,
     val source: String,
-    val postedAgo: String,
+    val postedAt: String,
     val headline: String
 )
 

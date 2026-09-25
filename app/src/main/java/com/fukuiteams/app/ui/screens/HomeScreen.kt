@@ -239,7 +239,7 @@ private fun NewsRow(news: NewsItem) {
                     withStyle(SpanStyle(color = news.team.color, fontWeight = FontWeight.Bold)) {
                         append(news.team.displayName)
                     }
-                    append("・${news.source}・${news.postedAgo}")
+                    append("・${news.source}・${news.postedAt}")
                 },
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft

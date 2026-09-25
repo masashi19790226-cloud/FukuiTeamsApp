@@ -318,10 +318,10 @@ private fun addToCalendar(context: Context, game: Game) {
 
 private fun calendarBeginMillis(game: Game): Long {
     val cal = Calendar.getInstance()
-    val year = cal.get(Calendar.YEAR)
     val dateParts = game.dateLabel.split("/")
-    val month = (dateParts.getOrNull(0)?.toIntOrNull() ?: 1) - 1
-    val day = dateParts.getOrNull(1)?.toIntOrNull() ?: 1
+    val year = dateParts.getOrNull(0)?.toIntOrNull() ?: cal.get(Calendar.YEAR)
+    val month = (dateParts.getOrNull(1)?.toIntOrNull() ?: 1) - 1
+    val day = dateParts.getOrNull(2)?.toIntOrNull() ?: 1
     val timeParts = game.timeLabel.split(":")
     val hour = timeParts.getOrNull(0)?.toIntOrNull() ?: 0
     val minute = timeParts.getOrNull(1)?.toIntOrNull() ?: 0
