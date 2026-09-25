@@ -5,10 +5,10 @@ import com.fukuiteams.app.ui.theme.TeamBlowinds
 import com.fukuiteams.app.ui.theme.TeamRac
 import com.fukuiteams.app.ui.theme.TeamUnited
 
-enum class Team(val displayName: String, val initial: String, val color: Color) {
-    BLOWINDS("福井ブローウィンズ", "B", TeamBlowinds),
-    RAC("福井丸岡ラック", "R", TeamRac),
-    UNITED("福井ユナイテッド", "U", TeamUnited)
+enum class Team(val displayName: String, val initial: String, val color: Color, val officialSiteUrl: String?) {
+    BLOWINDS("福井ブローウィンズ", "B", TeamBlowinds, "https://www.fukuiblowinds.com/"),
+    RAC("福井丸岡ラック", "R", TeamRac, "https://ruck-fukui.com/"),
+    UNITED("福井ユナイテッド", "U", TeamUnited, "https://fukuiunited.co.jp/")
 }
 
 data class NewsItem(
@@ -28,7 +28,9 @@ data class Game(
     val venue: String,
     val hasInvitation: Boolean,
     val ticketStatus: String,
-    val ticketSaleStart: String
+    val ticketSaleStart: String,
+    val isHome: Boolean = true,
+    val sortKey: String
 )
 
 enum class InvitationSource(val label: String) {

@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.MockData
 import com.fukuiteams.app.model.InvitationEvent
 import com.fukuiteams.app.model.InvitationSource
@@ -103,7 +104,7 @@ private fun OpenInvitationCard(invitation: InvitationEvent) {
             ) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     SourceBadge(invitation.source)
-                    TeamBadge(invitation.team, size = 22.dp, fontSize = androidx.compose.ui.unit.sp(10))
+                    TeamBadge(invitation.team, size = 22.dp, fontSize = 10.sp)
                     Text(invitation.team.displayName, color = invitation.team.color, style = MaterialTheme.typography.labelMedium)
                 }
                 Text(invitation.deadlineLabel, color = Accent, style = MaterialTheme.typography.labelMedium)
@@ -153,7 +154,7 @@ private fun ArchivedInvitationCard(invitation: InvitationEvent) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    TeamBadge(invitation.team, size = 20.dp, fontSize = androidx.compose.ui.unit.sp(9))
+                    TeamBadge(invitation.team, size = 20.dp, fontSize = 9.sp)
                     Text(
                         "${invitation.source.label}・",
                         style = MaterialTheme.typography.bodySmall,

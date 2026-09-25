@@ -113,8 +113,10 @@ fun HomeScreen(
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("今週の試合", style = MaterialTheme.typography.titleSmall)
-                    val games = MockData.upcomingGames.filter { selectedTeam == null || it.team == selectedTeam }
+                    Text("今後の試合", style = MaterialTheme.typography.titleSmall)
+                    val games = MockData.upcomingGames
+                        .filter { selectedTeam == null || it.team == selectedTeam }
+                        .sortedBy { it.sortKey }
                     games.forEach { game ->
                         GameCard(game = game, onClick = { onOpenGame(game.id) })
                     }
@@ -193,7 +195,7 @@ private fun GameCard(game: Game, onClick: () -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(game.dayOfWeek, style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                Text(game.dateLabel.substringAfter("/"), style = MaterialTheme.typography.titleMedium)
+                Text(game.dateLabel.substringAfterLast("/"), style = MaterialTheme.typography.titleMedium)
             }
             TeamBadge(game.team, size = 34.dp, fontSize = 14.sp)
             Column(modifier = Modifier.weight(1f)) {

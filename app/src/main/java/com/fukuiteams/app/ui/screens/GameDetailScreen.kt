@@ -1,7 +1,12 @@
 package com.fukuiteams.app.ui.screens
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.CalendarContract
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,8 +18,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -29,11 +38,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.MockData
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.ui.components.TeamBadge
@@ -43,6 +58,8 @@ import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
+import java.net.URLEncoder
+import java.util.Calendar
 
 @Composable
 fun GameDetailScreen(
@@ -50,7 +67,13 @@ fun GameDetailScreen(
     onBack: () -> Unit,
     onOpenInvitations: () -> Unit
 ) {
-    val game = MockData.upcomingGames.firstOrNull { it.id == gameId } ?: MockData.upcomingGames.first()
+    // どの試合を表示するかは、この画面の中で選び直せる(下部ナビの「試合」タブから来た場合も
+    // 全チームの試合を選択できるようにするため)。
+    var selectedGameId by remember(gameId) { mutableStateOf(gameId ?: MockData.upcomingGames.first().id) }
+    val game = MockData.upcomingGames.firstOrNull { it.id == selectedGameId } ?: MockData.upcomingGames.first()
+    val context = LocalContext.current
+    val searchKeyword = "${game.team.displayName} ${game.dateLabel} 譲"
+    val encodedKeyword = URLEncoder.encode(searchKeyword, "UTF-8")
 
     Scaffold(
         topBar = {
@@ -69,10 +92,39 @@ fun GameDetailScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(MockData.upcomingGames.sortedBy { it.sortKey }) { g ->
+                    val selected = g.id == selectedGameId
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(if (selected) g.team.color else White)
+                            .border(BorderStroke(1.dp, if (selected) g.team.color else LineGray), RoundedCornerShape(20.dp))
+                            .clickable { selectedGameId = g.id }
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        TeamBadge(g.team, size = 20.dp, fontSize = 10.sp)
+                        Text(
+                            "${g.dateLabel} vs ${g.opponent}",
+                            color = if (selected) White else Ink,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+            }
+
             MatchHeaderCard(game)
+
+            OutlinedButton(
+                onClick = { addToCalendar(context, game) },
+                modifier = Modifier.fillMaxWidth()
+            ) { Text("Googleカレンダーに追加") }
 
             SectionTitle("無料招待")
             Card(
@@ -111,10 +163,14 @@ fun GameDetailScreen(
                     Text("販売状況:${game.ticketStatus}・一般販売開始 ${game.ticketSaleStart}", style = MaterialTheme.typography.bodyMedium, color = InkSoft)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Button(
-                            onClick = { /* TODO: 公式チケットページを開く */ },
+                            onClick = {
+                                val url = game.team.officialSiteUrl
+                                    ?: "https://www.google.com/search?q=" + URLEncoder.encode("${game.team.displayName} チケット", "UTF-8")
+                                openUrl(context, url)
+                            },
                             colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Ink),
                             modifier = Modifier.weight(1f)
-                        ) { Text("公式販売ページを開く") }
+                        ) { Text("公式サイトを開く") }
                         OutlinedButton(onClick = { /* TODO: 通知登録 */ }) { Text("販売開始を通知") }
                     }
                 }
@@ -127,12 +183,19 @@ fun GameDetailScreen(
                 color = InkSoft
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf("Xで探す", "メルカリ", "ジモティー").forEach { label ->
-                    OutlinedButton(
-                        onClick = { /* TODO: 外部検索結果ページを開く */ },
-                        modifier = Modifier.weight(1f)
-                    ) { Text(label) }
-                }
+                OutlinedButton(
+                    onClick = { openUrl(context, "https://x.com/search?q=$encodedKeyword&f=live") },
+                    modifier = Modifier.weight(1f)
+                ) { Text("Xで探す") }
+                OutlinedButton(
+                    onClick = {
+                        openUrl(
+                            context,
+                            "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=JP&q=$encodedKeyword&search_type=keyword_unordered&media_type=all"
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
+                ) { Text("SNS広告を探す(Meta広告ライブラリ)") }
             }
             Box(
                 modifier = Modifier
@@ -166,7 +229,7 @@ private fun MatchHeaderCard(game: Game) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "${game.team.displayName}・ホーム戦",
+                    "${game.team.displayName}・${if (game.isHome) "ホーム戦" else "アウェイ戦"}",
                     color = InkSoft,
                     style = MaterialTheme.typography.bodySmall
                 )
@@ -188,7 +251,7 @@ private fun MatchHeaderCard(game: Game) {
                     modifier = Modifier.width(100.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TeamBadge(game.team, size = 64.dp, fontSize = androidx.compose.ui.unit.sp(24))
+                    TeamBadge(game.team, size = 64.dp, fontSize = 24.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(game.team.displayName, style = MaterialTheme.typography.labelMedium, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
                 }
@@ -226,4 +289,43 @@ private fun MatchHeaderCard(game: Game) {
 @Composable
 private fun SectionTitle(text: String) {
     Text(text, style = MaterialTheme.typography.titleSmall)
+}
+
+private fun openUrl(context: Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    context.startActivity(intent)
+}
+
+/**
+ * 「Googleカレンダーに追加」ボタン用。実装が簡単で権限も不要なため、
+ * Android標準のカレンダー登録画面(ACTION_INSERT)を開く方式にしている。
+ * 開いた画面でユーザーが最後に保存をタップする必要がある(完全自動保存ではない)。
+ * MockDataの日付に年が含まれていないため、今年として計算している。
+ * 試合時間は仮に2時間として終了時刻を設定している。
+ */
+private fun addToCalendar(context: Context, game: Game) {
+    val begin = calendarBeginMillis(game)
+    val end = begin + 2 * 60 * 60 * 1000
+    val intent = Intent(Intent.ACTION_INSERT).apply {
+        data = CalendarContract.Events.CONTENT_URI
+        putExtra(CalendarContract.Events.TITLE, "${game.team.displayName} vs ${game.opponent}")
+        putExtra(CalendarContract.Events.EVENT_LOCATION, game.venue)
+        putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, begin)
+        putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end)
+    }
+    context.startActivity(intent)
+}
+
+private fun calendarBeginMillis(game: Game): Long {
+    val cal = Calendar.getInstance()
+    val year = cal.get(Calendar.YEAR)
+    val dateParts = game.dateLabel.split("/")
+    val month = (dateParts.getOrNull(0)?.toIntOrNull() ?: 1) - 1
+    val day = dateParts.getOrNull(1)?.toIntOrNull() ?: 1
+    val timeParts = game.timeLabel.split(":")
+    val hour = timeParts.getOrNull(0)?.toIntOrNull() ?: 0
+    val minute = timeParts.getOrNull(1)?.toIntOrNull() ?: 0
+    cal.set(year, month, day, hour, minute, 0)
+    cal.set(Calendar.MILLISECOND, 0)
+    return cal.timeInMillis
 }
