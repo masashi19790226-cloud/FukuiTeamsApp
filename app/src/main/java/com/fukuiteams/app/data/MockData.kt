@@ -43,6 +43,18 @@ object MockData {
             hasInvitation = false,
             ticketStatus = "販売前",
             ticketSaleStart = "9/20 18:00"
+        ),
+        Game(
+            id = "g3",
+            team = Team.RAC,
+            opponent = "金沢フットサルクラブ",
+            dateLabel = "9/29",
+            dayOfWeek = "月",
+            timeLabel = "19:30",
+            venue = "丸岡体育館",
+            hasInvitation = false,
+            ticketStatus = "販売中",
+            ticketSaleStart = "9/15 10:00"
         )
     )
 
