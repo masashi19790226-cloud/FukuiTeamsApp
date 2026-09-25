@@ -7,7 +7,7 @@ import com.fukuiteams.app.ui.theme.TeamUnited
 
 enum class Team(val displayName: String, val initial: String, val color: Color, val officialSiteUrl: String?) {
     BLOWINDS("福井ブローウィンズ", "B", TeamBlowinds, "https://www.fukuiblowinds.com/"),
-    RAC("福井丸岡ラック", "R", TeamRac, null),
+    RAC("福井丸岡ラック", "R", TeamRac, "https://ruck-fukui.com/"),
     UNITED("福井ユナイテッド", "U", TeamUnited, "https://fukuiunited.co.jp/")
 }
 
