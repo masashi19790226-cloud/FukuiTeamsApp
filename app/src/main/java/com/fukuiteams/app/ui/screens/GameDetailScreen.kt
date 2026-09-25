@@ -3,8 +3,10 @@ package com.fukuiteams.app.ui.screens
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.CalendarContract
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +18,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,6 +38,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +59,7 @@ import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
 import java.net.URLEncoder
+import java.util.Calendar
 
 @Composable
 fun GameDetailScreen(
@@ -58,7 +67,10 @@ fun GameDetailScreen(
     onBack: () -> Unit,
     onOpenInvitations: () -> Unit
 ) {
-    val game = MockData.upcomingGames.firstOrNull { it.id == gameId } ?: MockData.upcomingGames.first()
+    // どの試合を表示するかは、この画面の中で選び直せる(下部ナビの「試合」タブから来た場合も
+    // 全チームの試合を選択できるようにするため)。
+    var selectedGameId by remember(gameId) { mutableStateOf(gameId ?: MockData.upcomingGames.first().id) }
+    val game = MockData.upcomingGames.firstOrNull { it.id == selectedGameId } ?: MockData.upcomingGames.first()
     val context = LocalContext.current
     val searchKeyword = "${game.team.displayName} ${game.dateLabel} 譲"
     val encodedKeyword = URLEncoder.encode(searchKeyword, "UTF-8")
@@ -84,7 +96,35 @@ fun GameDetailScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(MockData.upcomingGames) { g ->
+                    val selected = g.id == selectedGameId
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(if (selected) g.team.color else White)
+                            .border(BorderStroke(1.dp, if (selected) g.team.color else LineGray), RoundedCornerShape(20.dp))
+                            .clickable { selectedGameId = g.id }
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        TeamBadge(g.team, size = 20.dp, fontSize = 10.sp)
+                        Text(
+                            "${g.dateLabel} vs ${g.opponent}",
+                            color = if (selected) White else Ink,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+            }
+
             MatchHeaderCard(game)
+
+            OutlinedButton(
+                onClick = { addToCalendar(context, game) },
+                modifier = Modifier.fillMaxWidth()
+            ) { Text("Googleカレンダーに追加") }
 
             SectionTitle("無料招待")
             Card(
@@ -148,13 +188,14 @@ fun GameDetailScreen(
                     modifier = Modifier.weight(1f)
                 ) { Text("Xで探す") }
                 OutlinedButton(
-                    onClick = { openUrl(context, "https://jp.mercari.com/search?keyword=$encodedKeyword") },
+                    onClick = {
+                        openUrl(
+                            context,
+                            "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=JP&q=$encodedKeyword&search_type=keyword_unordered&media_type=all"
+                        )
+                    },
                     modifier = Modifier.weight(1f)
-                ) { Text("メルカリ") }
-                OutlinedButton(
-                    onClick = { openUrl(context, "https://www.google.com/search?q=site:jmty.jp+$encodedKeyword") },
-                    modifier = Modifier.weight(1f)
-                ) { Text("ジモティー") }
+                ) { Text("Instagram広告を探す") }
             }
             Box(
                 modifier = Modifier
@@ -253,4 +294,38 @@ private fun SectionTitle(text: String) {
 private fun openUrl(context: Context, url: String) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     context.startActivity(intent)
+}
+
+/**
+ * 「Googleカレンダーに追加」ボタン用。実装が簡単で権限も不要なため、
+ * Android標準のカレンダー登録画面(ACTION_INSERT)を開く方式にしている。
+ * 開いた画面でユーザーが最後に保存をタップする必要がある(完全自動保存ではない)。
+ * MockDataの日付に年が含まれていないため、今年として計算している。
+ * 試合時間は仮に2時間として終了時刻を設定している。
+ */
+private fun addToCalendar(context: Context, game: Game) {
+    val begin = calendarBeginMillis(game)
+    val end = begin + 2 * 60 * 60 * 1000
+    val intent = Intent(Intent.ACTION_INSERT).apply {
+        data = CalendarContract.Events.CONTENT_URI
+        putExtra(CalendarContract.Events.TITLE, "${game.team.displayName} vs ${game.opponent}")
+        putExtra(CalendarContract.Events.EVENT_LOCATION, game.venue)
+        putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, begin)
+        putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end)
+    }
+    context.startActivity(intent)
+}
+
+private fun calendarBeginMillis(game: Game): Long {
+    val cal = Calendar.getInstance()
+    val year = cal.get(Calendar.YEAR)
+    val dateParts = game.dateLabel.split("/")
+    val month = (dateParts.getOrNull(0)?.toIntOrNull() ?: 1) - 1
+    val day = dateParts.getOrNull(1)?.toIntOrNull() ?: 1
+    val timeParts = game.timeLabel.split(":")
+    val hour = timeParts.getOrNull(0)?.toIntOrNull() ?: 0
+    val minute = timeParts.getOrNull(1)?.toIntOrNull() ?: 0
+    cal.set(year, month, day, hour, minute, 0)
+    cal.set(Calendar.MILLISECOND, 0)
+    return cal.timeInMillis
 }
