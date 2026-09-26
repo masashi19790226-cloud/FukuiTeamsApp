@@ -15,10 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -57,11 +59,25 @@ import com.fukuiteams.app.ui.theme.White
 @Composable
 fun InvitationsScreen() {
     var tabIndex by remember { mutableIntStateOf(0) }
+    var alertsResult by remember { mutableStateOf<AlertsResult?>(null) }
+    var refreshKey by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(refreshKey) {
+        alertsResult = null
+        alertsResult = InvitationAlertsRepository.fetch()
+    }
+
+    val openCount = (alertsResult as? AlertsResult.Success)?.items?.size ?: 0
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("無料招待・プレゼント", style = MaterialTheme.typography.titleLarge) },
+                actions = {
+                    IconButton(onClick = { refreshKey++ }) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "更新")
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         },
@@ -73,12 +89,12 @@ fun InvitationsScreen() {
                 containerColor = MaterialTheme.colorScheme.background,
                 contentColor = Accent
             ) {
-                Tab(selected = tabIndex == 0, onClick = { tabIndex = 0 }, text = { Text("募集中 ${MockData.openInvitations.size}") })
+                Tab(selected = tabIndex == 0, onClick = { tabIndex = 0 }, text = { Text("募集中 $openCount") })
                 Tab(selected = tabIndex == 1, onClick = { tabIndex = 1 }, text = { Text("アーカイブ") })
             }
 
             if (tabIndex == 0) {
-                OpenInvitationsList()
+                OpenInvitationsList(alertsResult)
             } else {
                 ArchivedInvitationsList()
             }
@@ -87,13 +103,8 @@ fun InvitationsScreen() {
 }
 
 @Composable
-private fun OpenInvitationsList() {
+private fun OpenInvitationsList(alertsResult: AlertsResult?) {
     val context = LocalContext.current
-    var alertsResult by remember { mutableStateOf<AlertsResult?>(null) }
-
-    LaunchedEffect(Unit) {
-        alertsResult = InvitationAlertsRepository.fetch()
-    }
 
     LazyColumn(
         modifier = Modifier.padding(16.dp),
@@ -102,7 +113,7 @@ private fun OpenInvitationsList() {
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("自動検知した最新情報(Googleアラート)", style = MaterialTheme.typography.labelMedium, color = InkSoft)
-                when (val result = alertsResult) {
+                when (alertsResult) {
                     null -> Text("読み込み中…", style = MaterialTheme.typography.bodySmall, color = InkSoft)
                     is AlertsResult.Failure -> Text(
                         "取得に失敗しました(通信環境をご確認ください)",
@@ -110,11 +121,11 @@ private fun OpenInvitationsList() {
                         color = InkSoft
                     )
                     is AlertsResult.Success -> {
-                        if (result.items.isEmpty()) {
+                        if (alertsResult.items.isEmpty()) {
                             Text("まだ自動検知された情報はありません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
                         } else {
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                result.items.take(10).forEach { alert ->
+                                alertsResult.items.take(10).forEach { alert ->
                                     AutoDetectedAlertCard(alert, onClick = { openUrl(context, alert.link) })
                                 }
                             }
@@ -122,14 +133,6 @@ private fun OpenInvitationsList() {
                     }
                 }
             }
-        }
-
-        item {
-            Text("サンプル(仕様確認用のダミーデータ)", style = MaterialTheme.typography.labelMedium, color = InkSoft)
-        }
-
-        items(MockData.openInvitations) { invitation ->
-            OpenInvitationCard(invitation)
         }
     }
 }
@@ -159,45 +162,6 @@ private fun AutoDetectedAlertCard(alert: RemoteInvitationAlert, onClick: () -> U
             }
             Text(alert.title, style = MaterialTheme.typography.bodyLarge)
             Text("検知:${alert.published.ifBlank { alert.detectedAt }}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-        }
-    }
-}
-
-@Composable
-private fun OpenInvitationCard(invitation: InvitationEvent) {
-    Card(
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
-        border = BorderStroke(1.dp, LineGray)
-    ) {
-        Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    SourceBadge(invitation.source)
-                    TeamBadge(invitation.team, size = 22.dp, fontSize = 10.sp)
-                    Text(invitation.team.displayName, color = invitation.team.color, style = MaterialTheme.typography.labelMedium)
-                }
-                Text(invitation.deadlineLabel, color = Accent, style = MaterialTheme.typography.labelMedium)
-            }
-            Text(invitation.title, style = MaterialTheme.typography.titleMedium)
-            Column {
-                Text("発信元:${invitation.fromWho}・検知 ${invitation.detectedAt}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                Text("対象試合:${invitation.relatedGameLabel}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(
-                    onClick = { /* TODO: 応募ページを開く */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Accent),
-                    modifier = Modifier.weight(1f)
-                ) { Text("応募ページを開く") }
-                OutlinedButton(onClick = { /* TODO: 元投稿を開く */ }) { Text("元投稿") }
-            }
         }
     }
 }
@@ -271,22 +235,6 @@ private fun ResultStat(label: String, value: String) {
     ) {
         Text(label, style = MaterialTheme.typography.bodySmall, color = InkSoft)
         Text(value, style = MaterialTheme.typography.titleMedium)
-    }
-}
-
-@Composable
-private fun SourceBadge(source: InvitationSource) {
-    val (bg, fg) = when (source) {
-        InvitationSource.OFFICIAL -> Ink to White
-        InvitationSource.AD -> White to Ink
-        InvitationSource.PERSONAL -> DividerGray to Ink
-    }
-    Box(
-        modifier = Modifier
-            .background(bg, RoundedCornerShape(6.dp))
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-    ) {
-        Text(source.label, color = fg, style = MaterialTheme.typography.labelSmall)
     }
 }
 
