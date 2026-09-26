@@ -144,25 +144,18 @@ fun HomeScreen(
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("公式サイト", style = MaterialTheme.typography.titleSmall)
-                    OfficialSiteLinks(selectedTeam)
-                }
-            }
-
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("直近の試合", style = MaterialTheme.typography.titleSmall)
-                    // 「すべて」のときはチームごとに直近1件、特定のチームを選んだときはそのチームの直近1件だけ表示。
+                    // 特定のチームを選んだときはそのチームの直近3件、「すべて」のときは全体の直近3件を表示。
                     // 試合スケジュールの一覧は「試合」タブにまとめてあるので、ここでは概要だけ。
                     val games = if (selectedTeam != null) {
                         MockData.upcomingGames
                             .filter { it.team == selectedTeam }
                             .sortedBy { it.sortKey }
-                            .take(1)
+                            .take(3)
                     } else {
-                        Team.values().mapNotNull { team ->
-                            MockData.upcomingGames.filter { it.team == team }.minByOrNull { it.sortKey }
-                        }
+                        MockData.upcomingGames
+                            .sortedBy { it.sortKey }
+                            .take(3)
                     }
                     if (games.isEmpty()) {
                         Text(
@@ -184,6 +177,13 @@ fun HomeScreen(
                         style = MaterialTheme.typography.bodySmall,
                         color = InkSoft
                     )
+                }
+            }
+
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text("公式サイト", style = MaterialTheme.typography.titleSmall)
+                    OfficialSiteLinks(selectedTeam)
                 }
             }
 

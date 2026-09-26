@@ -67,9 +67,10 @@ import com.fukuiteams.app.ui.theme.White
 import java.net.URLEncoder
 
 /**
- * 「試合」タブ。3チームの試合スケジュール一覧と、選んだ試合の詳細をこの1画面にまとめている。
- * 公式サイトへの一般的な導線(試合データが無いチーム向け)はホーム画面に移した。
- * ここに残る「公式サイトを開く」は、チケット購入という具体的な目的に紐づくもの。
+ * 「試合」タブ。上から: チーム選択 → 譲渡・招待チケット検索(チーム単位) →
+ * (試合を選んでいればその詳細) → 試合スケジュール一覧、の並び。
+ * 「直近の試合」の概要はホーム画面にあるため、ここではタブを開いた時点では
+ * 特定の試合を自動選択しない(スケジュールから選んだときだけ詳細が出る)。
  */
 @Composable
 fun GameDetailScreen(
@@ -83,10 +84,20 @@ fun GameDetailScreen(
     val teamGames = remember(selectedTeam) {
         MockData.upcomingGames.filter { it.team == selectedTeam }.sortedBy { it.sortKey }
     }
+    // ホーム画面から特定の試合を選んで遷移してきた場合はそれを表示。
+    // 「試合」タブを直接開いた場合は、何も自動選択しない。
     var selectedGameId by remember(selectedTeam) {
-        mutableStateOf(gameId?.takeIf { id -> teamGames.any { it.id == id } } ?: teamGames.firstOrNull()?.id)
+        mutableStateOf(gameId?.takeIf { id -> teamGames.any { it.id == id } })
     }
     val game = teamGames.firstOrNull { it.id == selectedGameId }
+    val context = LocalContext.current
+
+    // Xの個人投稿は「チーム名+チケット+譲」で広めに検索。
+    // 一方、企業広告は「譲ります」という言い方をしないため、広告検索は「チーム名+招待」のみにする。
+    val personalSearchKeyword = "${selectedTeam.displayName} チケット 譲"
+    val encodedPersonalKeyword = URLEncoder.encode(personalSearchKeyword, "UTF-8")
+    val adSearchKeyword = "${selectedTeam.displayName} 招待"
+    val encodedAdKeyword = URLEncoder.encode(adSearchKeyword, "UTF-8")
 
     Scaffold(
         topBar = {
@@ -120,26 +131,69 @@ fun GameDetailScreen(
                 }
             }
 
+            TicketSearchSection(
+                personalSearchKeyword = personalSearchKeyword,
+                adSearchKeyword = adSearchKeyword,
+                onSearchX = { openUrl(context, "https://x.com/search?q=$encodedPersonalKeyword&f=live") },
+                onSearchAd = {
+                    openUrl(
+                        context,
+                        "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=JP&q=$encodedAdKeyword&search_type=keyword_unordered&media_type=all"
+                    )
+                }
+            )
+
+            if (game != null) {
+                SelectedGameDetail(game, onOpenInvitations)
+            }
+
             if (teamGames.isEmpty()) {
                 EmptyTeamState(selectedTeam)
             } else {
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     SectionTitle("試合スケジュール")
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        teamGames.forEach { g ->
-                            ScheduleRow(
-                                game = g,
-                                selected = g.id == selectedGameId,
-                                onClick = { selectedGameId = g.id }
-                            )
-                        }
-                    }
-
-                    if (game != null) {
-                        GameDetailContent(game, onOpenInvitations)
+                    teamGames.forEach { g ->
+                        ScheduleRow(
+                            game = g,
+                            selected = g.id == selectedGameId,
+                            onClick = { selectedGameId = g.id }
+                        )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun TicketSearchSection(
+    personalSearchKeyword: String,
+    adSearchKeyword: String,
+    onSearchX: () -> Unit,
+    onSearchAd: () -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        SectionTitle("譲渡・招待チケットを探す")
+        Text(
+            "検索結果を開きます(X:${personalSearchKeyword}・広告:${adSearchKeyword})",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedButton(onClick = onSearchX, modifier = Modifier.weight(1f)) { Text("Xで探す") }
+            OutlinedButton(onClick = onSearchAd, modifier = Modifier.weight(1f)) { Text("SNS広告を探す(Meta広告ライブラリ)") }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .background(DividerGray)
+                .padding(12.dp)
+        ) {
+            Text(
+                "取引は各サービス上で行われ、本アプリは内容や安全性を保証しません。定価を大きく超える転売にはご注意ください。",
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }
@@ -214,14 +268,8 @@ private fun EmptyTeamState(team: Team) {
 }
 
 @Composable
-private fun GameDetailContent(game: Game, onOpenInvitations: () -> Unit) {
+private fun SelectedGameDetail(game: Game, onOpenInvitations: () -> Unit) {
     val context = LocalContext.current
-    // Xの個人投稿は「チーム名+チケット+譲」で広めに検索。
-    // 一方、企業広告は「譲ります」という言い方をしないため、広告検索は「チーム名+招待」のみにする。
-    val personalSearchKeyword = "${game.team.displayName} チケット 譲"
-    val encodedPersonalKeyword = URLEncoder.encode(personalSearchKeyword, "UTF-8")
-    val adSearchKeyword = "${game.team.displayName} 招待"
-    val encodedAdKeyword = URLEncoder.encode(adSearchKeyword, "UTF-8")
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         MatchHeaderCard(game)
@@ -278,40 +326,6 @@ private fun GameDetailContent(game: Game, onOpenInvitations: () -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 ) { Text("チケットを購入する(公式サイト)") }
             }
-        }
-
-        SectionTitle("譲渡・出品を探す(非公式)")
-        Text(
-            "検索結果を開きます(X:${personalSearchKeyword}・広告:${adSearchKeyword})",
-            style = MaterialTheme.typography.bodySmall,
-            color = InkSoft
-        )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(
-                onClick = { openUrl(context, "https://x.com/search?q=$encodedPersonalKeyword&f=live") },
-                modifier = Modifier.weight(1f)
-            ) { Text("Xで探す") }
-            OutlinedButton(
-                onClick = {
-                    openUrl(
-                        context,
-                        "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=JP&q=$encodedAdKeyword&search_type=keyword_unordered&media_type=all"
-                    )
-                },
-                modifier = Modifier.weight(1f)
-            ) { Text("SNS広告を探す(Meta広告ライブラリ)") }
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(10.dp))
-                .background(DividerGray)
-                .padding(12.dp)
-        ) {
-            Text(
-                "取引は各サービス上で行われ、本アプリは内容や安全性を保証しません。定価を大きく超える転売にはご注意ください。",
-                style = MaterialTheme.typography.bodySmall
-            )
         }
     }
 }
