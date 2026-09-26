@@ -144,11 +144,26 @@ fun HomeScreen(
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("今後の試合", style = MaterialTheme.typography.titleSmall)
-                    val games = MockData.upcomingGames
-                        .filter { selectedTeam == null || it.team == selectedTeam }
-                        .sortedBy { it.sortKey }
-                        .take(10)
+                    Text("公式サイト", style = MaterialTheme.typography.titleSmall)
+                    OfficialSiteLinks(selectedTeam)
+                }
+            }
+
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text("直近の試合", style = MaterialTheme.typography.titleSmall)
+                    // 「すべて」のときはチームごとに直近1件、特定のチームを選んだときはそのチームの直近1件だけ表示。
+                    // 試合スケジュールの一覧は「試合」タブにまとめてあるので、ここでは概要だけ。
+                    val games = if (selectedTeam != null) {
+                        MockData.upcomingGames
+                            .filter { it.team == selectedTeam }
+                            .sortedBy { it.sortKey }
+                            .take(1)
+                    } else {
+                        Team.values().mapNotNull { team ->
+                            MockData.upcomingGames.filter { it.team == team }.minByOrNull { it.sortKey }
+                        }
+                    }
                     if (games.isEmpty()) {
                         Text(
                             "このチームの試合データはまだ準備できていません",
@@ -164,6 +179,11 @@ fun HomeScreen(
                             )
                         }
                     }
+                    Text(
+                        "すべての試合日程は「試合」タブでご覧いただけます",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
+                    )
                 }
             }
 
@@ -242,6 +262,38 @@ private fun InviteBanner(onClick: () -> Unit) {
             Text("Googleアラートで自動検知した最新情報をチェックできます", color = White, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(4.dp))
             Text("一覧を見る ›", color = White, style = MaterialTheme.typography.labelLarge)
+        }
+    }
+}
+
+@Composable
+private fun OfficialSiteLinks(selectedTeam: Team?) {
+    val context = LocalContext.current
+    val teams = if (selectedTeam != null) listOf(selectedTeam) else Team.values().toList()
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        teams.forEach { team ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(White)
+                    .border(BorderStroke(1.dp, LineGray), RoundedCornerShape(12.dp))
+                    .clickable(enabled = team.officialSiteUrl != null) {
+                        team.officialSiteUrl?.let { openUrl(context, it) }
+                    }
+                    .padding(horizontal = 14.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                TeamBadge(team, size = 28.dp, fontSize = 12.sp)
+                Text(team.displayName, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+                if (team.officialSiteUrl != null) {
+                    Text("公式サイトを開く ›", style = MaterialTheme.typography.labelMedium, color = Accent)
+                } else {
+                    Text("準備中", style = MaterialTheme.typography.labelMedium, color = InkSoft)
+                }
+            }
         }
     }
 }

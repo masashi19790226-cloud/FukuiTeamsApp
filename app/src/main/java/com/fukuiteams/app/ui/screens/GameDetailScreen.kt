@@ -6,7 +6,6 @@ import android.net.Uri
 import android.provider.CalendarContract
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -67,13 +66,17 @@ import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
 import java.net.URLEncoder
 
+/**
+ * 「試合」タブ。3チームの試合スケジュール一覧と、選んだ試合の詳細をこの1画面にまとめている。
+ * 公式サイトへの一般的な導線(試合データが無いチーム向け)はホーム画面に移した。
+ * ここに残る「公式サイトを開く」は、チケット購入という具体的な目的に紐づくもの。
+ */
 @Composable
 fun GameDetailScreen(
     gameId: String?,
     onBack: () -> Unit,
     onOpenInvitations: () -> Unit
 ) {
-    // チームは常に3つとも選択できるようにする(そのチームの試合データがまだ無くても選べる)。
     val initialTeam = MockData.upcomingGames.firstOrNull { it.id == gameId }?.team ?: Team.BLOWINDS
     var selectedTeam by remember { mutableStateOf(initialTeam) }
 
@@ -88,7 +91,7 @@ fun GameDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("試合詳細", style = MaterialTheme.typography.titleSmall) },
+                title = { Text("試合", style = MaterialTheme.typography.titleSmall) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
@@ -120,31 +123,66 @@ fun GameDetailScreen(
             if (teamGames.isEmpty()) {
                 EmptyTeamState(selectedTeam)
             } else {
-                if (teamGames.size > 1) {
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(teamGames) { g ->
-                            val selected = g.id == selectedGameId
-                            Row(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(20.dp))
-                                    .background(if (selected) g.team.color else White)
-                                    .border(BorderStroke(1.dp, if (selected) g.team.color else LineGray), RoundedCornerShape(20.dp))
-                                    .clickable { selectedGameId = g.id }
-                                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    "${g.dateLabel} vs ${g.opponent}",
-                                    color = if (selected) White else Ink,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            }
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    SectionTitle("試合スケジュール")
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        teamGames.forEach { g ->
+                            ScheduleRow(
+                                game = g,
+                                selected = g.id == selectedGameId,
+                                onClick = { selectedGameId = g.id }
+                            )
                         }
                     }
-                }
 
-                if (game != null) {
-                    GameDetailContent(game, onOpenInvitations)
+                    if (game != null) {
+                        GameDetailContent(game, onOpenInvitations)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ScheduleRow(game: Game, selected: Boolean, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) game.team.color.copy(alpha = 0.06f) else White
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = if (selected) 3.dp else 1.dp),
+        border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) game.team.color else LineGray)
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Column(
+                modifier = Modifier.width(44.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(game.dayOfWeek, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                Text(
+                    game.dateLabel.split("/").drop(1).joinToString("/"),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text("vs ${game.opponent}", style = MaterialTheme.typography.titleMedium)
+                    HomeAwayBadge(isHome = game.isHome)
+                }
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Icon(Icons.Filled.Schedule, contentDescription = null, tint = InkSoft, modifier = Modifier.size(13.dp))
+                    Text(game.timeLabel, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(Icons.Filled.LocationOn, contentDescription = null, tint = InkSoft, modifier = Modifier.size(13.dp))
+                    Text(game.venue, style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 }
             }
         }
@@ -153,7 +191,6 @@ fun GameDetailScreen(
 
 @Composable
 private fun EmptyTeamState(team: Team) {
-    val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = White),
@@ -164,21 +201,14 @@ private fun EmptyTeamState(team: Team) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text("${team.displayName}の試合データはまだ準備できていません", style = MaterialTheme.typography.bodyLarge)
             Text(
-                "公式サイトの日程ページが確認でき次第、反映します。それまでは公式サイトを直接ご覧ください。",
+                "公式サイトの日程ページが確認でき次第、反映します。公式サイトへのリンクはホーム画面にあります。",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
-            if (team.officialSiteUrl != null) {
-                Button(
-                    onClick = { openUrl(context, team.officialSiteUrl) },
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Ink),
-                    modifier = Modifier.fillMaxWidth()
-                ) { Text("公式サイトを開く") }
-            }
         }
     }
 }
@@ -246,7 +276,7 @@ private fun GameDetailContent(game: Game, onOpenInvitations: () -> Unit) {
                     },
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Ink),
                     modifier = Modifier.fillMaxWidth()
-                ) { Text("公式サイトを開く") }
+                ) { Text("チケットを購入する(公式サイト)") }
             }
         }
 
