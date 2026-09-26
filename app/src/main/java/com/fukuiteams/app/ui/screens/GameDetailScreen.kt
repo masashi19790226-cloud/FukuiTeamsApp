@@ -72,6 +72,9 @@ import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.DividerGray
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.runtime.rememberCoroutineScope
 import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
@@ -109,6 +112,18 @@ fun GameDetailScreen(
     }
     val game = allTeamGames.firstOrNull { it.id == selectedGameId }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    suspend fun refreshResults() {
+        isRefreshing = true
+        autoResults = GameResultsRepository.fetch()
+        isRefreshing = false
+    }
+
+    LaunchedEffect(Unit) { refreshResults() }
 
     // Xの個人投稿は「チーム名+チケット+譲」で広めに検索。
     // 一方、企業広告は「譲ります」という言い方をしないため、広告検索は「チーム名+招待」のみにする。
@@ -126,14 +141,23 @@ fun GameDetailScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
                     }
                 },
+                actions = {
+                    IconButton(onClick = { scope.launch { refreshResults() } }) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "結果を更新")
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = { scope.launch { refreshResults() } },
+            modifier = Modifier.padding(padding)
+        ) {
         Column(
             modifier = Modifier
-                .padding(padding)
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -162,7 +186,7 @@ fun GameDetailScreen(
             )
 
             if (game != null) {
-                SelectedGameDetail(game, onOpenInvitations)
+                SelectedGameDetail(game, autoResults[game.id], onOpenInvitations)
             }
 
             if (allTeamGames.isEmpty()) {
@@ -199,6 +223,7 @@ fun GameDetailScreen(
                     }
                 }
             }
+        }
         }
     }
 }
@@ -324,7 +349,7 @@ private fun EmptyTeamState(team: Team) {
 }
 
 @Composable
-private fun SelectedGameDetail(game: Game, onOpenInvitations: () -> Unit) {
+private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpenInvitations: () -> Unit) {
     val context = LocalContext.current
     val isPast = !game.isUpcoming()
 
@@ -332,7 +357,7 @@ private fun SelectedGameDetail(game: Game, onOpenInvitations: () -> Unit) {
         MatchHeaderCard(game, isPast)
 
         if (isPast) {
-            PastGameResultCard(game)
+            PastGameResultCard(game, autoResult)
             WatchMethodPicker(game)
             return@Column
         }
@@ -394,17 +419,13 @@ private fun SelectedGameDetail(game: Game, onOpenInvitations: () -> Unit) {
 }
 
 @Composable
-private fun PastGameResultCard(game: Game) {
+private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var outcome by remember(game.id) { mutableStateOf<GameOutcome?>(null) }
-    var autoResult by remember(game.id) { mutableStateOf<RemoteGameResult?>(null) }
-    var autoResultChecked by remember(game.id) { mutableStateOf(false) }
 
     LaunchedEffect(game.id) {
         outcome = loadGameOutcome(context, game.id)
-        autoResult = GameResultsRepository.fetch()[game.id]
-        autoResultChecked = true
     }
 
     Card(
@@ -461,7 +482,7 @@ private fun PastGameResultCard(game: Game) {
             }
 
             Text(
-                if (autoResultChecked) "自動取得はまだできていません。見てきた結果を、タップで記録できます。" else "自動取得を確認中…",
+                "自動取得はまだできていません。見てきた結果を、タップで記録できます。",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )

@@ -29,12 +29,14 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -51,6 +53,7 @@ import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
+import kotlinx.coroutines.launch
 
 // アーカイブ表示用の説明文で使う日数(実際の判定はInvitationAlertsRepository.isLikelyClosed()を使用)
 private const val ARCHIVE_AFTER_DAYS = 14L
@@ -61,10 +64,13 @@ fun InvitationsScreen() {
     var selectedTeam by remember { mutableStateOf<Team?>(null) }
     var alertsResult by remember { mutableStateOf<AlertsResult?>(null) }
     var refreshKey by remember { mutableIntStateOf(0) }
+    var isRefreshing by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(refreshKey) {
-        alertsResult = null
+        isRefreshing = true
         alertsResult = InvitationAlertsRepository.fetch()
+        isRefreshing = false
     }
 
     val teamFiltered = (alertsResult as? AlertsResult.Success)?.items
@@ -87,7 +93,12 @@ fun InvitationsScreen() {
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = { refreshKey++ },
+            modifier = Modifier.padding(padding)
+        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             LazyRow(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -127,6 +138,7 @@ fun InvitationsScreen() {
             } else {
                 ArchivedInvitationsList(archivedItems)
             }
+        }
         }
     }
 }

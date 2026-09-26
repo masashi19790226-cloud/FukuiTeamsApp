@@ -40,12 +40,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,6 +71,7 @@ import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -80,6 +83,15 @@ fun HomeScreen(
     var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
     var newsRefreshKey by remember { mutableIntStateOf(0) }
     var invitationsResult by remember { mutableStateOf<AlertsResult?>(null) }
+    var isRefreshing by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    suspend fun refreshAll() {
+        isRefreshing = true
+        invitationsResult = InvitationAlertsRepository.fetch()
+        newsResult = NewsAlertsRepository.fetch()
+        isRefreshing = false
+    }
 
     LaunchedEffect(newsRefreshKey) {
         newsResult = null
@@ -111,9 +123,13 @@ fun HomeScreen(
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = { scope.launch { refreshAll() } },
+            modifier = Modifier.padding(padding)
+        ) {
         LazyColumn(
             modifier = Modifier
-                .padding(padding)
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
@@ -244,6 +260,7 @@ private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?) {
                     }
                 }
             }
+        }
         }
     }
 }

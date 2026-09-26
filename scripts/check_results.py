@@ -13,7 +13,7 @@ import json
 import os
 import re
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timedelta
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 GAMES_PATH = os.path.join(BASE_DIR, "games.json")
@@ -91,7 +91,10 @@ def main():
 
     print(f"[INFO] 取得したHTMLの文字数: {len(html)}")
 
-    now = datetime.now()
+    # GitHub Actionsのサーバーは世界標準時(UTC)で動いているため、
+    # 日本時間(UTC+9)に変換してから「試合開始済みかどうか」を判定する。
+    now = datetime.utcnow() + timedelta(hours=9)
+    print(f"[INFO] 現在時刻(日本時間換算): {now.isoformat()}")
     updated = 0
 
     for game in games:
