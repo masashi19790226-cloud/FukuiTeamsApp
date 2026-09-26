@@ -12,5 +12,6 @@ val Context.notificationDataStore: DataStore<Preferences> by preferencesDataStor
 object NotificationPrefsKeys {
     fun teamKey(teamId: String) = booleanPreferencesKey("team_$teamId")
     fun kindKey(kindId: String) = booleanPreferencesKey("kind_$kindId")
-    val KEYWORD = stringPreferencesKey("keyword")
+    val LAST_SEEN_INVITE_AT = stringPreferencesKey("last_seen_invite_at")
+    val LAST_SEEN_NEWS_AT = stringPreferencesKey("last_seen_news_at")
 }

@@ -11,11 +11,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,13 +46,30 @@ import com.fukuiteams.app.data.RemoteInvitationAlert
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
+import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
+import java.time.Instant
+
+// 検知からこの日数を過ぎたら「終了した可能性が高い」とみなし、自動的にアーカイブへ移す。
+// 応募締切や当選結果までは分からないため、あくまで日付だけによる簡易的な振り分け。
+private const val ARCHIVE_AFTER_DAYS = 14L
+
+private fun isLikelyClosed(detectedAt: String): Boolean {
+    return try {
+        val instant = Instant.parse(detectedAt)
+        val ageMillis = System.currentTimeMillis() - instant.toEpochMilli()
+        ageMillis > ARCHIVE_AFTER_DAYS * 24 * 60 * 60 * 1000
+    } catch (e: Exception) {
+        false
+    }
+}
 
 @Composable
 fun InvitationsScreen() {
     var tabIndex by remember { mutableIntStateOf(0) }
+    var selectedTeam by remember { mutableStateOf<Team?>(null) }
     var alertsResult by remember { mutableStateOf<AlertsResult?>(null) }
     var refreshKey by remember { mutableIntStateOf(0) }
 
@@ -57,7 +78,11 @@ fun InvitationsScreen() {
         alertsResult = InvitationAlertsRepository.fetch()
     }
 
-    val openCount = (alertsResult as? AlertsResult.Success)?.items?.size ?: 0
+    val teamFiltered = (alertsResult as? AlertsResult.Success)?.items
+        ?.filter { selectedTeam == null || it.teamId == selectedTeam?.name }
+        ?: emptyList()
+    val openItems = teamFiltered.filterNot { isLikelyClosed(it.detectedAt) }
+    val archivedItems = teamFiltered.filter { isLikelyClosed(it.detectedAt) }
 
     Scaffold(
         topBar = {
@@ -74,26 +99,51 @@ fun InvitationsScreen() {
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
+            LazyRow(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                item {
+                    FilterChip(
+                        selected = selectedTeam == null,
+                        onClick = { selectedTeam = null },
+                        label = { Text("すべて") },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = Ink,
+                            selectedLabelColor = White
+                        )
+                    )
+                }
+                items(Team.values().toList()) { team ->
+                    FilterChip(
+                        selected = selectedTeam == team,
+                        onClick = { selectedTeam = if (selectedTeam == team) null else team },
+                        leadingIcon = { TeamBadge(team, size = 20.dp, fontSize = 10.sp) },
+                        label = { Text(team.displayName) }
+                    )
+                }
+            }
+
             TabRow(
                 selectedTabIndex = tabIndex,
                 containerColor = MaterialTheme.colorScheme.background,
                 contentColor = Accent
             ) {
-                Tab(selected = tabIndex == 0, onClick = { tabIndex = 0 }, text = { Text("募集中 $openCount") })
-                Tab(selected = tabIndex == 1, onClick = { tabIndex = 1 }, text = { Text("アーカイブ") })
+                Tab(selected = tabIndex == 0, onClick = { tabIndex = 0 }, text = { Text("募集中 ${openItems.size}") })
+                Tab(selected = tabIndex == 1, onClick = { tabIndex = 1 }, text = { Text("アーカイブ ${archivedItems.size}") })
             }
 
             if (tabIndex == 0) {
-                OpenInvitationsList(alertsResult)
+                OpenInvitationsList(alertsResult, openItems)
             } else {
-                ArchivedInvitationsPlaceholder()
+                ArchivedInvitationsList(archivedItems)
             }
         }
     }
 }
 
 @Composable
-private fun OpenInvitationsList(alertsResult: AlertsResult?) {
+private fun OpenInvitationsList(alertsResult: AlertsResult?, openItems: List<RemoteInvitationAlert>) {
     val context = LocalContext.current
 
     LazyColumn(
@@ -111,17 +161,44 @@ private fun OpenInvitationsList(alertsResult: AlertsResult?) {
                         color = InkSoft
                     )
                     is AlertsResult.Success -> {
-                        if (alertsResult.items.isEmpty()) {
+                        if (openItems.isEmpty()) {
                             Text("まだ自動検知された情報はありません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
                         } else {
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                alertsResult.items.take(10).forEach { alert ->
+                                openItems.take(10).forEach { alert ->
                                     AutoDetectedAlertCard(alert, onClick = { openUrl(context, alert.link) })
                                 }
                             }
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ArchivedInvitationsList(archivedItems: List<RemoteInvitationAlert>) {
+    val context = LocalContext.current
+
+    LazyColumn(
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        item {
+            Text(
+                "検知から${ARCHIVE_AFTER_DAYS}日以上経過したものを自動的にここへ移しています(応募締切や当選結果までは判定していません)",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+        }
+        if (archivedItems.isEmpty()) {
+            item {
+                Text("まだアーカイブされた情報はありません", style = MaterialTheme.typography.bodyLarge)
+            }
+        } else {
+            items(archivedItems) { alert ->
+                AutoDetectedAlertCard(alert, onClick = { openUrl(context, alert.link) })
             }
         }
     }
@@ -153,28 +230,6 @@ private fun AutoDetectedAlertCard(alert: RemoteInvitationAlert, onClick: () -> U
             Text(alert.title, style = MaterialTheme.typography.bodyLarge)
             Text("検知:${alert.published.ifBlank { alert.detectedAt }}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         }
-    }
-}
-
-/**
- * 検知した情報を「終了」「結果判明」などに自動で振り分けてアーカイブする仕組みは
- * まだ作っていないため、現時点では空の状態を表示するだけ。
- */
-@Composable
-private fun ArchivedInvitationsPlaceholder() {
-    Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            "まだアーカイブされた情報はありません",
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Text(
-            "検知した情報を終了・結果判明として自動的に振り分ける仕組みは、まだ作っていません。",
-            style = MaterialTheme.typography.bodySmall,
-            color = InkSoft
-        )
     }
 }
 
