@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,8 +22,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Flight
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -204,6 +209,7 @@ private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?) {
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
                     border = BorderStroke(1.dp, LineGray)
                 ) {
                     Column {
@@ -246,39 +252,92 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(containerColor = White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         border = BorderStroke(1.dp, LineGray)
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Column(
-                modifier = Modifier.width(36.dp),
+                modifier = Modifier.width(44.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(game.dayOfWeek, style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                Text(game.dateLabel.substringAfterLast("/"), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    game.dateLabel.split("/").drop(1).joinToString("/"),
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
             TeamBadge(game.team, size = 34.dp, fontSize = 14.sp)
-            Column(modifier = Modifier.weight(1f)) {
-                Text(game.team.displayName, color = game.team.color, style = MaterialTheme.typography.labelMedium)
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(game.team.displayName, color = game.team.color, style = MaterialTheme.typography.labelMedium)
+                    HomeAwayBadge(isHome = game.isHome)
+                }
                 Text("vs ${game.opponent}", style = MaterialTheme.typography.titleMedium)
-                Text("${game.timeLabel}・${game.venue}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Icon(Icons.Filled.Schedule, contentDescription = null, tint = InkSoft, modifier = Modifier.size(13.dp))
+                    Text(game.timeLabel, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(Icons.Filled.LocationOn, contentDescription = null, tint = InkSoft, modifier = Modifier.size(13.dp))
+                    Text(game.venue, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                }
             }
             if (hasOpenInvite) {
                 Text(
                     "招待あり",
                     color = Accent,
                     style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.padding(4.dp)
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .border(BorderStroke(1.dp, Accent), RoundedCornerShape(6.dp))
+                        .padding(horizontal = 6.dp, vertical = 3.dp)
                 )
             }
         }
     }
 }
+
+@Composable
+private fun HomeAwayBadge(isHome: Boolean) {
+    val style = if (isHome) {
+        HomeAwayStyle(
+            background = androidx.compose.ui.graphics.Color(0xFF2F6846).copy(alpha = 0.14f),
+            foreground = androidx.compose.ui.graphics.Color(0xFF2F6846),
+            icon = Icons.Filled.Home,
+            label = "ホーム"
+        )
+    } else {
+        HomeAwayStyle(
+            background = androidx.compose.ui.graphics.Color(0xFF2541B2).copy(alpha = 0.12f),
+            foreground = androidx.compose.ui.graphics.Color(0xFF2541B2),
+            icon = Icons.Filled.Flight,
+            label = "アウェイ"
+        )
+    }
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(style.background)
+            .padding(horizontal = 6.dp, vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(3.dp)
+    ) {
+        Icon(style.icon, contentDescription = null, tint = style.foreground, modifier = Modifier.size(11.dp))
+        Text(style.label, style = MaterialTheme.typography.labelSmall, color = style.foreground)
+    }
+}
+
+private data class HomeAwayStyle(
+    val background: androidx.compose.ui.graphics.Color,
+    val foreground: androidx.compose.ui.graphics.Color,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    val label: String
+)
 
 @Composable
 private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {

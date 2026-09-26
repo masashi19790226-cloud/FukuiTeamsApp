@@ -26,6 +26,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Flight
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -152,6 +157,7 @@ private fun EmptyTeamState(team: Team) {
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         border = BorderStroke(1.dp, LineGray)
     ) {
         Column(
@@ -202,6 +208,7 @@ private fun GameDetailContent(game: Game, onOpenInvitations: () -> Unit) {
                 .clickable(onClick = onOpenInvitations),
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
             border = BorderStroke(2.dp, Accent)
         ) {
             Row(
@@ -223,6 +230,7 @@ private fun GameDetailContent(game: Game, onOpenInvitations: () -> Unit) {
         Card(
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
             border = BorderStroke(1.dp, LineGray)
         ) {
             Column(
@@ -280,9 +288,11 @@ private fun GameDetailContent(game: Game, onOpenInvitations: () -> Unit) {
 
 @Composable
 private fun MatchHeaderCard(game: Game) {
+    val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(containerColor = White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         border = BorderStroke(1.dp, LineGray)
     ) {
         Column(
@@ -291,13 +301,13 @@ private fun MatchHeaderCard(game: Game) {
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    "${game.team.displayName}・${if (game.isHome) "ホーム戦" else "アウェイ戦"}",
-                    color = InkSoft,
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(game.team.displayName, color = InkSoft, style = MaterialTheme.typography.bodySmall)
+                    HomeAwayBadge(isHome = game.isHome)
+                }
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(6.dp))
@@ -340,14 +350,65 @@ private fun MatchHeaderCard(game: Game) {
                     Text(game.opponent, style = MaterialTheme.typography.labelMedium, color = InkSoft, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
                 }
             }
-            Text(
-                "${game.dateLabel}(${game.dayOfWeek})${game.timeLabel} 開始・${game.venue}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = InkSoft,
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-            )
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.Schedule, contentDescription = null, tint = InkSoft, modifier = Modifier.size(15.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    "${game.dateLabel}(${game.dayOfWeek})${game.timeLabel} 開始",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = InkSoft
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable { openUrl(context, "https://www.google.com/maps/search/?api=1&query=" + URLEncoder.encode(game.venue, "UTF-8")) }
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.LocationOn, contentDescription = null, tint = Accent, modifier = Modifier.size(15.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(game.venue, style = MaterialTheme.typography.bodyMedium, color = Accent)
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(Icons.Filled.Map, contentDescription = "地図を開く", tint = Accent, modifier = Modifier.size(15.dp))
+            }
         }
+    }
+}
+
+@Composable
+private fun HomeAwayBadge(isHome: Boolean) {
+    val bg: androidx.compose.ui.graphics.Color
+    val fg: androidx.compose.ui.graphics.Color
+    val icon: androidx.compose.ui.graphics.vector.ImageVector
+    val label: String
+    if (isHome) {
+        fg = androidx.compose.ui.graphics.Color(0xFF2F6846)
+        bg = fg.copy(alpha = 0.14f)
+        icon = Icons.Filled.Home
+        label = "ホーム"
+    } else {
+        fg = androidx.compose.ui.graphics.Color(0xFF2541B2)
+        bg = fg.copy(alpha = 0.12f)
+        icon = Icons.Filled.Flight
+        label = "アウェイ"
+    }
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(bg)
+            .padding(horizontal = 6.dp, vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(3.dp)
+    ) {
+        Icon(icon, contentDescription = null, tint = fg, modifier = Modifier.size(11.dp))
+        Text(label, style = MaterialTheme.typography.labelSmall, color = fg)
     }
 }
 
