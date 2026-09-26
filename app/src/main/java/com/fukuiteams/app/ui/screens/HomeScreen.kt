@@ -59,6 +59,7 @@ import com.fukuiteams.app.data.MockData
 import com.fukuiteams.app.data.NewsAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
 import com.fukuiteams.app.data.isLikelyClosed
+import com.fukuiteams.app.data.isUpcoming
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
@@ -149,11 +150,12 @@ fun HomeScreen(
                     // 試合スケジュールの一覧は「試合」タブにまとめてあるので、ここでは概要だけ。
                     val games = if (selectedTeam != null) {
                         MockData.upcomingGames
-                            .filter { it.team == selectedTeam }
+                            .filter { it.team == selectedTeam && it.isUpcoming() }
                             .sortedBy { it.sortKey }
                             .take(3)
                     } else {
                         MockData.upcomingGames
+                            .filter { it.isUpcoming() }
                             .sortedBy { it.sortKey }
                             .take(3)
                     }

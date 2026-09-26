@@ -24,10 +24,13 @@ jobs:
       - name: Run alert check
         run: python3 scripts/check_alerts.py
 
+      - name: Run result check
+        run: python3 scripts/check_results.py
+
       - name: Commit changes if any
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/invitations_raw.json data/news_raw.json
-          git diff --cached --quiet && echo "変更なし" || git commit -m "chore: 無料招待・ニュースの自動更新"
+          git add data/invitations_raw.json data/news_raw.json data/results.json
+          git diff --cached --quiet && echo "変更なし" || git commit -m "chore: 無料招待・ニュース・結果の自動更新"
           git push

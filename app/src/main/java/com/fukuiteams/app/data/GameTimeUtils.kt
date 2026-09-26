@@ -24,3 +24,20 @@ fun Game.startEpochMillis(): Long {
     cal.set(Calendar.MILLISECOND, 0)
     return cal.timeInMillis
 }
+
+/**
+ * 現在時刻を、Gameのsortkeyと同じ "yyyyMMdd-HHmm" 形式の文字列にしたもの。
+ * 文字列同士の比較で「終わった試合かどうか」を判定するのに使う。
+ */
+fun currentSortKey(): String {
+    val cal = Calendar.getInstance()
+    val y = cal.get(Calendar.YEAR)
+    val m = cal.get(Calendar.MONTH) + 1
+    val d = cal.get(Calendar.DAY_OF_MONTH)
+    val hh = cal.get(Calendar.HOUR_OF_DAY)
+    val mm = cal.get(Calendar.MINUTE)
+    return "%04d%02d%02d-%02d%02d".format(y, m, d, hh, mm)
+}
+
+/** この試合がまだ始まっていない(=一覧に表示すべき)かどうか。 */
+fun Game.isUpcoming(): Boolean = sortKey >= currentSortKey()

@@ -15,7 +15,7 @@ object MockData {
 
     val upcomingGames: List<Game> = listOf(
         // 2026年9月
-        Game("bw01", Team.BLOWINDS, "岐阜", "2026/9/26", "土", "14:05", "OKBぎふ清流アリーナ", "販売中", "販売中", isHome = false, sortKey = "20260926-1405"),
+        Game("bw01", Team.BLOWINDS, "岐阜", "2026/9/26", "土", "14:05", "OKBぎふ清流アリーナ", "販売中", "販売中", isHome = false, sortKey = "20260926-1405", resultPageUrl = "https://www.fukuiblowinds.com/game/?YMD=20260926&KEY=507167&DOUBLEHEADERFLAG=false&TAB=R"),
         Game("bw02", Team.BLOWINDS, "岐阜", "2026/9/27", "日", "14:05", "OKBぎふ清流アリーナ", "販売中", "販売中", isHome = false, sortKey = "20260927-1405"),
         // 2026年10月
         Game("bw03", Team.BLOWINDS, "金沢", "2026/10/3", "土", "15:05", "セーレン・ドリームアリーナ", "販売中", "販売中", isHome = true, sortKey = "20261003-1505"),

@@ -22,5 +22,7 @@ data class Game(
     val ticketStatus: String,
     val ticketSaleStart: String,
     val isHome: Boolean = true,
-    val sortKey: String
+    val sortKey: String,
+    // 公式サイトの結果ページURL(分かっているものだけ)。開いて自分でスコアを確認する用。
+    val resultPageUrl: String? = null
 )

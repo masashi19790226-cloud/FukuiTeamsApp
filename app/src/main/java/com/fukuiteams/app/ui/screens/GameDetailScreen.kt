@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.CalendarContract
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,9 +44,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,8 +57,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.MockData
+import com.fukuiteams.app.data.WatchMethod
+import com.fukuiteams.app.data.isUpcoming
+import com.fukuiteams.app.data.loadWatchMethod
+import com.fukuiteams.app.data.saveWatchMethod
 import com.fukuiteams.app.data.startEpochMillis
 import com.fukuiteams.app.model.Game
+import com.fukuiteams.app.data.GameOutcome
+import com.fukuiteams.app.data.GameResultsRepository
+import com.fukuiteams.app.data.RemoteGameResult
+import com.fukuiteams.app.data.loadGameOutcome
+import com.fukuiteams.app.data.saveGameOutcome
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -65,6 +77,7 @@ import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
 import java.net.URLEncoder
+import kotlinx.coroutines.launch
 
 /**
  * 「試合」タブ。上から: チーム選択 → 譲渡・招待チケット検索(チーム単位) →
@@ -81,15 +94,20 @@ fun GameDetailScreen(
     val initialTeam = MockData.upcomingGames.firstOrNull { it.id == gameId }?.team ?: Team.BLOWINDS
     var selectedTeam by remember { mutableStateOf(initialTeam) }
 
-    val teamGames = remember(selectedTeam) {
+    val allTeamGames = remember(selectedTeam) {
         MockData.upcomingGames.filter { it.team == selectedTeam }.sortedBy { it.sortKey }
     }
+    val upcomingTeamGames = remember(allTeamGames) { allTeamGames.filter { it.isUpcoming() } }
+    val pastTeamGames = remember(allTeamGames) { allTeamGames.filterNot { it.isUpcoming() }.sortedByDescending { it.sortKey } }
+
+    var scheduleTabIndex by remember(selectedTeam) { mutableStateOf(0) }
+
     // ホーム画面から特定の試合を選んで遷移してきた場合はそれを表示。
     // 「試合」タブを直接開いた場合は、何も自動選択しない。
     var selectedGameId by remember(selectedTeam) {
-        mutableStateOf(gameId?.takeIf { id -> teamGames.any { it.id == id } })
+        mutableStateOf(gameId?.takeIf { id -> allTeamGames.any { it.id == id } })
     }
-    val game = teamGames.firstOrNull { it.id == selectedGameId }
+    val game = allTeamGames.firstOrNull { it.id == selectedGameId }
     val context = LocalContext.current
 
     // Xの個人投稿は「チーム名+チケット+譲」で広めに検索。
@@ -147,17 +165,37 @@ fun GameDetailScreen(
                 SelectedGameDetail(game, onOpenInvitations)
             }
 
-            if (teamGames.isEmpty()) {
+            if (allTeamGames.isEmpty()) {
                 EmptyTeamState(selectedTeam)
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    SectionTitle("試合スケジュール")
-                    teamGames.forEach { g ->
-                        ScheduleRow(
-                            game = g,
-                            selected = g.id == selectedGameId,
-                            onClick = { selectedGameId = g.id }
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ScheduleTabChip(
+                            label = "今後の試合 ${upcomingTeamGames.size}",
+                            selected = scheduleTabIndex == 0,
+                            onClick = { scheduleTabIndex = 0 }
                         )
+                        ScheduleTabChip(
+                            label = "過去の試合 ${pastTeamGames.size}",
+                            selected = scheduleTabIndex == 1,
+                            onClick = { scheduleTabIndex = 1 }
+                        )
+                    }
+                    val listToShow = if (scheduleTabIndex == 0) upcomingTeamGames else pastTeamGames
+                    if (listToShow.isEmpty()) {
+                        Text(
+                            if (scheduleTabIndex == 0) "今後の試合予定はありません" else "過去の試合の記録はまだありません",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = InkSoft
+                        )
+                    } else {
+                        listToShow.forEach { g ->
+                            ScheduleRow(
+                                game = g,
+                                selected = g.id == selectedGameId,
+                                onClick = { selectedGameId = g.id }
+                            )
+                        }
                     }
                 }
             }
@@ -195,6 +233,24 @@ private fun TicketSearchSection(
                 style = MaterialTheme.typography.bodySmall
             )
         }
+    }
+}
+
+@Composable
+private fun ScheduleTabChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(if (selected) Ink else White)
+            .border(BorderStroke(1.dp, if (selected) Ink else LineGray), RoundedCornerShape(20.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+    ) {
+        Text(
+            label,
+            color = if (selected) White else InkSoft,
+            style = MaterialTheme.typography.labelMedium
+        )
     }
 }
 
@@ -270,9 +326,16 @@ private fun EmptyTeamState(team: Team) {
 @Composable
 private fun SelectedGameDetail(game: Game, onOpenInvitations: () -> Unit) {
     val context = LocalContext.current
+    val isPast = !game.isUpcoming()
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        MatchHeaderCard(game)
+        MatchHeaderCard(game, isPast)
+
+        if (isPast) {
+            PastGameResultCard(game)
+            WatchMethodPicker(game)
+            return@Column
+        }
 
         OutlinedButton(
             onClick = { addToCalendar(context, game) },
@@ -331,7 +394,183 @@ private fun SelectedGameDetail(game: Game, onOpenInvitations: () -> Unit) {
 }
 
 @Composable
-private fun MatchHeaderCard(game: Game) {
+private fun PastGameResultCard(game: Game) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var outcome by remember(game.id) { mutableStateOf<GameOutcome?>(null) }
+    var autoResult by remember(game.id) { mutableStateOf<RemoteGameResult?>(null) }
+    var autoResultChecked by remember(game.id) { mutableStateOf(false) }
+
+    LaunchedEffect(game.id) {
+        outcome = loadGameOutcome(context, game.id)
+        autoResult = GameResultsRepository.fetch()[game.id]
+        autoResultChecked = true
+    }
+
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        border = BorderStroke(1.dp, LineGray)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            SectionTitle("試合結果")
+
+            val result = autoResult
+            if (result != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text("${result.myScore} - ${result.opponentScore}", style = MaterialTheme.typography.titleLarge)
+                }
+                val diff = result.myScore - result.opponentScore
+                val (label, color) = when {
+                    diff > 0 -> "勝利" to androidx.compose.ui.graphics.Color(0xFF2F6846)
+                    diff < 0 -> "敗戦" to androidx.compose.ui.graphics.Color(0xFFB3261E)
+                    else -> "引き分け" to InkSoft
+                }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(color.copy(alpha = 0.12f))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                    ) {
+                        Text(label, color = color, style = MaterialTheme.typography.labelLarge)
+                    }
+                }
+                Text(
+                    "公式サイトから自動取得したスコアです",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                return@Column
+            }
+
+            if (game.resultPageUrl != null) {
+                OutlinedButton(
+                    onClick = { openUrl(context, game.resultPageUrl) },
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("結果ページを見る(公式サイト)") }
+            }
+
+            Text(
+                if (autoResultChecked) "自動取得はまだできていません。見てきた結果を、タップで記録できます。" else "自動取得を確認中…",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                GameOutcome.values().forEach { option ->
+                    val isSelected = outcome == option
+                    val color = when (option) {
+                        GameOutcome.WIN -> androidx.compose.ui.graphics.Color(0xFF2F6846)
+                        GameOutcome.LOSE -> androidx.compose.ui.graphics.Color(0xFFB3261E)
+                        GameOutcome.DRAW -> InkSoft
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(if (isSelected) color.copy(alpha = 0.12f) else White)
+                            .border(
+                                BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) color else LineGray),
+                                RoundedCornerShape(10.dp)
+                            )
+                            .clickable {
+                                outcome = option
+                                scope.launch { saveGameOutcome(context, game.id, option) }
+                            }
+                            .padding(vertical = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(option.label, color = if (isSelected) color else Ink, style = MaterialTheme.typography.labelLarge)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WatchMethodPicker(game: Game) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var selected by remember(game.id) { mutableStateOf<WatchMethod?>(null) }
+
+    LaunchedEffect(game.id) {
+        selected = loadWatchMethod(context, game.id)
+    }
+
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        border = BorderStroke(1.dp, LineGray)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            SectionTitle("どうやって観戦しましたか?")
+            Text(
+                "この記録はあなたの端末だけに保存され、どこにも送信されません。",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                WatchMethod.values().forEach { method ->
+                    val isSelected = selected == method
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(if (isSelected) Accent.copy(alpha = 0.10f) else White)
+                            .border(
+                                BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) Accent else LineGray),
+                                RoundedCornerShape(10.dp)
+                            )
+                            .clickable {
+                                selected = method
+                                scope.launch { saveWatchMethod(context, game.id, method) }
+                            }
+                            .padding(horizontal = 14.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(18.dp)
+                                .clip(CircleShape)
+                                .border(BorderStroke(2.dp, if (isSelected) Accent else LineGray), CircleShape)
+                                .background(if (isSelected) Accent else White),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (isSelected) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .clip(CircleShape)
+                                        .background(White)
+                                )
+                            }
+                        }
+                        Text(method.label, style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+        }
+    }
+}
+
+
     val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(14.dp),
@@ -358,7 +597,7 @@ private fun MatchHeaderCard(game: Game) {
                         .background(DividerGray)
                         .padding(horizontal = 8.dp, vertical = 2.dp)
                 ) {
-                    Text("試合前", style = MaterialTheme.typography.labelSmall)
+                    Text(if (isPast) "試合終了" else "試合前", style = MaterialTheme.typography.labelSmall)
                 }
             }
             Row(
