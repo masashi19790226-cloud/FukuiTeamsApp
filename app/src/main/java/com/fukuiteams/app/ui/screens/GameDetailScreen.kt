@@ -571,6 +571,8 @@ private fun WatchMethodPicker(game: Game) {
 }
 
 
+@Composable
+private fun MatchHeaderCard(game: Game, isPast: Boolean = false) {
     val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(14.dp),
