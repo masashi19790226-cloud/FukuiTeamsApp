@@ -15,7 +15,8 @@ data class NewsItem(
     val team: Team,
     val source: String,
     val postedAt: String,
-    val headline: String
+    val headline: String,
+    val url: String
 )
 
 data class Game(

@@ -1,5 +1,8 @@
 package com.fukuiteams.app.ui.screens
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -117,6 +121,7 @@ fun HomeScreen(
                     val games = MockData.upcomingGames
                         .filter { selectedTeam == null || it.team == selectedTeam }
                         .sortedBy { it.sortKey }
+                        .take(10)
                     games.forEach { game ->
                         GameCard(game = game, onClick = { onOpenGame(game.id) })
                     }
@@ -126,6 +131,7 @@ fun HomeScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("新着ニュース", style = MaterialTheme.typography.titleSmall)
+                    val context = LocalContext.current
                     Card(
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(containerColor = White),
@@ -134,7 +140,7 @@ fun HomeScreen(
                         val newsList = MockData.news.filter { selectedTeam == null || it.team == selectedTeam }
                         Column {
                             newsList.forEachIndexed { index, news ->
-                                NewsRow(news)
+                                NewsRow(news, onClick = { openUrl(context, news.url) })
                                 if (index != newsList.lastIndex) {
                                     Divider(color = DividerGray)
                                 }
@@ -216,10 +222,11 @@ private fun GameCard(game: Game, onClick: () -> Unit) {
 }
 
 @Composable
-private fun NewsRow(news: NewsItem) {
+private fun NewsRow(news: NewsItem, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -247,4 +254,9 @@ private fun NewsRow(news: NewsItem) {
             Text(news.headline, style = MaterialTheme.typography.bodyLarge)
         }
     }
+}
+
+private fun openUrl(context: Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    context.startActivity(intent)
 }

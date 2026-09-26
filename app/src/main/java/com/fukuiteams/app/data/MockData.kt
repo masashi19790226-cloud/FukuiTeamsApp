@@ -21,15 +21,15 @@ object MockData {
      * 公式サイトのニュースページのURLを教えてもらい、同じ手順で反映する。
      */
     val news = listOf(
-        NewsItem(Team.BLOWINDS, "公式サイト", "2026/9/24", "【お知らせ】クラブ方針・3カ年ロードマップ発表"),
-        NewsItem(Team.BLOWINDS, "公式サイト", "2026/9/24", "内藤 英真 選手 契約(プロ)締結のお知らせ"),
-        NewsItem(Team.BLOWINDS, "公式サイト", "2026/9/23", "【第8節】11/4(水)vs 鹿児島レブナイズ 冠パートナー決定のお知らせ"),
-        NewsItem(Team.UNITED, "公式サイト", "2026/9/25", "第6回「大人サッカー教室」参加者募集のお知らせ"),
-        NewsItem(Team.UNITED, "公式サイト", "2026/9/23", "【9/27 新福FC戦】試合観戦について"),
-        NewsItem(Team.UNITED, "公式サイト", "2026/9/23", "「ファン交流会2026」開催のお知らせ"),
-        NewsItem(Team.RAC, "公式サイト", "2026/9/22", "【第11節】メットライフ生命日本女子Fリーグ2026-27 結果"),
-        NewsItem(Team.RAC, "公式サイト", "2026/9/17", "【第11節】メットライフ生命日本女子Fリーグ2026-27 のお知らせ"),
-        NewsItem(Team.RAC, "公式サイト", "2026/9/13", "【第10節】メットライフ生命日本女子Fリーグ2026-27 福井開催 結果")
+        NewsItem(Team.BLOWINDS, "公式サイト", "2026/9/24", "【お知らせ】クラブ方針・3カ年ロードマップ発表", "https://www.fukuiblowinds.com/news/"),
+        NewsItem(Team.BLOWINDS, "公式サイト", "2026/9/24", "内藤 英真 選手 契約(プロ)締結のお知らせ", "https://www.fukuiblowinds.com/news/"),
+        NewsItem(Team.BLOWINDS, "公式サイト", "2026/9/23", "【第8節】11/4(水)vs 鹿児島レブナイズ 冠パートナー決定のお知らせ", "https://www.fukuiblowinds.com/news/"),
+        NewsItem(Team.UNITED, "公式サイト", "2026/9/25", "第6回「大人サッカー教室」参加者募集のお知らせ", "https://fukuiunited.co.jp/news/"),
+        NewsItem(Team.UNITED, "公式サイト", "2026/9/23", "【9/27 新福FC戦】試合観戦について", "https://fukuiunited.co.jp/news/"),
+        NewsItem(Team.UNITED, "公式サイト", "2026/9/23", "「ファン交流会2026」開催のお知らせ", "https://fukuiunited.co.jp/news/"),
+        NewsItem(Team.RAC, "公式サイト", "2026/9/22", "【第11節】メットライフ生命日本女子Fリーグ2026-27 結果", "https://ruck-fukui.com/news"),
+        NewsItem(Team.RAC, "公式サイト", "2026/9/17", "【第11節】メットライフ生命日本女子Fリーグ2026-27 のお知らせ", "https://ruck-fukui.com/news"),
+        NewsItem(Team.RAC, "公式サイト", "2026/9/13", "【第10節】メットライフ生命日本女子Fリーグ2026-27 福井開催 結果", "https://ruck-fukui.com/news")
     )
 
     val upcomingGames: List<Game> = listOf(
