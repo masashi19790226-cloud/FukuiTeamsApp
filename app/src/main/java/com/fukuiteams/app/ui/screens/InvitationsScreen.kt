@@ -67,11 +67,13 @@ fun InvitationsScreen() {
     var isRefreshing by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(refreshKey) {
+    suspend fun refresh() {
         isRefreshing = true
         alertsResult = InvitationAlertsRepository.fetch()
         isRefreshing = false
     }
+
+    LaunchedEffect(refreshKey) { refresh() }
 
     val teamFiltered = (alertsResult as? AlertsResult.Success)?.items
         ?.filter { selectedTeam == null || it.teamId == selectedTeam?.name }
@@ -84,7 +86,7 @@ fun InvitationsScreen() {
             TopAppBar(
                 title = { Text("無料招待・プレゼント", style = MaterialTheme.typography.titleLarge) },
                 actions = {
-                    IconButton(onClick = { refreshKey++ }) {
+                    IconButton(onClick = { scope.launch { refresh() } }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "更新")
                     }
                 },
@@ -95,50 +97,50 @@ fun InvitationsScreen() {
     ) { padding ->
         PullToRefreshBox(
             isRefreshing = isRefreshing,
-            onRefresh = { refreshKey++ },
+            onRefresh = { scope.launch { refresh() } },
             modifier = Modifier.padding(padding)
         ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            LazyRow(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                item {
-                    FilterChip(
-                        selected = selectedTeam == null,
-                        onClick = { selectedTeam = null },
-                        label = { Text("すべて") },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Ink,
-                            selectedLabelColor = White
+            Column(modifier = Modifier.fillMaxWidth()) {
+                LazyRow(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    item {
+                        FilterChip(
+                            selected = selectedTeam == null,
+                            onClick = { selectedTeam = null },
+                            label = { Text("すべて") },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Ink,
+                                selectedLabelColor = White
+                            )
                         )
-                    )
+                    }
+                    items(Team.values().toList()) { team ->
+                        FilterChip(
+                            selected = selectedTeam == team,
+                            onClick = { selectedTeam = if (selectedTeam == team) null else team },
+                            leadingIcon = { TeamBadge(team, size = 20.dp, fontSize = 10.sp) },
+                            label = { Text(team.displayName) }
+                        )
+                    }
                 }
-                items(Team.values().toList()) { team ->
-                    FilterChip(
-                        selected = selectedTeam == team,
-                        onClick = { selectedTeam = if (selectedTeam == team) null else team },
-                        leadingIcon = { TeamBadge(team, size = 20.dp, fontSize = 10.sp) },
-                        label = { Text(team.displayName) }
-                    )
+
+                TabRow(
+                    selectedTabIndex = tabIndex,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = Accent
+                ) {
+                    Tab(selected = tabIndex == 0, onClick = { tabIndex = 0 }, text = { Text("募集中 ${openItems.size}") })
+                    Tab(selected = tabIndex == 1, onClick = { tabIndex = 1 }, text = { Text("アーカイブ ${archivedItems.size}") })
+                }
+
+                if (tabIndex == 0) {
+                    OpenInvitationsList(alertsResult, openItems)
+                } else {
+                    ArchivedInvitationsList(archivedItems)
                 }
             }
-
-            TabRow(
-                selectedTabIndex = tabIndex,
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = Accent
-            ) {
-                Tab(selected = tabIndex == 0, onClick = { tabIndex = 0 }, text = { Text("募集中 ${openItems.size}") })
-                Tab(selected = tabIndex == 1, onClick = { tabIndex = 1 }, text = { Text("アーカイブ ${archivedItems.size}") })
-            }
-
-            if (tabIndex == 0) {
-                OpenInvitationsList(alertsResult, openItems)
-            } else {
-                ArchivedInvitationsList(archivedItems)
-            }
-        }
         }
     }
 }

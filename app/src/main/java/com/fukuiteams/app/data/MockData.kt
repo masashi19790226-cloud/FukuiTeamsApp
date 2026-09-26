@@ -6,8 +6,10 @@ import com.fukuiteams.app.model.Team
 /**
  * 福井ブローウィンズの試合は、公式サイト(fukuiblowinds.com/schedule/list/)の
  * 2026年9月〜2027年4月の実際の日程を反映している。
- * 丸岡ラック・ユナイテッドは、まだ公式サイトの日程ページを確認できていないため仮データ。
- * 1月以降の試合は開始時刻・会場が「時間未定」「調整中」のまま公式サイトに掲載されている。
+ * 福井ユナイテッドは fukuiunited.co.jp/team/schedule.php、
+ * 福井丸岡RUCKは ruck-fukui.com/schedules-results の実際の日程・結果を反映している
+ * (どちらも今後、新しい試合が発表され次第、公式サイトを見て追記していく想定)。
+ * 1月以降のブローウィンズの試合は開始時刻・会場が「時間未定」「調整中」のまま公式サイトに掲載されている。
  * ニュースは NewsAlertsRepository 経由でGoogleアラートの結果をその都度取得するため、
  * ここには静的なニュースデータは持たない。
  */
@@ -78,9 +80,23 @@ object MockData {
         Game("bw48", Team.BLOWINDS, "越谷", "2027/4/10", "土", "時間未定", "調整中", "販売中", "販売中", isHome = true, sortKey = "20270410-0000"),
         Game("bw49", Team.BLOWINDS, "越谷", "2027/4/11", "日", "時間未定", "調整中", "販売中", "販売中", isHome = true, sortKey = "20270411-0000"),
         Game("bw50", Team.BLOWINDS, "愛媛", "2027/4/24", "土", "時間未定", "調整中", "販売中", "販売中", isHome = true, sortKey = "20270424-0000"),
-        Game("bw51", Team.BLOWINDS, "愛媛", "2027/4/25", "日", "時間未定", "調整中", "販売中", "販売中", isHome = true, sortKey = "20270425-0000")
+        Game("bw51", Team.BLOWINDS, "愛媛", "2027/4/25", "日", "時間未定", "調整中", "販売中", "販売中", isHome = true, sortKey = "20270425-0000"),
 
-        // 丸岡ラック・ユナイテッドは公式サイトの日程ページ未確認のため、まだ含めていない。
-        // URLが分かり次第、ブローウィンズと同じ手順でここに追加する。
+        // 福井ユナイテッド(fukuiunited.co.jp/team/schedule.php より、2026年9〜10月分)
+        Game("un01", Team.UNITED, "新潟医療福祉大学FC", "2026/9/27", "日", "11:00", "新潟聖籠スポーツセンターアルビレッジEピッチ", "情報なし", "-", isHome = false, sortKey = "20260927-1100"),
+        Game("un02", Team.UNITED, "富山新庄クラブ", "2026/10/4", "日", "13:30", "岩瀬スポーツ公園サッカー・ラグビー場", "情報なし", "-", isHome = false, sortKey = "20261004-1330"),
+
+        // 福井丸岡RUCK(ruck-fukui.com/schedules-results より、2026年メットライフ生命日本女子フットサルリーグ)
+        // 結果(スコア)も同ページに掲載されていたため、data/results.json 側にも反映済み。
+        Game("rc01", Team.RAC, "フウガドールすみだレディース", "2026/6/14", "日", "14:00", "セーレン・ドリームアリーナ", "終了", "-", isHome = true, sortKey = "20260614-1400", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104694"),
+        Game("rc02", Team.RAC, "アニージャ湘南", "2026/6/28", "日", "14:00", "セーレン・ドリームアリーナ", "終了", "-", isHome = true, sortKey = "20260628-1400", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104704"),
+        Game("rc03", Team.RAC, "立川アスレティックFCレディース", "2026/7/5", "日", "16:00", "サイデン化学アリーナさいたま", "終了", "-", isHome = false, sortKey = "20260705-1600", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104709"),
+        Game("rc04", Team.RAC, "アルコ神戸", "2026/7/19", "日", "14:00", "セーレン・ドリームアリーナ", "終了", "-", isHome = true, sortKey = "20260719-1400", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104714"),
+        Game("rc05", Team.RAC, "バルドラール浦安ラス・ボニータス", "2026/7/25", "土", "11:00", "北海きたえーる", "終了", "-", isHome = false, sortKey = "20260725-1100", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104715"),
+        Game("rc06", Team.RAC, "SWHレディース西宮", "2026/8/2", "日", "13:30", "ニューライフアリーナ龍ケ崎", "終了", "-", isHome = false, sortKey = "20260802-1330", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104723"),
+        Game("rc07", Team.RAC, "ミネルバ宇部", "2026/8/23", "日", "14:00", "セーレン・ドリームアリーナ", "終了", "-", isHome = true, sortKey = "20260823-1400", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104729"),
+        Game("rc08", Team.RAC, "流経大メニーナ龍ケ崎", "2026/9/5", "土", "13:30", "神戸市立中央体育館", "終了", "-", isHome = false, sortKey = "20260905-1330", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104731"),
+        Game("rc09", Team.RAC, "さいたまサイコロ", "2026/9/12", "土", "15:00", "セーレン・ドリームアリーナ", "終了", "-", isHome = true, sortKey = "20260912-1500", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104737"),
+        Game("rc10", Team.RAC, "エスポラーダ北海道イルネーヴェ", "2026/9/19", "土", "13:30", "西宮市立中央体育館", "終了", "-", isHome = false, sortKey = "20260919-1330", resultPageUrl = "https://w-fleague.jp/score/result.html?gid=104741")
     )
 }

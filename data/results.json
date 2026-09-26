@@ -1,1 +1,12 @@
-{}
+{
+  "rc01": {"my_score": 3, "opponent_score": 0, "checked_at": "manual: ruck-fukui.com/schedules-results"},
+  "rc02": {"my_score": 5, "opponent_score": 2, "checked_at": "manual: ruck-fukui.com/schedules-results"},
+  "rc03": {"my_score": 3, "opponent_score": 4, "checked_at": "manual: ruck-fukui.com/schedules-results"},
+  "rc04": {"my_score": 1, "opponent_score": 3, "checked_at": "manual: ruck-fukui.com/schedules-results"},
+  "rc05": {"my_score": 0, "opponent_score": 4, "checked_at": "manual: ruck-fukui.com/schedules-results"},
+  "rc06": {"my_score": 1, "opponent_score": 4, "checked_at": "manual: ruck-fukui.com/schedules-results"},
+  "rc07": {"my_score": 3, "opponent_score": 2, "checked_at": "manual: ruck-fukui.com/schedules-results"},
+  "rc08": {"my_score": 4, "opponent_score": 5, "checked_at": "manual: ruck-fukui.com/schedules-results"},
+  "rc09": {"my_score": 7, "opponent_score": 0, "checked_at": "manual: ruck-fukui.com/schedules-results"},
+  "rc10": {"my_score": 0, "opponent_score": 0, "checked_at": "manual: ruck-fukui.com/schedules-results"}
+}
