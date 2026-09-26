@@ -72,7 +72,9 @@ fun GameDetailScreen(
     var selectedGameId by remember(gameId) { mutableStateOf(gameId ?: MockData.upcomingGames.first().id) }
     val game = MockData.upcomingGames.firstOrNull { it.id == selectedGameId } ?: MockData.upcomingGames.first()
     val context = LocalContext.current
-    val searchKeyword = "${game.team.displayName} ${game.dateLabel} 譲"
+    // 実際の投稿は西暦や正確な日付を書かないことが多いため、日付は含めず
+    // 「チーム名+チケット+譲」程度の広めのキーワードで検索する。
+    val searchKeyword = "${game.team.displayName} チケット 譲"
     val encodedKeyword = URLEncoder.encode(searchKeyword, "UTF-8")
 
     Scaffold(
@@ -175,7 +177,7 @@ fun GameDetailScreen(
 
             SectionTitle("譲渡・出品を探す(非公式)")
             Text(
-                "各サービスの検索結果を開きます(キーワード:${game.team.displayName} ${game.dateLabel} 譲)",
+                "各サービスの検索結果を開きます(キーワード:${game.team.displayName} チケット 譲)",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
