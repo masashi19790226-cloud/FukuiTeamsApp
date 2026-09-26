@@ -19,7 +19,6 @@ data class Game(
     val dayOfWeek: String,
     val timeLabel: String,
     val venue: String,
-    val hasInvitation: Boolean,
     val ticketStatus: String,
     val ticketSaleStart: String,
     val isHome: Boolean = true,

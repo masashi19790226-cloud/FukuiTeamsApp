@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.AlertsResult
 import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
+import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -50,21 +51,9 @@ import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
-import java.time.Instant
 
-// 検知からこの日数を過ぎたら「終了した可能性が高い」とみなし、自動的にアーカイブへ移す。
-// 応募締切や当選結果までは分からないため、あくまで日付だけによる簡易的な振り分け。
+// アーカイブ表示用の説明文で使う日数(実際の判定はInvitationAlertsRepository.isLikelyClosed()を使用)
 private const val ARCHIVE_AFTER_DAYS = 14L
-
-private fun isLikelyClosed(detectedAt: String): Boolean {
-    return try {
-        val instant = Instant.parse(detectedAt)
-        val ageMillis = System.currentTimeMillis() - instant.toEpochMilli()
-        ageMillis > ARCHIVE_AFTER_DAYS * 24 * 60 * 60 * 1000
-    } catch (e: Exception) {
-        false
-    }
-}
 
 @Composable
 fun InvitationsScreen() {
@@ -81,8 +70,8 @@ fun InvitationsScreen() {
     val teamFiltered = (alertsResult as? AlertsResult.Success)?.items
         ?.filter { selectedTeam == null || it.teamId == selectedTeam?.name }
         ?: emptyList()
-    val openItems = teamFiltered.filterNot { isLikelyClosed(it.detectedAt) }
-    val archivedItems = teamFiltered.filter { isLikelyClosed(it.detectedAt) }
+    val openItems = teamFiltered.filterNot { it.isLikelyClosed() }
+    val archivedItems = teamFiltered.filter { it.isLikelyClosed() }
 
     Scaffold(
         topBar = {

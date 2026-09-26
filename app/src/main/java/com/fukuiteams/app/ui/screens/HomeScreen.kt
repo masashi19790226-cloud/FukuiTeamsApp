@@ -49,9 +49,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.AlertsResult
+import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.MockData
 import com.fukuiteams.app.data.NewsAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
+import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
@@ -71,11 +73,23 @@ fun HomeScreen(
     var selectedTeam by remember { mutableStateOf<Team?>(null) }
     var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
     var newsRefreshKey by remember { mutableIntStateOf(0) }
+    var invitationsResult by remember { mutableStateOf<AlertsResult?>(null) }
 
     LaunchedEffect(newsRefreshKey) {
         newsResult = null
         newsResult = NewsAlertsRepository.fetch()
     }
+    LaunchedEffect(Unit) {
+        invitationsResult = InvitationAlertsRepository.fetch()
+    }
+
+    // 「招待あり」タグは、Googleアラートで実際に募集中(14日以内に検知)の情報がある
+    // チームの試合にだけ付ける。
+    val teamsWithOpenInvites = (invitationsResult as? AlertsResult.Success)?.items
+        ?.filterNot { it.isLikelyClosed() }
+        ?.map { it.teamId }
+        ?.toSet()
+        ?: emptySet()
 
     Scaffold(
         topBar = {
@@ -138,7 +152,11 @@ fun HomeScreen(
                         )
                     } else {
                         games.forEach { game ->
-                            GameCard(game = game, onClick = { onOpenGame(game.id) })
+                            GameCard(
+                                game = game,
+                                hasOpenInvite = game.team.name in teamsWithOpenInvites,
+                                onClick = { onOpenGame(game.id) }
+                            )
                         }
                     }
                 }
@@ -223,7 +241,7 @@ private fun InviteBanner(onClick: () -> Unit) {
 }
 
 @Composable
-private fun GameCard(game: Game, onClick: () -> Unit) {
+private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -250,7 +268,7 @@ private fun GameCard(game: Game, onClick: () -> Unit) {
                 Text("vs ${game.opponent}", style = MaterialTheme.typography.titleMedium)
                 Text("${game.timeLabel}・${game.venue}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
             }
-            if (game.hasInvitation) {
+            if (hasOpenInvite) {
                 Text(
                     "招待あり",
                     color = Accent,
