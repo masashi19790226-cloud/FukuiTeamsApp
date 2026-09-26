@@ -1,4 +1,4 @@
-name: Check Invitation Alerts
+name: Check Alerts (Invitations & News)
 
 on:
   schedule:
@@ -28,6 +28,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/invitations_raw.json
-          git diff --cached --quiet && echo "変更なし" || git commit -m "chore: 無料招待アラートの自動更新"
+          git add data/invitations_raw.json data/news_raw.json
+          git diff --cached --quiet && echo "変更なし" || git commit -m "chore: 無料招待・ニュースの自動更新"
           git push

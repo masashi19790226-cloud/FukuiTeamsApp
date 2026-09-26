@@ -72,10 +72,12 @@ fun GameDetailScreen(
     var selectedGameId by remember(gameId) { mutableStateOf(gameId ?: MockData.upcomingGames.first().id) }
     val game = MockData.upcomingGames.firstOrNull { it.id == selectedGameId } ?: MockData.upcomingGames.first()
     val context = LocalContext.current
-    // 実際の投稿は西暦や正確な日付を書かないことが多いため、日付は含めず
-    // 「チーム名+チケット+譲」程度の広めのキーワードで検索する。
-    val searchKeyword = "${game.team.displayName} チケット 譲"
-    val encodedKeyword = URLEncoder.encode(searchKeyword, "UTF-8")
+    // Xの個人投稿は「チーム名+チケット+譲」で広めに検索。
+    // 一方、企業広告は「譲ります」という言い方をしないため、広告検索は「チーム名+チケット」のみにする。
+    val personalSearchKeyword = "${game.team.displayName} チケット 譲"
+    val encodedPersonalKeyword = URLEncoder.encode(personalSearchKeyword, "UTF-8")
+    val adSearchKeyword = "${game.team.displayName} チケット 招待"
+    val encodedAdKeyword = URLEncoder.encode(adSearchKeyword, "UTF-8")
 
     Scaffold(
         topBar = {
@@ -145,8 +147,8 @@ fun GameDetailScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text("この試合の招待 募集中 2件", style = MaterialTheme.typography.bodyLarge)
-                        Text("最も早い締切:あと18時間", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                        Text("無料招待・プレゼント情報を見る", style = MaterialTheme.typography.bodyLarge)
+                        Text("自動検知した最新情報はこちらから確認できます", style = MaterialTheme.typography.bodySmall, color = InkSoft)
                     }
                     Text("›", color = Accent, style = MaterialTheme.typography.titleMedium)
                 }
@@ -177,20 +179,20 @@ fun GameDetailScreen(
 
             SectionTitle("譲渡・出品を探す(非公式)")
             Text(
-                "各サービスの検索結果を開きます(キーワード:${game.team.displayName} チケット 譲)",
+                "検索結果を開きます(X:${personalSearchKeyword}・広告:${adSearchKeyword})",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(
-                    onClick = { openUrl(context, "https://x.com/search?q=$encodedKeyword&f=live") },
+                    onClick = { openUrl(context, "https://x.com/search?q=$encodedPersonalKeyword&f=live") },
                     modifier = Modifier.weight(1f)
                 ) { Text("Xで探す") }
                 OutlinedButton(
                     onClick = {
                         openUrl(
                             context,
-                            "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=JP&q=$encodedKeyword&search_type=keyword_unordered&media_type=all"
+                            "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=JP&q=$encodedAdKeyword&search_type=keyword_unordered&media_type=all"
                         )
                     },
                     modifier = Modifier.weight(1f)

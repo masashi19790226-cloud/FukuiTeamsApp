@@ -1,10 +1,6 @@
 package com.fukuiteams.app.data
 
 import com.fukuiteams.app.model.Game
-import com.fukuiteams.app.model.InvitationEvent
-import com.fukuiteams.app.model.InvitationSource
-import com.fukuiteams.app.model.InvitationStatus
-import com.fukuiteams.app.model.NewsItem
 import com.fukuiteams.app.model.Team
 
 /**
@@ -12,25 +8,10 @@ import com.fukuiteams.app.model.Team
  * 2026年9月〜2027年4月の実際の日程を反映している。
  * 丸岡ラック・ユナイテッドは、まだ公式サイトの日程ページを確認できていないため仮データ。
  * 1月以降の試合は開始時刻・会場が「時間未定」「調整中」のまま公式サイトに掲載されている。
+ * ニュースは NewsAlertsRepository 経由でGoogleアラートの結果をその都度取得するため、
+ * ここには静的なニュースデータは持たない。
  */
 object MockData {
-
-    /**
-     * 各チーム公式サイトのニュース一覧ページ(2026/9/25時点)より。
-     * 一度きりの取得のため、時間が経つと内容が古くなる。更新する場合は
-     * 公式サイトのニュースページのURLを教えてもらい、同じ手順で反映する。
-     */
-    val news = listOf(
-        NewsItem(Team.BLOWINDS, "公式サイト", "2026/9/24", "【お知らせ】クラブ方針・3カ年ロードマップ発表", "https://www.fukuiblowinds.com/news/"),
-        NewsItem(Team.BLOWINDS, "公式サイト", "2026/9/24", "内藤 英真 選手 契約(プロ)締結のお知らせ", "https://www.fukuiblowinds.com/news/"),
-        NewsItem(Team.BLOWINDS, "公式サイト", "2026/9/23", "【第8節】11/4(水)vs 鹿児島レブナイズ 冠パートナー決定のお知らせ", "https://www.fukuiblowinds.com/news/"),
-        NewsItem(Team.UNITED, "公式サイト", "2026/9/25", "第6回「大人サッカー教室」参加者募集のお知らせ", "https://fukuiunited.co.jp/news/"),
-        NewsItem(Team.UNITED, "公式サイト", "2026/9/23", "【9/27 新福FC戦】試合観戦について", "https://fukuiunited.co.jp/news/"),
-        NewsItem(Team.UNITED, "公式サイト", "2026/9/23", "「ファン交流会2026」開催のお知らせ", "https://fukuiunited.co.jp/news/"),
-        NewsItem(Team.RAC, "公式サイト", "2026/9/22", "【第11節】メットライフ生命日本女子Fリーグ2026-27 結果", "https://ruck-fukui.com/news"),
-        NewsItem(Team.RAC, "公式サイト", "2026/9/17", "【第11節】メットライフ生命日本女子Fリーグ2026-27 のお知らせ", "https://ruck-fukui.com/news"),
-        NewsItem(Team.RAC, "公式サイト", "2026/9/13", "【第10節】メットライフ生命日本女子Fリーグ2026-27 福井開催 結果", "https://ruck-fukui.com/news")
-    )
 
     val upcomingGames: List<Game> = listOf(
         // 2026年9月
@@ -97,74 +78,9 @@ object MockData {
         Game("bw48", Team.BLOWINDS, "越谷", "2027/4/10", "土", "時間未定", "調整中", false, "販売中", "販売中", isHome = true, sortKey = "20270410-0000"),
         Game("bw49", Team.BLOWINDS, "越谷", "2027/4/11", "日", "時間未定", "調整中", false, "販売中", "販売中", isHome = true, sortKey = "20270411-0000"),
         Game("bw50", Team.BLOWINDS, "愛媛", "2027/4/24", "土", "時間未定", "調整中", false, "販売中", "販売中", isHome = true, sortKey = "20270424-0000"),
-        Game("bw51", Team.BLOWINDS, "愛媛", "2027/4/25", "日", "時間未定", "調整中", false, "販売中", "販売中", isHome = true, sortKey = "20270425-0000"),
+        Game("bw51", Team.BLOWINDS, "愛媛", "2027/4/25", "日", "時間未定", "調整中", false, "販売中", "販売中", isHome = true, sortKey = "20270425-0000")
 
-        // 丸岡ラック・ユナイテッドは公式サイトの日程ページ未確認のため、仮データのまま
-        Game("un01", Team.UNITED, "新潟医療福祉大学FC", "2026/9/27", "土", "11:00", "新潟聖籠スポーツセンター", false, "販売前", "9/20 18:00", isHome = false, sortKey = "20260927-1100"),
-        Game("rc01", Team.RAC, "金沢フットサルクラブ", "2026/9/29", "月", "19:30", "丸岡体育館", false, "販売中", "9/15 10:00", isHome = true, sortKey = "20260929-1930")
-    )
-
-    val openInvitations = listOf(
-        InvitationEvent(
-            id = "i1",
-            team = Team.BLOWINDS,
-            source = InvitationSource.OFFICIAL,
-            title = "9/26アウェイゲーム ペア招待券プレゼント",
-            fromWho = "@fukui_blowinds",
-            detectedAt = "9/23 09:10",
-            relatedGameLabel = "9/26 vs 岐阜",
-            deadlineLabel = "あと18時間",
-            status = InvitationStatus.OPEN
-        ),
-        InvitationEvent(
-            id = "i2",
-            team = Team.UNITED,
-            source = InvitationSource.AD,
-            title = "スポンサー企業タイアップ 観戦チケットプレゼント",
-            fromWho = "井上金庫グループ(Instagram広告)",
-            detectedAt = "9/22 20:40",
-            relatedGameLabel = "9/27 vs 新潟医療福祉大学FC",
-            deadlineLabel = "あと3日",
-            status = InvitationStatus.OPEN
-        ),
-        InvitationEvent(
-            id = "i3",
-            team = Team.RAC,
-            source = InvitationSource.PERSONAL,
-            title = "急用のため観戦チケット1枚譲ります",
-            fromWho = "Xユーザー投稿",
-            detectedAt = "9/23 07:55",
-            relatedGameLabel = "試合まで5日",
-            deadlineLabel = "試合まで5日",
-            status = InvitationStatus.OPEN
-        )
-    )
-
-    val archivedInvitations = listOf(
-        InvitationEvent(
-            id = "i0",
-            team = Team.BLOWINDS,
-            source = InvitationSource.OFFICIAL,
-            title = "開幕戦 ペア招待券プレゼント",
-            fromWho = "@fukui_blowinds",
-            detectedAt = "8/30 10:00",
-            relatedGameLabel = "9/5 vs アルティーリ千葉",
-            deadlineLabel = "締切済み",
-            status = InvitationStatus.RESULT_LINKED,
-            winners = "3組",
-            applicants = "142件",
-            competitionRate = "約47倍"
-        ),
-        InvitationEvent(
-            id = "i0b",
-            team = Team.UNITED,
-            source = InvitationSource.AD,
-            title = "地元ラジオ局タイアップ招待企画",
-            fromWho = "FM福井(Instagram広告)",
-            detectedAt = "8/20 12:00",
-            relatedGameLabel = "8/24 vs JAPAN.S.C.",
-            deadlineLabel = "終了・結果未反映",
-            status = InvitationStatus.CLOSED_NO_RESULT
-        )
+        // 丸岡ラック・ユナイテッドは公式サイトの日程ページ未確認のため、まだ含めていない。
+        // URLが分かり次第、ブローウィンズと同じ手順でここに追加する。
     )
 }

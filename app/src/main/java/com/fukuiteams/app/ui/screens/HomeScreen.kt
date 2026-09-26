@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -35,7 +36,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,15 +46,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fukuiteams.app.data.AlertsResult
 import com.fukuiteams.app.data.MockData
+import com.fukuiteams.app.data.NewsAlertsRepository
+import com.fukuiteams.app.data.RemoteInvitationAlert
 import com.fukuiteams.app.model.Game
-import com.fukuiteams.app.model.NewsItem
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -68,6 +69,13 @@ fun HomeScreen(
     onOpenNotifications: () -> Unit
 ) {
     var selectedTeam by remember { mutableStateOf<Team?>(null) }
+    var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
+    var newsRefreshKey by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(newsRefreshKey) {
+        newsResult = null
+        newsResult = NewsAlertsRepository.fetch()
+    }
 
     Scaffold(
         topBar = {
@@ -122,35 +130,74 @@ fun HomeScreen(
                         .filter { selectedTeam == null || it.team == selectedTeam }
                         .sortedBy { it.sortKey }
                         .take(10)
-                    games.forEach { game ->
-                        GameCard(game = game, onClick = { onOpenGame(game.id) })
+                    if (games.isEmpty()) {
+                        Text(
+                            "このチームの試合データはまだ準備できていません",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = InkSoft
+                        )
+                    } else {
+                        games.forEach { game ->
+                            GameCard(game = game, onClick = { onOpenGame(game.id) })
+                        }
                     }
                 }
             }
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("新着ニュース", style = MaterialTheme.typography.titleSmall)
-                    val context = LocalContext.current
-                    Card(
-                        shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = White),
-                        border = BorderStroke(1.dp, LineGray)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        val newsList = MockData.news.filter { selectedTeam == null || it.team == selectedTeam }
-                        Column {
-                            newsList.forEachIndexed { index, news ->
-                                NewsRow(news, onClick = { openUrl(context, news.url) })
-                                if (index != newsList.lastIndex) {
-                                    Divider(color = DividerGray)
-                                }
+                        Text("新着ニュース(Googleアラート)", style = MaterialTheme.typography.titleSmall)
+                        IconButton(onClick = { newsRefreshKey++ }) {
+                            Icon(Icons.Filled.Refresh, contentDescription = "ニュースを更新")
+                        }
+                    }
+                    NewsSection(newsResult, selectedTeam)
+                }
+            }
+
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+        }
+    }
+}
+
+@Composable
+private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?) {
+    val context = LocalContext.current
+
+    when (newsResult) {
+        null -> Text("読み込み中…", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        is AlertsResult.Failure -> Text(
+            "取得に失敗しました(通信環境をご確認ください)",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+        is AlertsResult.Success -> {
+            val newsList = newsResult.items.filter {
+                selectedTeam == null || it.teamId == selectedTeam.name
+            }
+            if (newsList.isEmpty()) {
+                Text("まだニュースが自動検知されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            } else {
+                Card(
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = White),
+                    border = BorderStroke(1.dp, LineGray)
+                ) {
+                    Column {
+                        newsList.take(10).forEachIndexed { index, news ->
+                            NewsRow(news, onClick = { openUrl(context, news.link) })
+                            if (index != newsList.take(10).lastIndex) {
+                                Divider(color = DividerGray)
                             }
                         }
                     }
                 }
             }
-
-            item { Spacer(modifier = Modifier.height(8.dp)) }
         }
     }
 }
@@ -166,15 +213,9 @@ private fun InviteBanner(onClick: () -> Unit) {
             .padding(16.dp)
     ) {
         Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("無料招待 募集中", color = White, style = MaterialTheme.typography.labelLarge)
-                Text("3件", color = White, style = MaterialTheme.typography.titleLarge)
-            }
+            Text("無料招待・プレゼント情報", color = White, style = MaterialTheme.typography.labelLarge)
             Spacer(modifier = Modifier.height(4.dp))
-            Text("締切間近:ホームゲーム ペア招待券プレゼント・あと18時間", color = White, style = MaterialTheme.typography.bodyLarge)
+            Text("Googleアラートで自動検知した最新情報をチェックできます", color = White, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(4.dp))
             Text("一覧を見る ›", color = White, style = MaterialTheme.typography.labelLarge)
         }
@@ -222,7 +263,8 @@ private fun GameCard(game: Game, onClick: () -> Unit) {
 }
 
 @Composable
-private fun NewsRow(news: NewsItem, onClick: () -> Unit) {
+private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
+    val team = Team.values().find { it.name == news.teamId }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -235,28 +277,24 @@ private fun NewsRow(news: NewsItem, onClick: () -> Unit) {
             modifier = Modifier
                 .size(48.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .background(news.team.color),
+                .background(team?.color ?: InkSoft),
             contentAlignment = Alignment.Center
         ) {
-            Text(news.team.initial, color = White, style = MaterialTheme.typography.titleMedium)
+            Text(team?.initial ?: "?", color = White, style = MaterialTheme.typography.titleMedium)
         }
         Column {
             Text(
-                buildAnnotatedString {
-                    withStyle(SpanStyle(color = news.team.color, fontWeight = FontWeight.Bold)) {
-                        append(news.team.displayName)
-                    }
-                    append("・${news.source}・${news.postedAt}")
-                },
+                "${team?.displayName ?: news.teamId}・検知 ${news.published.ifBlank { news.detectedAt }}",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
-            Text(news.headline, style = MaterialTheme.typography.bodyLarge)
+            Text(news.title, style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
 
 private fun openUrl(context: Context, url: String) {
+    if (url.isBlank()) return
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     context.startActivity(intent)
 }
