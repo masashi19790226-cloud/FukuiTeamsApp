@@ -148,6 +148,7 @@ fun GameDetailScreen(
 
 @Composable
 private fun EmptyTeamState(team: Team) {
+    val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = White),
@@ -157,14 +158,21 @@ private fun EmptyTeamState(team: Team) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text("${team.displayName}の試合データはまだ準備できていません", style = MaterialTheme.typography.bodyLarge)
             Text(
-                "公式サイトの日程ページが確認でき次第、反映します。",
+                "公式サイトの日程ページが確認でき次第、反映します。それまでは公式サイトを直接ご覧ください。",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
+            if (team.officialSiteUrl != null) {
+                Button(
+                    onClick = { openUrl(context, team.officialSiteUrl) },
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Ink),
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("公式サイトを開く") }
+            }
         }
     }
 }
