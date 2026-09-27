@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "id": "official:https://www.fukuiblowinds.com/news/detail/id=51634",
+    "team": "BLOWINDS",
+    "title": "【第8節】11/4（水）vs 鹿児島レブナイズ 冠パートナー決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51634",
+    "published": "2026-09-23T09:00:00+09:00",
+    "detected_at": "2026-09-23T00:00:00+00:00",
+    "snippet": "今シーズンも「インフロニア B.Hi TOUCH」がやってきます！ 昨年に引き続き、インフロニアグループの前田製作所の建設機械「かにクレーン」を使ったシュートチャレンジゲーム「かに",
+    "source": "ブローウィンズ公式"
+  },
+  {
+    "id": "official:https://www.city.fukui.lg.jp/kyoiku/sports/sports/p073437.html",
+    "team": "BLOWINDS",
+    "title": "2026年9月25日  スポーツ   -->  【応募は9/29まで！福井ブローウィンズ🏀】福井ブローウィンズホームゲームに50組100名を無料招待します✨",
+    "link": "https://www.city.fukui.lg.jp/kyoiku/sports/sports/p073437.html",
+    "published": "2026-09-25T09:00:00+09:00",
+    "detected_at": "2026-09-27T14:42:52.606369+00:00",
+    "snippet": "",
+    "source": "福井市"
+  }
+]
