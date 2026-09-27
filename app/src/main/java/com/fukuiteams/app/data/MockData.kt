@@ -4,6 +4,9 @@ import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.model.Team
 
 /**
+ * 【重要】現在、試合日程の本体は GitHub 上の data/games.json。アプリはそちらを読み込む(GamesRepository)。
+ * このファイルは、初回起動で通信できないときだけ使う予備データ。日程の追加・変更は games.json で行う。
+ *
  * 福井ブローウィンズの試合は、公式サイト(fukuiblowinds.com/schedule/list/)の
  * 2026年9月〜2027年4月の実際の日程を反映している。
  * 福井ユナイテッドは fukuiunited.co.jp/team/schedule.php、

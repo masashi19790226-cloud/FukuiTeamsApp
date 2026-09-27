@@ -41,24 +41,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.AlertsResult
 import com.fukuiteams.app.data.InvitationAlertsRepository
-import com.fukuiteams.app.data.MockData
+import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.NewsAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
 import com.fukuiteams.app.data.isLikelyClosed
@@ -72,7 +72,6 @@ import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -82,24 +81,23 @@ fun HomeScreen(
 ) {
     var selectedTeam by remember { mutableStateOf<Team?>(null) }
     var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
-    var newsRefreshKey by remember { mutableIntStateOf(0) }
     var invitationsResult by remember { mutableStateOf<AlertsResult?>(null) }
-    var isRefreshing by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+    val pullToRefreshState = rememberPullToRefreshState()
+    val appContext = LocalContext.current.applicationContext
 
     suspend fun refreshAll() {
-        isRefreshing = true
+        GamesRepository.refresh(appContext)
         invitationsResult = InvitationAlertsRepository.fetch()
         newsResult = NewsAlertsRepository.fetch()
-        isRefreshing = false
     }
 
-    LaunchedEffect(newsRefreshKey) {
-        newsResult = null
-        newsResult = NewsAlertsRepository.fetch()
-    }
-    LaunchedEffect(Unit) {
-        invitationsResult = InvitationAlertsRepository.fetch()
+    LaunchedEffect(Unit) { refreshAll() }
+
+    if (pullToRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            refreshAll()
+            pullToRefreshState.endRefresh()
+        }
     }
 
     // 「招待あり」タグは、Googleアラートで実際に募集中(14日以内に検知)の情報がある
@@ -124,10 +122,11 @@ fun HomeScreen(
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = { scope.launch { refreshAll() } },
-            modifier = Modifier.padding(padding)
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
         LazyColumn(
             modifier = Modifier
@@ -166,12 +165,12 @@ fun HomeScreen(
                     // 特定のチームを選んだときはそのチームの直近3件、「すべて」のときは全体の直近3件を表示。
                     // 試合スケジュールの一覧は「試合」タブにまとめてあるので、ここでは概要だけ。
                     val games = if (selectedTeam != null) {
-                        MockData.upcomingGames
+                        GamesRepository.games
                             .filter { it.team == selectedTeam && it.isUpcoming() }
                             .sortedBy { it.sortKey }
                             .take(3)
                     } else {
-                        MockData.upcomingGames
+                        GamesRepository.games
                             .filter { it.isUpcoming() }
                             .sortedBy { it.sortKey }
                             .take(3)
@@ -214,7 +213,7 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("新着ニュース(Googleアラート)", style = MaterialTheme.typography.titleSmall)
-                        IconButton(onClick = { newsRefreshKey++ }) {
+                        IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                             Icon(Icons.Filled.Refresh, contentDescription = "ニュースを更新")
                         }
                     }
@@ -224,6 +223,10 @@ fun HomeScreen(
 
             item { Spacer(modifier = Modifier.height(8.dp)) }
         }
+        PullToRefreshContainer(
+            state = pullToRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
         }
     }
 }
@@ -262,7 +265,6 @@ private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?) {
                     }
                 }
             }
-        }
         }
     }
 }

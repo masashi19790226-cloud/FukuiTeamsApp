@@ -6,8 +6,10 @@ import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,16 +31,18 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,7 +57,6 @@ import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
-import kotlinx.coroutines.launch
 
 // アーカイブ表示用の説明文で使う日数(実際の判定はInvitationAlertsRepository.isLikelyClosed()を使用)
 private const val ARCHIVE_AFTER_DAYS = 14L
@@ -63,17 +66,18 @@ fun InvitationsScreen() {
     var tabIndex by remember { mutableIntStateOf(0) }
     var selectedTeam by remember { mutableStateOf<Team?>(null) }
     var alertsResult by remember { mutableStateOf<AlertsResult?>(null) }
-    var refreshKey by remember { mutableIntStateOf(0) }
-    var isRefreshing by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+    val pullToRefreshState = rememberPullToRefreshState()
 
-    suspend fun refresh() {
-        isRefreshing = true
+    LaunchedEffect(Unit) {
         alertsResult = InvitationAlertsRepository.fetch()
-        isRefreshing = false
     }
 
-    LaunchedEffect(refreshKey) { refresh() }
+    if (pullToRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            alertsResult = InvitationAlertsRepository.fetch()
+            pullToRefreshState.endRefresh()
+        }
+    }
 
     val teamFiltered = (alertsResult as? AlertsResult.Success)?.items
         ?.filter { selectedTeam == null || it.teamId == selectedTeam?.name }
@@ -86,7 +90,7 @@ fun InvitationsScreen() {
             TopAppBar(
                 title = { Text("無料招待・プレゼント", style = MaterialTheme.typography.titleLarge) },
                 actions = {
-                    IconButton(onClick = { scope.launch { refresh() } }) {
+                    IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "更新")
                     }
                 },
@@ -95,10 +99,11 @@ fun InvitationsScreen() {
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = { scope.launch { refresh() } },
-            modifier = Modifier.padding(padding)
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 LazyRow(
@@ -141,6 +146,10 @@ fun InvitationsScreen() {
                     ArchivedInvitationsList(archivedItems)
                 }
             }
+            PullToRefreshContainer(
+                state = pullToRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }

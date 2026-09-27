@@ -7,7 +7,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.fukuiteams.app.data.MockData
+import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.NotificationPrefsKeys
 import com.fukuiteams.app.data.notificationDataStore
 import com.fukuiteams.app.data.startEpochMillis
@@ -46,7 +46,7 @@ suspend fun rescheduleGameStartNotifications(context: Context) {
     val now = System.currentTimeMillis()
     val workManager = WorkManager.getInstance(context)
 
-    MockData.upcomingGames.forEach { game ->
+    GamesRepository.refresh(context).forEach { game ->
         val teamOn = prefs[NotificationPrefsKeys.teamKey(game.team.name)] ?: true
         val startMillis = game.startEpochMillis()
         val triggerAt = startMillis - LEAD_TIME_MINUTES * 60_000

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -44,6 +45,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,10 +57,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fukuiteams.app.data.MockData
+import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.WatchMethod
 import com.fukuiteams.app.data.isUpcoming
 import com.fukuiteams.app.data.loadWatchMethod
@@ -69,11 +73,15 @@ import com.fukuiteams.app.data.GameResultsRepository
 import com.fukuiteams.app.data.RemoteGameResult
 import com.fukuiteams.app.data.loadGameOutcome
 import com.fukuiteams.app.data.saveGameOutcome
+import com.fukuiteams.app.data.WatchRecord
+import com.fukuiteams.app.data.computeWatchRecords
+import com.fukuiteams.app.data.gameLogDataStore
+import androidx.compose.runtime.collectAsState
+import androidx.datastore.preferences.core.Preferences
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.DividerGray
-import androidx.compose.runtime.rememberCoroutineScope
 import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
@@ -93,11 +101,12 @@ fun GameDetailScreen(
     onBack: () -> Unit,
     onOpenInvitations: () -> Unit
 ) {
-    val initialTeam = MockData.upcomingGames.firstOrNull { it.id == gameId }?.team ?: Team.BLOWINDS
+    val allGames = GamesRepository.games
+    val initialTeam = allGames.firstOrNull { it.id == gameId }?.team ?: Team.BLOWINDS
     var selectedTeam by remember { mutableStateOf(initialTeam) }
 
-    val allTeamGames = remember(selectedTeam) {
-        MockData.upcomingGames.filter { it.team == selectedTeam }.sortedBy { it.sortKey }
+    val allTeamGames = remember(selectedTeam, allGames) {
+        allGames.filter { it.team == selectedTeam }.sortedBy { it.sortKey }
     }
     val upcomingTeamGames = remember(allTeamGames) { allTeamGames.filter { it.isUpcoming() } }
     val pastTeamGames = remember(allTeamGames) { allTeamGames.filterNot { it.isUpcoming() }.sortedByDescending { it.sortKey } }
@@ -111,18 +120,28 @@ fun GameDetailScreen(
     }
     val game = allTeamGames.firstOrNull { it.id == selectedGameId }
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
-    var isRefreshing by remember { mutableStateOf(false) }
+    // 観戦方法・勝敗の記録は、変更されるたびに観戦成績カードへ即反映させる
+    val gameLogPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+    val watchRecords = remember(allTeamGames, gameLogPrefs, autoResults) {
+        computeWatchRecords(allTeamGames, gameLogPrefs, autoResults)
+    }
+    val pullToRefreshState = rememberPullToRefreshState()
 
     suspend fun refreshResults() {
-        isRefreshing = true
+        GamesRepository.refresh(context)
         autoResults = GameResultsRepository.fetch()
-        isRefreshing = false
     }
 
     LaunchedEffect(Unit) { refreshResults() }
+
+    if (pullToRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            refreshResults()
+            pullToRefreshState.endRefresh()
+        }
+    }
 
     // Xの個人投稿は「チーム名+チケット+譲」で広めに検索。
     // 一方、企業広告は「譲ります」という言い方をしないため、広告検索は「チーム名+招待」のみにする。
@@ -141,7 +160,7 @@ fun GameDetailScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { scope.launch { refreshResults() } }) {
+                    IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "結果を更新")
                     }
                 },
@@ -150,10 +169,11 @@ fun GameDetailScreen(
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = { scope.launch { refreshResults() } },
-            modifier = Modifier.padding(padding)
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
         Column(
             modifier = Modifier
@@ -171,6 +191,8 @@ fun GameDetailScreen(
                     )
                 }
             }
+
+            WatchStatsCard(watchRecords)
 
             TicketSearchSection(
                 personalSearchKeyword = personalSearchKeyword,
@@ -223,7 +245,91 @@ fun GameDetailScreen(
                 }
             }
         }
+        PullToRefreshContainer(
+            state = pullToRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
         }
+    }
+}
+
+/**
+ * 選択中のチームについて、終了済みの試合の通算成績を「現地観戦」「それ以外」「全体」に分けて表示する。
+ * 現地観戦 = 観戦方法を「現地」にした試合。それ以外 = 配信・見ていない・未記録の試合。
+ */
+@Composable
+private fun WatchStatsCard(records: Map<WatchMethod, WatchRecord>) {
+    val onSite = records[WatchMethod.ON_SITE] ?: WatchRecord()
+    val streaming = records[WatchMethod.STREAMING] ?: WatchRecord()
+    val others = streaming + (records[WatchMethod.NOT_WATCHED] ?: WatchRecord())
+    val all = onSite + others
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .border(BorderStroke(1.dp, DividerGray), RoundedCornerShape(12.dp))
+            .padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("観戦成績", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+            Text("通算", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        }
+
+        if (all.watched == 0) {
+            Text(
+                "まだ終了した試合がありません。",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                WatchRecordTile("現地観戦", onSite, Modifier.weight(1f), highlight = true)
+                WatchRecordTile("それ以外", others, Modifier.weight(1f))
+                WatchRecordTile("全体", all, Modifier.weight(1f))
+            }
+
+            if (onSite.watched == 0) {
+                Text(
+                    "過去の試合を選んで観戦方法を「現地観戦」にすると、ここに勝率が表示されます。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+            }
+
+            if (all.unknown > 0) {
+                Text(
+                    "結果が未確定の試合 ${all.unknown}件は除外しています(試合詳細で勝敗を記録できます)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun WatchRecordTile(
+    label: String,
+    record: WatchRecord,
+    modifier: Modifier = Modifier,
+    highlight: Boolean = false
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(DividerGray)
+            .then(
+                if (highlight) Modifier.border(BorderStroke(1.5.dp, InkSoft), RoundedCornerShape(10.dp))
+                else Modifier
+            )
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Text(label, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        Text(record.winRateLabel(), style = MaterialTheme.typography.titleLarge)
+        Text(record.summaryLabel(), style = MaterialTheme.typography.bodySmall, color = InkSoft)
     }
 }
 
