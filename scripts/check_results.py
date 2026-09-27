@@ -21,6 +21,9 @@ GAMES_PATH = os.path.join(BASE_DIR, "games.json")
 RESULTS_PATH = os.path.join(BASE_DIR, "results.json")
 
 BLOWINDS_URL = "https://www.fukuiblowinds.com/"
+# B.LEAGUE公式の対戦成績(福井=2891)。日付・WIN/LOSE・点数がそのまま載っていて一番確実
+BLEAGUE_RECORD_URL = "https://www.bleague.jp/record/?club1=2891&club2=0"
+BLOWINDS_LIST_URL = "https://www.fukuiblowinds.com/schedule/list/?year={year}&month={month}"
 RUCK_URL = "https://w-fleague.jp/club/maruoka/schedule.html"
 UNITED_URL = "https://fukuiunited.co.jp/"
 
@@ -63,26 +66,60 @@ def html_to_lines(html: str):
     return [ln.strip() for ln in text.splitlines() if ln.strip()]
 
 
-# ---------- ブローウィンズ(従来どおり) ----------
+# ---------- ブローウィンズ ----------
+# 以前はHTMLのまま日付や点数を探していたが、「09/26」「(土)」「90」「-」「88」が
+# 別々のタグに分かれていて一致しなかった。タグを外した文字列で探すように変更。
+# 終了した試合の表示例(同じB.LEAGUEクラブ公式サイトの共通レイアウト):
+#   AWAY 09/26(土) 14:05 レギュラーシーズン 福井 福井 90 - 88 location_on 会場 岐阜 岐阜 試合レポート
 
-def blowinds_score(page: str, game_dt: datetime, game: dict):
+BW_DATE = re.compile(r"(\d{2})/(\d{2})\s*\(\s*[月火水木金土日]\s*\)\s*(\d{1,2}:\d{2})?")
+
+
+def parse_bleague_record(page: str):
+    """
+    B.LEAGUE公式「対戦成績」ページから {"2026-09-26": (福井の点, 相手の点)} を作る。
+    表示例: AWAY 2026.09.26 VS 岐阜スゥープス … WIN 90-88
+    """
+    results = {}
+    if not page:
+        return results
+    text = " ".join(html_to_lines(page))
+    pat = re.compile(r"(\d{4})\.(\d{2})\.(\d{2})(.{0,300}?)(WIN|LOSE)\s*(\d{2,3})\s*[-‐−–]\s*(\d{2,3})")
+    for m in pat.finditer(text):
+        # 途中に別の日付が挟まっていたら、その日付の試合の点数ではない
+        if re.search(r"\d{4}\.\d{2}\.\d{2}", m.group(4)):
+            continue
+        a, b = int(m.group(6)), int(m.group(7))
+        win = m.group(5) == "WIN"
+        mine, opp = (a, b) if (a > b) == win else (b, a)
+        results[f"{m.group(1)}-{m.group(2)}-{m.group(3)}"] = (mine, opp)
+    return results
+
+
+def blowinds_text(pages):
+    return " ".join(" ".join(html_to_lines(p)) for p in pages if p)
+
+
+def blowinds_score(text: str, game_dt: datetime, game: dict):
     date_str = game_dt.strftime("%m/%d")
-    time_str = game["time"]
-    pattern = re.compile(re.escape(date_str) + r"\s*\([月火水木金土日]\)\s*" + re.escape(time_str))
-    m = pattern.search(page)
-    if not m:
-        return None
-    start = m.end()
-    next_m = re.compile(r"\d{2}/\d{2}\s*\([月火水木金土日]\)").search(page, start)
-    end = next_m.start() if next_m else min(len(page), start + 3000)
-    segment = page[start:end]
-    if "試合レポート" not in segment and "試合終了" not in segment:
-        return None
-    score_m = re.search(r"(\d{2,3})\s*[-‐−–]\s*(\d{2,3})", segment)
-    if not score_m:
-        print(f"[DEBUG] BW: 試合レポートはあるがスコアが見つからない: {date_str} {time_str}")
-        return None
-    return int(score_m.group(1)), int(score_m.group(2))
+    for m in BW_DATE.finditer(text):
+        if f"{m.group(1)}/{m.group(2)}" != date_str:
+            continue
+        nxt = BW_DATE.search(text, m.end())
+        segment = text[m.end(): nxt.start() if nxt else min(len(text), m.end() + 400)]
+        sm = re.search(r"(?<!\d)(\d{2,3})\s*[-‐−–]\s*(\d{2,3})(?!\d)", segment)
+        if not sm:
+            continue
+        a, b = int(sm.group(1)), int(sm.group(2))
+        # 点数より前に「福井」があれば福井が左側(自チームの点数が先)
+        before = segment[:sm.start()]
+        after = segment[sm.end():]
+        if "福井" in before:
+            return a, b
+        if "福井" in after.split("location_on")[-1][:30] or "福井" in after[:60]:
+            return b, a
+        print(f"[DEBUG] BW: {date_str} の点数 {a}-{b} はあるが、どちらが福井か判定できない")
+    return None
 
 
 # ---------- 丸岡RUCK(女子Fリーグ公式) ----------
@@ -216,7 +253,17 @@ def main():
         return
 
     teams = {g.get("team", "blowinds") for g, _ in pending}
-    bw_page = safe_fetch("BW", BLOWINDS_URL) if "blowinds" in teams else None
+    bw_page = None
+    if "blowinds" in teams:
+        # トップページ(直近の試合)と、確認が必要な試合がある月の日程一覧の両方を見る
+        pages = [safe_fetch("BW", BLOWINDS_URL)]
+        months = sorted({(dt.year, dt.month) for g, dt in pending if g.get("team", "blowinds") == "blowinds"})
+        for y, m in months[-3:]:
+            pages.append(safe_fetch("BW", BLOWINDS_LIST_URL.format(year=y, month=m)))
+        bw_page = blowinds_text(pages) or None
+    bleague = parse_bleague_record(safe_fetch("BLEAGUE", BLEAGUE_RECORD_URL)) if "blowinds" in teams else {}
+    if bleague:
+        print(f"[INFO] BLEAGUE: {len(bleague)} 試合の結果を検出 {sorted(bleague)}")
     ruck_page = safe_fetch("RUCK", RUCK_URL) if "rac" in teams else None
     un_page = safe_fetch("UNITED", UNITED_URL) if "united" in teams else None
 
@@ -231,8 +278,11 @@ def main():
     for game, game_dt in pending:
         team = game.get("team", "blowinds")
         score = None
-        if team == "blowinds" and bw_page:
-            score = blowinds_score(bw_page, game_dt, game)
+        if team == "blowinds":
+            # B.LEAGUE公式を優先し、無ければクラブ公式サイトから探す
+            score = bleague.get(game["date"])
+            if not score and bw_page:
+                score = blowinds_score(bw_page, game_dt, game)
         elif team == "rac" and ruck_parsed:
             score = ruck_score(ruck_parsed, game)
         elif team == "united" and un_page:

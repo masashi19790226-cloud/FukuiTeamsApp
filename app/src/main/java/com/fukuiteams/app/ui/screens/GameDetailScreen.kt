@@ -75,6 +75,7 @@ import com.fukuiteams.app.data.loadGameOutcome
 import com.fukuiteams.app.data.saveGameOutcome
 import com.fukuiteams.app.data.WatchRecord
 import com.fukuiteams.app.data.computeWatchRecords
+import com.fukuiteams.app.data.resolveOutcome
 import com.fukuiteams.app.data.gameLogDataStore
 import androidx.compose.runtime.collectAsState
 import androidx.datastore.preferences.core.Preferences
@@ -235,10 +236,14 @@ fun GameDetailScreen(
                         )
                     } else {
                         listToShow.forEach { g ->
+                            val isPastTab = scheduleTabIndex == 1
                             ScheduleRow(
                                 game = g,
                                 selected = g.id == selectedGameId,
-                                onClick = { selectedGameId = g.id }
+                                onClick = { selectedGameId = g.id },
+                                score = if (isPastTab) autoResults[g.id] else null,
+                                outcome = if (isPastTab) resolveOutcome(g.id, gameLogPrefs, autoResults) else null,
+                                showResult = isPastTab
                             )
                         }
                     }
@@ -385,7 +390,14 @@ private fun ScheduleTabChip(label: String, selected: Boolean, onClick: () -> Uni
 }
 
 @Composable
-private fun ScheduleRow(game: Game, selected: Boolean, onClick: () -> Unit) {
+private fun ScheduleRow(
+    game: Game,
+    selected: Boolean,
+    onClick: () -> Unit,
+    score: RemoteGameResult? = null,
+    outcome: GameOutcome? = null,
+    showResult: Boolean = false
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -425,6 +437,41 @@ private fun ScheduleRow(game: Game, selected: Boolean, onClick: () -> Unit) {
                     Text(game.venue, style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 }
             }
+            if (showResult) {
+                ResultBadge(team = game.team, score = score, outcome = outcome)
+            }
+        }
+    }
+}
+
+/** 過去の試合一覧の右端に出す「勝/負/分」と点数。 */
+@Composable
+private fun ResultBadge(team: Team, score: RemoteGameResult?, outcome: GameOutcome?) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        val (label, bg, fg) = when (outcome) {
+            GameOutcome.WIN -> Triple("勝", team.color, White)
+            GameOutcome.LOSE -> Triple("負", DividerGray, Ink)
+            GameOutcome.DRAW -> Triple("分", DividerGray, InkSoft)
+            null -> Triple("-", White, InkSoft)
+        }
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(bg)
+                .border(BorderStroke(1.dp, if (outcome == null) LineGray else bg), RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(label, color = fg, style = MaterialTheme.typography.titleMedium)
+        }
+        // 点数が無く手動で勝敗だけ記録した試合は、点数欄を出さない
+        val scoreText = when {
+            score != null -> "${score.myScore}-${score.opponentScore}"
+            outcome == null -> "結果待ち"
+            else -> null
+        }
+        if (scoreText != null) {
+            Text(scoreText, style = MaterialTheme.typography.bodySmall, color = InkSoft)
         }
     }
 }

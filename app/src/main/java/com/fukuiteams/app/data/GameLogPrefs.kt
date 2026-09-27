@@ -92,13 +92,7 @@ fun computeWatchRecords(
         val method = WatchMethod.values().find { it.name == prefs?.get(watchMethodKey(game.id)) }
             ?: WatchMethod.NOT_WATCHED
 
-        val auto = autoResults[game.id]
-        val outcome = when {
-            auto != null && auto.myScore > auto.opponentScore -> GameOutcome.WIN
-            auto != null && auto.myScore < auto.opponentScore -> GameOutcome.LOSE
-            auto != null -> GameOutcome.DRAW
-            else -> GameOutcome.values().find { it.name == prefs?.get(outcomeKey(game.id)) }
-        }
+        val outcome = resolveOutcome(game.id, prefs, autoResults)
         val add = when (outcome) {
             GameOutcome.WIN -> WatchRecord(wins = 1)
             GameOutcome.LOSE -> WatchRecord(losses = 1)
@@ -108,4 +102,22 @@ fun computeWatchRecords(
         records[method] = records.getValue(method) + add
     }
     return records
+}
+
+/**
+ * 試合の勝敗を決める。自動取得した結果(results.json)を優先し、無ければ手動の記録。
+ * どちらも無ければ null。
+ */
+fun resolveOutcome(
+    gameId: String,
+    prefs: Preferences?,
+    autoResults: Map<String, RemoteGameResult>
+): GameOutcome? {
+    val auto = autoResults[gameId]
+    return when {
+        auto != null && auto.myScore > auto.opponentScore -> GameOutcome.WIN
+        auto != null && auto.myScore < auto.opponentScore -> GameOutcome.LOSE
+        auto != null -> GameOutcome.DRAW
+        else -> GameOutcome.values().find { it.name == prefs?.get(outcomeKey(gameId)) }
+    }
 }
