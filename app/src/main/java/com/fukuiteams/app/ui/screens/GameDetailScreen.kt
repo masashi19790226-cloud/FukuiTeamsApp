@@ -12,6 +12,7 @@ import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.components.resultMark
 import com.fukuiteams.app.ui.components.resultHeadline
 import com.fukuiteams.app.ui.components.ThinRule
+import com.fukuiteams.app.ui.components.shortLabel
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
@@ -797,6 +798,57 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
     }
 }
 
+/** スコアの両側にチーム名を置いた得点板。左が福井側、右が対戦相手。 */
+@Composable
+private fun ScoreBoard(game: Game, myScore: Int, opponentScore: Int) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ScoreSide(
+            name = game.team.shortLabel(),
+            sub = if (game.isHome) "ホーム" else "アウェイ",
+            color = game.team.color,
+            won = myScore > opponentScore,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            "$myScore - $opponentScore",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+        ScoreSide(
+            name = game.opponent,
+            sub = if (game.isHome) "アウェイ" else "ホーム",
+            color = InkSoft,
+            won = opponentScore > myScore,
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun ScoreSide(name: String, sub: String, color: androidx.compose.ui.graphics.Color, won: Boolean, modifier: Modifier) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            name,
+            color = color,
+            fontWeight = if (won) FontWeight.Black else FontWeight.Bold,
+            style = MaterialTheme.typography.titleSmall,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            maxLines = 2
+        )
+        Box(
+            modifier = Modifier
+                .padding(top = 3.dp)
+                .width(36.dp)
+                .height(3.dp)
+                .background(color)
+        )
+        Text(sub, style = MaterialTheme.typography.labelSmall, color = InkSoft, modifier = Modifier.padding(top = 3.dp))
+    }
+}
+
 @Composable
 private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
     val context = LocalContext.current
@@ -821,12 +873,11 @@ private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
 
             val result = autoResult
             if (result != null) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text("${result.myScore} - ${result.opponentScore}", style = MaterialTheme.typography.titleLarge)
-                }
+                ScoreBoard(
+                    game = game,
+                    myScore = result.myScore,
+                    opponentScore = result.opponentScore
+                )
                 val diff = result.myScore - result.opponentScore
                 val (label, color) = when {
                     diff > 0 -> "勝利" to androidx.compose.ui.graphics.Color(0xFF2F6846)
