@@ -3,7 +3,20 @@ name: Build Debug APK
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: '知人配布用にReleasesへ公開する'
+        type: boolean
+        default: false
+      notes:
+        description: '更新内容(配布ページに表示されます・省略可)'
+        type: string
+        default: ''
+
+# Releases を作るための書き込み権限
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -43,3 +56,30 @@ jobs:
         with:
           name: fukui-teams-app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      # ここから下は「Run workflow」で公開にチェックを入れたときだけ動く
+      - name: Publish to GitHub Releases
+        if: github.event_name == 'workflow_dispatch' && inputs.publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG_KEYSTORE_BASE64: ${{ secrets.DEBUG_KEYSTORE_BASE64 }}
+          NOTES: ${{ inputs.notes }}
+        run: |
+          if [ -z "$DEBUG_KEYSTORE_BASE64" ]; then
+            echo "::error::署名鍵のSecretが未登録です。この状態で配ると、次の版に上書き更新できないため公開を中止しました"
+            exit 1
+          fi
+          VERSION="0.1.${GITHUB_RUN_NUMBER}"
+          cp app/build/outputs/apk/debug/app-debug.apk fukuispo.apk
+          BODY="${NOTES:-更新しました}"
+          BODY="${BODY}
+
+          ### インストール方法
+          下の **fukuispo.apk** をタップしてダウンロードし、開いてインストールしてください。
+          初回は「この提供元のアプリを許可」を求められるので、許可してください。
+          すでに入っている場合は、同じ手順で上書き更新できます(データは消えません)。"
+          gh release create "v${VERSION}" fukuispo.apk \
+            --title "ふくスポ v${VERSION}" \
+            --notes "$BODY" \
+            --latest
+          echo "公開しました: https://github.com/${GITHUB_REPOSITORY}/releases/latest"

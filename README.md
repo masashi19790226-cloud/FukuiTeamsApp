@@ -84,3 +84,15 @@ app/src/main/java/com/fukuiteams/app/
   ui/components/                  ... TeamBadge, 下部ナビ等の共通部品
   ui/screens/                     ... 画面ごとのComposable
 ```
+
+## 知人への配布(GitHub Releases)
+
+1. GitHub のリポジトリで **Actions → Build Debug APK → Run workflow** を開く
+2. 「知人配布用にReleasesへ公開する」にチェックを入れ、必要なら更新内容を書いて実行
+3. ビルドが緑になると Releases に `fukuispo.apk` が公開される
+
+配布用リンク(常に最新版が落ちてくる):
+https://github.com/masashi19790226-cloud/FukuiTeamsApp/releases/latest/download/fukuispo.apk
+
+- 署名鍵の Secret(DEBUG_KEYSTORE_BASE64)が未登録だと公開は中止される(上書き更新できなくなるため)
+- 普段の push では公開されない(自分用のビルドのみ)
