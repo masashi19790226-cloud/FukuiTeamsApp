@@ -96,6 +96,16 @@ def parse_bleague_record(page: str):
     return results
 
 
+def parse_bleague_links(page: str):
+    """対戦成績ページの各試合の詳細ページURL {"2026-09-26": "https://www.bleague.jp/game_detail/?ScheduleKey=…"}。"""
+    links = {}
+    if not page:
+        return links
+    for m in re.finditer(r'game_detail/\?ScheduleKey=(\d+)[^>]*>\s*(?:<[^>]+>\s*)*(\d{4})\.(\d{2})\.(\d{2})', page):
+        links[f"{m.group(2)}-{m.group(3)}-{m.group(4)}"] = f"https://www.bleague.jp/game_detail/?ScheduleKey={m.group(1)}"
+    return links
+
+
 def blowinds_text(pages):
     return " ".join(" ".join(html_to_lines(p)) for p in pages if p)
 
@@ -261,7 +271,9 @@ def main():
         for y, m in months[-3:]:
             pages.append(safe_fetch("BW", BLOWINDS_LIST_URL.format(year=y, month=m)))
         bw_page = blowinds_text(pages) or None
-    bleague = parse_bleague_record(safe_fetch("BLEAGUE", BLEAGUE_RECORD_URL)) if "blowinds" in teams else {}
+    bleague_page = safe_fetch("BLEAGUE", BLEAGUE_RECORD_URL) if "blowinds" in teams else None
+    bleague = parse_bleague_record(bleague_page)
+    bleague_links = parse_bleague_links(bleague_page)
     if bleague:
         print(f"[INFO] BLEAGUE: {len(bleague)} 試合の結果を検出 {sorted(bleague)}")
     ruck_page = safe_fetch("RUCK", RUCK_URL) if "rac" in teams else None
@@ -278,15 +290,21 @@ def main():
     for game, game_dt in pending:
         team = game.get("team", "blowinds")
         score = None
+        source_url = None  # アプリで結果をタップしたときに開く、取得元のページ
         if team == "blowinds":
             # B.LEAGUE公式を優先し、無ければクラブ公式サイトから探す
             score = bleague.get(game["date"])
+            source_url = bleague_links.get(game["date"], BLEAGUE_RECORD_URL)
             if not score and bw_page:
                 score = blowinds_score(bw_page, game_dt, game)
+                source_url = BLOWINDS_URL
         elif team == "rac" and ruck_parsed:
             score = ruck_score(ruck_parsed, game)
+            gid = game.get("gid")
+            source_url = f"https://w-fleague.jp/score/result.html?gid={gid}" if gid else RUCK_URL
         elif team == "united" and un_page:
             score = united_score(un_latest, game_dt, game)
+            source_url = UNITED_URL
 
         label = f"{game['id']} ({game['date']} vs {game['opponent']})"
         if score:
@@ -294,6 +312,7 @@ def main():
                 "my_score": score[0],
                 "opponent_score": score[1],
                 "checked_at": datetime.utcnow().isoformat(),
+                "source_url": source_url,
             }
             updated += 1
             print(f"[INFO] {label}: {score[0]} - {score[1]} を記録")

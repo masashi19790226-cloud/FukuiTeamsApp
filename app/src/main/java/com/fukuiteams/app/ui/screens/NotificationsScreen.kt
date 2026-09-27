@@ -1,5 +1,14 @@
 package com.fukuiteams.app.ui.screens
 
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import com.fukuiteams.app.ui.theme.Ivory
+import com.fukuiteams.app.ui.components.DoubleRule
+import com.fukuiteams.app.ui.components.Headline
+import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.MastheadTopBar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -79,20 +88,32 @@ fun NotificationsScreen() {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Card(
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp),
-                colors = CardDefaults.cardColors(containerColor = Paper),
-                border = BorderStroke(1.dp, Ink)
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Headline("号外の届け先を\n選べます", fontSize = 22)
+                Text(
+                    "チームごと・内容ごとに、スマホへの通知(号外)を受け取るか選べます。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                DoubleRule(modifier = Modifier.padding(top = 6.dp))
+            }
+
+            // 通知の見本を「号外」風に
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.5.dp, Ink)
+                    .background(Paper)
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text("通知の表示例", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                    Text("新しい無料招待:福井ブローウィンズ", style = MaterialTheme.typography.titleMedium)
-                    Text("ホームゲーム ペア招待券プレゼント・締切まであと18時間", style = MaterialTheme.typography.bodyMedium)
-                }
+                SectionLabel("号外・見本", red = true)
+                Text("新しい無料招待:福井ブローウィンズ", style = MaterialTheme.typography.titleMedium)
+                Text("ホームゲーム ペア招待券プレゼント・締切まであと18時間", style = MaterialTheme.typography.bodyMedium, color = InkSoft)
             }
 
             Column {
-                Text("チーム", style = MaterialTheme.typography.labelMedium, color = InkSoft)
+                SectionLabel("チーム", modifier = Modifier.padding(bottom = 6.dp))
                 Card(
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp),
                     colors = CardDefaults.cardColors(containerColor = Paper),
@@ -108,7 +129,7 @@ fun NotificationsScreen() {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                    TeamBadge(team, size = 28.dp, fontSize = 12.sp)
+                                    Box(modifier = Modifier.width(5.dp).height(22.dp).background(team.color))
                                     Text(team.displayName, style = MaterialTheme.typography.bodyLarge)
                                 }
                                 Switch(
@@ -121,17 +142,17 @@ fun NotificationsScreen() {
                                             rescheduleGameStartNotifications(context)
                                         }
                                     },
-                                    colors = SwitchDefaults.colors(checkedTrackColor = Accent)
+                                    colors = SwitchDefaults.colors(checkedTrackColor = Ink, checkedThumbColor = Ivory)
                                 )
                             }
-                            if (index != Team.values().lastIndex) Divider(color = DividerGray)
+                            if (index != Team.values().lastIndex) Divider(color = LineGray)
                         }
                     }
                 }
             }
 
             Column {
-                Text("通知する内容", style = MaterialTheme.typography.labelMedium, color = InkSoft)
+                SectionLabel("通知する内容", modifier = Modifier.padding(bottom = 6.dp))
                 Card(
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp),
                     colors = CardDefaults.cardColors(containerColor = Paper),
@@ -157,10 +178,10 @@ fun NotificationsScreen() {
                                             rescheduleGameStartNotifications(context)
                                         }
                                     },
-                                    colors = SwitchDefaults.colors(checkedTrackColor = Accent)
+                                    colors = SwitchDefaults.colors(checkedTrackColor = Ink, checkedThumbColor = Ivory)
                                 )
                             }
-                            if (index != kindDefs.lastIndex) Divider(color = DividerGray)
+                            if (index != kindDefs.lastIndex) Divider(color = LineGray)
                         }
                     }
                 }

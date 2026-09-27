@@ -1,15 +1,15 @@
 {
-  "rc01": {"my_score": 3, "opponent_score": 0, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "rc02": {"my_score": 5, "opponent_score": 2, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "rc03": {"my_score": 3, "opponent_score": 4, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "rc04": {"my_score": 1, "opponent_score": 3, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "rc05": {"my_score": 0, "opponent_score": 4, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "rc06": {"my_score": 1, "opponent_score": 4, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "rc07": {"my_score": 3, "opponent_score": 2, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "rc08": {"my_score": 4, "opponent_score": 5, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "rc09": {"my_score": 7, "opponent_score": 0, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "rc10": {"my_score": 0, "opponent_score": 0, "checked_at": "manual: ruck-fukui.com/schedules-results"},
-  "un01": {"my_score": 1, "opponent_score": 2, "checked_at": "manual: fukuiunited.co.jp LATEST MATCH"},
-  "bw01": {"my_score": 90, "opponent_score": 88, "checked_at": "manual: 報道(9/26 岐阜戦)"},
-  "bw02": {"my_score": 80, "opponent_score": 82, "checked_at": "manual: bleague.jp 対戦成績"}
+  "rc01": {"my_score": 3, "opponent_score": 0, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104694"},
+  "rc02": {"my_score": 5, "opponent_score": 2, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104704"},
+  "rc03": {"my_score": 3, "opponent_score": 4, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104709"},
+  "rc04": {"my_score": 1, "opponent_score": 3, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104714"},
+  "rc05": {"my_score": 0, "opponent_score": 4, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104715"},
+  "rc06": {"my_score": 1, "opponent_score": 4, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104723"},
+  "rc07": {"my_score": 3, "opponent_score": 2, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104729"},
+  "rc08": {"my_score": 4, "opponent_score": 5, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104731"},
+  "rc09": {"my_score": 7, "opponent_score": 0, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104737"},
+  "rc10": {"my_score": 0, "opponent_score": 0, "checked_at": "manual: ruck-fukui.com/schedules-results", "source_url": "https://w-fleague.jp/score/result.html?gid=104741"},
+  "un01": {"my_score": 1, "opponent_score": 2, "checked_at": "manual: fukuiunited.co.jp LATEST MATCH", "source_url": "https://fukuiunited.co.jp/"},
+  "bw01": {"my_score": 90, "opponent_score": 88, "checked_at": "manual: 報道(9/26 岐阜戦)", "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507167"},
+  "bw02": {"my_score": 80, "opponent_score": 82, "checked_at": "manual: bleague.jp 対戦成績", "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507168"}
 }

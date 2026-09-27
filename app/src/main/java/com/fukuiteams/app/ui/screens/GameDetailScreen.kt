@@ -1,5 +1,6 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.data.resultSourceUrl
 import androidx.compose.ui.text.font.FontWeight
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.components.resultMark
@@ -613,30 +614,47 @@ private fun ScheduleRow(
                 }
             }
             if (showResult) {
-                ResultBadge(team = game.team, score = score, outcome = outcome)
+                ResultBadge(game = game, score = score, outcome = outcome)
             }
         }
     }
 }
 
-/** 過去の試合一覧の右端に出す「○90-88」「●80-82」のような結果。 */
+/**
+ * 過去の試合一覧の右端に出す「○90-88」「●80-82」のような結果。
+ * 結果が出ている試合は、タップすると取得元のページ(B.LEAGUE公式など)を開く。
+ */
 @Composable
-private fun ResultBadge(team: Team, score: RemoteGameResult?, outcome: GameOutcome?) {
+private fun ResultBadge(game: Game, score: RemoteGameResult?, outcome: GameOutcome?) {
+    val context = LocalContext.current
     val text = when {
         outcome == null -> "結果待ち"
         score != null -> "${resultMark(outcome)}${score.myScore}-${score.opponentScore}"
         else -> resultMark(outcome)
     }
-    Text(
-        text,
-        fontWeight = FontWeight.ExtraBold,
-        fontSize = if (outcome == null) 11.sp else 15.sp,
-        color = when (outcome) {
-            GameOutcome.WIN -> NewsRed
-            null -> InkSoft
-            else -> Ink
+    Column(
+        modifier = Modifier
+            .then(
+                if (outcome != null) Modifier.clickable { openUrl(context, game.resultSourceUrl(score)) }
+                else Modifier
+            )
+            .padding(4.dp),
+        horizontalAlignment = Alignment.End
+    ) {
+        Text(
+            text,
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = if (outcome == null) 11.sp else 15.sp,
+            color = when (outcome) {
+                GameOutcome.WIN -> NewsRed
+                null -> InkSoft
+                else -> Ink
+            }
+        )
+        if (outcome != null) {
+            Text("詳報 ›", fontSize = 10.sp, color = InkSoft)
         }
-    )
+    }
 }
 
 @Composable
@@ -784,6 +802,10 @@ private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
+                OutlinedButton(
+                    onClick = { openUrl(context, game.resultSourceUrl(result)) },
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("取得元のページで詳報を見る") }
                 return@Column
             }
 

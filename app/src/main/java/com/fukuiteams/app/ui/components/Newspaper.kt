@@ -158,12 +158,18 @@ fun TeamSelectorRow(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        // 横スクロールせずに全ボタンが1画面に収まるよう、幅を分け合って横一列に並べる
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             if (showAll) {
-                item { TeamSelectorChip("すべて", Ink, selectedTeam == null) { onSelect(null) } }
+                TeamSelectorChip("すべて", Ink, selectedTeam == null, Modifier.weight(0.75f)) { onSelect(null) }
             }
-            items(Team.values().toList()) { team ->
-                TeamSelectorChip(team.displayName, team.color, selectedTeam == team) { onSelect(team) }
+            Team.values().forEach { team ->
+                TeamSelectorChip(team.shortLabel(), team.color, selectedTeam == team, Modifier.weight(team.chipWeight())) {
+                    onSelect(team)
+                }
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -176,11 +182,30 @@ fun TeamSelectorRow(
     }
 }
 
+/** ボタン用の短い表示名。 */
+fun Team.shortLabel(): String = when (this) {
+    Team.BLOWINDS -> "ブローウィンズ"
+    Team.RAC -> "丸岡RUCK"
+    Team.UNITED -> "ユナイテッド"
+}
+
+// 名前の長さに合わせたボタン幅の配分
+private fun Team.chipWeight(): Float = when (this) {
+    Team.BLOWINDS -> 1.35f
+    Team.RAC -> 1f
+    Team.UNITED -> 1.15f
+}
+
 @Composable
-private fun TeamSelectorChip(label: String, color: Color, selected: Boolean, onClick: () -> Unit) {
+private fun TeamSelectorChip(
+    label: String,
+    color: Color,
+    selected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Column(
-        modifier = Modifier
-            .width(IntrinsicSize.Max)
+        modifier = modifier
             .border(1.dp, if (selected) color else Ink)
             .background(if (selected) color else Paper)
             .clickable(onClick = onClick)
@@ -188,11 +213,15 @@ private fun TeamSelectorChip(label: String, color: Color, selected: Boolean, onC
         Box(modifier = Modifier.fillMaxWidth().height(4.dp).background(color))
         Text(
             label,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 2.dp, vertical = 7.dp),
             color = if (selected) White else Ink,
-            fontSize = 12.sp,
+            fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            softWrap = false
         )
     }
 }

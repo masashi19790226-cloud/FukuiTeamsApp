@@ -1,5 +1,10 @@
 package com.fukuiteams.app.ui.screens
 
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.IntrinsicSize
+import com.fukuiteams.app.ui.components.resultMark
+import com.fukuiteams.app.data.resultSourceUrl
 import com.fukuiteams.app.data.GameOutcome
 import com.fukuiteams.app.data.RemoteGameResult
 import com.fukuiteams.app.data.GameResultsRepository
@@ -169,8 +174,23 @@ fun HomeScreen(
             item { InviteBanner(onClick = onOpenInvitations) }
 
             item {
+                // 一面の2段組:左に「次の試合」、右に他チームの近況
+                val nextGame = GamesRepository.games
+                    .filter { (selectedTeam == null || it.team == selectedTeam) && it.isUpcoming() }
+                    .minByOrNull { it.sortKey }
+                val sideTeams = Team.values().filter { it != (selectedTeam ?: nextGame?.team) }
+                TwoColumnFront(
+                    nextGame = nextGame,
+                    hasOpenInvite = nextGame != null && nextGame.team.name in teamsWithOpenInvites,
+                    sideTeams = sideTeams,
+                    autoResults = autoResults,
+                    onOpenGame = onOpenGame
+                )
+            }
+
+            item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    SectionLabel("次の試合")
+                    SectionLabel("今後の日程")
                     // 特定のチームを選んだときはそのチームの直近3件、「すべて」のときは全体の直近3件を表示。
                     // 試合スケジュールの一覧は「試合」タブにまとめてあるので、ここでは概要だけ。
                     val games = if (selectedTeam != null) {
@@ -486,10 +506,13 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
             "${game.team.displayName}\n${resultHeadline(game, result.myScore, result.opponentScore, outcome)}",
             fontSize = 26
         )
+        val context = LocalContext.current
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .border(BorderStroke(2.dp, Ink))
+                // スコアボックスをタップすると取得元のページ(B.LEAGUE公式など)を開く
+                .clickable { openUrl(context, game.resultSourceUrl(result)) }
                 .background(Paper)
                 .padding(vertical = 10.dp, horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -512,7 +535,120 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
             Headline("${result.opponentScore}", fontSize = 34)
             Text(game.opponent, style = MaterialTheme.typography.labelMedium, modifier = Modifier.width(72.dp))
         }
+        Text(
+            "スコアをタップで詳報(取得元のページ)",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
         DoubleRule(modifier = Modifier.padding(top = 6.dp))
     }
+}
+
+/**
+ * 一面の2段組。左段に次の試合、右段に他チームの近況(最新結果か次の試合)。
+ * 段の間には縦の罫線を引く。
+ */
+@Composable
+private fun TwoColumnFront(
+    nextGame: Game?,
+    hasOpenInvite: Boolean,
+    sideTeams: List<Team>,
+    autoResults: Map<String, RemoteGameResult>,
+    onOpenGame: (String) -> Unit
+) {
+    Column {
+        Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+            // 左段:次の試合
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 10.dp)
+                    .then(if (nextGame != null) Modifier.clickable { onOpenGame(nextGame.id) } else Modifier),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                SectionLabel("次の試合")
+                if (nextGame == null) {
+                    Text("予定はまだ発表されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                } else {
+                    Text(nextGame.team.displayName, style = MaterialTheme.typography.labelMedium, color = nextGame.team.color)
+                    Headline(
+                        "${nextGame.dateLabel.split("/").drop(1).joinToString("/")}(${nextGame.dayOfWeek})\n${nextGame.timeLabel} ${nextGame.opponent}戦",
+                        fontSize = 17
+                    )
+                    Text(
+                        "${if (nextGame.isHome) "HOME" else "AWAY"}・${nextGame.venue}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
+                    )
+                    Text("チケット:${nextGame.ticketStatus}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                    if (hasOpenInvite) {
+                        Text("無料招待あり", style = MaterialTheme.typography.labelSmall, color = NewsRed)
+                    }
+                }
+            }
+            // 縦罫
+            Box(modifier = Modifier.width(1.dp).fillMaxHeight().background(Ink))
+            // 右段:他チームの近況
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                SectionLabel("各チームの近況")
+                sideTeams.forEach { team -> TeamBrief(team, autoResults, onOpenGame) }
+            }
+        }
+        DoubleRule(modifier = Modifier.padding(top = 10.dp))
+    }
+}
+
+/** 右段の1チーム分。最新結果(あれば)と次の試合を1〜2行で。 */
+@Composable
+private fun TeamBrief(team: Team, autoResults: Map<String, RemoteGameResult>, onOpenGame: (String) -> Unit) {
+    val teamGames = GamesRepository.games.filter { it.team == team }
+    val latest = teamGames.filter { autoResults.containsKey(it.id) }.maxByOrNull { it.sortKey }
+    val next = teamGames.filter { it.isUpcoming() }.minByOrNull { it.sortKey }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(
+                (latest ?: next)?.let { g -> Modifier.clickable { onOpenGame(g.id) } } ?: Modifier
+            ),
+        verticalArrangement = Arrangement.spacedBy(1.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            Box(modifier = Modifier.width(4.dp).height(12.dp).background(team.color))
+            Text(team.shortLabelForFront(), style = MaterialTheme.typography.labelMedium)
+        }
+        if (latest != null) {
+            val r = autoResults.getValue(latest.id)
+            val outcome = when {
+                r.myScore > r.opponentScore -> GameOutcome.WIN
+                r.myScore < r.opponentScore -> GameOutcome.LOSE
+                else -> GameOutcome.DRAW
+            }
+            Text(
+                "${resultMark(outcome)}${r.myScore}-${r.opponentScore} ${latest.opponent}",
+                style = MaterialTheme.typography.bodySmall,
+                color = if (outcome == GameOutcome.WIN) NewsRed else Ink,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Text(
+            if (next != null) "次:${next.dateLabel.split("/").drop(1).joinToString("/")} ${next.opponent}" else "次:日程発表待ち",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+private fun Team.shortLabelForFront(): String = when (this) {
+    Team.BLOWINDS -> "ブローウィンズ"
+    Team.RAC -> "丸岡RUCK"
+    Team.UNITED -> "ユナイテッド"
 }
 

@@ -1,5 +1,17 @@
 package com.fukuiteams.app.ui.screens
 
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import com.fukuiteams.app.ui.theme.Ivory
+import com.fukuiteams.app.data.eventInstant
+import com.fukuiteams.app.ui.components.DoubleRule
+import com.fukuiteams.app.ui.components.Headline
+import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.components.MastheadTopBar
 import android.content.Context
@@ -117,13 +129,15 @@ fun InvitationsScreen() {
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
 
-                TabRow(
-                    selectedTabIndex = tabIndex,
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = Accent
+                // 紙面の面割り風の切り替え(選択中は黒地に白抜き)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Tab(selected = tabIndex == 0, onClick = { tabIndex = 0 }, text = { Text("募集中 ${openItems.size}") })
-                    Tab(selected = tabIndex == 1, onClick = { tabIndex = 1 }, text = { Text("アーカイブ ${archivedItems.size}") })
+                    PageTab("受付中 ${openItems.size}", tabIndex == 0, Modifier.weight(1f)) { tabIndex = 0 }
+                    PageTab("過去の招待 ${archivedItems.size}", tabIndex == 1, Modifier.weight(1f)) { tabIndex = 1 }
                 }
 
                 if (tabIndex == 0) {
@@ -141,6 +155,22 @@ fun InvitationsScreen() {
 }
 
 @Composable
+private fun PageTab(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Text(
+        label,
+        modifier = modifier
+            .border(1.dp, Ink)
+            .background(if (selected) Ink else Paper)
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp),
+        color = if (selected) Ivory else Ink,
+        fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
+        fontSize = 13.sp,
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
 private fun OpenInvitationsList(alertsResult: AlertsResult?, openItems: List<RemoteInvitationAlert>) {
     val context = LocalContext.current
 
@@ -149,29 +179,58 @@ private fun OpenInvitationsList(alertsResult: AlertsResult?, openItems: List<Rem
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("自動検知した最新情報(Googleアラート)", style = MaterialTheme.typography.labelMedium, color = InkSoft)
-                when (alertsResult) {
-                    null -> Text("読み込み中…", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                    is AlertsResult.Failure -> Text(
-                        "取得に失敗しました(通信環境をご確認ください)",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = InkSoft
-                    )
-                    is AlertsResult.Success -> {
-                        if (openItems.isEmpty()) {
-                            Text("まだ自動検知された情報はありません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                        } else {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                openItems.take(10).forEach { alert ->
-                                    AutoDetectedAlertCard(alert, onClick = { openUrl(context, alert.link) })
-                                }
-                            }
-                        }
-                    }
-                }
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                SectionLabel("受付中", red = true)
+                Headline(
+                    if (openItems.isEmpty()) "受付中の招待は\nいまのところなし" else "無料招待 ${openItems.size}件\n受付中",
+                    fontSize = 24
+                )
+                Text(
+                    "Googleアラートで自動検知した情報です。応募条件・締切は各記事でご確認ください。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                DoubleRule(modifier = Modifier.padding(top = 6.dp))
             }
         }
+        when (alertsResult) {
+            null -> item { Text("読み込み中…", style = MaterialTheme.typography.bodySmall, color = InkSoft) }
+            is AlertsResult.Failure -> item {
+                Text("取得に失敗しました(通信環境をご確認ください)", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            }
+            is AlertsResult.Success -> items(openItems.take(10)) { alert ->
+                NoticeBox(alert, onClick = { openUrl(context, alert.link) })
+            }
+        }
+    }
+}
+
+/** 受付中の招待を「囲み記事」風に。3日以内に見つけたものには NEW を付ける。 */
+@Composable
+private fun NoticeBox(alert: RemoteInvitationAlert, onClick: () -> Unit) {
+    val team = Team.values().find { it.name == alert.teamId }
+    val isNew = alert.eventInstant()?.let {
+        System.currentTimeMillis() - it.toEpochMilli() < 3L * 24 * 60 * 60 * 1000
+    } ?: false
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.5.dp, Ink)
+            .background(Paper)
+            .clickable(onClick = onClick)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            if (isNew) SectionLabel("NEW", red = true)
+            if (team != null) {
+                Box(modifier = Modifier.width(4.dp).height(12.dp).background(team.color))
+                Text(team.displayName, style = MaterialTheme.typography.labelMedium, color = team.color)
+            }
+        }
+        Headline(alert.title, fontSize = 16)
+        Text("掲載 ${alert.timeLabel().ifBlank { "日時不明" }}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        Text("記事を開く ›", style = MaterialTheme.typography.labelLarge, color = Ink)
     }
 }
 
@@ -181,53 +240,81 @@ private fun ArchivedInvitationsList(archivedItems: List<RemoteInvitationAlert>) 
 
     LazyColumn(
         modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         item {
-            Text(
-                "検知から${ARCHIVE_AFTER_DAYS}日以上経過したものを自動的にここへ移しています(応募締切や当選結果までは判定していません)",
-                style = MaterialTheme.typography.bodySmall,
-                color = InkSoft
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.padding(bottom = 8.dp)) {
+                SectionLabel("過去の招待")
+                Text(
+                    "検知から${ARCHIVE_AFTER_DAYS}日以上たったものをここへ移しています(締切や当選結果までは判定していません)。行をタップで記事を開きます。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+            }
         }
         if (archivedItems.isEmpty()) {
-            item {
-                Text("まだアーカイブされた情報はありません", style = MaterialTheme.typography.bodyLarge)
-            }
+            item { Text("まだ過去の招待はありません", style = MaterialTheme.typography.bodyMedium) }
         } else {
+            item { ArchiveTableRow("掲載", null, "内容", header = true) }
             items(archivedItems) { alert ->
-                AutoDetectedAlertCard(alert, onClick = { openUrl(context, alert.link) })
+                val team = Team.values().find { it.name == alert.teamId }
+                ArchiveTableRow(
+                    date = alert.eventInstant()?.atZone(java.time.ZoneId.of("Asia/Tokyo"))
+                        ?.let { "${it.monthValue}/${it.dayOfMonth}" } ?: "-",
+                    team = team,
+                    title = alert.title,
+                    onClick = { openUrl(context, alert.link) }
+                )
             }
         }
     }
 }
 
+/** 過去の招待の表組みの1行。左から 掲載日・チーム色・内容。 */
 @Composable
-private fun AutoDetectedAlertCard(alert: RemoteInvitationAlert, onClick: () -> Unit) {
-    val team = Team.values().find { it.name == alert.teamId }
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(3.dp),
-        colors = CardDefaults.cardColors(containerColor = Paper),
-        border = BorderStroke(1.dp, Ink)
-    ) {
-        Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+private fun ArchiveTableRow(
+    date: String,
+    team: Team?,
+    title: String,
+    header: Boolean = false,
+    onClick: (() -> Unit)? = null
+) {
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                if (team != null) {
-                    TeamBadge(team, size = 20.dp, fontSize = 9.sp)
-                    Text(team.displayName, color = team.color, style = MaterialTheme.typography.labelMedium)
-                } else {
-                    Text(alert.teamId, style = MaterialTheme.typography.labelMedium, color = InkSoft)
-                }
-            }
-            Text(alert.title, style = MaterialTheme.typography.bodyLarge)
-            Text("掲載:${alert.timeLabel().ifBlank { "日時不明" }}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            Text(
+                date,
+                modifier = Modifier.width(40.dp),
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = if (header) FontWeight.ExtraBold else FontWeight.Normal
+            )
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .height(if (header) 0.dp else 28.dp)
+                    .background(team?.color ?: Ink)
+            )
+            Text(
+                title,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = if (header) FontWeight.ExtraBold else FontWeight.Normal,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(if (header) 2.dp else 1.dp)
+                .background(if (header) Ink else LineGray)
+        )
     }
 }
 
