@@ -1,1 +1,52 @@
-[]
+[
+  {
+    "id": "official:https://www.fukuiblowinds.com/news/detail/id=51634",
+    "team": "BLOWINDS",
+    "title": "【第8節】11/4（水）vs 鹿児島レブナイズ 冠パートナー決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51634",
+    "published": "2026-09-23T09:00:00+09:00",
+    "detected_at": "2026-09-23T00:00:00+00:00",
+    "snippet": "今シーズンも「インフロニア B.Hi TOUCH」がやってきます！ 昨年に引き続き、インフロニアグループの前田製作所の建設機械「かにクレーン」を使ったシュートチャレンジゲーム「かに",
+    "source": "ブローウィンズ公式"
+  },
+  {
+    "id": "official:https://www.city.fukui.lg.jp/kyoiku/sports/sports/p073437.html",
+    "team": "BLOWINDS",
+    "title": "2026年9月25日  スポーツ   -->  【応募は9/29まで！福井ブローウィンズ🏀】福井ブローウィンズホームゲームに50組100名を無料招待します✨",
+    "link": "https://www.city.fukui.lg.jp/kyoiku/sports/sports/p073437.html",
+    "published": "2026-09-25T09:00:00+09:00",
+    "detected_at": "2026-09-27T14:42:52.606369+00:00",
+    "snippet": "",
+    "source": "福井市"
+  },
+  {
+    "id": "official:https://www.city.fukui.lg.jp/kyoiku/sports/sports/p072702.html",
+    "team": "BLOWINDS",
+    "title": "【福井市に転入された皆さまへ🏀⚽】福井市へようこそ！地元トップスポーツを体感してみませんか？",
+    "link": "https://www.city.fukui.lg.jp/kyoiku/sports/sports/p072702.html",
+    "published": "2026-03-25T09:00:00+09:00",
+    "detected_at": "2026-03-25T00:00:00+00:00",
+    "snippet": "転入者限定・ホームゲーム観戦チケットをプレゼント✨",
+    "source": "福井市"
+  },
+  {
+    "id": "official:https://www.city.fukui.lg.jp/kyoiku/sports/sports/p072530.html",
+    "team": "BLOWINDS",
+    "title": "【福井の若者よ集え！3/2〆切🏀⚽】「FUKUIスポーツ ユースアンバサダー」を募集します！✨",
+    "link": "https://www.city.fukui.lg.jp/kyoiku/sports/sports/p072530.html",
+    "published": "2026-01-28T09:00:00+09:00",
+    "detected_at": "2026-01-28T00:00:00+00:00",
+    "snippet": "・ホームゲーム無料観戦チケット",
+    "source": "福井市"
+  },
+  {
+    "id": "official:https://www.city.fukui.lg.jp/kyoiku/sports/sports/p071122.html",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ「福井市・熊本市姉妹都市提携30周年記念試合」を開催しました",
+    "link": "https://www.city.fukui.lg.jp/kyoiku/sports/sports/p071122.html",
+    "published": "2025-02-12T09:00:00+09:00",
+    "detected_at": "2025-02-12T00:00:00+00:00",
+    "snippet": "この2日間は市民計500名を無料招待したほか、両市の交流の歴史の紹介や観光PR、熊本の特産品の販売を行い、両日で計5,025名の方が来場されました",
+    "source": "福井市"
+  }
+]
