@@ -35,6 +35,49 @@ fun RemoteInvitationAlert.isLikelyClosed(): Boolean {
     }
 }
 
+/**
+ * 記事・招待情報の日時。Googleアラートの掲載日時(published)を優先し、
+ * 無ければアプリ側で検知した日時(detected_at)を使う。
+ */
+fun RemoteInvitationAlert.eventInstant(): java.time.Instant? {
+    for (raw in listOf(published, detectedAt)) {
+        if (raw.isBlank()) continue
+        try {
+            return java.time.OffsetDateTime.parse(raw).toInstant()
+        } catch (e: Exception) {
+        }
+        try {
+            return java.time.Instant.parse(raw)
+        } catch (e: Exception) {
+        }
+    }
+    return null
+}
+
+/** 「9/26(土) 17:45・3時間前」のような日本時間の表示。日時が分からなければ空文字。 */
+fun RemoteInvitationAlert.timeLabel(): String {
+    val instant = eventInstant() ?: return ""
+    val zoned = instant.atZone(java.time.ZoneId.of("Asia/Tokyo"))
+    val weekdays = listOf("月", "火", "水", "木", "金", "土", "日")
+    val base = "%d/%d(%s) %02d:%02d".format(
+        zoned.monthValue, zoned.dayOfMonth, weekdays[zoned.dayOfWeek.value - 1], zoned.hour, zoned.minute
+    )
+    val minutes = (System.currentTimeMillis() - instant.toEpochMilli()) / 60_000
+    val relative = when {
+        minutes < 0 -> ""
+        minutes < 60 -> "${minutes.coerceAtLeast(1)}分前"
+        minutes < 24 * 60 -> "${minutes / 60}時間前"
+        minutes < 7 * 24 * 60 -> "${minutes / (24 * 60)}日前"
+        else -> ""
+    }
+    return if (relative.isEmpty()) base else "$base・$relative"
+}
+
+/** 新しい順(日時が分からないものは最後)に並べる。 */
+fun List<RemoteInvitationAlert>.sortedNewestFirst(): List<RemoteInvitationAlert> =
+    sortedWith(compareByDescending<RemoteInvitationAlert> { it.eventInstant() != null }
+        .thenByDescending { it.eventInstant() })
+
 sealed class AlertsResult {
     data class Success(val items: List<RemoteInvitationAlert>) : AlertsResult()
     data class Failure(val message: String) : AlertsResult()
@@ -68,7 +111,7 @@ object InvitationAlertsRepository {
                     )
                 )
             }
-            AlertsResult.Success(items.reversed()) // 新しいものが先頭に来るように
+            AlertsResult.Success(items.sortedNewestFirst()) // 新しいものが先頭に来るように
         } catch (e: Exception) {
             AlertsResult.Failure(e.message ?: "取得に失敗しました")
         }

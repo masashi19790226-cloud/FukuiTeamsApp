@@ -1,5 +1,14 @@
 package com.fukuiteams.app.ui.screens
 
+import androidx.compose.ui.text.font.FontWeight
+import com.fukuiteams.app.ui.theme.NewsRed
+import com.fukuiteams.app.ui.components.resultMark
+import com.fukuiteams.app.ui.components.resultHeadline
+import com.fukuiteams.app.ui.components.ThinRule
+import com.fukuiteams.app.ui.components.Headline
+import com.fukuiteams.app.ui.components.SectionLabel
+import com.fukuiteams.app.ui.components.TeamSelectorRow
+import com.fukuiteams.app.ui.components.MastheadTopBar
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -40,6 +49,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -76,6 +86,9 @@ import com.fukuiteams.app.data.saveGameOutcome
 import com.fukuiteams.app.data.WatchRecord
 import com.fukuiteams.app.data.computeWatchRecords
 import com.fukuiteams.app.data.resolveOutcome
+import com.fukuiteams.app.data.watchCategoryOf
+import com.fukuiteams.app.data.recordedWatchMethod
+import com.fukuiteams.app.data.recordedOutcome
 import com.fukuiteams.app.data.gameLogDataStore
 import androidx.compose.runtime.collectAsState
 import androidx.datastore.preferences.core.Preferences
@@ -84,6 +97,7 @@ import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.DividerGray
 import com.fukuiteams.app.ui.theme.Ink
+import com.fukuiteams.app.ui.theme.Paper
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
@@ -128,6 +142,8 @@ fun GameDetailScreen(
     val watchRecords = remember(allTeamGames, gameLogPrefs, autoResults) {
         computeWatchRecords(allTeamGames, gameLogPrefs, autoResults)
     }
+    // 観戦成績のタイルをタップしたときに開く試合一覧(null なら閉じている)
+    var statsFilter by remember(selectedTeam) { mutableStateOf<StatsFilter?>(null) }
     val pullToRefreshState = rememberPullToRefreshState()
 
     suspend fun refreshResults() {
@@ -153,8 +169,9 @@ fun GameDetailScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("試合", style = MaterialTheme.typography.titleSmall) },
+            MastheadTopBar(
+                section = "試合面",
+                edition = "${selectedTeam.displayName}版",
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
@@ -164,8 +181,7 @@ fun GameDetailScreen(
                     IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "結果を更新")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+                }
             )
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -182,18 +198,13 @@ fun GameDetailScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(Team.values().toList()) { team ->
-                    FilterChip(
-                        selected = team == selectedTeam,
-                        onClick = { selectedTeam = team },
-                        leadingIcon = { TeamBadge(team, size = 20.dp, fontSize = 10.sp) },
-                        label = { Text(team.displayName) }
-                    )
-                }
-            }
+            TeamSelectorRow(
+                selectedTeam = selectedTeam,
+                onSelect = { t -> if (t != null) selectedTeam = t },
+                showAll = false
+            )
 
-            WatchStatsCard(watchRecords)
+            WatchStatsCard(watchRecords, onOpenList = { statsFilter = it })
 
             TicketSearchSection(
                 personalSearchKeyword = personalSearchKeyword,
@@ -237,14 +248,24 @@ fun GameDetailScreen(
                     } else {
                         listToShow.forEach { g ->
                             val isPastTab = scheduleTabIndex == 1
+                            val isSelected = g.id == selectedGameId
                             ScheduleRow(
                                 game = g,
-                                selected = g.id == selectedGameId,
-                                onClick = { selectedGameId = g.id },
+                                selected = isSelected,
+                                // 過去の試合はもう一度タップすると閉じる(次々に記録しやすいように)
+                                onClick = { selectedGameId = if (isPastTab && isSelected) null else g.id },
                                 score = if (isPastTab) autoResults[g.id] else null,
                                 outcome = if (isPastTab) resolveOutcome(g.id, gameLogPrefs, autoResults) else null,
                                 showResult = isPastTab
                             )
+                            if (isPastTab && isSelected) {
+                                QuickRecordPanel(
+                                    game = g,
+                                    watchMethod = recordedWatchMethod(g.id, gameLogPrefs),
+                                    manualOutcome = recordedOutcome(g.id, gameLogPrefs),
+                                    hasAutoResult = autoResults[g.id] != null
+                                )
+                            }
                         }
                     }
                 }
@@ -256,6 +277,140 @@ fun GameDetailScreen(
         )
         }
     }
+
+    statsFilter?.let { filter ->
+        val filteredGames = pastTeamGames.filter { filter.matches(watchCategoryOf(it.id, gameLogPrefs)) }
+        val record = when (filter) {
+            StatsFilter.ON_SITE -> watchRecords[WatchMethod.ON_SITE] ?: WatchRecord()
+            StatsFilter.OTHERS -> (watchRecords[WatchMethod.STREAMING] ?: WatchRecord()) +
+                (watchRecords[WatchMethod.NOT_WATCHED] ?: WatchRecord())
+            StatsFilter.ALL -> watchRecords.values.fold(WatchRecord()) { acc, r -> acc + r }
+        }
+        ModalBottomSheet(onDismissRequest = { statsFilter = null }, containerColor = Paper) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    "${filter.label}の試合",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    "${record.summaryLabel()}・勝率 ${record.winRateLabel()}(新しい順)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                if (filteredGames.isEmpty()) {
+                    Text("該当する試合はありません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                } else {
+                    filteredGames.forEach { g ->
+                        ScheduleRow(
+                            game = g,
+                            selected = false,
+                            onClick = {
+                                // タップした試合を「過去の試合」で選択状態にして詳細を表示
+                                scheduleTabIndex = 1
+                                selectedGameId = g.id
+                                statsFilter = null
+                            },
+                            score = autoResults[g.id],
+                            outcome = resolveOutcome(g.id, gameLogPrefs, autoResults),
+                            showResult = true
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 過去の試合一覧で、選択した行のすぐ下に出す記録欄。
+ * 観戦方法と(自動取得の結果が無い試合は)勝敗を、その場でタップして記録できる。
+ */
+@Composable
+private fun QuickRecordPanel(
+    game: Game,
+    watchMethod: WatchMethod?,
+    manualOutcome: GameOutcome?,
+    hasAutoResult: Boolean
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(3.dp))
+            .background(game.team.color.copy(alpha = 0.06f))
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text("観戦方法", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            WatchMethod.values().forEach { method ->
+                val label = when (method) {
+                    WatchMethod.ON_SITE -> "現地"
+                    WatchMethod.STREAMING -> "配信"
+                    WatchMethod.NOT_WATCHED -> "見ていない"
+                }
+                QuickChoice(label, watchMethod == method, game.team.color, Modifier.weight(1f)) {
+                    scope.launch { saveWatchMethod(context, game.id, method) }
+                }
+            }
+        }
+        if (!hasAutoResult) {
+            Text("勝敗(自動取得の結果がまだ無い試合のみ)", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                GameOutcome.values().forEach { option ->
+                    val label = when (option) {
+                        GameOutcome.WIN -> "勝ち"
+                        GameOutcome.LOSE -> "負け"
+                        GameOutcome.DRAW -> "引分"
+                    }
+                    QuickChoice(label, manualOutcome == option, game.team.color, Modifier.weight(1f)) {
+                        scope.launch { saveGameOutcome(context, game.id, option) }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuickChoice(
+    label: String,
+    selected: Boolean,
+    color: androidx.compose.ui.graphics.Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(3.dp))
+            .background(if (selected) color else Paper)
+            .border(BorderStroke(1.dp, if (selected) color else LineGray), RoundedCornerShape(3.dp))
+            .clickable(onClick = onClick)
+            .padding(vertical = 10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(label, color = if (selected) White else Ink, style = MaterialTheme.typography.labelLarge)
+    }
+}
+
+/** 観戦成績のタイルの区分。 */
+private enum class StatsFilter(val label: String) {
+    ON_SITE("現地観戦"),
+    OTHERS("それ以外"),
+    ALL("全体");
+
+    fun matches(method: WatchMethod): Boolean = when (this) {
+        ON_SITE -> method == WatchMethod.ON_SITE
+        OTHERS -> method != WatchMethod.ON_SITE
+        ALL -> true
+    }
 }
 
 /**
@@ -263,49 +418,51 @@ fun GameDetailScreen(
  * 現地観戦 = 観戦方法を「現地」にした試合。それ以外 = 配信・見ていない・未記録の試合。
  */
 @Composable
-private fun WatchStatsCard(records: Map<WatchMethod, WatchRecord>) {
+private fun WatchStatsCard(
+    records: Map<WatchMethod, WatchRecord>,
+    onOpenList: (StatsFilter) -> Unit
+) {
     val onSite = records[WatchMethod.ON_SITE] ?: WatchRecord()
     val streaming = records[WatchMethod.STREAMING] ?: WatchRecord()
     val others = streaming + (records[WatchMethod.NOT_WATCHED] ?: WatchRecord())
     val all = onSite + others
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .border(BorderStroke(1.dp, DividerGray), RoundedCornerShape(12.dp))
-            .padding(14.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
+    val onSiteRate = onSite.rate()
+    val allRate = all.rate()
+    // 紙面の見出し:現地観戦の勝率を全体と比べて一言
+    val headline = when {
+        onSiteRate == null -> "現地観戦の記録はまだ"
+        allRate != null && onSiteRate >= allRate + 0.05 -> "現地で強し\n勝率 ${onSite.winRateLabel()}"
+        allRate != null && onSiteRate <= allRate - 0.05 -> "現地では苦戦\n勝率 ${onSite.winRateLabel()}"
+        else -> "現地観戦\n勝率 ${onSite.winRateLabel()}"
+    }
+    val lead = when {
+        all.watched == 0 -> "まだ終了した試合がありません。"
+        onSiteRate == null -> "過去の試合を選んで観戦方法を「現地」にすると、ここに勝率が出ます。"
+        allRate == null -> "現地観戦は${onSite.summaryLabel()}。"
+        onSiteRate > allRate -> "現地観戦は${onSite.summaryLabel()}。全体の${all.winRateLabel()}を上回る。"
+        onSiteRate < allRate -> "現地観戦は${onSite.summaryLabel()}。全体の${all.winRateLabel()}を下回る。"
+        else -> "現地観戦は${onSite.summaryLabel()}。全体と同じ勝率。"
+    }
+
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("観戦成績", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
-            Text("通算", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            SectionLabel("観戦成績")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("通算・行をタップで試合一覧", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         }
-
-        if (all.watched == 0) {
-            Text(
-                "まだ終了した試合がありません。",
-                style = MaterialTheme.typography.bodySmall,
-                color = InkSoft
-            )
-        } else {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                WatchRecordTile("現地観戦", onSite, Modifier.weight(1f), highlight = true)
-                WatchRecordTile("それ以外", others, Modifier.weight(1f))
-                WatchRecordTile("全体", all, Modifier.weight(1f))
+        Headline(headline, fontSize = 24)
+        Text(lead, style = MaterialTheme.typography.bodyMedium, color = InkSoft)
+        if (all.watched > 0) {
+            Column(modifier = Modifier.padding(top = 4.dp)) {
+                StatsTableRow(listOf("区分", "試合", "勝", "敗", "分", "勝率"), header = true)
+                StatsTableRow(onSite.asCells("現地観戦 ›"), bold = true, highlightRate = true) { onOpenList(StatsFilter.ON_SITE) }
+                StatsTableRow(others.asCells("それ以外 ›")) { onOpenList(StatsFilter.OTHERS) }
+                StatsTableRow(all.asCells("全体 ›")) { onOpenList(StatsFilter.ALL) }
             }
-
-            if (onSite.watched == 0) {
-                Text(
-                    "過去の試合を選んで観戦方法を「現地観戦」にすると、ここに勝率が表示されます。",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = InkSoft
-                )
-            }
-
             if (all.unknown > 0) {
                 Text(
-                    "結果が未確定の試合 ${all.unknown}件は除外しています(試合詳細で勝敗を記録できます)",
+                    "結果が未確定の試合 ${all.unknown}件は除外(一覧で勝敗を記録できます)",
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
@@ -314,27 +471,42 @@ private fun WatchStatsCard(records: Map<WatchMethod, WatchRecord>) {
     }
 }
 
+private fun WatchRecord.asCells(label: String) =
+    listOf(label, "$decidedGames", "$wins", "$losses", "$draws", winRateLabel())
+
 @Composable
-private fun WatchRecordTile(
-    label: String,
-    record: WatchRecord,
-    modifier: Modifier = Modifier,
-    highlight: Boolean = false
+private fun StatsTableRow(
+    cells: List<String>,
+    header: Boolean = false,
+    bold: Boolean = false,
+    highlightRate: Boolean = false,
+    onClick: (() -> Unit)? = null
 ) {
-    Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
-            .background(DividerGray)
-            .then(
-                if (highlight) Modifier.border(BorderStroke(1.5.dp, InkSoft), RoundedCornerShape(10.dp))
-                else Modifier
-            )
-            .padding(horizontal = 10.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = InkSoft)
-        Text(record.winRateLabel(), style = MaterialTheme.typography.titleLarge)
-        Text(record.summaryLabel(), style = MaterialTheme.typography.bodySmall, color = InkSoft)
+    val weights = listOf(2.4f, 1f, 0.8f, 0.8f, 0.8f, 1.3f)
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+                .padding(vertical = 7.dp, horizontal = 2.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            cells.forEachIndexed { i, cell ->
+                val isRate = i == cells.lastIndex
+                Text(
+                    cell,
+                    modifier = Modifier.weight(weights[i]),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = if (header || bold || (isRate && highlightRate)) FontWeight.ExtraBold else FontWeight.Normal,
+                    color = if (isRate && highlightRate && !header) NewsRed else Ink
+                )
+            }
+        }
+        if (header) {
+            Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(Ink))
+        } else {
+            ThinRule(color = LineGray)
+        }
     }
 }
 
@@ -359,7 +531,7 @@ private fun TicketSearchSection(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(3.dp))
                 .background(DividerGray)
                 .padding(12.dp)
         ) {
@@ -375,9 +547,9 @@ private fun TicketSearchSection(
 private fun ScheduleTabChip(label: String, selected: Boolean, onClick: () -> Unit) {
     Row(
         modifier = Modifier
-            .clip(RoundedCornerShape(20.dp))
-            .background(if (selected) Ink else White)
-            .border(BorderStroke(1.dp, if (selected) Ink else LineGray), RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(3.dp))
+            .background(if (selected) Ink else Paper)
+            .border(BorderStroke(1.dp, if (selected) Ink else LineGray), RoundedCornerShape(3.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 8.dp),
     ) {
@@ -402,7 +574,7 @@ private fun ScheduleRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(3.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (selected) game.team.color.copy(alpha = 0.06f) else White
         ),
@@ -426,7 +598,10 @@ private fun ScheduleRow(
             }
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("vs ${game.opponent}", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        if (showResult) resultHeadline(game, score?.myScore, score?.opponentScore, outcome) else "vs ${game.opponent}",
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     HomeAwayBadge(isHome = game.isHome)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
@@ -444,45 +619,33 @@ private fun ScheduleRow(
     }
 }
 
-/** 過去の試合一覧の右端に出す「勝/負/分」と点数。 */
+/** 過去の試合一覧の右端に出す「○90-88」「●80-82」のような結果。 */
 @Composable
 private fun ResultBadge(team: Team, score: RemoteGameResult?, outcome: GameOutcome?) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        val (label, bg, fg) = when (outcome) {
-            GameOutcome.WIN -> Triple("勝", team.color, White)
-            GameOutcome.LOSE -> Triple("負", DividerGray, Ink)
-            GameOutcome.DRAW -> Triple("分", DividerGray, InkSoft)
-            null -> Triple("-", White, InkSoft)
-        }
-        Box(
-            modifier = Modifier
-                .size(32.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(bg)
-                .border(BorderStroke(1.dp, if (outcome == null) LineGray else bg), RoundedCornerShape(8.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(label, color = fg, style = MaterialTheme.typography.titleMedium)
-        }
-        // 点数が無く手動で勝敗だけ記録した試合は、点数欄を出さない
-        val scoreText = when {
-            score != null -> "${score.myScore}-${score.opponentScore}"
-            outcome == null -> "結果待ち"
-            else -> null
-        }
-        if (scoreText != null) {
-            Text(scoreText, style = MaterialTheme.typography.bodySmall, color = InkSoft)
-        }
+    val text = when {
+        outcome == null -> "結果待ち"
+        score != null -> "${resultMark(outcome)}${score.myScore}-${score.opponentScore}"
+        else -> resultMark(outcome)
     }
+    Text(
+        text,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = if (outcome == null) 11.sp else 15.sp,
+        color = when (outcome) {
+            GameOutcome.WIN -> NewsRed
+            null -> InkSoft
+            else -> Ink
+        }
+    )
 }
 
 @Composable
 private fun EmptyTeamState(team: Team) {
     Card(
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        border = BorderStroke(1.dp, LineGray)
+        shape = RoundedCornerShape(3.dp),
+        colors = CardDefaults.cardColors(containerColor = Paper),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, Ink)
     ) {
         Column(
             modifier = Modifier
@@ -524,9 +687,9 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onOpenInvitations),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = White),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+            shape = RoundedCornerShape(3.dp),
+            colors = CardDefaults.cardColors(containerColor = Paper),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             border = BorderStroke(2.dp, Accent)
         ) {
             Row(
@@ -546,10 +709,10 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
 
         SectionTitle("公式チケット")
         Card(
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = White),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-            border = BorderStroke(1.dp, LineGray)
+            shape = RoundedCornerShape(3.dp),
+            colors = CardDefaults.cardColors(containerColor = Paper),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            border = BorderStroke(1.dp, Ink)
         ) {
             Column(
                 modifier = Modifier.padding(14.dp),
@@ -574,17 +737,15 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
 private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var outcome by remember(game.id) { mutableStateOf<GameOutcome?>(null) }
-
-    LaunchedEffect(game.id) {
-        outcome = loadGameOutcome(context, game.id)
-    }
+    // 一覧側の記録欄で変更しても、ここにすぐ反映されるように保存データを直接見る
+    val prefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+    val outcome = recordedOutcome(game.id, prefs)
 
     Card(
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        border = BorderStroke(1.dp, LineGray)
+        shape = RoundedCornerShape(3.dp),
+        colors = CardDefaults.cardColors(containerColor = Paper),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, Ink)
     ) {
         Column(
             modifier = Modifier
@@ -649,14 +810,13 @@ private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(if (isSelected) color.copy(alpha = 0.12f) else White)
+                            .clip(RoundedCornerShape(3.dp))
+                            .background(if (isSelected) color.copy(alpha = 0.12f) else Paper)
                             .border(
                                 BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) color else LineGray),
-                                RoundedCornerShape(10.dp)
+                                RoundedCornerShape(3.dp)
                             )
                             .clickable {
-                                outcome = option
                                 scope.launch { saveGameOutcome(context, game.id, option) }
                             }
                             .padding(vertical = 12.dp),
@@ -674,17 +834,15 @@ private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
 private fun WatchMethodPicker(game: Game) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var selected by remember(game.id) { mutableStateOf<WatchMethod?>(null) }
-
-    LaunchedEffect(game.id) {
-        selected = loadWatchMethod(context, game.id)
-    }
+    // 一覧側の記録欄で変更しても、ここにすぐ反映されるように保存データを直接見る
+    val prefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+    val selected = recordedWatchMethod(game.id, prefs)
 
     Card(
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        border = BorderStroke(1.dp, LineGray)
+        shape = RoundedCornerShape(3.dp),
+        colors = CardDefaults.cardColors(containerColor = Paper),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, Ink)
     ) {
         Column(
             modifier = Modifier
@@ -704,14 +862,13 @@ private fun WatchMethodPicker(game: Game) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(if (isSelected) Accent.copy(alpha = 0.10f) else White)
+                            .clip(RoundedCornerShape(3.dp))
+                            .background(if (isSelected) Accent.copy(alpha = 0.10f) else Paper)
                             .border(
                                 BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) Accent else LineGray),
-                                RoundedCornerShape(10.dp)
+                                RoundedCornerShape(3.dp)
                             )
                             .clickable {
-                                selected = method
                                 scope.launch { saveWatchMethod(context, game.id, method) }
                             }
                             .padding(horizontal = 14.dp, vertical = 12.dp),
@@ -723,7 +880,7 @@ private fun WatchMethodPicker(game: Game) {
                                 .size(18.dp)
                                 .clip(CircleShape)
                                 .border(BorderStroke(2.dp, if (isSelected) Accent else LineGray), CircleShape)
-                                .background(if (isSelected) Accent else White),
+                                .background(if (isSelected) Accent else Paper),
                             contentAlignment = Alignment.Center
                         ) {
                             if (isSelected) {
@@ -748,10 +905,10 @@ private fun WatchMethodPicker(game: Game) {
 private fun MatchHeaderCard(game: Game, isPast: Boolean = false) {
     val context = LocalContext.current
     Card(
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
+        shape = RoundedCornerShape(3.dp),
+        colors = CardDefaults.cardColors(containerColor = Paper),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        border = BorderStroke(1.dp, LineGray)
+        border = BorderStroke(1.dp, Ink)
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
@@ -824,7 +981,7 @@ private fun MatchHeaderCard(game: Game, isPast: Boolean = false) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(3.dp))
                     .clickable { openUrl(context, "https://www.google.com/maps/search/?api=1&query=" + URLEncoder.encode(game.venue, "UTF-8")) }
                     .padding(vertical = 4.dp),
                 horizontalArrangement = Arrangement.Center,

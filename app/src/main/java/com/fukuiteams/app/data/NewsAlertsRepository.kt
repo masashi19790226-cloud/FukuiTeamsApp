@@ -41,7 +41,7 @@ object NewsAlertsRepository {
                     )
                 )
             }
-            AlertsResult.Success(items.reversed())
+            AlertsResult.Success(items.sortedNewestFirst())
         } catch (e: Exception) {
             AlertsResult.Failure(e.message ?: "取得に失敗しました")
         }

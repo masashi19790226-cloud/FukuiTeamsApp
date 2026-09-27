@@ -1,4 +1,4 @@
-# 福井チーム情報アプリ(FukuiTeamsApp)
+# ふくスポ(FukuiTeamsApp)
 
 福井ブローウィンズ・福井丸岡ラック・福井ユナイテッドの最新情報・無料招待・チケット情報を
 まとめる Android アプリのスターター実装です。Kotlin + Jetpack Compose (Material 3) で、

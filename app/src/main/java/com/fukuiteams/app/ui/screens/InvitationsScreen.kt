@@ -1,5 +1,7 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.ui.components.TeamSelectorRow
+import com.fukuiteams.app.ui.components.MastheadTopBar
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -49,11 +51,13 @@ import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.AlertsResult
 import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
+import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.Ink
+import com.fukuiteams.app.ui.theme.Paper
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
@@ -87,14 +91,14 @@ fun InvitationsScreen() {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("無料招待・プレゼント", style = MaterialTheme.typography.titleLarge) },
+            MastheadTopBar(
+                section = "招待面",
+                edition = selectedTeam?.let { "${it.displayName}版" },
                 actions = {
                     IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "更新")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+                }
             )
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -106,30 +110,12 @@ fun InvitationsScreen() {
                 .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                LazyRow(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    item {
-                        FilterChip(
-                            selected = selectedTeam == null,
-                            onClick = { selectedTeam = null },
-                            label = { Text("すべて") },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Ink,
-                                selectedLabelColor = White
-                            )
-                        )
-                    }
-                    items(Team.values().toList()) { team ->
-                        FilterChip(
-                            selected = selectedTeam == team,
-                            onClick = { selectedTeam = if (selectedTeam == team) null else team },
-                            leadingIcon = { TeamBadge(team, size = 20.dp, fontSize = 10.sp) },
-                            label = { Text(team.displayName) }
-                        )
-                    }
-                }
+                TeamSelectorRow(
+                    selectedTeam = selectedTeam,
+                    onSelect = { t -> selectedTeam = if (t != null && t == selectedTeam) null else t },
+                    showAll = true,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
 
                 TabRow(
                     selectedTabIndex = tabIndex,
@@ -223,9 +209,9 @@ private fun AutoDetectedAlertCard(alert: RemoteInvitationAlert, onClick: () -> U
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
-        border = BorderStroke(1.dp, LineGray)
+        shape = RoundedCornerShape(3.dp),
+        colors = CardDefaults.cardColors(containerColor = Paper),
+        border = BorderStroke(1.dp, Ink)
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
@@ -240,7 +226,7 @@ private fun AutoDetectedAlertCard(alert: RemoteInvitationAlert, onClick: () -> U
                 }
             }
             Text(alert.title, style = MaterialTheme.typography.bodyLarge)
-            Text("検知:${alert.published.ifBlank { alert.detectedAt }}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            Text("掲載:${alert.timeLabel().ifBlank { "日時不明" }}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         }
     }
 }

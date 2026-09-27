@@ -34,7 +34,7 @@ WEEKDAY_JP = ["月", "火", "水", "木", "金", "土", "日"]
 EN_WEEKDAYS = "Mon|Tue|Wed|Thu|Fri|Sat|Sun"
 ID_PREFIX = {"blowinds": "bw", "rac": "rc", "united": "un"}
 
-# ホーム判定に使う会場名のキーワード(RUCK・ユナイテッド用)
+# ホーム判定に使う会場名のキーワード(ユナイテッド用。RUCKはセーレン・ドリームアリーナのみホーム)
 FUKUI_VENUE_WORDS = ["福井", "セーレン", "テクノポート", "9.98", "９．９８", "丸岡", "坂井", "敦賀", "鯖江", "越前", "武生", "三国", "大野", "勝山", "小浜"]
 
 NOW = datetime.utcnow() + timedelta(hours=9)  # 日本時間
@@ -164,7 +164,10 @@ def scrape_ruck():
         gid_m = re.search(r"gid=(\d+)", cells[5]) if len(cells) > 5 else None
         if not opp:
             continue
-        games.append(make_game("rac", year, mo, d, time, opp, venue, is_fukui_venue(venue),
+        # RUCKはセーレン・ドリームアリーナ(福井県営体育館)開催だけがホーム。
+        # 福井県内の別会場でも、それ以外はすべてアウェイ扱い
+        is_home = "セーレン" in venue or "福井県営体育館" in venue
+        games.append(make_game("rac", year, mo, d, time, opp, venue, is_home,
                                gid=gid_m.group(1) if gid_m else None))
     print(f"[INFO] RUCK: {len(games)} 試合を読み取り")
     return games

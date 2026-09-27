@@ -2,16 +2,20 @@ package com.fukuiteams.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ベース
-val Ivory = Color(0xFFF4F2EE)
-val Ink = Color(0xFF1F1D1A)
-val InkSoft = Color(0xFF5E5A54)
-val LineGray = Color(0xFFCFCAC2)
-val DividerGray = Color(0xFFE4E0D9)
+// ベース(スポーツ新聞風:生成りの紙・墨・赤)
+val Ivory = Color(0xFFF3F0E8)       // 紙面の地色
+val Paper = Color(0xFFFBF9F4)       // カード・囲み記事の地色(紙面より少し明るい)
+val Ink = Color(0xFF111111)         // 墨
+val InkSoft = Color(0xFF55504A)     // 本文の補足
+val LineGray = Color(0xFFB9B2A4)    // 罫線(細)
+val DividerGray = Color(0xFFE6E0D3) // 淡い地
 val White = Color(0xFFFFFFFF)
 
-// アプリ全体のアクセント(無料招待・CTA用、薄めのテラコッタ)
-val Accent = Color(0xFFD97757)
+// 新聞の赤(速報・勝ち・強調)
+val NewsRed = Color(0xFFC8102E)
+
+// アプリ全体のアクセント(無料招待・CTA用)。新聞の赤にそろえる
+val Accent = NewsRed
 
 // チームカラー(ワイヤーフレームで確定した実際のチームカラーに準拠)
 val TeamBlowinds = Color(0xFF0F3460) // 福井ブローウィンズ:濃紺

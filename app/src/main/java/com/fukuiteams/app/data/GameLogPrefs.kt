@@ -63,6 +63,12 @@ data class WatchRecord(val wins: Int = 0, val losses: Int = 0, val draws: Int = 
         return if (rate >= 1.0) text else text.removePrefix("0")
     }
 
+    /** 勝率(勝ち÷(勝ち+負け))。勝ち負けが無ければ null。 */
+    fun rate(): Double? = if (wins + losses == 0) null else wins.toDouble() / (wins + losses)
+
+    /** 結果が分かっている試合数(勝+負+分)。 */
+    val decidedGames: Int get() = wins + losses + draws
+
     /** 「4勝2敗」「2勝1敗1分」の形式。 */
     fun summaryLabel(): String = "${wins}勝${losses}敗" + if (draws > 0) "${draws}分" else ""
 
@@ -121,3 +127,15 @@ fun resolveOutcome(
         else -> GameOutcome.values().find { it.name == prefs?.get(outcomeKey(gameId)) }
     }
 }
+
+/** 観戦成績の区分に使う観戦方法。未記録の試合は NOT_WATCHED(未観戦)扱い。 */
+fun watchCategoryOf(gameId: String, prefs: Preferences?): WatchMethod =
+    WatchMethod.values().find { it.name == prefs?.get(watchMethodKey(gameId)) } ?: WatchMethod.NOT_WATCHED
+
+/** 記録済みの観戦方法(未記録なら null)。画面の表示用。 */
+fun recordedWatchMethod(gameId: String, prefs: Preferences?): WatchMethod? =
+    WatchMethod.values().find { it.name == prefs?.get(watchMethodKey(gameId)) }
+
+/** 手動で記録した勝敗(未記録なら null)。画面の表示用。 */
+fun recordedOutcome(gameId: String, prefs: Preferences?): GameOutcome? =
+    GameOutcome.values().find { it.name == prefs?.get(outcomeKey(gameId)) }

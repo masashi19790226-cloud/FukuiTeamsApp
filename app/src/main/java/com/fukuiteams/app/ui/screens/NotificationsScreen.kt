@@ -1,5 +1,6 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.ui.components.MastheadTopBar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,7 +36,9 @@ import com.fukuiteams.app.notifications.rescheduleGameStartNotifications
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.DividerGray
+import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
+import com.fukuiteams.app.ui.theme.Paper
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
 import kotlinx.coroutines.flow.map
@@ -65,10 +68,7 @@ fun NotificationsScreen() {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("通知設定", style = MaterialTheme.typography.titleLarge) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
-            )
+            MastheadTopBar(section = "通知設定")
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
@@ -80,9 +80,9 @@ fun NotificationsScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Card(
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = White),
-                border = BorderStroke(1.dp, LineGray)
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp),
+                colors = CardDefaults.cardColors(containerColor = Paper),
+                border = BorderStroke(1.dp, Ink)
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text("通知の表示例", style = MaterialTheme.typography.bodySmall, color = InkSoft)
@@ -94,9 +94,9 @@ fun NotificationsScreen() {
             Column {
                 Text("チーム", style = MaterialTheme.typography.labelMedium, color = InkSoft)
                 Card(
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = White),
-                    border = BorderStroke(1.dp, LineGray)
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp),
+                    colors = CardDefaults.cardColors(containerColor = Paper),
+                    border = BorderStroke(1.dp, Ink)
                 ) {
                     Column {
                         Team.values().forEachIndexed { index, team ->
@@ -133,9 +133,9 @@ fun NotificationsScreen() {
             Column {
                 Text("通知する内容", style = MaterialTheme.typography.labelMedium, color = InkSoft)
                 Card(
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = White),
-                    border = BorderStroke(1.dp, LineGray)
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp),
+                    colors = CardDefaults.cardColors(containerColor = Paper),
+                    border = BorderStroke(1.dp, Ink)
                 ) {
                     Column {
                         kindDefs.forEachIndexed { index, kind ->

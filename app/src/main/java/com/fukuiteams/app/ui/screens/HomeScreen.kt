@@ -1,5 +1,15 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.data.GameOutcome
+import com.fukuiteams.app.data.RemoteGameResult
+import com.fukuiteams.app.data.GameResultsRepository
+import com.fukuiteams.app.ui.theme.NewsRed
+import com.fukuiteams.app.ui.components.resultHeadline
+import com.fukuiteams.app.ui.components.DoubleRule
+import com.fukuiteams.app.ui.components.Headline
+import com.fukuiteams.app.ui.components.SectionLabel
+import com.fukuiteams.app.ui.components.TeamSelectorRow
+import com.fukuiteams.app.ui.components.MastheadTopBar
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -61,6 +71,7 @@ import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.NewsAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
+import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isUpcoming
 import com.fukuiteams.app.model.Game
@@ -69,6 +80,7 @@ import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.DividerGray
 import com.fukuiteams.app.ui.theme.Ink
+import com.fukuiteams.app.ui.theme.Paper
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
@@ -85,8 +97,11 @@ fun HomeScreen(
     val pullToRefreshState = rememberPullToRefreshState()
     val appContext = LocalContext.current.applicationContext
 
+    var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
+
     suspend fun refreshAll() {
         GamesRepository.refresh(appContext)
+        autoResults = GameResultsRepository.fetch()
         invitationsResult = InvitationAlertsRepository.fetch()
         newsResult = NewsAlertsRepository.fetch()
     }
@@ -110,14 +125,14 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("福井チーム情報", style = MaterialTheme.typography.titleLarge) },
+            MastheadTopBar(
+                section = "一面",
+                edition = selectedTeam?.let { "${it.displayName}版" },
                 actions = {
                     IconButton(onClick = onOpenNotifications) {
                         Icon(Icons.Filled.Notifications, contentDescription = "通知設定")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+                }
             )
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -134,26 +149,20 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
             item {
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    item {
-                        FilterChip(
-                            selected = selectedTeam == null,
-                            onClick = { selectedTeam = null },
-                            label = { Text("すべて") },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Ink,
-                                selectedLabelColor = White
-                            )
-                        )
-                    }
-                    items(Team.values().toList()) { team ->
-                        FilterChip(
-                            selected = selectedTeam == team,
-                            onClick = { selectedTeam = if (selectedTeam == team) null else team },
-                            leadingIcon = { TeamBadge(team, size = 20.dp, fontSize = 10.sp) },
-                            label = { Text(team.displayName) }
-                        )
-                    }
+                TeamSelectorRow(
+                    selectedTeam = selectedTeam,
+                    onSelect = { t -> selectedTeam = if (t != null && t == selectedTeam) null else t },
+                    showAll = true
+                )
+            }
+
+            item {
+                // 一面トップ:選択中のチーム(「すべて」なら全チーム)の最新の試合結果
+                val latest = GamesRepository.games
+                    .filter { (selectedTeam == null || it.team == selectedTeam) && autoResults.containsKey(it.id) }
+                    .maxByOrNull { it.sortKey }
+                if (latest != null) {
+                    LatestResultHero(latest, autoResults.getValue(latest.id), onClick = { onOpenGame(latest.id) })
                 }
             }
 
@@ -161,7 +170,7 @@ fun HomeScreen(
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("直近の試合", style = MaterialTheme.typography.titleSmall)
+                    SectionLabel("次の試合")
                     // 特定のチームを選んだときはそのチームの直近3件、「すべて」のときは全体の直近3件を表示。
                     // 試合スケジュールの一覧は「試合」タブにまとめてあるので、ここでは概要だけ。
                     val games = if (selectedTeam != null) {
@@ -200,7 +209,7 @@ fun HomeScreen(
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("公式サイト", style = MaterialTheme.typography.titleSmall)
+                    SectionLabel("公式サイト")
                     OfficialSiteLinks(selectedTeam)
                 }
             }
@@ -212,7 +221,7 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("新着ニュース(Googleアラート)", style = MaterialTheme.typography.titleSmall)
+                        SectionLabel("ニュース")
                         IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                             Icon(Icons.Filled.Refresh, contentDescription = "ニュースを更新")
                         }
@@ -250,10 +259,10 @@ private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?) {
                 Text("まだニュースが自動検知されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
             } else {
                 Card(
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-                    border = BorderStroke(1.dp, LineGray)
+                    shape = RoundedCornerShape(3.dp),
+                    colors = CardDefaults.cardColors(containerColor = Paper),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                    border = BorderStroke(1.dp, Ink)
                 ) {
                     Column {
                         newsList.take(10).forEachIndexed { index, news ->
@@ -274,7 +283,7 @@ private fun InviteBanner(onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(3.dp))
             .background(Accent)
             .clickable(onClick = onClick)
             .padding(16.dp)
@@ -299,9 +308,9 @@ private fun OfficialSiteLinks(selectedTeam: Team?) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(3.dp))
                     .background(White)
-                    .border(BorderStroke(1.dp, LineGray), RoundedCornerShape(12.dp))
+                    .border(BorderStroke(1.dp, Ink), RoundedCornerShape(3.dp))
                     .clickable(enabled = team.officialSiteUrl != null) {
                         team.officialSiteUrl?.let { openUrl(context, it) }
                     }
@@ -327,10 +336,10 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        border = BorderStroke(1.dp, LineGray)
+        shape = RoundedCornerShape(3.dp),
+        colors = CardDefaults.cardColors(containerColor = Paper),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, Ink)
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -428,7 +437,7 @@ private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .size(48.dp)
-                .clip(RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(3.dp))
                 .background(team?.color ?: InkSoft),
             contentAlignment = Alignment.Center
         ) {
@@ -436,7 +445,7 @@ private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
         }
         Column {
             Text(
-                "${team?.displayName ?: news.teamId}・検知 ${news.published.ifBlank { news.detectedAt }}",
+                listOf(team?.displayName ?: news.teamId, news.timeLabel()).filter { it.isNotBlank() }.joinToString("・"),
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
@@ -450,3 +459,60 @@ private fun openUrl(context: Context, url: String) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     context.startActivity(intent)
 }
+
+/** 一面トップの「速報」。最新の試合結果を大見出しとスコアボックスで見せる。 */
+@Composable
+private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -> Unit) {
+    val outcome = when {
+        result.myScore > result.opponentScore -> GameOutcome.WIN
+        result.myScore < result.opponentScore -> GameOutcome.LOSE
+        else -> GameOutcome.DRAW
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            SectionLabel("速報", red = true)
+            Text(
+                "${game.dateLabel.split("/").drop(1).joinToString("/")}(${game.dayOfWeek})・${if (game.isHome) "HOME" else "AWAY"}",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+        }
+        Headline(
+            "${game.team.displayName}\n${resultHeadline(game, result.myScore, result.opponentScore, outcome)}",
+            fontSize = 26
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(BorderStroke(2.dp, Ink))
+                .background(Paper)
+                .padding(vertical = 10.dp, horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("福井", style = MaterialTheme.typography.labelMedium)
+                Text(
+                    when (outcome) {
+                        GameOutcome.WIN -> "WIN"
+                        GameOutcome.LOSE -> "LOSE"
+                        GameOutcome.DRAW -> "DRAW"
+                    },
+                    style = MaterialTheme.typography.labelSmall,
+                    color = if (outcome == GameOutcome.WIN) NewsRed else InkSoft
+                )
+            }
+            Headline("${result.myScore}", fontSize = 34, color = if (outcome == GameOutcome.WIN) NewsRed else Ink)
+            Text("-", style = MaterialTheme.typography.titleLarge)
+            Headline("${result.opponentScore}", fontSize = 34)
+            Text(game.opponent, style = MaterialTheme.typography.labelMedium, modifier = Modifier.width(72.dp))
+        }
+        DoubleRule(modifier = Modifier.padding(top = 6.dp))
+    }
+}
+
