@@ -8,3 +8,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# 署名鍵はリポジトリに入れない(GitHub Secret で管理)
+*.jks
+*.keystore

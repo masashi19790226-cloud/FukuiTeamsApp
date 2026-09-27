@@ -1,5 +1,14 @@
 package com.fukuiteams.app.ui.screens
 
+import androidx.compose.runtime.collectAsState
+import androidx.datastore.preferences.core.Preferences
+import com.fukuiteams.app.ui.components.photoCaption
+import com.fukuiteams.app.ui.components.NewspaperPhoto
+import com.fukuiteams.app.data.recordedWatchMethod
+import com.fukuiteams.app.data.gameLogDataStore
+import com.fukuiteams.app.data.GamePhotos
+import androidx.compose.ui.text.font.FontWeight
+import com.fukuiteams.app.ui.theme.Ivory
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -380,7 +389,7 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(game.team.displayName, color = game.team.color, style = MaterialTheme.typography.labelMedium)
-                    HomeAwayBadge(isHome = game.isHome)
+                    HomeAwayLabel(isHome = game.isHome)
                 }
                 Text("vs ${game.opponent}", style = MaterialTheme.typography.titleMedium)
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
@@ -388,7 +397,13 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
                     Text(game.timeLabel, style = MaterialTheme.typography.bodySmall, color = InkSoft)
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(Icons.Filled.LocationOn, contentDescription = null, tint = InkSoft, modifier = Modifier.size(13.dp))
-                    Text(game.venue, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                    Text(
+                        game.venue,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
             if (hasOpenInvite) {
@@ -404,6 +419,22 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
             }
         }
     }
+}
+
+/** 紙面風の HOME / AWAY 表示。HOME は黒地に白抜き、AWAY は黒枠。 */
+@Composable
+private fun HomeAwayLabel(isHome: Boolean) {
+    Text(
+        if (isHome) "HOME" else "AWAY",
+        modifier = Modifier
+            .border(1.dp, Ink)
+            .background(if (isHome) Ink else Paper)
+            .padding(horizontal = 4.dp, vertical = 1.dp),
+        color = if (isHome) Ivory else Ink,
+        fontSize = 9.sp,
+        fontWeight = FontWeight.ExtraBold,
+        letterSpacing = 0.5.sp
+    )
 }
 
 @Composable
@@ -507,6 +538,16 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
             fontSize = 26
         )
         val context = LocalContext.current
+        // その試合に写真が登録されていれば、1枚目を写真説明付きで載せる
+        val photos = remember(game.id, GamePhotos.version) { GamePhotos.list(context, game.id) }
+        if (photos.isNotEmpty()) {
+            val prefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+            NewspaperPhoto(
+                file = photos.first(),
+                caption = photoCaption(game, result, outcome, recordedWatchMethod(game.id, prefs)),
+                height = 200.dp
+            )
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()

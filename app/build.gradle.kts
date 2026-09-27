@@ -11,8 +11,25 @@ android {
         applicationId = "com.fukuiteams.app"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1"
+        // GitHub Actions の実行番号をバージョン番号にする(ビルドのたびに増えるので上書きインストールできる)
+        val runNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1
+        versionCode = runNumber
+        versionName = "0.1.$runNumber"
+    }
+
+    // 毎回同じ鍵で署名するための設定。
+    // GitHub Actions が Secret(DEBUG_KEYSTORE_BASE64)から app/fukuispo-debug.jks を復元する。
+    // 鍵ファイルが無いとき(手元でのビルドなど)は、Android標準のデバッグ鍵を使う。
+    signingConfigs {
+        getByName("debug") {
+            val keystore = file("fukuispo-debug.jks")
+            if (keystore.exists()) {
+                storeFile = keystore
+                storePassword = "fukuispo"
+                keyAlias = "fukuispo"
+                keyPassword = "fukuispo"
+            }
+        }
     }
 
     buildTypes {

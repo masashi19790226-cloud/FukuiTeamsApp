@@ -1,5 +1,11 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.ui.components.photoCaption
+import com.fukuiteams.app.ui.components.PhotoStrip
+import com.fukuiteams.app.ui.components.GamePhotoSpread
+import com.fukuiteams.app.data.GamePhotos
+import com.fukuiteams.app.ui.theme.Ivory
+import androidx.compose.ui.text.style.TextOverflow
 import com.fukuiteams.app.data.resultSourceUrl
 import androidx.compose.ui.text.font.FontWeight
 import com.fukuiteams.app.ui.theme.NewsRed
@@ -250,6 +256,7 @@ fun GameDetailScreen(
                         listToShow.forEach { g ->
                             val isPastTab = scheduleTabIndex == 1
                             val isSelected = g.id == selectedGameId
+                            val photoCount = remember(g.id, GamePhotos.version) { GamePhotos.list(context, g.id).size }
                             ScheduleRow(
                                 game = g,
                                 selected = isSelected,
@@ -257,14 +264,21 @@ fun GameDetailScreen(
                                 onClick = { selectedGameId = if (isPastTab && isSelected) null else g.id },
                                 score = if (isPastTab) autoResults[g.id] else null,
                                 outcome = if (isPastTab) resolveOutcome(g.id, gameLogPrefs, autoResults) else null,
-                                showResult = isPastTab
+                                showResult = isPastTab,
+                                photoCount = photoCount
                             )
                             if (isPastTab && isSelected) {
                                 QuickRecordPanel(
                                     game = g,
                                     watchMethod = recordedWatchMethod(g.id, gameLogPrefs),
                                     manualOutcome = recordedOutcome(g.id, gameLogPrefs),
-                                    hasAutoResult = autoResults[g.id] != null
+                                    hasAutoResult = autoResults[g.id] != null,
+                                    photoCaption = photoCaption(
+                                        g,
+                                        autoResults[g.id],
+                                        resolveOutcome(g.id, gameLogPrefs, autoResults),
+                                        recordedWatchMethod(g.id, gameLogPrefs)
+                                    )
                                 )
                             }
                         }
@@ -337,7 +351,8 @@ private fun QuickRecordPanel(
     game: Game,
     watchMethod: WatchMethod?,
     manualOutcome: GameOutcome?,
-    hasAutoResult: Boolean
+    hasAutoResult: Boolean,
+    photoCaption: String
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -377,6 +392,8 @@ private fun QuickRecordPanel(
                 }
             }
         }
+        Text("写真", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        PhotoStrip(game, photoCaption)
     }
 }
 
@@ -569,7 +586,8 @@ private fun ScheduleRow(
     onClick: () -> Unit,
     score: RemoteGameResult? = null,
     outcome: GameOutcome? = null,
-    showResult: Boolean = false
+    showResult: Boolean = false,
+    photoCount: Int = 0
 ) {
     Card(
         modifier = Modifier
@@ -587,30 +605,41 @@ private fun ScheduleRow(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // 日付の下に HOME/AWAY を置く(見出しが長くても押し出されないように)
             Column(
-                modifier = Modifier.width(44.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.width(50.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(game.dayOfWeek, style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 Text(
                     game.dateLabel.split("/").drop(1).joinToString("/"),
                     style = MaterialTheme.typography.titleMedium
                 )
+                HomeAwayLabel(isHome = game.isHome)
             }
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(
-                        if (showResult) resultHeadline(game, score?.myScore, score?.opponentScore, outcome) else "vs ${game.opponent}",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    HomeAwayBadge(isHome = game.isHome)
-                }
+                Text(
+                    if (showResult) resultHeadline(game, score?.myScore, score?.opponentScore, outcome) else "vs ${game.opponent}",
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                    if (photoCount > 0) {
+                        Text("写真$photoCount", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Ink,
+                            modifier = Modifier.border(1.dp, Ink).padding(horizontal = 3.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                    }
                     Icon(Icons.Filled.Schedule, contentDescription = null, tint = InkSoft, modifier = Modifier.size(13.dp))
                     Text(game.timeLabel, style = MaterialTheme.typography.bodySmall, color = InkSoft)
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(Icons.Filled.LocationOn, contentDescription = null, tint = InkSoft, modifier = Modifier.size(13.dp))
-                    Text(game.venue, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                    Text(
+                        game.venue,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
             if (showResult) {
@@ -686,8 +715,25 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
     val context = LocalContext.current
     val isPast = !game.isUpcoming()
 
+    val detailPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+    val photos = remember(game.id, GamePhotos.version) { GamePhotos.list(context, game.id) }
+
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         MatchHeaderCard(game, isPast)
+
+        if (isPast && photos.isNotEmpty()) {
+            val autoMap = autoResult?.let { mapOf(game.id to it) } ?: emptyMap()
+            GamePhotoSpread(
+                game = game,
+                photos = photos,
+                leadCaption = photoCaption(
+                    game,
+                    autoResult,
+                    resolveOutcome(game.id, detailPrefs, autoMap),
+                    recordedWatchMethod(game.id, detailPrefs)
+                )
+            )
+        }
 
         if (isPast) {
             PastGameResultCard(game, autoResult)
@@ -943,7 +989,7 @@ private fun MatchHeaderCard(game: Game, isPast: Boolean = false) {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(game.team.displayName, color = InkSoft, style = MaterialTheme.typography.bodySmall)
-                    HomeAwayBadge(isHome = game.isHome)
+                    HomeAwayLabel(isHome = game.isHome)
                 }
                 Box(
                     modifier = Modifier
@@ -1017,6 +1063,22 @@ private fun MatchHeaderCard(game: Game, isPast: Boolean = false) {
             }
         }
     }
+}
+
+/** 紙面風の HOME / AWAY 表示。HOME は黒地に白抜き、AWAY は黒枠。 */
+@Composable
+private fun HomeAwayLabel(isHome: Boolean) {
+    Text(
+        if (isHome) "HOME" else "AWAY",
+        modifier = Modifier
+            .border(1.dp, Ink)
+            .background(if (isHome) Ink else Paper)
+            .padding(horizontal = 4.dp, vertical = 1.dp),
+        color = if (isHome) Ivory else Ink,
+        fontSize = 9.sp,
+        fontWeight = FontWeight.ExtraBold,
+        letterSpacing = 0.5.sp
+    )
 }
 
 @Composable
