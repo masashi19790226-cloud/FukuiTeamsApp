@@ -2,8 +2,8 @@ name: Check Alerts (Invitations & News)
 
 on:
   schedule:
-    # 6時間おき(UTC基準。日本時間の 3時, 9時, 15時, 21時ごろ)
-    - cron: '0 */6 * * *'
+    # 1時間おき(毎時15分ごろ)。無料招待は募集期間が短いので早めに拾う
+    - cron: '15 * * * *'
   workflow_dispatch: {}
 
 permissions:
@@ -24,6 +24,9 @@ jobs:
       - name: Run alert check
         run: python3 scripts/check_alerts.py
 
+      - name: Check official sites for invitations
+        run: python3 scripts/check_official_invites.py
+
       - name: Update schedule
         run: python3 scripts/update_schedule.py
 
@@ -34,6 +37,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/invitations_raw.json data/news_raw.json data/results.json data/games.json
+          git add data/invitations_raw.json data/official_seen.json data/news_raw.json data/results.json data/games.json
           git diff --cached --quiet && echo "変更なし" || git commit -m "chore: 無料招待・ニュース・日程・結果の自動更新"
           git push

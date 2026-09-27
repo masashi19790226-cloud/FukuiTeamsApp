@@ -229,7 +229,11 @@ private fun NoticeBox(alert: RemoteInvitationAlert, onClick: () -> Unit) {
             }
         }
         Headline(alert.title, fontSize = 16)
-        Text("掲載 ${alert.timeLabel().ifBlank { "日時不明" }}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        if (alert.snippet.isNotBlank()) {
+            Text("「${alert.snippet}」", style = MaterialTheme.typography.bodyMedium, color = Ink)
+        }
+        val via = if (alert.source.isNotBlank()) "・${alert.source}" else ""
+        Text("掲載 ${alert.timeLabel().ifBlank { "日時不明" }}$via", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         Text("記事を開く ›", style = MaterialTheme.typography.labelLarge, color = Ink)
     }
 }

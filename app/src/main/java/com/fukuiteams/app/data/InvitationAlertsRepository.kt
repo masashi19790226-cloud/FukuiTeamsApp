@@ -19,7 +19,11 @@ data class RemoteInvitationAlert(
     val title: String,
     val link: String,
     val published: String,
-    val detectedAt: String
+    val detectedAt: String,
+    // 公式サイト巡回で本文から見つけた場合の該当箇所(タイトルだけでは招待と分からない記事用)
+    val snippet: String = "",
+    // 見つけた場所(「ブローウィンズ公式」「公式ストア」など)。Googleアラート由来は空
+    val source: String = ""
 )
 
 // 検知からこの日数を過ぎたら「終了した可能性が高い」とみなす(応募締切や当選結果までは分からないため簡易判定)。
@@ -107,7 +111,9 @@ object InvitationAlertsRepository {
                         title = obj.optString("title"),
                         link = obj.optString("link"),
                         published = obj.optString("published"),
-                        detectedAt = obj.optString("detected_at")
+                        detectedAt = obj.optString("detected_at"),
+                        snippet = obj.optString("snippet"),
+                        source = obj.optString("source")
                     )
                 )
             }
