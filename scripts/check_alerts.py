@@ -6,6 +6,7 @@ GitHub Actions (.github/workflows/check-invitations.yml) から定期実行さ�
 ローカルで試す場合は `python3 scripts/check_alerts.py` を実行する。
 """
 
+import html
 import json
 import os
 import re
@@ -35,8 +36,41 @@ ATOM_NS = "{http://www.w3.org/2005/Atom}"
 
 
 def strip_html(text: str) -> str:
-    """Googleアラートのdescriptionには<b>タグ等が入っているので取り除く"""
-    return re.sub(r"<[^>]+>", "", text or "").strip()
+    """Googleアラートのタイトルには<b>タグや &quot; などが入っているので取り除く(二重に変換されていることがある)"""
+    t = re.sub(r"<[^>]+>", "", text or "")
+    for _ in range(2):
+        t = html.unescape(t)
+    return re.sub(r"<[^>]+>", "", t).strip()
+
+
+# 記事の中身からチームを判定する。アラートの検索語どうしが重なって、
+# 別チームのフィードに記事が入ってくることがあるため(丸岡RUCKの記事がユナイテッド側に入る等)。
+TEAM_WORDS = {
+    "BLOWINDS": re.compile(r"ブローウィンズ|BLOWINDS", re.I),
+    "UNITED": re.compile(r"ユナイテッド|UNITED", re.I),
+    "RAC": re.compile(r"RUCK|丸岡", re.I),
+}
+
+
+def guess_team(title: str, feed_team: str) -> str:
+    hits = [team for team, rx in TEAM_WORDS.items() if rx.search(title or "")]
+    if len(hits) == 1:
+        return hits[0]
+    return feed_team  # どれにも当てはまらない・複数当てはまるときはフィードの割り当てのまま
+
+
+def repair_existing(items):
+    """保存済みの記事の文字化け(&quot;など)とチームの割り当てを直す。公式サイト由来はそのまま。"""
+    fixed = 0
+    for item in items:
+        if str(item.get("id", "")).startswith("official:"):
+            continue
+        title = strip_html(item.get("title", ""))
+        team = guess_team(title, item.get("team", ""))
+        if title != item.get("title") or team != item.get("team"):
+            item["title"], item["team"] = title, team
+            fixed += 1
+    return fixed
 
 
 def fetch_feed(url: str) -> bytes:
@@ -82,6 +116,9 @@ def save(path, data):
 
 def check_feeds(feeds: dict, path: str, label: str) -> int:
     existing = load_existing(path)
+    repaired = repair_existing(existing)
+    if repaired:
+        print(f"[{label}] 既存の{repaired}件のタイトル・チームを修正しました")
     existing_ids = {item["id"] for item in existing}
     new_count = 0
 
@@ -98,7 +135,7 @@ def check_feeds(feeds: dict, path: str, label: str) -> int:
             existing.append(
                 {
                     "id": entry["id"],
-                    "team": team,
+                    "team": guess_team(entry["title"], team),
                     "title": entry["title"],
                     "link": entry["link"],
                     "published": entry["published"],

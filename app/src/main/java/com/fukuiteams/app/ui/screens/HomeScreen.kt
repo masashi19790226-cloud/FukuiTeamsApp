@@ -129,13 +129,11 @@ fun HomeScreen(
         }
     }
 
-    // 「招待あり」タグは、Googleアラートで実際に募集中(14日以内に検知)の情報がある
-    // チームの試合にだけ付ける。
-    val teamsWithOpenInvites = (invitationsResult as? AlertsResult.Success)?.items
+    // 「招待あり」タグは、募集中の招待情報のうち、その試合の日付(または対戦相手)が
+    // 書かれているものがある試合にだけ付ける。チームに招待が1件あるだけで全試合に付けない。
+    val openInvites = (invitationsResult as? AlertsResult.Success)?.items
         ?.filterNot { it.isLikelyClosed() }
-        ?.map { it.teamId }
-        ?.toSet()
-        ?: emptySet()
+        ?: emptyList()
 
     Scaffold(
         topBar = {
@@ -190,7 +188,7 @@ fun HomeScreen(
                 val sideTeams = Team.values().filter { it != (selectedTeam ?: nextGame?.team) }
                 TwoColumnFront(
                     nextGame = nextGame,
-                    hasOpenInvite = nextGame != null && nextGame.team.name in teamsWithOpenInvites,
+                    hasOpenInvite = nextGame != null && nextGame.hasMatchingInvite(openInvites),
                     sideTeams = sideTeams,
                     autoResults = autoResults,
                     onOpenGame = onOpenGame
@@ -223,7 +221,7 @@ fun HomeScreen(
                         games.forEach { game ->
                             GameCard(
                                 game = game,
-                                hasOpenInvite = game.team.name in teamsWithOpenInvites,
+                                hasOpenInvite = game.hasMatchingInvite(openInvites),
                                 onClick = { onOpenGame(game.id) }
                             )
                         }
@@ -320,7 +318,7 @@ private fun InviteBanner(onClick: () -> Unit) {
         Column {
             Text("無料招待・プレゼント情報", color = White, style = MaterialTheme.typography.labelLarge)
             Spacer(modifier = Modifier.height(4.dp))
-            Text("Googleアラートで自動検知した最新情報をチェックできます", color = White, style = MaterialTheme.typography.bodyLarge)
+            Text("公式サイトや市のページ、Googleアラートから集めた最新情報をチェックできます", color = White, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(4.dp))
             Text("一覧を見る ›", color = White, style = MaterialTheme.typography.labelLarge)
         }
@@ -376,19 +374,28 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Column(
-                modifier = Modifier.width(44.dp),
+                modifier = Modifier.width(54.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(game.dayOfWeek, style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 Text(
                     game.dateLabel.split("/").drop(1).joinToString("/"),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    softWrap = false
                 )
             }
             TeamBadge(game.team, size = 34.dp, fontSize = 14.sp)
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(game.team.displayName, color = game.team.color, style = MaterialTheme.typography.labelMedium)
+                    Text(
+                        game.team.displayName,
+                        color = game.team.color,
+                        style = MaterialTheme.typography.labelMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
                     HomeAwayLabel(isHome = game.isHome)
                 }
                 Text("vs ${game.opponent}", style = MaterialTheme.typography.titleMedium)
@@ -409,6 +416,8 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
             if (hasOpenInvite) {
                 Text(
                     "招待あり",
+                    maxLines = 1,
+                    softWrap = false,
                     color = Accent,
                     style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier
@@ -433,7 +442,9 @@ private fun HomeAwayLabel(isHome: Boolean) {
         color = if (isHome) Ivory else Ink,
         fontSize = 9.sp,
         fontWeight = FontWeight.ExtraBold,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
+        maxLines = 1,
+        softWrap = false
     )
 }
 
@@ -693,3 +704,29 @@ private fun Team.shortLabelForFront(): String = when (this) {
     Team.UNITED -> "ユナイテッド"
 }
 
+
+
+/**
+ * この試合向けの招待情報があるか。
+ * 招待の見出し・本文抜粋に試合日(「10/3」「10月3日」など)が書かれていれば該当とみなす。
+ * 日付が1つも書かれていない招待は、対戦相手名が書かれている場合だけ該当とみなす。
+ */
+private fun Game.hasMatchingInvite(invites: List<com.fukuiteams.app.data.RemoteInvitationAlert>): Boolean {
+    val parts = dateLabel.split("/").mapNotNull { it.trim().toIntOrNull() }
+    if (parts.size < 3) return false
+    val month = parts[1]
+    val day = parts[2]
+    val datePattern = Regex("""(?<!\d)$month\s*[/月]\s*$day(?!\d)""")
+    val anyDate = Regex("""(?<!\d)\d{1,2}\s*[/月]\s*\d{1,2}(?!\d)""")
+    return invites.any { invite ->
+        if (invite.teamId != team.name) return@any false
+        val text = "${invite.title} ${invite.snippet}"
+        when {
+            datePattern.containsMatchIn(text) -> true
+            // 「10/3(土)・4(日)」のような2日連戦の書き方
+            Regex("""(?<!\d)$month\s*[/月]\s*\d{1,2}[^\d]{0,6}[・、,&～~-]\s*$day(?!\d)""").containsMatchIn(text) -> true
+            anyDate.containsMatchIn(text) -> false
+            else -> opponent.isNotBlank() && text.contains(opponent)
+        }
+    }
+}

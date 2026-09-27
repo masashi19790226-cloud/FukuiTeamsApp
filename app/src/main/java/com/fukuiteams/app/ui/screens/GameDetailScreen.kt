@@ -608,14 +608,16 @@ private fun ScheduleRow(
         ) {
             // 日付の下に HOME/AWAY を置く(見出しが長くても押し出されないように)
             Column(
-                modifier = Modifier.width(50.dp),
+                modifier = Modifier.width(58.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(game.dayOfWeek, style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 Text(
                     game.dateLabel.split("/").drop(1).joinToString("/"),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    softWrap = false
                 )
                 HomeAwayLabel(isHome = game.isHome)
             }
@@ -815,7 +817,9 @@ private fun ScoreBoard(game: Game, myScore: Int, opponentScore: Int) {
         Text(
             "$myScore - $opponentScore",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 4.dp),
+            maxLines = 1,
+            softWrap = false
         )
         ScoreSide(
             name = game.opponent,
@@ -834,9 +838,11 @@ private fun ScoreSide(name: String, sub: String, color: androidx.compose.ui.grap
             name,
             color = color,
             fontWeight = if (won) FontWeight.Black else FontWeight.Bold,
-            style = MaterialTheme.typography.titleSmall,
+            fontSize = 14.sp,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            maxLines = 2
+            maxLines = 1,
+            softWrap = false,
+            overflow = TextOverflow.Ellipsis
         )
         Box(
             modifier = Modifier
@@ -1057,18 +1063,24 @@ private fun MatchHeaderCard(game: Game, isPast: Boolean = false) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
-                    modifier = Modifier.width(100.dp),
+                    modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     TeamBadge(game.team, size = 64.dp, fontSize = 24.sp)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(game.team.displayName, style = MaterialTheme.typography.labelMedium, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                    Text(
+                        game.team.displayName,
+                        style = MaterialTheme.typography.labelMedium,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Text("VS", style = MaterialTheme.typography.titleSmall, color = InkSoft)
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Column(
-                    modifier = Modifier.width(100.dp),
+                    modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Box(
@@ -1081,7 +1093,14 @@ private fun MatchHeaderCard(game: Game, isPast: Boolean = false) {
                         Text("?", color = InkSoft, style = MaterialTheme.typography.titleMedium)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(game.opponent, style = MaterialTheme.typography.labelMedium, color = InkSoft, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                    Text(
+                        game.opponent,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = InkSoft,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
             Row(
@@ -1128,7 +1147,9 @@ private fun HomeAwayLabel(isHome: Boolean) {
         color = if (isHome) Ivory else Ink,
         fontSize = 9.sp,
         fontWeight = FontWeight.ExtraBold,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
+        maxLines = 1,
+        softWrap = false
     )
 }
 

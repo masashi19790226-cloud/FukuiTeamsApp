@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import com.fukuiteams.app.data.appVersionName
+import com.fukuiteams.app.data.APP_AUTHOR
 import com.fukuiteams.app.ui.theme.Ivory
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
@@ -62,7 +65,7 @@ private val kindDefs = listOf(
 )
 
 @Composable
-fun NotificationsScreen() {
+fun NotificationsScreen(onOpenChangelog: () -> Unit = {}) {
     // ON/OFFは端末に保存され、アプリを閉じても消えない(DataStore)。
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -184,6 +187,28 @@ fun NotificationsScreen() {
                             if (index != kindDefs.lastIndex) Divider(color = LineGray)
                         }
                     }
+                }
+            }
+
+            // アプリの版と更新履歴への入口
+            Column {
+                SectionLabel("このアプリについて", modifier = Modifier.padding(bottom = 6.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, Ink)
+                        .background(Paper)
+                        .clickable(onClick = onOpenChangelog)
+                        .padding(horizontal = 14.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Text("更新履歴", style = MaterialTheme.typography.bodyLarge)
+                        Text("いま入っている版:v${appVersionName(context)}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                        Text("制作:$APP_AUTHOR", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                    }
+                    Text("›", style = MaterialTheme.typography.titleLarge, color = Ink)
                 }
             }
         }

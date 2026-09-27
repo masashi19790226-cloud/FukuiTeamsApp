@@ -186,7 +186,7 @@ private fun OpenInvitationsList(alertsResult: AlertsResult?, openItems: List<Rem
                     fontSize = 24
                 )
                 Text(
-                    "Googleアラートで自動検知した情報です。応募条件・締切は各記事でご確認ください。",
+                    "公式サイト・市のページ・Googleアラートから自動で集めた情報です。応募条件・締切は各記事でご確認ください。",
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )

@@ -18,6 +18,7 @@ import com.fukuiteams.app.ui.screens.GameDetailScreen
 import com.fukuiteams.app.ui.screens.HomeScreen
 import com.fukuiteams.app.ui.screens.InvitationsScreen
 import com.fukuiteams.app.ui.screens.NotificationsScreen
+import com.fukuiteams.app.ui.screens.ChangelogScreen
 
 object Routes {
     const val HOME = "home"
@@ -25,6 +26,7 @@ object Routes {
     const val GAME_DETAIL_WITH_ARG = "game_detail/{gameId}"
     const val INVITATIONS = "invitations"
     const val NOTIFICATIONS = "notifications"
+    const val CHANGELOG = "changelog"
 }
 
 @Composable
@@ -75,7 +77,10 @@ fun AppNavHost() {
                     InvitationsScreen()
                 }
                 composable(Routes.NOTIFICATIONS) {
-                    NotificationsScreen()
+                    NotificationsScreen(onOpenChangelog = { navController.navigate(Routes.CHANGELOG) })
+                }
+                composable(Routes.CHANGELOG) {
+                    ChangelogScreen(onBack = { navController.popBackStack() })
                 }
             }
         }
