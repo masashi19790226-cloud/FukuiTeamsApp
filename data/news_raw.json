@@ -422,5 +422,45 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://search.yahoo.co.jp/realtime/search/tweet/2103303474448322877%3Fdetail%3D1%26ifr%3Dtl_twdtl%26rkf%3D1&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0GP7-yp5T_0ySsFXkxtUzA",
     "published": "2026-09-27T00:06:56Z",
     "detected_at": "2026-09-27T17:25:39.615578+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17645176056303879157",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ - X",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/FUKUI_BLOWINDS/status/2104420838544224364&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0ENbUBdTq1_koX13gOpd4m",
+    "published": "2026-09-28T04:10:30Z",
+    "detected_at": "2026-09-28T04:30:23.254188+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15036076180914479592",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ - X",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/FUKUI_BLOWINDS/status/2104405752127393873&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2CHvULVSpWms9IMqFPFhEM",
+    "published": "2026-09-28T03:01:38Z",
+    "detected_at": "2026-09-28T04:30:23.254210+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8273253952376435959",
+    "team": "BLOWINDS",
+    "title": "「福井ブローウィンズ」開幕戦は川島選手の3ポイントで岐阜に逆転、白星スタート 連勝は逃す 今 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/4e361d5c29c3fb896b9d3f4a0154573681c2b5f5&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3QOnRPvwFIVVPcM-o5g1Zs",
+    "published": "2026-09-28T02:37:05Z",
+    "detected_at": "2026-09-28T04:30:23.254219+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12722920385743166731",
+    "team": "BLOWINDS",
+    "title": "守備からリズムを掴む 素早いローテーションから相手の隙を逃さず連続スティール ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/DdyPR3jGe2N/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3w6ueIvZ8HILatLKN0GxHj",
+    "published": "2026-09-27T23:32:11Z",
+    "detected_at": "2026-09-28T04:30:23.254226+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4813516365032673431",
+    "team": "BLOWINDS",
+    "title": "本日のMVP 西濃建設東洋スタビ賞     9/27 (日) 福井ブローウィンズ GAME 2 #2 エリック ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DdyXA7qpR0H/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw34sPmhr4dERFSAjej8ZjTU",
+    "published": "2026-09-27T23:04:13Z",
+    "detected_at": "2026-09-28T04:30:23.254233+00:00"
   }
 ]
