@@ -57,3 +57,21 @@ fun Game.isToday(): Boolean {
     val parts = dateLabel.split("/").mapNotNull { it.trim().toIntOrNull() }
     return parts.size == 3 && parts[0] == today.year && parts[1] == today.monthValue && parts[2] == today.dayOfMonth
 }
+
+
+/** 今日(日本時間)から試合日まであと何日か。当日は 0、明日は 1。日付が読めなければ null。 */
+fun Game.daysUntil(): Long? {
+    val parts = dateLabel.split("/").mapNotNull { it.trim().toIntOrNull() }
+    if (parts.size != 3) return null
+    val date = runCatching { java.time.LocalDate.of(parts[0], parts[1], parts[2]) }.getOrNull() ?: return null
+    val today = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"))
+    return java.time.temporal.ChronoUnit.DAYS.between(today, date)
+}
+
+/** 「あと3日」「あと1日(明日)」「きょう試合」の表記。過ぎた日や日付不明は null。 */
+fun Game.countdownLabel(): String? = when (val d = daysUntil()) {
+    null -> null
+    0L -> "きょう試合"
+    1L -> "あと1日(明日)"
+    else -> if (d > 1L) "あと${d}日" else null
+}

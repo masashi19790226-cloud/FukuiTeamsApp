@@ -39,26 +39,29 @@ class AlertsCheckWorker(
         val inviteEnabled = prefs[NotificationPrefsKeys.kindKey("invite")] ?: true
         val newsEnabled = prefs[NotificationPrefsKeys.kindKey("news")] ?: true
 
-        if (inviteEnabled) {
-            checkAndNotify(
-                result = InvitationAlertsRepository.fetch(),
-                lastSeenKey = NotificationPrefsKeys.LAST_SEEN_INVITE_AT,
-                notificationTitlePrefix = "新しい無料招待",
-                notificationIdBase = 2000,
-                openRoute = "radar/INVITE",
-                teamEnabled = ::teamEnabled
-            )
-        }
-        if (newsEnabled) {
-            checkAndNotify(
-                result = NewsAlertsRepository.fetch(),
-                lastSeenKey = NotificationPrefsKeys.LAST_SEEN_NEWS_AT,
-                notificationTitlePrefix = "新しいニュース",
-                notificationIdBase = 3000,
-                openRoute = "radar/ALL",
-                teamEnabled = ::teamEnabled
-            )
-        }
+        // OFFの種類も「ここまで見た」だけは進めておく。
+        // (進めないと、あとでONに戻したときに、OFFの間の情報がまとめて通知されてしまう)
+        checkAndNotify(
+            result = InvitationAlertsRepository.fetch(),
+            lastSeenKey = NotificationPrefsKeys.LAST_SEEN_INVITE_AT,
+            notificationTitlePrefix = "新しい無料招待",
+            notificationIdBase = 2000,
+            openRoute = "radar/INVITE",
+            teamEnabled = ::teamEnabled,
+            notify = inviteEnabled
+        )
+        checkAndNotify(
+            result = NewsAlertsRepository.fetch(),
+            lastSeenKey = NotificationPrefsKeys.LAST_SEEN_NEWS_AT,
+            notificationTitlePrefix = "新しいニュース",
+            notificationIdBase = 3000,
+            openRoute = "radar/ALL",
+            teamEnabled = ::teamEnabled,
+            notify = newsEnabled
+        )
+
+        // 試合開始前の通知も予約し直す(アプリを開かなくても、あとから決まった開始時刻や日程の変更に合わせる)
+        runCatching { rescheduleGameStartNotifications(applicationContext) }
 
         // ホーム画面のウィジェット(次の試合・招待あり)も定期的に最新にする
         com.fukuiteams.app.widget.NextGameWidget.requestUpdate(applicationContext)
@@ -72,7 +75,8 @@ class AlertsCheckWorker(
         notificationTitlePrefix: String,
         notificationIdBase: Int,
         openRoute: String,
-        teamEnabled: (String) -> Boolean
+        teamEnabled: (String) -> Boolean,
+        notify: Boolean
     ) {
         if (result !is AlertsResult.Success || result.items.isEmpty()) return
 
@@ -83,7 +87,11 @@ class AlertsCheckWorker(
             applicationContext.notificationDataStore.edit { it[lastSeenKey] = latest }
             return
         }
-        val newItems = result.items.filter { it.detectedAt > lastSeenAt && teamEnabled(it.teamId) }
+        val newItems = if (notify) {
+            result.items.filter { it.detectedAt > lastSeenAt && teamEnabled(it.teamId) }
+        } else {
+            emptyList()
+        }
 
         newItems.take(5).forEachIndexed { index, item ->
             val team = Team.values().find { it.name == item.teamId }

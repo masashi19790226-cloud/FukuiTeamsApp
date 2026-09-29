@@ -34,7 +34,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.font.FontWeight
+import androidx.core.app.NotificationManagerCompat
+import kotlinx.coroutines.delay
+import com.fukuiteams.app.ui.theme.NewsRed
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,14 +70,13 @@ private data class NotificationKind(val id: String, val label: String, val defau
 private val kindDefs = listOf(
     NotificationKind("invite", "無料招待の新着", true),
     NotificationKind("news", "ニュース", true),
-    NotificationKind("gamestart", "試合開始前", true)
+    NotificationKind("gamestart", "試合開始1時間前", true)
 )
 
 @Composable
 fun NotificationsScreen(
     onOpenChangelog: () -> Unit = {},
-    onOpenHowToUse: () -> Unit = {},
-    onOpenPlayers: () -> Unit = {}
+    onOpenHowToUse: () -> Unit = {}
 ) {
     // ON/OFFは端末に保存され、アプリを閉じても消えない(DataStore)。
     val context = LocalContext.current
@@ -82,6 +89,18 @@ fun NotificationsScreen(
     val kindPrefs by context.notificationDataStore.data
         .map { prefs -> kindDefs.associate { it.id to (prefs[NotificationPrefsKeys.kindKey(it.id)] ?: it.defaultOn) } }
         .collectAsState(initial = kindDefs.associate { it.id to it.defaultOn })
+
+    // スマホの設定でこのアプリの通知が許可されているか。設定画面から戻ってきたときにも確かめ直す
+    var notificationsAllowed by remember {
+        mutableStateOf(NotificationManagerCompat.from(context).areNotificationsEnabled())
+    }
+    // (この画面を開いている間、2秒おきに確かめる。スマホの設定を変えて戻ってくると表示が切り替わる)
+    LaunchedEffect(Unit) {
+        while (true) {
+            notificationsAllowed = NotificationManagerCompat.from(context).areNotificationsEnabled()
+            delay(2_000)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -104,6 +123,31 @@ fun NotificationsScreen(
                     color = InkSoft
                 )
                 DoubleRule(modifier = Modifier.padding(top = 6.dp))
+            }
+
+            // スマホの設定で通知が止められていると、下のスイッチがONでも届かないので知らせる
+            if (!notificationsAllowed) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.5.dp, NewsRed)
+                        .background(Paper)
+                        .clickable { openAppNotificationSettings(context) }
+                        .padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        "スマホの設定で、このアプリの通知がオフになっています",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = NewsRed
+                    )
+                    Text(
+                        "このままでは、下のスイッチをONにしても通知は届きません。ここを押すと、スマホの通知設定が開きます。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Ink
+                    )
+                }
             }
 
             Column {
@@ -181,18 +225,13 @@ fun NotificationsScreen(
                 }
             }
 
-            // 使い方・選手の数字への入口
+            // 使い方への入口(選手の数字は下のメニューの「選手」から開くので、ここには置かない)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SectionLabel("メニュー")
                 MenuLinkRow(
                     title = "アプリの使い方",
                     sub = "各画面でできることの説明",
                     onClick = onOpenHowToUse
-                )
-                MenuLinkRow(
-                    title = "選手の数字",
-                    sub = "背番号・選手名と、公式サイトから取得した成績",
-                    onClick = onOpenPlayers
                 )
             }
 
@@ -219,4 +258,16 @@ fun NotificationsScreen(
             }
         }
     }
+}
+
+/** スマホの設定の「このアプリの通知」画面を開く。開けない機種ではアプリ情報の画面を開く。 */
+private fun openAppNotificationSettings(context: android.content.Context) {
+    val intent = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        android.content.Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+            .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, context.packageName)
+    } else {
+        android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            .setData(android.net.Uri.fromParts("package", context.packageName, null))
+    }.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+    runCatching { context.startActivity(intent) }
 }

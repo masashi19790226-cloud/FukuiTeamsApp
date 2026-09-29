@@ -67,7 +67,9 @@ suspend fun rescheduleGameStartNotifications(context: Context) {
         val data = workDataOf(
             KEY_TITLE to "まもなく試合開始:${game.team.displayName}",
             KEY_TEXT to "${game.dateLabel}(${game.dayOfWeek})${game.timeLabel} vs ${game.opponent}・${game.venue}",
-            KEY_NOTIFICATION_ID to (4000 + game.id.hashCode() % 1000),
+            // 4000〜4999 の番号にする(hashCode は負になることがあるので floorMod で必ず 0〜999 にする。
+            // 以前は 3001〜3999 になることがあり、ニュースの通知(3000番台)を上書きしてしまうことがあった)
+            KEY_NOTIFICATION_ID to (4000 + Math.floorMod(game.id.hashCode(), 1000)),
             KEY_GAME_ID to game.id
         )
         val request = OneTimeWorkRequestBuilder<GameStartNotificationWorker>()

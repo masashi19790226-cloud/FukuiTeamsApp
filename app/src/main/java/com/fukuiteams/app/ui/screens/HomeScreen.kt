@@ -97,6 +97,7 @@ import com.fukuiteams.app.data.DataStatus
 import com.fukuiteams.app.data.DataStatusRepository
 import com.fukuiteams.app.data.MatchWeather
 import com.fukuiteams.app.data.WeatherRepository
+import com.fukuiteams.app.data.countdownLabel
 import com.fukuiteams.app.data.isToday
 import com.fukuiteams.app.widget.NextGameWidget
 import com.fukuiteams.app.data.hasMatchingInvite
@@ -754,7 +755,26 @@ private fun TwoColumnFront(
             if (nextGame == null) {
                 Text("予定はまだ発表されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
             } else {
-                Text(nextGame.team.displayName, style = MaterialTheme.typography.labelMedium, color = nextGame.team.color)
+                // チーム名の右に、試合まであと何日かを赤い札で出す
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        nextGame.team.displayName,
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = nextGame.team.color
+                    )
+                    nextGame.countdownLabel()?.let { label ->
+                        Text(
+                            label,
+                            modifier = Modifier
+                                .background(NewsRed)
+                                .padding(horizontal = 8.dp, vertical = 2.dp),
+                            color = Paper,
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
                 Headline(
                     "${nextGame.dateLabel.split("/").drop(1).joinToString("/")}(${nextGame.dayOfWeek}) ${nextGame.timeLabel}\n${nextGame.opponent}戦",
                     fontSize = 19
