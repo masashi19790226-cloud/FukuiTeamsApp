@@ -28,6 +28,9 @@ import com.fukuiteams.app.ui.theme.Ivory
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.theme.Paper
 
+/** カウントダウン(「あと○日」)を出し始める日数 */
+private const val COUNTDOWN_DAYS = 10L
+
 /**
  * 特別な日(コラボ企画など)の特集枠。二重の赤枠に、関係するチームの色の帯と「★ SPECIAL DAY」の見出し。
  * 一面ではカウントダウン付きで、試合詳細ではその試合の上に出す。
@@ -80,7 +83,8 @@ fun SpecialDayBanner(day: SpecialDay, showCountdown: Boolean = true, onOpenGame:
                 Headline(day.title, fontSize = 21)
                 Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(day.dateLabel(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.ExtraBold)
-                    if (showCountdown && until != null) {
+                    // カウントダウンは開催の10日前から(それより前は日付だけ)
+                    if (showCountdown && until != null && until in 0L..COUNTDOWN_DAYS) {
                         Text(
                             when {
                                 until == 0L -> "きょう開催!"

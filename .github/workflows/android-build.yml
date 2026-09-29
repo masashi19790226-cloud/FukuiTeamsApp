@@ -51,11 +51,15 @@ jobs:
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
 
+      # APK のファイル名を「fukuispo-v版番号.apk」にする(版番号はアプリの versionName と同じ 0.1.実行番号)
+      - name: Rename APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk "fukuispo-v0.1.${GITHUB_RUN_NUMBER}.apk"
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: fukui-teams-app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: fukuispo-v0.1.${{ github.run_number }}
+          path: fukuispo-v0.1.${{ github.run_number }}.apk
 
       # ここから下は「Run workflow」で公開にチェックを入れたときだけ動く
       - name: Publish to GitHub Releases
@@ -70,15 +74,17 @@ jobs:
             exit 1
           fi
           VERSION="0.1.${GITHUB_RUN_NUMBER}"
-          cp app/build/outputs/apk/debug/app-debug.apk fukuispo.apk
+          APK="fukuispo-v${VERSION}.apk"
+          # 固定のダウンロードリンク(releases/latest/download/fukuispo.apk)用に、従来の名前のファイルも置く
+          cp "$APK" fukuispo.apk
           BODY="${NOTES:-更新しました}"
           BODY="${BODY}
 
           ### インストール方法
-          下の **fukuispo.apk** をタップしてダウンロードし、開いてインストールしてください。
+          下の **${APK}** をタップしてダウンロードし、開いてインストールしてください(fukuispo.apk も同じ中身です)。
           初回は「この提供元のアプリを許可」を求められるので、許可してください。
           すでに入っている場合は、同じ手順で上書き更新できます(データは消えません)。"
-          gh release create "v${VERSION}" fukuispo.apk \
+          gh release create "v${VERSION}" "$APK" fukuispo.apk \
             --title "ふくスポ v${VERSION}" \
             --notes "$BODY" \
             --latest
