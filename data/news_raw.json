@@ -625,5 +625,30 @@
     "published": "2026-09-03T13:59:35+00:00",
     "detected_at": "2026-09-03T13:59:35+00:00",
     "source": "丸岡RUCK公式"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2104488912249077940&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3KEaE5JP-doMNG-tCgJnOB",
+    "published": "2026-09-28T15:09:47Z",
+    "detected_at": "2026-09-29T03:30:19.169783+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3957891240871789982",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】B.ONE開幕 ブローウィンズは連勝逃す 岐阜に1勝1敗 ユナイテッドは今季初黒星",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/amp/article/fbc/region/fbc-2026092808357976&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw1zaHKZAhKjhl3o5uXS5JeM",
+    "published": "2026-09-28T07:23:24Z",
+    "detected_at": "2026-09-29T03:30:19.169813+00:00"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7000",
+    "team": "UNITED",
+    "title": "【 10/4 新庄ク戦 】試合観戦について",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7000",
+    "published": "2026-09-29T09:00:00+09:00",
+    "detected_at": "2026-09-29T03:30:19.352830+00:00",
+    "source": "ユナイテッド公式"
   }
 ]
