@@ -38,8 +38,23 @@
     "players_note": "今季2試合の成績から",
     "opp_link": "https://www.bleague.jp/club_detail/?TeamID=750",
     "h2h_checked": true,
+    "my_key_players": [
+      {
+        "number": "15",
+        "name": "チョンディー・ブラウン ジュニア",
+        "position": "SF",
+        "stat": "平均26.0点・6.5アシスト"
+      },
+      {
+        "number": "14",
+        "name": "ドゥシャン・リスティッチ",
+        "position": "C",
+        "stat": "平均11.5リバウンド"
+      }
+    ],
+    "my_players_note": "今季2試合の成績から",
     "summary": "福井は直近2試合で1勝1敗。金沢は2勝0敗。今季初対戦。金沢は#14 キーガン・レコード(平均24.0点)に注意。",
-    "updated_at": "2026-09-29T04:30:13.923502+00:00"
+    "updated_at": "2026-09-29T05:29:15.786857+00:00"
   },
   "un02": {
     "game_id": "un02",
@@ -61,6 +76,6 @@
     "players_note": "",
     "opp_link": null,
     "summary": "1位の福井と3位の富山新庄クラブの対戦。",
-    "updated_at": "2026-09-29T04:30:15.808571+00:00"
+    "updated_at": "2026-09-29T05:29:17.749800+00:00"
   }
 }
