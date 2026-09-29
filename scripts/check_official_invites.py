@@ -25,6 +25,9 @@ from urllib.parse import urljoin
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 INVITATIONS_PATH = os.path.join(BASE_DIR, "invitations_raw.json")
 SEEN_PATH = os.path.join(BASE_DIR, "official_seen.json")
+NEWS_PATH = os.path.join(BASE_DIR, "news_raw.json")
+# 公式サイトのお知らせをニュース欄に載せる期間
+NEWS_DAYS = 30
 
 JST = timezone(timedelta(hours=9))
 UA = "Mozilla/5.0 (Linux; Android 14) FukuiSpoBot/1.0 (+https://github.com/masashi19790226-cloud/FukuiTeamsApp)"
@@ -163,6 +166,27 @@ class Collector:
         self.seen = load_json(SEEN_PATH, {})
         self.added = 0
         self.now = datetime.now(timezone.utc)
+        self.news = load_json(NEWS_PATH, [])
+        self.news_ids = {n.get("id") for n in self.news}
+        self.news_added = 0
+
+    def add_news(self, team, title, url, date, source):
+        """公式サイトのお知らせをニュース欄にも載せる(30日以内の記事だけ)。"""
+        news_id = f"official-news:{url}"
+        if not title or news_id in self.news_ids:
+            return
+        if date is None or self.now - date.astimezone(timezone.utc) > timedelta(days=NEWS_DAYS):
+            return
+        self.news.append({
+            "id": news_id, "team": team, "title": title, "link": url,
+            "published": date.isoformat(),
+            # 何日も前の記事を初めて取り込むときは、通知が一斉に来ないよう検知日時を公開日に合わせる
+            "detected_at": (date.astimezone(timezone.utc) if self.now - date.astimezone(timezone.utc) > timedelta(days=BACKFILL_DAYS)
+                            else self.now).isoformat(),
+            "source": source,
+        })
+        self.news_ids.add(news_id)
+        self.news_added += 1
 
     def is_seen(self, url):
         return url in self.seen or url in self.known_links or f"official:{url}" in self.known_links
@@ -203,9 +227,10 @@ class Collector:
         print(f"[{source}] 一覧から {len(entries)} 件")
         read = 0
         for url, label in entries:
+            title, date = split_label(label)
+            self.add_news(team, title, url, date, source)
             if self.is_seen(url):
                 continue
-            title, date = split_label(label)
             if TITLE_WORDS.search(title):
                 self.add(team, title, url, date, None, source)
                 self.mark_seen(url)
@@ -317,7 +342,7 @@ class Collector:
         for item in root.iter("item"):
             count += 1
             link = (item.findtext("link") or "").strip()
-            if not link or self.is_seen(link):
+            if not link:
                 continue
             title = text_of(item.findtext("title") or "")
             body = text_of((item.findtext("content:encoded", namespaces=ns) or "") + "\n" + (item.findtext("description") or ""))
@@ -327,6 +352,9 @@ class Collector:
                 date = parsedate_to_datetime(item.findtext("pubDate") or "")
             except Exception:
                 pass
+            self.add_news("RAC", title, link, date, "丸岡RUCK公式")
+            if self.is_seen(link):
+                continue
             self.mark_seen(link)
             if TITLE_WORDS.search(title):
                 self.add("RAC", title, link, date, None, "公式サイト")
@@ -342,6 +370,8 @@ class Collector:
         trimmed = dict(sorted(self.seen.items(), key=lambda kv: kv[1], reverse=True)[:600])
         save_json(SEEN_PATH, trimmed)
         print(f"[公式サイト] 新しく見つかった招待: {self.added}件(累計 {len(self.items)}件)")
+        save_json(NEWS_PATH, self.news)
+        print(f"[公式サイト] ニュースに追加: {self.news_added}件")
 
 
 def main():

@@ -65,6 +65,7 @@ import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
 import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.data.isLikelyClosed
+import com.fukuiteams.app.data.isTooOld
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -97,6 +98,7 @@ fun InvitationsScreen() {
 
     val teamFiltered = (alertsResult as? AlertsResult.Success)?.items
         ?.filter { selectedTeam == null || it.teamId == selectedTeam?.name }
+        ?.filterNot { it.isTooOld() }
         ?: emptyList()
     val openItems = teamFiltered.filterNot { it.isLikelyClosed() }
     val archivedItems = teamFiltered.filter { it.isLikelyClosed() }
@@ -250,7 +252,7 @@ private fun ArchivedInvitationsList(archivedItems: List<RemoteInvitationAlert>) 
             Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.padding(bottom = 8.dp)) {
                 SectionLabel("過去の招待")
                 Text(
-                    "検知から${ARCHIVE_AFTER_DAYS}日以上たったものをここへ移しています(締切や当選結果までは判定していません)。行をタップで記事を開きます。",
+                    "書かれている試合日・締切日が過ぎたもの、日付がないものは見つけてから${ARCHIVE_AFTER_DAYS}日たったものをここへ移しています。半年より前の情報は表示しません。行をタップで記事を開きます。",
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )

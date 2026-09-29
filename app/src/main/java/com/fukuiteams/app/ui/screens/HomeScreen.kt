@@ -20,6 +20,7 @@ import com.fukuiteams.app.data.GameResultsRepository
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.components.resultHeadline
 import com.fukuiteams.app.ui.components.DoubleRule
+import com.fukuiteams.app.ui.components.ThinRule
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
@@ -83,6 +84,9 @@ import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.AlertsResult
 import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.GamesRepository
+import com.fukuiteams.app.data.GamePreview
+import com.fukuiteams.app.data.GamePreviewRepository
+import com.fukuiteams.app.data.KeyPlayer
 import com.fukuiteams.app.data.NewsAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
 import com.fukuiteams.app.data.timeLabel
@@ -112,12 +116,14 @@ fun HomeScreen(
     val appContext = LocalContext.current.applicationContext
 
     var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
+    var previews by remember { mutableStateOf<Map<String, GamePreview>>(emptyMap()) }
 
     suspend fun refreshAll() {
         GamesRepository.refresh(appContext)
         autoResults = GameResultsRepository.fetch()
         invitationsResult = InvitationAlertsRepository.fetch()
         newsResult = NewsAlertsRepository.fetch()
+        previews = GamePreviewRepository.fetch()
     }
 
     LaunchedEffect(Unit) { refreshAll() }
@@ -191,6 +197,7 @@ fun HomeScreen(
                     hasOpenInvite = nextGame != null && nextGame.hasMatchingInvite(openInvites),
                     sideTeams = sideTeams,
                     autoResults = autoResults,
+                    preview = nextGame?.let { previews[it.id] },
                     onOpenGame = onOpenGame
                 )
             }
@@ -507,7 +514,8 @@ private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
         }
         Column {
             Text(
-                listOf(team?.displayName ?: news.teamId, news.timeLabel()).filter { it.isNotBlank() }.joinToString("・"),
+                listOf(team?.displayName ?: news.teamId, news.timeLabel(), if (news.source.isNotBlank()) "公式" else "")
+                    .filter { it.isNotBlank() }.joinToString("・"),
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
@@ -597,8 +605,8 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
 }
 
 /**
- * 一面の2段組。左段に次の試合、右段に他チームの近況(最新結果か次の試合)。
- * 段の間には縦の罫線を引く。
+ * 一面の「次の試合」欄。横幅いっぱいに次の試合と「データで見る展望」「相手の注目選手」を載せ、
+ * その下に他チームの近況を2段で並べる。展望データがまだないときは試合情報だけを出す。
  */
 @Composable
 private fun TwoColumnFront(
@@ -606,52 +614,123 @@ private fun TwoColumnFront(
     hasOpenInvite: Boolean,
     sideTeams: List<Team>,
     autoResults: Map<String, RemoteGameResult>,
+    preview: GamePreview?,
     onOpenGame: (String) -> Unit
 ) {
-    Column {
-        Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-            // 左段:次の試合
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 10.dp)
-                    .then(if (nextGame != null) Modifier.clickable { onOpenGame(nextGame.id) } else Modifier),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                SectionLabel("次の試合")
-                if (nextGame == null) {
-                    Text("予定はまだ発表されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                } else {
-                    Text(nextGame.team.displayName, style = MaterialTheme.typography.labelMedium, color = nextGame.team.color)
-                    Headline(
-                        "${nextGame.dateLabel.split("/").drop(1).joinToString("/")}(${nextGame.dayOfWeek})\n${nextGame.timeLabel} ${nextGame.opponent}戦",
-                        fontSize = 17
-                    )
-                    Text(
-                        "${if (nextGame.isHome) "HOME" else "AWAY"}・${nextGame.venue}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = InkSoft
-                    )
-                    Text("チケット:${nextGame.ticketStatus}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                    if (hasOpenInvite) {
-                        Text("無料招待あり", style = MaterialTheme.typography.labelSmall, color = NewsRed)
+    val context = LocalContext.current
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.5.dp, Ink)
+                .background(Paper)
+                .then(if (nextGame != null) Modifier.clickable { onOpenGame(nextGame.id) } else Modifier)
+                .padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            SectionLabel("次の試合")
+            if (nextGame == null) {
+                Text("予定はまだ発表されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            } else {
+                Text(nextGame.team.displayName, style = MaterialTheme.typography.labelMedium, color = nextGame.team.color)
+                Headline(
+                    "${nextGame.dateLabel.split("/").drop(1).joinToString("/")}(${nextGame.dayOfWeek}) ${nextGame.timeLabel}\n${nextGame.opponent}戦",
+                    fontSize = 19
+                )
+                Text(
+                    "${if (nextGame.isHome) "HOME" else "AWAY"}・${nextGame.venue}・チケット:${nextGame.ticketStatus}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+
+                if (preview != null) {
+                    DoubleRule(modifier = Modifier.padding(vertical = 6.dp))
+                    SectionLabel("データで見る展望", red = true)
+                    PreviewTable(preview)
+                    if (preview.summary.isNotBlank()) {
+                        Text(preview.summary, style = MaterialTheme.typography.bodyMedium, color = Ink)
+                    }
+
+                    ThinRule(modifier = Modifier.padding(vertical = 6.dp))
+                    SectionLabel("相手の注目選手")
+                    if (preview.keyPlayers.isNotEmpty()) {
+                        preview.keyPlayers.forEach { KeyPlayerRow(it) }
+                        if (preview.playersNote.isNotBlank()) {
+                            Text("※${preview.playersNote}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                        }
+                    } else {
+                        Text("相手の選手データは公開されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                    }
+                    preview.oppLink?.let { link ->
+                        Text(
+                            "相手チームの情報を見る ›",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Accent,
+                            modifier = Modifier.clickable { openUrl(context, link) }.padding(top = 2.dp)
+                        )
                     }
                 }
-            }
-            // 縦罫
-            Box(modifier = Modifier.width(1.dp).fillMaxHeight().background(Ink))
-            // 右段:他チームの近況
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 10.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                SectionLabel("各チームの近況")
-                sideTeams.forEach { team -> TeamBrief(team, autoResults, onOpenGame) }
+                if (hasOpenInvite) {
+                    Text("無料招待あり ›", style = MaterialTheme.typography.labelMedium, color = NewsRed, modifier = Modifier.padding(top = 4.dp))
+                }
             }
         }
-        DoubleRule(modifier = Modifier.padding(top = 10.dp))
+
+        // 他チームの近況(2段)
+        SectionLabel("各チームの近況", modifier = Modifier.padding(top = 6.dp))
+        Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+            sideTeams.forEachIndexed { index, team ->
+                if (index > 0) Box(modifier = Modifier.padding(horizontal = 8.dp).width(1.dp).fillMaxHeight().background(Ink))
+                Box(modifier = Modifier.weight(1f)) { TeamBrief(team, autoResults, onOpenGame) }
+            }
+        }
+        DoubleRule(modifier = Modifier.padding(top = 6.dp))
+    }
+}
+
+/** 展望の比較表(福井側・項目名・相手側)。値がない行は出さない。 */
+@Composable
+private fun PreviewTable(preview: GamePreview) {
+    val rows = listOf(
+        Triple(preview.my.rank, "順位", preview.opp.rank),
+        Triple(preview.my.record, "成績", preview.opp.record),
+        Triple(preview.my.form, "直近", preview.opp.form)
+    ).filter { it.first.isNotBlank() || it.third.isNotBlank() }
+    Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(preview.my.label, modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, color = Accent,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center, maxLines = 1)
+            Text("", modifier = Modifier.width(44.dp))
+            Text(preview.opp.label, modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+        rows.forEach { (mine, label, theirs) ->
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(mine.ifBlank { "−" }, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center, maxLines = 1)
+                Text(label, modifier = Modifier.width(44.dp), style = MaterialTheme.typography.labelSmall, color = InkSoft,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                Text(theirs.ifBlank { "−" }, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center, maxLines = 1)
+            }
+        }
+        preview.lastMeeting?.let {
+            Text("前回対戦:$it", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        }
+    }
+}
+
+@Composable
+private fun KeyPlayerRow(player: KeyPlayer) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.padding(vertical = 2.dp)) {
+        Headline("#${player.number}", fontSize = 20, modifier = Modifier.width(52.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(player.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold,
+                maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(listOf(player.position, player.stat).filter { it.isNotBlank() }.joinToString("・"),
+                style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        }
     }
 }
 

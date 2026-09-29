@@ -12,7 +12,7 @@ import os
 import re
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 # 無料招待・プレゼント関連(「招待 OR プレゼント」で絞り込み済み)
 INVITATION_FEEDS = {
@@ -47,9 +47,53 @@ def strip_html(text: str) -> str:
 # 別チームのフィードに記事が入ってくることがあるため(丸岡RUCKの記事がユナイテッド側に入る等)。
 TEAM_WORDS = {
     "BLOWINDS": re.compile(r"ブローウィンズ|BLOWINDS", re.I),
-    "UNITED": re.compile(r"ユナイテッド|UNITED", re.I),
-    "RAC": re.compile(r"RUCK|丸岡", re.I),
+    # 「ユナイテッド」だけだと海外サッカー(マンチェスター・ユナイテッド等)まで入るので福井とセットのときだけ
+    "UNITED": re.compile(r"福井\s*ユナイテッド|福井U(?![A-Za-z0-9])|FUKUI\s*UNITED|ユナイテッド.{0,20}福井|福井.{0,20}ユナイテッド", re.I),
+    "RAC": re.compile(r"丸岡\s*(RUCK|ラック)|丸岡\s*de\s*フットサル|RUCK.{0,20}丸岡|丸岡.{0,20}RUCK|福井丸岡", re.I),
 }
+
+# ニュースから外すもの(通販・求人・フリマなど、チーム名が入っていても記事ではないもの)
+NEWS_NOISE = re.compile(r"求人|アルバイト|バイト募集|楽天市場|Amazon|メルカリ|ヤフオク|中古|通販|送料|価格\.com|ラクマ", re.I)
+
+# ニュースとして残す期間
+NEWS_KEEP_DAYS = 45
+
+
+def is_old_title(title: str) -> bool:
+    """見出しに去年以前の年やシーズン(「2024」「2024-25」など)しか出てこない記事は古い情報とみなす。"""
+    this_year = datetime.now(timezone.utc).year
+    years = [int(y) for y in re.findall(r"(?<!\d)(20\d\d)(?!\d)", title or "")]
+    seasons = [int(a) + 1 for a in re.findall(r"(?<!\d)(20\d\d)\s*[-–/]\s*\d{2}(?!\d)", title or "")]
+    mentioned = years + seasons
+    return bool(mentioned) and max(mentioned) < this_year
+
+
+def is_good_news(title: str) -> bool:
+    """3チームのどれかがはっきり書かれていて、ノイズでも古い情報でもない記事だけ残す。"""
+    if not any(rx.search(title or "") for rx in TEAM_WORDS.values()):
+        return False
+    if NEWS_NOISE.search(title or ""):
+        return False
+    return not is_old_title(title)
+
+
+def clean_news(items):
+    """保存済みニュースから、関係ない・古い・期限切れのものを取り除く。公式サイト由来は期間だけで判定。"""
+    cutoff = datetime.now(timezone.utc) - timedelta(days=NEWS_KEEP_DAYS)
+    kept, removed = [], 0
+    for item in items:
+        official = str(item.get("id", "")).startswith("official")
+        try:
+            when = datetime.fromisoformat(str(item.get("published") or item.get("detected_at")).replace("Z", "+00:00"))
+            if when.tzinfo is None:
+                when = when.replace(tzinfo=timezone.utc)
+        except ValueError:
+            when = None
+        if (when and when < cutoff) or (not official and not is_good_news(item.get("title", ""))):
+            removed += 1
+            continue
+        kept.append(item)
+    return kept, removed
 
 
 def guess_team(title: str, feed_team: str) -> str:
@@ -114,8 +158,13 @@ def save(path, data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def check_feeds(feeds: dict, path: str, label: str) -> int:
+def check_feeds(feeds: dict, path: str, label: str, is_news: bool = False) -> int:
     existing = load_existing(path)
+    skipped = 0
+    if is_news:
+        existing, removed = clean_news(existing)
+        if removed:
+            print(f"[{label}] 関係ない・古い記事を{removed}件取り除きました")
     repaired = repair_existing(existing)
     if repaired:
         print(f"[{label}] 既存の{repaired}件のタイトル・チームを修正しました")
@@ -132,6 +181,10 @@ def check_feeds(feeds: dict, path: str, label: str) -> int:
         for entry in parse_entries(xml_bytes):
             if not entry["id"] or entry["id"] in existing_ids:
                 continue
+            if is_news and not is_good_news(entry["title"]):
+                existing_ids.add(entry["id"])
+                skipped += 1
+                continue
             existing.append(
                 {
                     "id": entry["id"],
@@ -146,13 +199,13 @@ def check_feeds(feeds: dict, path: str, label: str) -> int:
             new_count += 1
 
     save(path, existing)
-    print(f"[{label}] 新しく見つかった件数: {new_count}件(累計 {len(existing)}件)")
+    print(f"[{label}] 新しく見つかった件数: {new_count}件(累計 {len(existing)}件)" + (f"、対象外{skipped}件" if skipped else ""))
     return new_count
 
 
 def main():
     check_feeds(INVITATION_FEEDS, INVITATIONS_PATH, "無料招待")
-    check_feeds(NEWS_FEEDS, NEWS_PATH, "ニュース")
+    check_feeds(NEWS_FEEDS, NEWS_PATH, "ニュース", is_news=True)
 
 
 if __name__ == "__main__":

@@ -37,7 +37,8 @@ object NewsAlertsRepository {
                         title = obj.optString("title"),
                         link = obj.optString("link"),
                         published = obj.optString("published"),
-                        detectedAt = obj.optString("detected_at")
+                        detectedAt = obj.optString("detected_at"),
+                        source = obj.optString("source")
                     )
                 )
             }

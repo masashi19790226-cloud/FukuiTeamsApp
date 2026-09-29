@@ -539,13 +539,13 @@ private fun TicketSearchSection(
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         SectionTitle("譲渡・招待チケットを探す")
         Text(
-            "検索結果を開きます(X:${personalSearchKeyword}・広告:${adSearchKeyword})",
+            "X:「${personalSearchKeyword}」・SNS広告(Meta広告ライブラリ):「${adSearchKeyword}」で検索します",
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = onSearchX, modifier = Modifier.weight(1f)) { Text("Xで探す") }
-            OutlinedButton(onClick = onSearchAd, modifier = Modifier.weight(1f)) { Text("SNS広告を探す(Meta広告ライブラリ)") }
+            OutlinedButton(onClick = onSearchX, modifier = Modifier.weight(1f)) { Text("Xで探す", maxLines = 1) }
+            OutlinedButton(onClick = onSearchAd, modifier = Modifier.weight(1f)) { Text("SNS広告", maxLines = 1) }
         }
         Box(
             modifier = Modifier

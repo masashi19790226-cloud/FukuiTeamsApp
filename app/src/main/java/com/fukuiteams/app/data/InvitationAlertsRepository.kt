@@ -30,13 +30,60 @@ data class RemoteInvitationAlert(
 private const val LIKELY_CLOSED_AFTER_DAYS = 14L
 
 fun RemoteInvitationAlert.isLikelyClosed(): Boolean {
+    // 1) 見出し・本文抜粋に書かれた日付(試合日・締切日)がすべて過ぎていれば終了
+    val dates = mentionedDates()
+    if (dates.isNotEmpty() && dates.max() < java.time.LocalDate.now(TOKYO)) return true
+    // 2) 日付が書かれていないものは、見つけてから一定日数たったら終了扱い
+    val detected = parseInstant(detectedAt) ?: parseInstant(published) ?: return false
+    val ageMillis = System.currentTimeMillis() - detected.toEpochMilli()
+    return ageMillis > LIKELY_CLOSED_AFTER_DAYS * 24 * 60 * 60 * 1000
+}
+
+/** 過去の招待にも出さない古い情報か(掲載から半年以上、または見出しが去年以前の年だけ)。 */
+fun RemoteInvitationAlert.isTooOld(): Boolean {
+    val instant = eventInstant()
+    if (instant != null && System.currentTimeMillis() - instant.toEpochMilli() > TOO_OLD_DAYS * 24 * 60 * 60 * 1000) return true
+    val thisYear = java.time.LocalDate.now(TOKYO).year
+    val years = Regex("""(?<!\d)(20\d\d)(?!\d)""").findAll(title).map { it.groupValues[1].toInt() }.toList()
+    return years.isNotEmpty() && years.max() < thisYear
+}
+
+private val TOKYO: java.time.ZoneId = java.time.ZoneId.of("Asia/Tokyo")
+private const val TOO_OLD_DAYS = 180L
+
+/** 「+00:00」付き・「Z」付きのどちらの書き方の日時も読む。 */
+private fun parseInstant(raw: String): java.time.Instant? {
+    if (raw.isBlank()) return null
     return try {
-        val instant = java.time.Instant.parse(detectedAt)
-        val ageMillis = System.currentTimeMillis() - instant.toEpochMilli()
-        ageMillis > LIKELY_CLOSED_AFTER_DAYS * 24 * 60 * 60 * 1000
+        java.time.OffsetDateTime.parse(raw).toInstant()
     } catch (e: Exception) {
-        false
+        try { java.time.Instant.parse(raw) } catch (e2: Exception) { null }
     }
+}
+
+/**
+ * 見出しと本文抜粋に出てくる月日(「10/3」「10月3日」「10/3(土)・4(日)」)を日付にする。
+ * 年は掲載日から推定する(掲載が12月で「1/10」なら翌年)。
+ */
+fun RemoteInvitationAlert.mentionedDates(): List<java.time.LocalDate> {
+    val base = (eventInstant() ?: java.time.Instant.now()).atZone(TOKYO).toLocalDate()
+    // 「2026/10/3」「2026年10月3日」の年の部分は外してから読む
+    val text = "$title $snippet".replace(Regex("""20\d\d\s*[/年.]\s*(?=\d{1,2}\s*[/月])"""), "")
+    val result = mutableListOf<java.time.LocalDate>()
+    val pattern = Regex("""(?<![\d/.])(\d{1,2})\s*[/月]\s*(\d{1,2})(?![\d/])(?:日)?(?:[^\d]{0,6}[・、,&～~-]\s*(\d{1,2})(?!\d))?""")
+    for (m in pattern.findAll(text)) {
+        val month = m.groupValues[1].toInt()
+        val days = listOfNotNull(m.groupValues[2].toIntOrNull(), m.groupValues[3].toIntOrNull())
+        if (month !in 1..12) continue
+        for (day in days) {
+            if (day !in 1..31) continue
+            var year = base.year
+            if (month < base.monthValue - 6) year += 1
+            if (month > base.monthValue + 6) year -= 1
+            try { result.add(java.time.LocalDate.of(year, month, day)) } catch (e: Exception) { }
+        }
+    }
+    return result
 }
 
 /**
