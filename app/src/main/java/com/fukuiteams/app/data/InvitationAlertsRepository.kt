@@ -195,3 +195,59 @@ fun com.fukuiteams.app.model.Game.hasMatchingInvite(invites: List<RemoteInvitati
         }
     }
 }
+
+// 記事のリンク先のドメインと、画面に出す引用元の名前
+private val SOURCE_NAMES = listOf(
+    "fukuishimbun.co.jp" to "福井新聞",
+    "chunichi.co.jp" to "中日新聞",
+    "asahi.com" to "朝日新聞",
+    "yomiuri.co.jp" to "読売新聞",
+    "mainichi.jp" to "毎日新聞",
+    "sankei.com" to "産経新聞",
+    "nikkei.com" to "日本経済新聞",
+    "nhk.or.jp" to "NHK",
+    "fbc.jp" to "福井放送",
+    "fukui-tv.co.jp" to "福井テレビ",
+    "news.yahoo.co.jp" to "Yahoo!ニュース",
+    "bleague.jp" to "Bリーグ公式",
+    "basketballking.jp" to "バスケットボールキング",
+    "basket-count.com" to "バスケットカウント",
+    "fukuiblowinds.com" to "ブローウィンズ公式",
+    "fukuiunited.co.jp" to "ユナイテッド公式",
+    "ruck-fukui.com" to "丸岡RUCK公式",
+    "w-fleague.jp" to "女子Fリーグ公式",
+    "city.fukui.lg.jp" to "福井市",
+    "pref.fukui.lg.jp" to "福井県",
+    "prtimes.jp" to "PR TIMES",
+    "x.com" to "X",
+    "twitter.com" to "X",
+    "instagram.com" to "Instagram"
+)
+
+/**
+ * 記事の引用元(どこの記事か)。公式サイト巡回で見つけたものは保存済みの名前(「ブローウィンズ公式」など)、
+ * Googleアラート由来は記事のリンク先のドメインから判定する(知らないドメインはドメイン名をそのまま出す)。
+ * 分からなければ空文字。
+ */
+fun RemoteInvitationAlert.sourceLabel(): String {
+    if (source.isNotBlank()) return source
+    val host = articleHost() ?: return ""
+    return SOURCE_NAMES.firstOrNull { (domain, _) -> host == domain || host.endsWith(".$domain") }?.second
+        ?: host.removePrefix("www.")
+}
+
+/** 記事の本当のリンク先のホスト名。Googleアラートの転送用URL(google.com/url?url=...)は中身を取り出す。 */
+private fun RemoteInvitationAlert.articleHost(): String? = try {
+    var uri = java.net.URI(link.trim())
+    val host = uri.host?.lowercase() ?: ""
+    if (host.contains("google.") && uri.path == "/url") {
+        val target = uri.rawQuery?.split("&")
+            ?.firstOrNull { it.startsWith("url=") || it.startsWith("q=") }
+            ?.substringAfter("=")
+            ?.let { java.net.URLDecoder.decode(it, "UTF-8") }
+        if (target != null) uri = java.net.URI(target)
+    }
+    uri.host?.lowercase()
+} catch (e: Exception) {
+    null
+}

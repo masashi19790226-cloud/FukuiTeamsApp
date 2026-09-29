@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- ウィジェットの AWAY の札:紺の塗りつぶし(白抜き文字) -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="#FBF9F4" />
-    <stroke android:width="1dp" android:color="#2B4C7E" />
+    <solid android:color="#2B4C7E" />
+    <corners android:radius="2dp" />
 </shape>

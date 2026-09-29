@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -16,7 +17,6 @@ import androidx.compose.runtime.getValue
 import com.fukuiteams.app.ui.components.AppBottomNavBar
 import com.fukuiteams.app.ui.screens.GameDetailScreen
 import com.fukuiteams.app.ui.screens.HomeScreen
-import com.fukuiteams.app.ui.screens.InvitationsScreen
 import com.fukuiteams.app.ui.screens.NotificationsScreen
 import com.fukuiteams.app.ui.screens.ChangelogScreen
 import com.fukuiteams.app.ui.screens.HowToUseScreen
@@ -27,22 +27,33 @@ object Routes {
     const val HOME = "home"
     const val GAME_DETAIL = "game_detail"
     const val GAME_DETAIL_WITH_ARG = "game_detail/{gameId}"
-    const val INVITATIONS = "invitations"
     const val NOTIFICATIONS = "notifications"
     const val CHANGELOG = "changelog"
     const val RADAR = "radar"
-    const val RADAR_WITH_ARG = "radar/{category}"
-    // トピック画面を「招待・プレゼント」で開く(旧・招待タブの代わり)
+    // トピック画面を分類・チームを指定して開く。category は INVITE / ALL など、team は BLOWINDS などで省略可
+    const val RADAR_WITH_ARG = "radar/{category}?team={team}"
+    // トピック画面を「招待・プレゼント」(3チームすべて)で開く
     const val RADAR_INVITES = "radar/INVITE"
+
+    /** トピック画面を「すべての分類」で開くルート。team が null なら3チームすべて。 */
+    fun radarAll(team: com.fukuiteams.app.model.Team?): String =
+        "radar/ALL" + (team?.let { "?team=${it.name}" } ?: "")
     const val HOW_TO_USE = "how_to_use"
     const val PLAYERS = "players"
 }
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(initialRoute: String? = null) {
     val navController: NavHostController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route?.substringBefore("/")
+
+    LaunchedEffect(initialRoute) {
+        if (initialRoute != null) {
+            // 知らないルートが来てもアプリが落ちないようにする
+            runCatching { navController.navigate(initialRoute) }
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -61,9 +72,8 @@ fun AppNavHost() {
                 composable(Routes.HOME) {
                     HomeScreen(
                         onOpenGame = { gameId -> navController.navigate("game_detail/$gameId") },
-                        onOpenInvitations = { navController.navigate(Routes.RADAR_INVITES) },
                         onOpenNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
-                        onOpenRadar = { navController.navigate(Routes.RADAR) }
+                        onOpenRadar = { team -> navController.navigate(Routes.radarAll(team)) }
                     )
                 }
                 composable(Routes.GAME_DETAIL) {
@@ -85,18 +95,24 @@ fun AppNavHost() {
                         onOpenPlayers = { navController.navigate(Routes.PLAYERS) }
                     )
                 }
-                // 旧・招待タブの画面。下のメニューからは外したが、画面自体は残しておく
-                composable(Routes.INVITATIONS) {
-                    InvitationsScreen()
-                }
                 composable(Routes.RADAR) {
                     RadarScreen()
                 }
                 composable(
                     Routes.RADAR_WITH_ARG,
-                    arguments = listOf(navArgument("category") { type = NavType.StringType })
+                    arguments = listOf(
+                        navArgument("category") { type = NavType.StringType },
+                        navArgument("team") {
+                            type = NavType.StringType
+                            nullable = true
+                            defaultValue = null
+                        }
+                    )
                 ) { entry ->
-                    RadarScreen(initialCategory = entry.arguments?.getString("category"))
+                    RadarScreen(
+                        initialCategory = entry.arguments?.getString("category"),
+                        initialTeam = entry.arguments?.getString("team")
+                    )
                 }
                 composable(Routes.NOTIFICATIONS) {
                     NotificationsScreen(

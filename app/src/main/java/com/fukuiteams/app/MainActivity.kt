@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.fukuiteams.app.navigation.AppNavHost
+import com.fukuiteams.app.notifications.EXTRA_OPEN_ROUTE
 import com.fukuiteams.app.notifications.ensureAlertsNotificationChannel
 import com.fukuiteams.app.notifications.rescheduleGameStartNotifications
 import com.fukuiteams.app.notifications.schedulePeriodicAlertsCheck
@@ -42,10 +43,12 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             rescheduleGameStartNotifications(applicationContext)
         }
+        // 通知から開いたときは、その通知の画面を開く(画面の回転などで作り直したときは開き直さない)
+        val openRoute = if (savedInstanceState == null) intent?.getStringExtra(EXTRA_OPEN_ROUTE) else null
         setContent {
             FukuiTeamsAppTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AppNavHost()
+                    AppNavHost(initialRoute = openRoute)
                 }
             }
         }

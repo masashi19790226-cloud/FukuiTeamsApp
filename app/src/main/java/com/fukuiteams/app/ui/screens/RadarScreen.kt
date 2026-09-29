@@ -40,9 +40,14 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.AlertsResult
+import com.fukuiteams.app.data.DataStatus
+import com.fukuiteams.app.data.DataStatusRepository
+import com.fukuiteams.app.data.sourceLabel
+import com.fukuiteams.app.ui.components.SourceTag
 import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.NewsAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
@@ -109,26 +114,38 @@ private fun RemoteInvitationAlert.isNewArrival(): Boolean =
  * 「ニュース・チケット・イベント・招待・プレゼント・その他」に分けて絞り込めるようにした画面。
  * 初期表示はブローウィンズ。チーム切替で他チームや「すべて」も見られる。
  * 旧・招待タブの役割もここに移した:「招待・プレゼント」では受付中と過去の招待を切り替えられる。
- * initialCategory に "INVITE" を渡すと、招待・プレゼント(3チームすべて)で開く。
+ * initialCategory に "INVITE" を渡すと招待・プレゼント、"ALL" を渡すとすべての分類で開く(チームは initialTeam、なければ3チームすべて)。
  */
 @Composable
-fun RadarScreen(initialCategory: String? = null) {
+fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     val context = LocalContext.current
     val startCategory = remember(initialCategory) {
         RadarCategory.values().find { it.name.equals(initialCategory, ignoreCase = true) }
     }
-    // 招待から開いたときは、旧・招待タブと同じく3チームすべてを出す
-    var selectedTeam by remember { mutableStateOf<Team?>(if (startCategory == RadarCategory.INVITE) null else Team.BLOWINDS) }
+    // 下のメニューから開いたときはブローウィンズ。一面・通知などから分類を指定して開いたときは、
+    // 指定のチーム(なければ3チームすべて)
+    var selectedTeam by remember {
+        mutableStateOf<Team?>(
+            when {
+                initialTeam != null -> Team.values().find { it.name == initialTeam }
+                initialCategory != null -> null
+                else -> Team.BLOWINDS
+            }
+        )
+    }
     var selectedCategory by remember { mutableStateOf(startCategory) }
     // 招待・プレゼントの中の切り替え(0 = 受付中、1 = 過去の招待)
     var inviteTab by remember { mutableStateOf(0) }
     var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
     var inviteResult by remember { mutableStateOf<AlertsResult?>(null) }
+    // 自動更新(GitHub)が最後に動いた時刻
+    var dataStatus by remember { mutableStateOf<DataStatus?>(null) }
     val pullToRefreshState = rememberPullToRefreshState()
 
     suspend fun refresh() {
         newsResult = NewsAlertsRepository.fetch()
         inviteResult = InvitationAlertsRepository.fetch()
+        dataStatus = DataStatusRepository.fetch()
     }
 
     LaunchedEffect(Unit) { refresh() }
@@ -221,6 +238,15 @@ fun RadarScreen(initialCategory: String? = null) {
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
+                        if (!loading) {
+                            val (updatedText, stale) = updatedLabel(dataStatus)
+                            Text(
+                                updatedText,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = if (stale) NewsRed else Ink
+                            )
+                        }
                         DoubleRule(modifier = Modifier.padding(top = 4.dp))
                     }
                 }
@@ -343,6 +369,7 @@ private fun RadarRow(item: RadarItem, showClosedNote: Boolean = true, onClick: (
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             if (alert.isNewArrival()) SectionLabel("NEW", red = true)
+            SourceTag(alert.sourceLabel())
             Text(
                 item.category.label,
                 modifier = Modifier.border(1.dp, Ink).padding(horizontal = 5.dp, vertical = 1.dp),
@@ -354,7 +381,14 @@ private fun RadarRow(item: RadarItem, showClosedNote: Boolean = true, onClick: (
             )
             if (team != null) {
                 Box(modifier = Modifier.width(4.dp).height(12.dp).background(team.color))
-                Text(team.displayName, style = MaterialTheme.typography.labelMedium, color = team.color, maxLines = 1)
+                Text(
+                    team.displayName,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = team.color,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
+                )
             }
         }
         Text(alert.title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = Ink)
@@ -363,7 +397,6 @@ private fun RadarRow(item: RadarItem, showClosedNote: Boolean = true, onClick: (
         }
         val details = listOf(
             alert.timeLabel().ifBlank { "日時不明" },
-            alert.source,
             if (showClosedNote && item.fromInvitations && alert.isLikelyClosed()) "受付終了の可能性" else ""
         ).filter { it.isNotBlank() }.joinToString("・")
         Text(details, style = MaterialTheme.typography.bodySmall, color = InkSoft)
@@ -372,6 +405,28 @@ private fun RadarRow(item: RadarItem, showClosedNote: Boolean = true, onClick: (
             style = MaterialTheme.typography.labelMedium,
             color = if (hasLink) Ink else LineGray
         )
+    }
+}
+
+/**
+ * 「最終更新:9/29 14:15(10分前)」の表示と、古すぎる(3時間より前)かどうか。
+ * 時刻は GitHub の自動更新(ニュース・招待の収集)が最後に動いた時刻。
+ */
+private fun updatedLabel(status: DataStatus?): Pair<String, Boolean> {
+    if (status == null) return "最終更新:確認できませんでした" to false
+    val updated = status.updatedAt ?: return "最終更新:確認できませんでした" to true
+    val zoned = updated.atZone(java.time.ZoneId.of("Asia/Tokyo"))
+    val minutes = (System.currentTimeMillis() - updated.toEpochMilli()) / 60_000
+    val ago = when {
+        minutes < 60 -> "${minutes.coerceAtLeast(0)}分前"
+        minutes < 24 * 60 -> "${minutes / 60}時間前"
+        else -> "${minutes / (24 * 60)}日前"
+    }
+    val base = "最終更新:%d/%d %02d:%02d(%s)".format(zoned.monthValue, zoned.dayOfMonth, zoned.hour, zoned.minute, ago)
+    return when {
+        minutes > 3 * 60 -> "$base・自動更新が止まっている可能性があります" to true
+        status.failedSteps.isNotEmpty() -> "$base・取得に失敗:${status.failedSteps.joinToString("、")}" to true
+        else -> base to false
     }
 }
 

@@ -45,6 +45,7 @@ class AlertsCheckWorker(
                 lastSeenKey = NotificationPrefsKeys.LAST_SEEN_INVITE_AT,
                 notificationTitlePrefix = "新しい無料招待",
                 notificationIdBase = 2000,
+                openRoute = "radar/INVITE",
                 teamEnabled = ::teamEnabled
             )
         }
@@ -54,6 +55,7 @@ class AlertsCheckWorker(
                 lastSeenKey = NotificationPrefsKeys.LAST_SEEN_NEWS_AT,
                 notificationTitlePrefix = "新しいニュース",
                 notificationIdBase = 3000,
+                openRoute = "radar/ALL",
                 teamEnabled = ::teamEnabled
             )
         }
@@ -69,11 +71,18 @@ class AlertsCheckWorker(
         lastSeenKey: androidx.datastore.preferences.core.Preferences.Key<String>,
         notificationTitlePrefix: String,
         notificationIdBase: Int,
+        openRoute: String,
         teamEnabled: (String) -> Boolean
     ) {
         if (result !is AlertsResult.Success || result.items.isEmpty()) return
 
         val lastSeenAt = applicationContext.notificationDataStore.data.first()[lastSeenKey] ?: ""
+        val latest = result.items.maxOf { it.detectedAt }
+        // 入れた直後・入れ直した直後の1回目は、これまでの情報をまとめて通知しないよう「ここまで見た」だけ記録する
+        if (lastSeenAt.isEmpty()) {
+            applicationContext.notificationDataStore.edit { it[lastSeenKey] = latest }
+            return
+        }
         val newItems = result.items.filter { it.detectedAt > lastSeenAt && teamEnabled(it.teamId) }
 
         newItems.take(5).forEachIndexed { index, item ->
@@ -82,11 +91,11 @@ class AlertsCheckWorker(
                 applicationContext,
                 notificationIdBase + index,
                 "$notificationTitlePrefix:${team?.displayName ?: item.teamId}",
-                item.title
+                item.title,
+                openRoute
             )
         }
 
-        val latest = result.items.maxOf { it.detectedAt }
         if (latest > lastSeenAt) {
             applicationContext.notificationDataStore.edit { it[lastSeenKey] = latest }
         }

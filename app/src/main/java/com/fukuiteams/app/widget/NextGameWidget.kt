@@ -84,8 +84,8 @@ class NextGameWidget : AppWidgetProvider() {
                 views.setTextViewText(row.teamLabel, row.label)
                 views.setTextColor(row.teamLabel, row.team.color.toArgb())
                 if (next == null) {
-                    views.setTextViewText(row.date, "")
-                    views.setTextViewText(row.opponent, "次の試合は未発表")
+                    views.setTextViewText(row.date, "次の試合は未発表")
+                    views.setTextViewText(row.opponent, "")
                     views.setViewVisibility(row.homeAway, View.GONE)
                     views.setViewVisibility(row.invite, View.GONE)
                 } else {
@@ -94,13 +94,12 @@ class NextGameWidget : AppWidgetProvider() {
                     views.setTextViewText(row.opponent, "vs ${next.opponent}・${next.venue}")
                     views.setViewVisibility(row.homeAway, View.VISIBLE)
                     views.setTextViewText(row.homeAway, if (next.isHome) "HOME" else "AWAY")
-                    if (next.isHome) {
-                        views.setInt(row.homeAway, "setBackgroundResource", R.drawable.widget_home_bg)
-                        views.setTextColor(row.homeAway, Color.WHITE)
-                    } else {
-                        views.setInt(row.homeAway, "setBackgroundResource", R.drawable.widget_away_bg)
-                        views.setTextColor(row.homeAway, Color.parseColor("#2B4C7E"))
-                    }
+                    // HOME は赤、AWAY は紺の塗りつぶしに白抜き文字(小さくても見分けやすいように)
+                    views.setInt(
+                        row.homeAway, "setBackgroundResource",
+                        if (next.isHome) R.drawable.widget_home_bg else R.drawable.widget_away_bg
+                    )
+                    views.setTextColor(row.homeAway, Color.WHITE)
                     views.setViewVisibility(row.invite, if (next.hasMatchingInvite(invites)) View.VISIBLE else View.GONE)
                 }
             }

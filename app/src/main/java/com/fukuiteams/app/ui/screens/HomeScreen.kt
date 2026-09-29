@@ -1,5 +1,7 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.ui.components.SourceTag
+import com.fukuiteams.app.data.sourceLabel
 import androidx.compose.runtime.collectAsState
 import androidx.datastore.preferences.core.Preferences
 import com.fukuiteams.app.ui.components.photoCaption
@@ -114,9 +116,9 @@ import com.fukuiteams.app.ui.theme.White
 @Composable
 fun HomeScreen(
     onOpenGame: (String) -> Unit,
-    onOpenInvitations: () -> Unit,
     onOpenNotifications: () -> Unit,
-    onOpenRadar: () -> Unit = {}
+    // 「ニュースをもっと見る」:一面で選んでいるチーム(null = すべて)でトピックを開く
+    onOpenRadar: (Team?) -> Unit = {}
 ) {
     var selectedTeam by remember { mutableStateOf<Team?>(null) }
     var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
@@ -216,7 +218,6 @@ fun HomeScreen(
                 }
             }
 
-            item { InviteBanner(onClick = onOpenInvitations) }
 
             item {
                 // 一面の2段組:左に「次の試合」、右に他チームの近況
@@ -294,7 +295,7 @@ fun HomeScreen(
                     }
                     // ニュース・招待などの自動更新が最後に動いた時刻
                     DataStatusLine(dataStatus)
-                    NewsSection(newsResult, selectedTeam, onOpenRadar)
+                    NewsSection(newsResult, selectedTeam) { onOpenRadar(selectedTeam) }
                 }
             }
 
@@ -424,26 +425,6 @@ private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?, onOpenRa
                         .padding(vertical = 6.dp)
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun InviteBanner(onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(3.dp))
-            .background(Accent)
-            .clickable(onClick = onClick)
-            .padding(16.dp)
-    ) {
-        Column {
-            Text("無料招待・プレゼント情報", color = White, style = MaterialTheme.typography.labelLarge)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text("公式サイトや市のページ、Googleアラートから集めた最新情報をチェックできます", color = White, style = MaterialTheme.typography.bodyLarge)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text("一覧を見る ›", color = White, style = MaterialTheme.typography.labelLarge)
         }
     }
 }
@@ -613,13 +594,19 @@ private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
         ) {
             Text(team?.initial ?: "?", color = White, style = MaterialTheme.typography.titleMedium)
         }
-        Column {
-            Text(
-                listOf(team?.displayName ?: news.teamId, news.timeLabel(), if (news.source.isNotBlank()) "公式" else "")
-                    .filter { it.isNotBlank() }.joinToString("・"),
-                style = MaterialTheme.typography.bodySmall,
-                color = InkSoft
-            )
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            // 1行目:引用元(どこの記事か)を枠付きで目立たせ、その横にチーム名と日時
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                SourceTag(news.sourceLabel())
+                Text(
+                    listOf(team?.displayName ?: news.teamId, news.timeLabel())
+                        .filter { it.isNotBlank() }.joinToString("・"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
             Text(news.title, style = MaterialTheme.typography.bodyLarge)
         }
     }

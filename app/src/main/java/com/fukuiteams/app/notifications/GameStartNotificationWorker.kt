@@ -18,6 +18,7 @@ private const val LEAD_TIME_MINUTES = 60L
 private const val KEY_TITLE = "title"
 private const val KEY_TEXT = "text"
 private const val KEY_NOTIFICATION_ID = "notification_id"
+private const val KEY_GAME_ID = "game_id"
 
 class GameStartNotificationWorker(
     context: Context,
@@ -27,7 +28,8 @@ class GameStartNotificationWorker(
         val title = inputData.getString(KEY_TITLE) ?: return Result.success()
         val text = inputData.getString(KEY_TEXT) ?: ""
         val notificationId = inputData.getInt(KEY_NOTIFICATION_ID, 0)
-        showAlertNotification(applicationContext, notificationId, title, text)
+        val gameId = inputData.getString(KEY_GAME_ID)
+        showAlertNotification(applicationContext, notificationId, title, text, gameId?.let { "game_detail/$it" })
         return Result.success()
     }
 }
@@ -41,10 +43,14 @@ class GameStartNotificationWorker(
 suspend fun rescheduleGameStartNotifications(context: Context) {
     val prefs = context.notificationDataStore.data.first()
     val gamestartEnabled = prefs[NotificationPrefsKeys.kindKey("gamestart")] ?: true
-    if (!gamestartEnabled) return
-
     val now = System.currentTimeMillis()
     val workManager = WorkManager.getInstance(context)
+
+    // 「試合開始前」をOFFにしたときは、すでに予約してある通知もすべて取り消す
+    if (!gamestartEnabled) {
+        GamesRepository.refresh(context).forEach { game -> workManager.cancelUniqueWork("gamestart_${game.id}") }
+        return
+    }
 
     GamesRepository.refresh(context).forEach { game ->
         val teamOn = prefs[NotificationPrefsKeys.teamKey(game.team.name)] ?: true
@@ -61,7 +67,8 @@ suspend fun rescheduleGameStartNotifications(context: Context) {
         val data = workDataOf(
             KEY_TITLE to "まもなく試合開始:${game.team.displayName}",
             KEY_TEXT to "${game.dateLabel}(${game.dayOfWeek})${game.timeLabel} vs ${game.opponent}・${game.venue}",
-            KEY_NOTIFICATION_ID to (4000 + game.id.hashCode() % 1000)
+            KEY_NOTIFICATION_ID to (4000 + game.id.hashCode() % 1000),
+            KEY_GAME_ID to game.id
         )
         val request = OneTimeWorkRequestBuilder<GameStartNotificationWorker>()
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)

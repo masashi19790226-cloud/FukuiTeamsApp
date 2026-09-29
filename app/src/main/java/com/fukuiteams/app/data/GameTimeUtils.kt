@@ -39,8 +39,16 @@ fun currentSortKey(): String {
     return "%04d%02d%02d-%02d%02d".format(y, m, d, hh, mm)
 }
 
-/** この試合がまだ始まっていない(=一覧に表示すべき)かどうか。 */
-fun Game.isUpcoming(): Boolean = sortKey >= currentSortKey()
+/**
+ * この試合がまだ始まっていない(=一覧に表示すべき)かどうか。
+ * 開始時刻が「時間未定」の試合は時刻で比べられないので、試合当日の終わりまでは「これから」とみなす
+ * (以前は当日の0時で「過去の試合」に移っていた)。
+ */
+fun Game.isUpcoming(): Boolean {
+    val now = currentSortKey()
+    val hasTime = Regex("""\d{1,2}:\d{2}""").matches(timeLabel.trim())
+    return if (hasTime) sortKey >= now else sortKey.take(8) >= now.take(8)
+}
 
 
 /** 今日(日本時間)の試合か。 */

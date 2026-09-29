@@ -8,6 +8,7 @@
 - 相手の注目選手(背番号・ポジション・成績)
 - 福井側の主力選手(ブローウィンズのみ。Bリーグ公式のクラブリーダー)
 - 上をつないだ短い展望文
+- 福井ブローウィンズの全選手の今季成績(data/players.json。アプリの「選手の数字」で使う)
 
 データの出どころ
 - 3チーム共通 : data/games.json と data/results.json(福井側の成績・直近・前回対戦)
@@ -28,6 +29,7 @@ BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 GAMES_PATH = os.path.join(BASE_DIR, "games.json")
 RESULTS_PATH = os.path.join(BASE_DIR, "results.json")
 PREVIEWS_PATH = os.path.join(BASE_DIR, "previews.json")
+PLAYERS_PATH = os.path.join(BASE_DIR, "players.json")
 
 JST = timezone(timedelta(hours=9))
 UA = "Mozilla/5.0 (Linux; Android 14) FukuiSpoBot/1.0 (+https://github.com/masashi19790226-cloud/FukuiTeamsApp)"
@@ -218,6 +220,96 @@ def blowinds_extra(next_game, preview):
                 break
 
 
+# ---------- ブローウィンズの全選手(Bリーグ公式のクラブページ「選手情報」) ----------
+
+ROSTER_URL = f"{BLEAGUE}/club_detail/?TeamID={BLOWINDS_TEAM_ID}&tab=1"
+
+# 成績表の見出し(英字の略語)→ players.json の項目名
+STAT_KEYS = {
+    "G": "games", "MINPG": "min_pg", "PPG": "ppg", "RPG": "rpg", "APG": "apg",
+    "STPG": "spg", "BSPG": "bpg", "FG%": "fg_pct", "3FG%": "three_pct", "FT%": "ft_pct", "EFFPG": "eff",
+}
+
+
+def _cells(row_html):
+    return [text_of(c).replace("\n", " ").strip()
+            for c in re.findall(r"<t[dh]\b[^>]*>(.*?)</t[dh]>", row_html, flags=re.S | re.I)]
+
+
+def parse_player_stats(page):
+    """「選手シーズン成績」の表(平均)から、選手ごとの成績を取り出す。見出し行の略語で列を決める。"""
+    for table in re.findall(r"<table\b.*?</table>", page, flags=re.S | re.I):
+        header, players, season = None, [], None
+        for row in re.findall(r"<tr\b[^>]*>(.*?)</tr>", table, flags=re.S | re.I):
+            cells = _cells(row)
+            if header is None:
+                if "PLAYER" in cells and "PPG" in cells and "G" in cells:
+                    header = cells
+                continue
+            if "roster_detail" not in row or len(cells) < len(header):
+                continue
+            rec = dict(zip(header, cells))
+            name = rec.get("PLAYER", "").strip()
+            if not name:
+                continue
+            # 表の先頭のシーズン(=今季)の行だけ使う
+            season = season or rec.get("SEASON")
+            if rec.get("SEASON") and rec.get("SEASON") != season:
+                continue
+            idx = header.index("PLAYER")
+            number = cells[idx - 1].strip() if idx > 0 else ""
+            p = {"number": number, "name": name, "position": rec.get("PO", "")}
+            for code, key in STAT_KEYS.items():
+                if rec.get(code, "") != "":
+                    p[key] = rec[code]
+            if all(x["name"] != name for x in players):
+                players.append(p)
+        if header and players:
+            return season, players
+    return None, []
+
+
+def parse_roster(page):
+    """ページ下の「選手」一覧(背番号・名前・ポジション)。試合に出ていない選手もここには載る。"""
+    roster = []
+    for m in re.finditer(r"<a\b[^>]*href=[\"'][^\"']*roster_detail[^\"']*[\"'][^>]*>(.*?)</a>", page, flags=re.S | re.I):
+        t = text_of(m.group(1)).replace("\n", " ")
+        if "背番号" in t:  # クラブリーダー欄のリンクは除く
+            continue
+        rm = re.match(r"\s*(\d+)\s+(.+?)\s+ポジション\s*[:：]\s*(\S+)\s*#\s*(\d+)", t)
+        if not rm:
+            continue
+        words = rm.group(2).split()
+        half = len(words) // 2
+        # 画像の代替文字と名前で同じ名前が2回並ぶので、同じなら1回分にする
+        name = " ".join(words[:half]) if half and words[:half] == words[half:] else rm.group(2).strip()
+        if all(x["number"] != rm.group(4) for x in roster):
+            roster.append({"number": rm.group(4), "name": name, "position": rm.group(3)})
+    return roster
+
+
+def build_players():
+    page = fetch(ROSTER_URL)
+    season, stats = parse_player_stats(page)
+    roster = parse_roster(page)
+    by_name = {p["name"]: p for p in stats}
+    players = []
+    for r in roster:
+        players.append(by_name.pop(r["name"], None) or r)
+        players[-1].setdefault("position", r["position"])
+        players[-1]["number"] = players[-1].get("number") or r["number"]
+    players += list(by_name.values())  # 一覧に無いが成績表にはいる選手
+    players.sort(key=lambda p: int(p["number"]) if str(p.get("number", "")).isdigit() else 999)
+    if not players:
+        print("[WARN] 選手: Bリーグ公式から選手を読み取れませんでした")
+        return None
+    print(f"[選手] ブローウィンズ {len(players)}人(成績あり{len(stats)}人・{season or 'シーズン不明'})")
+    return {"BLOWINDS": {
+        "season": season or "", "source_url": ROSTER_URL,
+        "updated_at": datetime.now(timezone.utc).isoformat(), "players": players,
+    }}
+
+
 # ---------- ユナイテッド(公式サイトの順位表) ----------
 
 def united_extra(next_game, preview):
@@ -316,6 +408,15 @@ def main():
     with open(PREVIEWS_PATH, "w", encoding="utf-8") as f:
         json.dump(previews, f, ensure_ascii=False, indent=2)
     print(f"[展望] {len(previews)}試合分を書き出しました")
+
+    # 選手の成績。読み取れなかったときは前回のファイルを残す
+    try:
+        players = build_players()
+        if players:
+            with open(PLAYERS_PATH, "w", encoding="utf-8") as f:
+                json.dump(players, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"[WARN] 選手: 取得に失敗しました {e!r}")
 
 
 if __name__ == "__main__":

@@ -41,6 +41,9 @@ import com.fukuiteams.app.data.GamePreview
 import com.fukuiteams.app.data.GamePreviewRepository
 import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.KeyPlayer
+import com.fukuiteams.app.data.PlayerStats
+import com.fukuiteams.app.data.PlayersRepository
+import com.fukuiteams.app.data.TeamPlayers
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
@@ -57,8 +60,8 @@ import kotlinx.coroutines.launch
 
 private const val NO_DATA = "データなし"
 
-// Bリーグ公式の福井ブローウィンズのクラブページ(全選手の成績はこちらで確認できる)
-private const val BLOWINDS_BLEAGUE_URL = "https://www.bleague.jp/club_detail/?TeamID=2891"
+// Bリーグ公式の福井ブローウィンズのクラブページ「選手情報」(全選手の今季成績はここから取得している)
+private const val BLOWINDS_BLEAGUE_URL = "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1"
 
 /**
  * 成績の文字列(例:「平均18.5点・5.5アシスト」)から部門ごとの数字を取り出す。
@@ -73,10 +76,11 @@ private fun parseStat(stat: String): PlayerNumbers {
 }
 
 /**
- * 選手の数字。今あるデータ(previews.json)から、
- * ・福井側の主力選手(ブローウィンズのみ。Bリーグ公式のクラブリーダー)
- * ・次の対戦相手の注目選手
- * を背番号・選手名付きで表示する。取得していない数字は「データなし」と表示し、作らない。
+ * 選手の数字。
+ * ・ブローウィンズの全選手:players.json(Bリーグ公式のクラブページ「選手情報」の選手一覧と今季成績)
+ *   まだ届いていないときは、previews.json のクラブリーダー(各部門のチーム1位)を代わりに出す
+ * ・次の対戦相手の注目選手:previews.json
+ * 取得していない数字は「データなし」と表示し、作らない。
  */
 @Composable
 fun PlayersScreen(onBack: () -> Unit) {
@@ -84,8 +88,16 @@ fun PlayersScreen(onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     var selectedTeam by remember { mutableStateOf(Team.BLOWINDS) }
     var previews by remember { mutableStateOf<Map<String, GamePreview>?>(null) }
+    var teamPlayers by remember { mutableStateOf<Map<String, TeamPlayers>>(emptyMap()) }
+    // 並び順(false = 背番号順、true = 平均得点の多い順)
+    var sortByPoints by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) { previews = GamePreviewRepository.fetch() }
+    suspend fun load() {
+        teamPlayers = PlayersRepository.fetch()
+        previews = GamePreviewRepository.fetch()
+    }
+
+    LaunchedEffect(Unit) { load() }
 
     // 選択中のチームの展望データ(次の試合1つ分)。team 項目が無い古いデータは試合IDからチームを探す
     val preview = previews?.values?.firstOrNull { p ->
@@ -107,7 +119,7 @@ fun PlayersScreen(onBack: () -> Unit) {
                 actions = {
                     IconButton(onClick = {
                         previews = null
-                        scope.launch { previews = GamePreviewRepository.fetch() }
+                        scope.launch { load() }
                     }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "更新")
                     }
@@ -146,9 +158,37 @@ fun PlayersScreen(onBack: () -> Unit) {
             }
 
             // 福井側の選手
-            SectionLabel("${selectedTeam.displayName}の主な選手")
+            val roster = teamPlayers[selectedTeam.name]
             val myPlayers = preview?.myKeyPlayers ?: emptyList()
-            if (myPlayers.isNotEmpty()) {
+            if (roster != null && roster.players.isNotEmpty()) {
+                SectionLabel("${selectedTeam.displayName}の選手")
+                Text(
+                    listOf(
+                        "出典:Bリーグ公式(クラブページの選手情報)",
+                        roster.season.takeIf { it.isNotBlank() }?.let { "${it}シーズン" } ?: "",
+                        roster.updatedAt?.atZone(java.time.ZoneId.of("Asia/Tokyo"))
+                            ?.let { "取得 %d/%d %02d:%02d".format(it.monthValue, it.dayOfMonth, it.hour, it.minute) } ?: ""
+                    ).filter { it.isNotBlank() }.joinToString("・"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    SortChip("背番号順", !sortByPoints) { sortByPoints = false }
+                    SortChip("得点順", sortByPoints) { sortByPoints = true }
+                }
+                val sorted = if (sortByPoints) {
+                    roster.players.sortedByDescending { it.points?.toDoubleOrNull() ?: -1.0 }
+                } else {
+                    roster.players
+                }
+                Text(
+                    "数字は今季の1試合あたりの平均です。選手を押すと、シュート成功率などの詳しい数字が開きます。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                sorted.forEach { RosterCard(it) }
+            } else if (myPlayers.isNotEmpty()) {
+                SectionLabel("${selectedTeam.displayName}の主な選手")
                 Text(
                     "Bリーグ公式の「クラブリーダー」(平均得点・リバウンド・アシストの各部門でチーム1位の選手)です。" +
                         "その部門で1位の数字だけが分かるため、ほかの部門は「$NO_DATA」になります。",
@@ -160,15 +200,16 @@ fun PlayersScreen(onBack: () -> Unit) {
                     Text("※${preview?.myPlayersNote}(チームの試合数)", style = MaterialTheme.typography.labelSmall, color = InkSoft)
                 }
             } else {
+                SectionLabel("${selectedTeam.displayName}の選手")
                 NoDataBox(
                     when (selectedTeam) {
-                        Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(1時間おき)が動くと、Bリーグ公式のクラブリーダーが表示されます。"
+                        Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(1時間おき)が動くと、Bリーグ公式の選手情報から全選手の成績が表示されます。"
                         Team.RAC, Team.UNITED -> "このチームの選手の成績は、今のところアプリで自動取得していません。"
                     }
                 )
             }
             if (selectedTeam == Team.BLOWINDS) {
-                LinkText("Bリーグ公式で全選手の成績を見る ›") { openPlayersUrl(context, BLOWINDS_BLEAGUE_URL) }
+                LinkText("Bリーグ公式の選手情報を見る ›") { openPlayersUrl(context, BLOWINDS_BLEAGUE_URL) }
             } else {
                 selectedTeam.officialSiteUrl?.let { url ->
                     LinkText("公式サイトで選手を見る ›") { openPlayersUrl(context, url) }
@@ -201,6 +242,95 @@ fun PlayersScreen(onBack: () -> Unit) {
                 LinkText("相手チームの情報を見る ›") { openPlayersUrl(context, link) }
             }
         }
+    }
+}
+
+/** 並び順の切り替えボタン。 */
+@Composable
+private fun SortChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    Text(
+        label,
+        modifier = Modifier
+            .border(1.dp, Ink)
+            .background(if (selected) Ink else Paper)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 6.dp),
+        color = if (selected) Paper else Ink,
+        style = MaterialTheme.typography.labelLarge,
+        fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal
+    )
+}
+
+/**
+ * 全選手一覧の1人分。背番号・名前・ポジションと、試合数・平均得点・リバウンド・アシスト。
+ * 押すと、出場時間・シュート成功率・スティール・ブロック・貢献度が開く。
+ */
+@Composable
+private fun RosterCard(player: PlayerStats) {
+    var expanded by remember(player.number, player.name) { mutableStateOf(false) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Ink)
+            .background(Paper)
+            .clickable { expanded = !expanded }
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Headline(
+                if (player.number.isNotBlank()) "#${player.number}" else "#-",
+                fontSize = 22,
+                modifier = Modifier.width(58.dp)
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    player.name.ifBlank { NO_DATA },
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    "ポジション:${player.position.ifBlank { NO_DATA }}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+            }
+            Text(if (expanded) "▲" else "▼", style = MaterialTheme.typography.labelMedium, color = InkSoft)
+        }
+        Row(modifier = Modifier.fillMaxWidth()) {
+            StatCell("試合", player.games, Modifier.weight(1f))
+            StatCell("得点", player.points, Modifier.weight(1f))
+            StatCell("リバウンド", player.rebounds, Modifier.weight(1f))
+            StatCell("アシスト", player.assists, Modifier.weight(1f))
+        }
+        if (expanded) {
+            Column {
+                StatRow("出場時間(平均)", player.minutesPerGame ?: NO_DATA)
+                StatRow("フィールドゴール成功率", player.fieldGoalPct ?: NO_DATA)
+                StatRow("3ポイント成功率", player.threePct ?: NO_DATA)
+                StatRow("フリースロー成功率", player.freeThrowPct ?: NO_DATA)
+                StatRow("スティール(平均)", player.steals ?: NO_DATA)
+                StatRow("ブロック(平均)", player.blocks ?: NO_DATA)
+                StatRow("貢献度(平均)", player.efficiency ?: NO_DATA)
+            }
+        }
+    }
+}
+
+/** 数字1つ分(上に項目名、下に数字)。数字が無ければ「データなし」。 */
+@Composable
+private fun StatCell(label: String, value: String?, modifier: Modifier) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(label, style = MaterialTheme.typography.labelSmall, color = InkSoft, maxLines = 1)
+        Text(
+            value ?: NO_DATA,
+            style = if (value == null) MaterialTheme.typography.labelSmall else MaterialTheme.typography.titleMedium,
+            fontWeight = if (value == null) FontWeight.Normal else FontWeight.ExtraBold,
+            color = if (value == null) InkSoft else Ink,
+            maxLines = 1
+        )
     }
 }
 
