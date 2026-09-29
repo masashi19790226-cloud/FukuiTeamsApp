@@ -91,7 +91,7 @@ private fun parseStat(stat: String): PlayerNumbers {
  * 取得していない数字は「データなし」と表示し、作らない。
  */
 @Composable
-fun PlayersScreen(onBack: () -> Unit) {
+fun PlayersScreen(onBack: (() -> Unit)? = null) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var selectedTeam by remember { mutableStateOf(Team.BLOWINDS) }
@@ -134,9 +134,12 @@ fun PlayersScreen(onBack: () -> Unit) {
             MastheadTopBar(
                 section = "選手の数字",
                 edition = "${selectedTeam.displayName}版",
+                // 戻り先があるときだけ左上に戻るボタンを出す(下のメニューのタブとして開いたときは出さない)
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
+                        }
                     }
                 },
                 actions = {

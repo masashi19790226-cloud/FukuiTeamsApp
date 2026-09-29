@@ -55,16 +55,19 @@ fun AppNavHost(initialRoute: String? = null) {
         }
     }
 
+    // 下のメニューの画面(一面・試合・選手・トピック・通知)へ切り替える。戻るボタンで一面に戻る
+    fun navigateTab(route: String) {
+        if (route != currentRoute) {
+            navController.navigate(route) {
+                popUpTo(Routes.HOME) { inclusive = false }
+                launchSingleTop = true
+            }
+        }
+    }
+
     Scaffold(
         bottomBar = {
-            AppBottomNavBar(currentRoute = currentRoute) { route ->
-                if (route != currentRoute) {
-                    navController.navigate(route) {
-                        popUpTo(Routes.HOME) { inclusive = false }
-                        launchSingleTop = true
-                    }
-                }
-            }
+            AppBottomNavBar(currentRoute = currentRoute) { route -> navigateTab(route) }
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
@@ -81,7 +84,7 @@ fun AppNavHost(initialRoute: String? = null) {
                         gameId = null,
                         onBack = { navController.popBackStack() },
                         onOpenInvitations = { navController.navigate(Routes.RADAR_INVITES) },
-                        onOpenPlayers = { navController.navigate(Routes.PLAYERS) }
+                        onOpenPlayers = { navigateTab(Routes.PLAYERS) }
                     )
                 }
                 composable(
@@ -92,7 +95,7 @@ fun AppNavHost(initialRoute: String? = null) {
                         gameId = entry.arguments?.getString("gameId"),
                         onBack = { navController.popBackStack() },
                         onOpenInvitations = { navController.navigate(Routes.RADAR_INVITES) },
-                        onOpenPlayers = { navController.navigate(Routes.PLAYERS) }
+                        onOpenPlayers = { navigateTab(Routes.PLAYERS) }
                     )
                 }
                 composable(Routes.RADAR) {
@@ -118,7 +121,7 @@ fun AppNavHost(initialRoute: String? = null) {
                     NotificationsScreen(
                         onOpenChangelog = { navController.navigate(Routes.CHANGELOG) },
                         onOpenHowToUse = { navController.navigate(Routes.HOW_TO_USE) },
-                        onOpenPlayers = { navController.navigate(Routes.PLAYERS) }
+                        onOpenPlayers = { navigateTab(Routes.PLAYERS) }
                     )
                 }
                 composable(Routes.CHANGELOG) {
@@ -128,7 +131,8 @@ fun AppNavHost(initialRoute: String? = null) {
                     HowToUseScreen(onBack = { navController.popBackStack() })
                 }
                 composable(Routes.PLAYERS) {
-                    PlayersScreen(onBack = { navController.popBackStack() })
+                    // 下のメニューの「選手」タブ。ほかのタブと同じく、左上の戻るボタンは出さない
+                    PlayersScreen()
                 }
             }
         }

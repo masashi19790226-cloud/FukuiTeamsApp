@@ -14,6 +14,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年9月29日",
+        title = "下のメニューに「選手」",
+        items = listOf(
+            "下のメニューの「試合」と「トピック」の間に「選手」を追加し、選手の数字をすぐ開けるようにしました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年9月29日",
         title = "選手の数字の表示と並べ替え",
         items = listOf(
             "選手の数字の一覧で、試合数の隣に1試合あたりの平均出場時間(分:秒)を表示するようにしました",
