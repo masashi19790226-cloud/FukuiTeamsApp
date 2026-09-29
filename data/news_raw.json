@@ -650,5 +650,45 @@
     "published": "2026-09-29T09:00:00+09:00",
     "detected_at": "2026-09-29T03:30:19.352830+00:00",
     "source": "ユナイテッド公式"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4050714821967609397",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ on X: \"｜第8節 11月4日（水） #鹿児島レブナイズ TICKET PRICE ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/FUKUI_BLOWINDS/status/2104766489891070060&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1MVCOG9MW82uZUUBNT38Om",
+    "published": "2026-09-29T03:45:10Z",
+    "detected_at": "2026-09-29T05:28:43.510791+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2102314004879614824",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ on X: \"【お知らせ】 #1 藤永 佳昭 選手が本日付でインジュアリーリスト登録 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/FUKUI_BLOWINDS/status/2104451036740292672&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0EP7U2CLOit_9rWgyKPI8Q",
+    "published": "2026-09-28T23:01:19Z",
+    "detected_at": "2026-09-29T05:28:43.510833+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8843157544638087553",
+    "team": "BLOWINDS",
+    "title": "残り13秒で逆転弾 Bリーグワン「福井ブローウィンズ」初戦は劇的勝利も岐阜に ... - Yahoo!ニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/161cf9b86a6be1fe44f50c6767e255942ad5be6e&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2t9tI20LqizE2OMp5IGP2q",
+    "published": "2026-09-28T21:32:39Z",
+    "detected_at": "2026-09-29T05:28:43.510855+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4259959380052901320",
+    "team": "UNITED",
+    "title": "前節優勝決めた福井ユナイテッド今季初黒星 新潟医療福祉大学FCと対戦 サッカー北信越リーグ1部",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://article.auone.jp/article/3fa11bee-43a9-40d3-b323-401528776c24&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3XybThyrsZV4e6sehOOEDp",
+    "published": "2026-09-28T17:26:27Z",
+    "detected_at": "2026-09-29T05:28:43.510882+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4166247428090929188",
+    "team": "BLOWINDS",
+    "title": "【第2節】福井ブローウィンズvs金沢サムライズ ”WESTER 全力応援キャンペーン” 実施のお知らせ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51639&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1E1nofBBAHR1xYD68gw-Nr",
+    "published": "2026-09-28T17:04:30Z",
+    "detected_at": "2026-09-29T05:28:43.510893+00:00"
   }
 ]
