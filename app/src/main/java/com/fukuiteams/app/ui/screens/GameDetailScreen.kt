@@ -1,6 +1,11 @@
 package com.fukuiteams.app.ui.screens
 
 import com.fukuiteams.app.ui.components.photoCaption
+import com.fukuiteams.app.ui.components.HomeAwayRecordCard
+import com.fukuiteams.app.ui.components.MenuLinkRow
+import com.fukuiteams.app.ui.components.PackingChecklistCard
+import com.fukuiteams.app.data.computeHomeAwaySummary
+import com.fukuiteams.app.data.isToday
 import com.fukuiteams.app.ui.components.PhotoStrip
 import com.fukuiteams.app.ui.components.GamePhotoSpread
 import com.fukuiteams.app.data.GamePhotos
@@ -123,7 +128,8 @@ import kotlinx.coroutines.launch
 fun GameDetailScreen(
     gameId: String?,
     onBack: () -> Unit,
-    onOpenInvitations: () -> Unit
+    onOpenInvitations: () -> Unit,
+    onOpenPlayers: () -> Unit = {}
 ) {
     val allGames = GamesRepository.games
     val initialTeam = allGames.firstOrNull { it.id == gameId }?.team ?: Team.BLOWINDS
@@ -150,6 +156,10 @@ fun GameDetailScreen(
     val gameLogPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
     val watchRecords = remember(allTeamGames, gameLogPrefs, autoResults) {
         computeWatchRecords(allTeamGames, gameLogPrefs, autoResults)
+    }
+    // ホーム・アウェイ別成績(観戦成績と同じ勝敗の決め方で集計)
+    val homeAwaySummary = remember(allTeamGames, gameLogPrefs, autoResults) {
+        computeHomeAwaySummary(allTeamGames, gameLogPrefs, autoResults)
     }
     // 観戦成績のタイルをタップしたときに開く試合一覧(null なら閉じている)
     var statsFilter by remember(selectedTeam) { mutableStateOf<StatsFilter?>(null) }
@@ -219,6 +229,14 @@ fun GameDetailScreen(
             )
 
             WatchStatsCard(watchRecords, onOpenList = { statsFilter = it })
+
+            HomeAwayRecordCard(homeAwaySummary)
+
+            MenuLinkRow(
+                title = "選手の数字を見る",
+                sub = "背番号・選手名と、公式サイトから取得した成績",
+                onClick = onOpenPlayers
+            )
 
             TicketSearchSection(
                 personalSearchKeyword = personalSearchKeyword,
@@ -729,6 +747,11 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         MatchHeaderCard(game, isPast)
+
+        // 試合前と試合当日は持ち物チェックを出す(チェックは試合ごとに保存)
+        if (!isPast || game.isToday()) {
+            PackingChecklistCard(game)
+        }
 
         if (isPast && photos.isNotEmpty()) {
             val autoMap = autoResult?.let { mapOf(game.id to it) } ?: emptyMap()

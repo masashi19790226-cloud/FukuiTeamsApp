@@ -1,0 +1,203 @@
+package com.fukuiteams.app.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.fukuiteams.app.data.APP_AUTHOR
+import com.fukuiteams.app.ui.components.DoubleRule
+import com.fukuiteams.app.ui.components.Headline
+import com.fukuiteams.app.ui.components.MastheadTopBar
+import com.fukuiteams.app.ui.components.SectionLabel
+import com.fukuiteams.app.ui.theme.Ink
+import com.fukuiteams.app.ui.theme.InkSoft
+import com.fukuiteams.app.ui.theme.Paper
+
+private data class HowToSection(val label: String, val title: String, val lines: List<String>)
+
+/**
+ * 使い方の本文。アプリに実際にある機能だけを書く。
+ * 機能を追加・変更したときは、ここも合わせて直すこと。
+ */
+private val HOW_TO_SECTIONS = listOf(
+    HowToSection(
+        "はじめに", "画面の切り替え方",
+        listOf(
+            "画面の一番下にあるボタンで、「一面」「試合」「トピック」「通知」の4つの画面を切り替えます。",
+            "多くの画面で、上のチーム名のボタン(ブローウィンズ・丸岡RUCK・ユナイテッド)を押すと、そのチームの情報だけに絞り込めます。「すべて」を押すと3チームまとめて表示します。",
+            "一面・試合・トピックの画面は、画面を下に引っ張るか、右上の更新ボタンで最新の情報を読み込み直します。"
+        )
+    ),
+    HowToSection(
+        "一面", "ホーム(一面)",
+        listOf(
+            "試合の当日は、一番上に「本日の試合」が出ます。開始時刻・HOME/AWAY・会場・試合時間ごろの天気が分かり、会場名を押すと地図が開きます。",
+            "「速報」には、いちばん新しい試合の結果が載ります。",
+            "「次の試合」では、日時・対戦相手・会場のほか、データがあれば「データで見る展望」(順位・成績・直近の勝敗・前回対戦)と「相手の注目選手」を表示します。",
+            "「各チームの近況」「今後の日程」「公式サイト」「ニュース」も一面で確認できます。試合を押すと、試合画面でその試合の詳細が開きます。",
+            "右上のベルのボタンから通知設定を開けます。"
+        )
+    ),
+    HowToSection(
+        "試合", "試合情報(試合タブ)",
+        listOf(
+            "「今後の試合」「過去の試合」を切り替えて、選んだチームの日程を一覧できます。日付の下にHOME/AWAYを表示します。",
+            "今後の試合を押すと詳細が開き、「Googleカレンダーに追加」「無料招待・プレゼント情報を見る」(トピックの招待・プレゼントが開きます)「チケットを購入する(公式サイト)」が使えます。",
+            "「譲渡・招待チケットを探す」では、Xの投稿とSNS広告(Meta広告ライブラリ)をチーム名で検索できます。取引は各サービス上で行われ、アプリは内容を保証しません。"
+        )
+    ),
+    HowToSection(
+        "試合詳細", "持ち物チェック",
+        listOf(
+            "今後の試合(試合当日を含む)の詳細に「持ち物チェック」があります。見出しを押すと一覧が開きます(試合当日は最初から開いています)。",
+            "ブローウィンズの試合は、バスケ観戦用の持ち物(必需品・応援・観戦グッズ・飲み物・食べ物・身の回り・あそび)が分類ごとに並びます。ほかのチームはチケット・財布・タオルなどの基本の持ち物で、ユナイテッドの試合(屋外)には雨具が加わります。",
+            "チェックは試合ごとに保存され、アプリを閉じても消えません。",
+            "「すべてチェック」「すべて解除」はその試合だけに効きます。「リセット」は全試合の持ち物チェックの記録を消します(観戦記録や写真は消えません)。"
+        )
+    ),
+    HowToSection(
+        "試合結果", "試合結果と成績",
+        listOf(
+            "過去の試合の右端に「○90-88」のような結果が出ます。公式サイトから自動で取得したもので、押すと取得元のページが開きます。まだ結果が取れていない試合は「結果待ち」と表示します。",
+            "過去の試合を押すと、すぐ下に記録欄が開きます。観戦方法(現地・配信・見ていない)と、自動取得の結果がまだ無い試合の勝敗を記録できます。記録はこの端末だけに保存されます。",
+            "「観戦成績」では、現地観戦・それ以外・全体に分けた勝敗と勝率を表示します。行を押すと、その区分の試合一覧が開きます。",
+            "「ホーム・アウェイ別成績」では、全体・HOME・AWAYごとの勝敗と勝率(勝利数÷試合数×100)を表示します。結果が分からない試合は数えません。"
+        )
+    ),
+    HowToSection(
+        "写真", "観戦の写真",
+        listOf(
+            "過去の試合を押して開く記録欄の「写真追加」から、スマホの写真を登録できます(1回で最大10枚)。",
+            "登録した写真は、その試合の詳細に写真説明付きで載ります。写真を押すと拡大、長押しで削除できます。",
+            "写真はアプリの中に保存されます。アプリを削除(アンインストール)すると写真も消えます。スマホのギャラリーにある元の写真は消えません。"
+        )
+    ),
+    HowToSection(
+        "トピック", "トピック(ニュース・無料招待)",
+        listOf(
+            "ニュースと無料招待の情報を1つの画面にまとめて表示します。最初はブローウィンズの情報が出ます。上のボタンで他のチームや「すべて」に切り替えられます。",
+            "「ニュース」「チケット」「イベント」「招待・プレゼント」「その他」のボタンで絞り込めます。分類は見出しに含まれる言葉から自動で決めています。",
+            "3日以内の情報には NEW が付きます。押すと元の記事がブラウザで開きます。"
+        )
+    ),
+    HowToSection(
+        "招待", "無料招待(トピックの招待・プレゼント)",
+        listOf(
+            "無料招待は、トピックの「招待・プレゼント」で見ます。公式サイト・市のページ・Googleアラートから自動で集めた情報です。一面の「無料招待・プレゼント情報」の帯を押しても開きます(3チームすべて表示)。",
+            "「受付中」と「過去の招待」を切り替えられます。書かれている日付が過ぎたもの、日付の無いものは見つけてから14日たったものを「過去の招待」に移します。半年より前の情報は表示しません。",
+            "その試合向けの招待が見つかると、一面や日程の試合に「招待あり」が付きます。"
+        )
+    ),
+    HowToSection(
+        "ニュース", "ニュース",
+        listOf(
+            "一面の下に最新のニュースが3件並びます。「ニュースをもっと見る(トピック)」を押すと、トピックですべてのニュースを見られます。3チームの公式サイトのお知らせ(「公式」と表示)と、Googleアラートで見つけた記事を自動で集めています。",
+            "ニュース欄には、データの最終更新時刻と、自動更新で取得に失敗したものがあればその内容を表示します。",
+            "記事を押すと元のページが開きます。"
+        )
+    ),
+    HowToSection(
+        "選手", "選手の数字",
+        listOf(
+            "通知画面の「選手の数字」、または試合タブの「選手の数字を見る」から開きます。",
+            "ブローウィンズは、Bリーグ公式のクラブリーダー(平均得点・リバウンド・アシストの各部門でチーム1位の選手)を背番号・選手名付きで表示します。次の対戦相手の注目選手も表示します。",
+            "取得できていない数字は「データなし」と表示します。丸岡RUCKとユナイテッドの選手の成績は、今のところ取得していません。"
+        )
+    ),
+    HowToSection(
+        "通知", "通知",
+        listOf(
+            "「通知」画面で、チームごと・内容ごと(無料招待の新着・ニュース・試合開始前)に通知を受け取るか選べます。",
+            "新しい無料招待やニュースは、およそ1時間おきに確認して通知します。試合開始前の通知は、開始時刻の1時間前に届きます(開始時刻が決まっている試合のみ)。",
+            "通知画面の下から「アプリの使い方」「選手の数字」「更新履歴」を開けます。"
+        )
+    ),
+    HowToSection(
+        "ウィジェット", "ホーム画面のウィジェット",
+        listOf(
+            "スマホのホーム画面を長押しして「ウィジェット」を選び、「ふくスポ 次の試合」を置けます。",
+            "3チームそれぞれの次の試合(日付・時刻・HOME/AWAY・相手・会場)を1行ずつ表示し、その試合向けの招待があれば「招待あり」が付きます。",
+            "ウィジェットを押すとアプリが開きます。表示はおよそ1時間ごとと、アプリの一面を開いたときに更新されます。"
+        )
+    ),
+    HowToSection(
+        "その他", "その他",
+        listOf(
+            "「更新履歴」では、これまでに追加・修正した内容と、いま入っている版の番号を確認できます。",
+            "試合日程・結果・ニュース・招待は、GitHub上で1時間おきに自動更新されています。アプリはそれを読み込むので、アプリを入れ直さなくても新しい情報が反映されます。"
+        )
+    )
+)
+
+@Composable
+fun HowToUseScreen(onBack: () -> Unit) {
+    Scaffold(
+        topBar = {
+            MastheadTopBar(
+                section = "アプリの使い方",
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
+                    }
+                }
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.background
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier.padding(padding).padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            item {
+                Column(modifier = Modifier.padding(top = 16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Headline("ふくスポの使い方", fontSize = 22)
+                    Text(
+                        "福井ブローウィンズ・福井丸岡RUCK・福井ユナイテッドの試合・結果・ニュース・無料招待をまとめて見られるアプリです。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
+                    )
+                    Text("制作:$APP_AUTHOR", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                    DoubleRule(modifier = Modifier.padding(top = 6.dp))
+                }
+            }
+            items(HOW_TO_SECTIONS) { section -> HowToCard(section) }
+            item { Text(" ", modifier = Modifier.padding(bottom = 8.dp)) }
+        }
+    }
+}
+
+@Composable
+private fun HowToCard(section: HowToSection) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Ink)
+            .background(Paper)
+            .padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        SectionLabel(section.label)
+        Headline(section.title, fontSize = 17)
+        section.lines.forEach { line ->
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("・", style = MaterialTheme.typography.bodyMedium, color = Ink)
+                Text(line, style = MaterialTheme.typography.bodyMedium, color = Ink)
+            }
+        }
+    }
+}

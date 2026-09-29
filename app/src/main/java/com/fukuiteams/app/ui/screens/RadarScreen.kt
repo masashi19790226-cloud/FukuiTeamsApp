@@ -3,8 +3,8 @@ package com.fukuiteams.app.ui.screens
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,38 +13,33 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.AlertsResult
@@ -54,433 +49,337 @@ import com.fukuiteams.app.data.RemoteInvitationAlert
 import com.fukuiteams.app.data.eventInstant
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isTooOld
+import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.model.Team
-import com.fukuiteams.app.ui.components.TeamBadge
-import com.fukuiteams.app.ui.theme.Accent
+import com.fukuiteams.app.ui.components.DoubleRule
+import com.fukuiteams.app.ui.components.Headline
+import com.fukuiteams.app.ui.components.MastheadTopBar
+import com.fukuiteams.app.ui.components.SectionLabel
+import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
+import com.fukuiteams.app.ui.theme.Ivory
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.theme.Paper
-import com.fukuiteams.app.ui.theme.White
-import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.OffsetDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
-private enum class RadarTab(val label: String) {
-    ALL("すべて"),
+/** トピック画面の分類。 */
+private enum class RadarCategory(val label: String) {
     NEWS("ニュース"),
-    INVITE("招待・プレゼント")
+    TICKET("チケット"),
+    EVENT("イベント"),
+    INVITE("招待・プレゼント"),
+    OTHER("その他")
 }
 
+/** トピック画面に並べる1件。元がニュースか招待情報かも持っておく。 */
 private data class RadarItem(
     val alert: RemoteInvitationAlert,
-    val kind: RadarTab
+    val category: RadarCategory,
+    val fromInvitations: Boolean
 )
 
+// 見出し・本文抜粋に含まれる言葉で分類する(上から順に当てはめる)
+private val INVITE_WORDS = listOf("招待", "プレゼント", "抽選", "当選", "無料")
+private val TICKET_WORDS = listOf("チケット", "前売", "先行販売", "一般販売", "販売開始", "完売", "当日券", "観戦券")
+private val EVENT_WORDS = listOf("イベント", "ファン", "感謝", "観戦会", "パブリックビューイング", "サイン会", "握手", "キャンペーン", "フェス", "祭", "体験", "教室")
+private val OTHER_WORDS = listOf("出演", "放送", "中継", "グッズ", "募集", "ボランティア", "スポンサー", "パートナー")
+
+private fun classify(alert: RemoteInvitationAlert, fromInvitations: Boolean): RadarCategory {
+    val text = "${alert.title} ${alert.snippet}"
+    return when {
+        // 招待情報として集めたものは、すべて「招待・プレゼント」
+        fromInvitations -> RadarCategory.INVITE
+        INVITE_WORDS.any { text.contains(it) } -> RadarCategory.INVITE
+        TICKET_WORDS.any { text.contains(it) } -> RadarCategory.TICKET
+        EVENT_WORDS.any { text.contains(it) } -> RadarCategory.EVENT
+        OTHER_WORDS.any { text.contains(it) } -> RadarCategory.OTHER
+        else -> RadarCategory.NEWS
+    }
+}
+
+// 招待画面と同じく、3日以内に掲載(または検知)されたものを新着とする
+private const val NEW_WITHIN_MILLIS = 3L * 24 * 60 * 60 * 1000
+
+private fun RemoteInvitationAlert.isNewArrival(): Boolean =
+    eventInstant()?.let { System.currentTimeMillis() - it.toEpochMilli() < NEW_WITHIN_MILLIS } ?: false
+
+/**
+ * トピック(旧RADAR)。既存のニュース(news_raw.json)と招待情報(invitations_raw.json)をまとめ、
+ * 「ニュース・チケット・イベント・招待・プレゼント・その他」に分けて絞り込めるようにした画面。
+ * 初期表示はブローウィンズ。チーム切替で他チームや「すべて」も見られる。
+ * 旧・招待タブの役割もここに移した:「招待・プレゼント」では受付中と過去の招待を切り替えられる。
+ * initialCategory に "INVITE" を渡すと、招待・プレゼント(3チームすべて)で開く。
+ */
 @Composable
-fun RadarScreen() {
+fun RadarScreen(initialCategory: String? = null) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+    val startCategory = remember(initialCategory) {
+        RadarCategory.values().find { it.name.equals(initialCategory, ignoreCase = true) }
+    }
+    // 招待から開いたときは、旧・招待タブと同じく3チームすべてを出す
+    var selectedTeam by remember { mutableStateOf<Team?>(if (startCategory == RadarCategory.INVITE) null else Team.BLOWINDS) }
+    var selectedCategory by remember { mutableStateOf(startCategory) }
+    // 招待・プレゼントの中の切り替え(0 = 受付中、1 = 過去の招待)
+    var inviteTab by remember { mutableStateOf(0) }
+    var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
+    var inviteResult by remember { mutableStateOf<AlertsResult?>(null) }
+    val pullToRefreshState = rememberPullToRefreshState()
 
-    var newsItems by remember { mutableStateOf<List<RemoteInvitationAlert>>(emptyList()) }
-    var inviteItems by remember { mutableStateOf<List<RemoteInvitationAlert>>(emptyList()) }
-    var selectedTeam by remember { mutableStateOf<Team?>(Team.BLOWINDS) }
-    var selectedTab by remember { mutableStateOf(RadarTab.ALL) }
-    var loading by remember { mutableStateOf(true) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    suspend fun refresh() {
+        newsResult = NewsAlertsRepository.fetch()
+        inviteResult = InvitationAlertsRepository.fetch()
+    }
 
-    fun load() {
-        scope.launch {
-            loading = true
-            errorMessage = null
+    LaunchedEffect(Unit) { refresh() }
 
-            val newsResult = NewsAlertsRepository.fetch()
-            val inviteResult = InvitationAlertsRepository.fetch()
-
-            newsItems = when (newsResult) {
-                is AlertsResult.Success -> newsResult.items
-                is AlertsResult.Failure -> emptyList()
-            }
-            inviteItems = when (inviteResult) {
-                is AlertsResult.Success -> inviteResult.items
-                is AlertsResult.Failure -> emptyList()
-            }
-
-            val errors = listOfNotNull(
-                (newsResult as? AlertsResult.Failure)?.message,
-                (inviteResult as? AlertsResult.Failure)?.message
-            )
-            errorMessage = if (errors.size == 2) "ニュースと招待情報を取得できませんでした" else errors.firstOrNull()
-            loading = false
+    if (pullToRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            refresh()
+            pullToRefreshState.endRefresh()
         }
     }
 
-    LaunchedEffect(Unit) {
-        load()
-    }
+    val loading = newsResult == null || inviteResult == null
+    val newsItems = (newsResult as? AlertsResult.Success)?.items ?: emptyList()
+    val inviteItems = (inviteResult as? AlertsResult.Success)?.items ?: emptyList()
 
-    val radarItems = remember(newsItems, inviteItems, selectedTeam, selectedTab) {
-        val all = buildList {
-            if (selectedTab == RadarTab.ALL || selectedTab == RadarTab.NEWS) {
-                addAll(newsItems.map { RadarItem(it, RadarTab.NEWS) })
-            }
-            if (selectedTab == RadarTab.ALL || selectedTab == RadarTab.INVITE) {
-                addAll(
-                    inviteItems
-                        .filterNot { it.isLikelyClosed() || it.isTooOld() }
-                        .map { RadarItem(it, RadarTab.INVITE) }
-                )
-            }
-        }
-
-        all.filter { item ->
-            selectedTeam == null || item.alert.teamId == selectedTeam.name
-        }.sortedByDescending { radarInstant(it.alert) ?: Instant.EPOCH }
+    // 同じ記事がニュースと招待の両方にあるときは、招待として1件だけ出す
+    val inviteLinks = inviteItems.map { it.link }.filter { it.isNotBlank() }.toSet()
+    val allItems = (
+        inviteItems.map { RadarItem(it, classify(it, true), true) } +
+            newsItems.filterNot { it.link.isNotBlank() && it.link in inviteLinks }
+                .map { RadarItem(it, classify(it, false), false) }
+        )
+        .filterNot { it.alert.isTooOld() }
+    // 新しい順(日時が分からないものは最後)。並べ方は既存の sortedNewestFirst() と同じ
+    val sorted = allItems.sortedWith(
+        compareByDescending<RadarItem> { it.alert.eventInstant() != null }
+            .thenByDescending { it.alert.eventInstant() }
+    )
+    val teamItems = sorted.filter { selectedTeam == null || it.alert.teamId == selectedTeam?.name }
+    val categoryItems = teamItems.filter { selectedCategory == null || it.category == selectedCategory }
+    // 招待・プレゼントは、旧・招待タブと同じ判定(isLikelyClosed)で受付中と過去に分ける
+    val openInvites = categoryItems.filterNot { it.alert.isLikelyClosed() }
+    val pastInvites = categoryItems.filter { it.alert.isLikelyClosed() }
+    val isInviteView = selectedCategory == RadarCategory.INVITE
+    val shown = when {
+        !isInviteView -> categoryItems
+        inviteTab == 0 -> openInvites
+        else -> pastInvites
     }
+    val newCount = teamItems.count { it.alert.isNewArrival() }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text("BLOWINDS RADAR", fontSize = 19.sp)
-                        Text(
-                            "新着情報をまとめてチェック",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = InkSoft
-                        )
-                    }
-                },
+            MastheadTopBar(
+                section = "トピック",
+                edition = selectedTeam?.let { "${it.displayName}版" },
                 actions = {
-                    IconButton(onClick = { load() }, enabled = !loading) {
+                    IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "更新")
                     }
                 }
             )
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(padding)
-                .background(Paper)
+                .fillMaxSize()
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
-            TeamFilter(
-                selectedTeam = selectedTeam,
-                onSelected = { selectedTeam = it }
-            )
-
-            TabFilter(
-                selectedTab = selectedTab,
-                onSelected = { selectedTab = it }
-            )
-
-            when {
-                loading && radarItems.isEmpty() -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-
-                errorMessage != null && radarItems.isEmpty() -> {
-                    ErrorContent(
-                        message = errorMessage ?: "取得に失敗しました",
-                        onRetry = { load() }
+            LazyColumn(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                item {
+                    TeamSelectorRow(
+                        selectedTeam = selectedTeam,
+                        onSelect = { t -> selectedTeam = t },
+                        showAll = true,
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                 }
-
-                radarItems.isEmpty() -> {
-                    EmptyContent()
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        SectionLabel(selectedTeam?.let { "${it.displayName}のトピック" } ?: "3チームのトピック", red = true)
+                        Headline(
+                            when {
+                                loading -> "情報を集めています"
+                                isInviteView && openInvites.isEmpty() -> "受付中の招待は\nいまのところなし"
+                                isInviteView -> "無料招待 ${openInvites.size}件\n受付中"
+                                teamItems.isEmpty() -> "いまのところ\n情報はありません"
+                                newCount > 0 -> "新着 ${newCount}件\n全${teamItems.size}件"
+                                else -> "情報 ${teamItems.size}件"
+                            },
+                            fontSize = 22
+                        )
+                        Text(
+                            "ニュースと無料招待の情報をまとめて表示します。3日以内のものに NEW が付きます。行をタップすると元の記事を開きます。",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = InkSoft
+                        )
+                        DoubleRule(modifier = Modifier.padding(top = 4.dp))
+                    }
                 }
-
-                else -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                            start = 12.dp,
-                            top = 8.dp,
-                            end = 12.dp,
-                            bottom = 24.dp
-                        ),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
+                item {
+                    // 分類で絞り込み(横にスクロールできる)
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         item {
-                            Text(
-                                "${radarItems.size}件",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = InkSoft,
-                                modifier = Modifier.padding(horizontal = 2.dp, vertical = 4.dp)
-                            )
+                            CategoryChip("すべて ${teamItems.size}", selectedCategory == null) { selectedCategory = null }
                         }
-
-                        items(
-                            items = radarItems,
-                            key = { "${it.kind.name}_${it.alert.id}" }
-                        ) { item ->
-                            RadarCard(
-                                item = item,
-                                onClick = { openUrl(context, item.alert.link) }
+                        items(RadarCategory.values().toList()) { cat ->
+                            val count = teamItems.count { it.category == cat }
+                            CategoryChip("${cat.label} $count", selectedCategory == cat) {
+                                selectedCategory = if (selectedCategory == cat) null else cat
+                                inviteTab = 0
+                            }
+                        }
+                    }
+                }
+                if (isInviteView) {
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                InviteTab("受付中 ${openInvites.size}", inviteTab == 0, Modifier.weight(1f)) { inviteTab = 0 }
+                                InviteTab("過去の招待 ${pastInvites.size}", inviteTab == 1, Modifier.weight(1f)) { inviteTab = 1 }
+                            }
+                            Text(
+                                if (inviteTab == 0) "応募条件・締切は各記事でご確認ください。"
+                                else "書かれている試合日・締切日が過ぎたもの、日付がないものは見つけてから14日たったものです。半年より前の情報は表示しません。",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = InkSoft
                             )
                         }
                     }
                 }
+                if (newsResult is AlertsResult.Failure || inviteResult is AlertsResult.Failure) {
+                    item {
+                        Text(
+                            "一部の情報を取得できませんでした(通信環境をご確認ください)。下に引っ張ると再読み込みします。",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = NewsRed
+                        )
+                    }
+                }
+                if (loading) {
+                    item { Text("読み込み中…", style = MaterialTheme.typography.bodySmall, color = InkSoft) }
+                } else if (shown.isEmpty()) {
+                    item {
+                        Text(
+                            "この分類の情報はありません",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = InkSoft,
+                            modifier = Modifier.padding(vertical = 12.dp)
+                        )
+                    }
+                } else {
+                    items(shown) { radarItem ->
+                        RadarRow(radarItem, showClosedNote = !isInviteView, onClick = { openRadarUrl(context, radarItem.alert.link) })
+                    }
+                }
+                item { Spacer(modifier = Modifier.height(12.dp)) }
             }
-        }
-    }
-}
-
-@Composable
-private fun TeamFilter(
-    selectedTeam: Team?,
-    onSelected: (Team?) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 6.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        FilterChip(
-            selected = selectedTeam == null,
-            onClick = { onSelected(null) },
-            label = { Text("全チーム") },
-            leadingIcon = if (selectedTeam == null) {
-                { Icon(Icons.Filled.Newspaper, contentDescription = null, modifier = Modifier.size(16.dp)) }
-            } else null
-        )
-
-        Team.values().forEach { team ->
-            FilterChip(
-                selected = selectedTeam == team,
-                onClick = { onSelected(if (selectedTeam == team) null else team) },
-                label = { Text(team.initial) },
-                leadingIcon = {
-                    TeamBadge(team, size = 18.dp, fontSize = 8.sp)
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = team.color.copy(alpha = 0.14f),
-                    selectedLabelColor = Ink
-                )
+            PullToRefreshContainer(
+                state = pullToRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
             )
         }
     }
 }
 
 @Composable
-private fun TabFilter(
-    selectedTab: RadarTab,
-    onSelected: (RadarTab) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 2.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        RadarTab.values().forEach { tab ->
-            FilterChip(
-                selected = selectedTab == tab,
-                onClick = { onSelected(tab) },
-                label = { Text(tab.label) },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = Ink,
-                    selectedLabelColor = White
-                )
-            )
-        }
-    }
+private fun InviteTab(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Text(
+        label,
+        modifier = modifier
+            .border(1.dp, Ink)
+            .background(if (selected) Ink else Paper)
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp),
+        color = if (selected) Ivory else Ink,
+        fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
+        fontSize = 13.sp,
+        textAlign = TextAlign.Center,
+        maxLines = 1
+    )
 }
 
 @Composable
-private fun RadarCard(
-    item: RadarItem,
-    onClick: () -> Unit
-) {
+private fun CategoryChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    Text(
+        label,
+        modifier = Modifier
+            .border(1.dp, Ink)
+            .background(if (selected) Ink else Paper)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 10.dp, vertical = 7.dp),
+        color = if (selected) Ivory else Ink,
+        fontSize = 12.sp,
+        fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
+        maxLines = 1,
+        softWrap = false
+    )
+}
+
+@Composable
+private fun RadarRow(item: RadarItem, showClosedNote: Boolean = true, onClick: () -> Unit) {
     val alert = item.alert
     val team = Team.values().find { it.name == alert.teamId }
-    val isNew = isNewItem(alert)
-    val sourceLabel = sourceLabel(alert.source, item.kind)
-    val dateLabel = radarTimeLabel(alert)
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = alert.link.isNotBlank(), onClick = onClick),
-        colors = CardDefaults.cardColors(containerColor = White),
-        shape = RoundedCornerShape(4.dp),
-        border = BorderStroke(1.dp, LineGray),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(7.dp)
-            ) {
-                if (team != null) {
-                    TeamBadge(team, size = 28.dp, fontSize = 11.sp)
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .clip(RoundedCornerShape(3.dp))
-                            .background(Accent),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("?", color = White, fontSize = 12.sp)
-                    }
-                }
-
-                Text(
-                    if (item.kind == RadarTab.INVITE) "招待・プレゼント" else "ニュース",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = if (item.kind == RadarTab.INVITE) Accent else NewsRed
-                )
-
-                if (isNew) {
-                    Text(
-                        "NEW",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = White,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(NewsRed)
-                            .padding(horizontal = 5.dp, vertical = 2.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    sourceLabel,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = InkSoft
-                )
-            }
-
-            Text(
-                alert.title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = Ink
-            )
-
-            if (alert.snippet.isNotBlank() && item.kind == RadarTab.INVITE) {
-                Text(
-                    alert.snippet,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = InkSoft,
-                    maxLines = 2
-                )
-            }
-
-            if (dateLabel.isNotBlank()) {
-                Text(
-                    dateLabel,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = InkSoft
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ErrorContent(
-    message: String,
-    onRetry: () -> Unit
-) {
+    val hasLink = alert.link.isNotBlank()
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .fillMaxWidth()
+            .border(1.dp, Ink)
+            .background(Paper)
+            .then(if (hasLink) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        Text("情報を取得できませんでした", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.width(1.dp))
-        Text(
-            message,
-            style = MaterialTheme.typography.bodySmall,
-            color = InkSoft
-        )
-        Spacer(modifier = Modifier.width(1.dp))
-        Button(onClick = onRetry) {
-            Text("もう一度取得")
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            if (alert.isNewArrival()) SectionLabel("NEW", red = true)
+            Text(
+                item.category.label,
+                modifier = Modifier.border(1.dp, Ink).padding(horizontal = 5.dp, vertical = 1.dp),
+                fontSize = 10.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Ink,
+                maxLines = 1,
+                softWrap = false
+            )
+            if (team != null) {
+                Box(modifier = Modifier.width(4.dp).height(12.dp).background(team.color))
+                Text(team.displayName, style = MaterialTheme.typography.labelMedium, color = team.color, maxLines = 1)
+            }
         }
-    }
-}
-
-@Composable
-private fun EmptyContent() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
-    ) {
+        Text(alert.title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = Ink)
+        if (alert.snippet.isNotBlank()) {
+            Text("「${alert.snippet}」", style = MaterialTheme.typography.bodySmall, color = Ink, maxLines = 3)
+        }
+        val details = listOf(
+            alert.timeLabel().ifBlank { "日時不明" },
+            alert.source,
+            if (showClosedNote && item.fromInvitations && alert.isLikelyClosed()) "受付終了の可能性" else ""
+        ).filter { it.isNotBlank() }.joinToString("・")
+        Text(details, style = MaterialTheme.typography.bodySmall, color = InkSoft)
         Text(
-            "該当する新着情報はありません",
-            style = MaterialTheme.typography.bodyLarge,
-            color = InkSoft
+            if (hasLink) "元の記事を開く ›" else "元の記事のリンクはありません",
+            style = MaterialTheme.typography.labelMedium,
+            color = if (hasLink) Ink else LineGray
         )
     }
 }
 
-private fun radarInstant(alert: RemoteInvitationAlert): Instant? {
-    return parseInstant(alert.detectedAt) ?: alert.eventInstant()
-}
-
-private fun parseInstant(raw: String): Instant? {
-    if (raw.isBlank()) return null
-    return try {
-        OffsetDateTime.parse(raw).toInstant()
-    } catch (_: Exception) {
-        try {
-            Instant.parse(raw)
-        } catch (_: Exception) {
-            null
-        }
-    }
-}
-
-private fun isNewItem(alert: RemoteInvitationAlert): Boolean {
-    val instant = radarInstant(alert) ?: return false
-    val age = System.currentTimeMillis() - instant.toEpochMilli()
-    return age in 0..(24L * 60L * 60L * 1000L)
-}
-
-private fun radarTimeLabel(alert: RemoteInvitationAlert): String {
-    val instant = radarInstant(alert) ?: return ""
-    val zoned = instant.atZone(ZoneId.of("Asia/Tokyo"))
-    val formatter = DateTimeFormatter.ofPattern("M/d(E) HH:mm")
-    return formatter.format(zoned)
-}
-
-private fun sourceLabel(source: String, kind: RadarTab): String {
-    if (source.isBlank()) {
-        return if (kind == RadarTab.INVITE) "情報収集" else "ニュース"
-    }
-    return when {
-        source.contains("Google", ignoreCase = true) -> "Google"
-        source.contains("SNS", ignoreCase = true) -> "SNS"
-        source.contains("福井新聞") -> "福井新聞"
-        source.contains("NHK") -> "NHK"
-        source.contains("公式") -> "公式"
-        else -> source
-    }
-}
-
-private fun openUrl(context: Context, url: String) {
+private fun openRadarUrl(context: Context, url: String) {
     if (url.isBlank()) return
-    runCatching {
+    try {
         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    } catch (e: Exception) {
+        // ブラウザが見つからないなどで開けないときは何もしない(アプリは落とさない)
     }
 }

@@ -6,6 +6,7 @@
 - 両チームの成績・順位・直近の勝敗
 - 前回対戦の結果
 - 相手の注目選手(背番号・ポジション・成績)
+- 福井側の主力選手(ブローウィンズのみ。Bリーグ公式のクラブリーダー)
 - 上をつないだ短い展望文
 
 データの出どころ
@@ -182,6 +183,11 @@ def blowinds_extra(next_game, preview):
         preview["my"]["record"] = mine["record"]
     if mine.get("rank"):
         preview["my"]["rank"] = mine["rank"]
+    if mine.get("leaders"):
+        # 福井側のクラブリーダー(平均得点・リバウンド・アシストの各1位)。アプリの「選手の数字」で使う
+        preview["my_key_players"] = mine["leaders"]
+        if mine.get("games"):
+            preview["my_players_note"] = f"今季{mine['games']}試合の成績から"
 
     opp_id = find_bleague_team_id(next_game["opponent"])
     if not opp_id:

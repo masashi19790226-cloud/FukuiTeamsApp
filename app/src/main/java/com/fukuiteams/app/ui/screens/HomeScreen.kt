@@ -115,7 +115,8 @@ import com.fukuiteams.app.ui.theme.White
 fun HomeScreen(
     onOpenGame: (String) -> Unit,
     onOpenInvitations: () -> Unit,
-    onOpenNotifications: () -> Unit
+    onOpenNotifications: () -> Unit,
+    onOpenRadar: () -> Unit = {}
 ) {
     var selectedTeam by remember { mutableStateOf<Team?>(null) }
     var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
@@ -293,7 +294,7 @@ fun HomeScreen(
                     }
                     // ニュース・招待などの自動更新が最後に動いた時刻
                     DataStatusLine(dataStatus)
-                    NewsSection(newsResult, selectedTeam)
+                    NewsSection(newsResult, selectedTeam, onOpenRadar)
                 }
             }
 
@@ -381,7 +382,7 @@ private fun DataStatusLine(status: DataStatus?) {
 }
 
 @Composable
-private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?) {
+private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?, onOpenRadar: () -> Unit) {
     val context = LocalContext.current
 
     when (newsResult) {
@@ -405,14 +406,23 @@ private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?) {
                     border = BorderStroke(1.dp, Ink)
                 ) {
                     Column {
-                        newsList.take(10).forEachIndexed { index, news ->
+                        // 一面は最新3件だけ。続きはトピック画面でまとめて見る
+                        newsList.take(3).forEachIndexed { index, news ->
                             NewsRow(news, onClick = { openUrl(context, news.link) })
-                            if (index != newsList.take(10).lastIndex) {
+                            if (index != newsList.take(3).lastIndex) {
                                 Divider(color = DividerGray)
                             }
                         }
                     }
                 }
+                Text(
+                    "ニュースをもっと見る(トピック) ›",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = Accent,
+                    modifier = Modifier
+                        .clickable(onClick = onOpenRadar)
+                        .padding(vertical = 6.dp)
+                )
             }
         }
     }

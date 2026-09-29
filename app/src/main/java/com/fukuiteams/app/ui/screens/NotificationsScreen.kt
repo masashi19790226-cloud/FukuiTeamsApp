@@ -13,6 +13,7 @@ import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.MastheadTopBar
+import com.fukuiteams.app.ui.components.MenuLinkRow
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -65,7 +66,11 @@ private val kindDefs = listOf(
 )
 
 @Composable
-fun NotificationsScreen(onOpenChangelog: () -> Unit = {}) {
+fun NotificationsScreen(
+    onOpenChangelog: () -> Unit = {},
+    onOpenHowToUse: () -> Unit = {},
+    onOpenPlayers: () -> Unit = {}
+) {
     // ON/OFFは端末に保存され、アプリを閉じても消えない(DataStore)。
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -188,6 +193,21 @@ fun NotificationsScreen(onOpenChangelog: () -> Unit = {}) {
                         }
                     }
                 }
+            }
+
+            // 使い方・選手の数字への入口
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("メニュー")
+                MenuLinkRow(
+                    title = "アプリの使い方",
+                    sub = "各画面でできることの説明",
+                    onClick = onOpenHowToUse
+                )
+                MenuLinkRow(
+                    title = "選手の数字",
+                    sub = "背番号・選手名と、公式サイトから取得した成績",
+                    onClick = onOpenPlayers
+                )
             }
 
             // アプリの版と更新履歴への入口
