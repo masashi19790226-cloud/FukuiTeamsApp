@@ -76,7 +76,8 @@ private val kindDefs = listOf(
 @Composable
 fun NotificationsScreen(
     onOpenChangelog: () -> Unit = {},
-    onOpenHowToUse: () -> Unit = {}
+    onOpenHowToUse: () -> Unit = {},
+    onOpenPlayers: () -> Unit = {}
 ) {
     // ON/OFFは端末に保存され、アプリを閉じても消えない(DataStore)。
     val context = LocalContext.current
@@ -225,13 +226,18 @@ fun NotificationsScreen(
                 }
             }
 
-            // 使い方への入口(選手の数字は下のメニューの「選手」から開くので、ここには置かない)
+            // 使い方・選手の数字への入口
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SectionLabel("メニュー")
                 MenuLinkRow(
                     title = "アプリの使い方",
                     sub = "各画面でできることの説明",
                     onClick = onOpenHowToUse
+                )
+                MenuLinkRow(
+                    title = "選手の数字",
+                    sub = "背番号・選手名と、公式サイトから取得した成績",
+                    onClick = onOpenPlayers
                 )
             }
 
