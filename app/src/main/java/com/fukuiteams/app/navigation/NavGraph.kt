@@ -14,17 +14,19 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.compose.runtime.getValue
 import com.fukuiteams.app.ui.components.AppBottomNavBar
+import com.fukuiteams.app.ui.screens.ChangelogScreen
 import com.fukuiteams.app.ui.screens.GameDetailScreen
 import com.fukuiteams.app.ui.screens.HomeScreen
 import com.fukuiteams.app.ui.screens.InvitationsScreen
 import com.fukuiteams.app.ui.screens.NotificationsScreen
-import com.fukuiteams.app.ui.screens.ChangelogScreen
+import com.fukuiteams.app.ui.screens.RadarScreen
 
 object Routes {
     const val HOME = "home"
     const val GAME_DETAIL = "game_detail"
     const val GAME_DETAIL_WITH_ARG = "game_detail/{gameId}"
     const val INVITATIONS = "invitations"
+    const val RADAR = "radar"
     const val NOTIFICATIONS = "notifications"
     const val CHANGELOG = "changelog"
 }
@@ -56,6 +58,7 @@ fun AppNavHost() {
                         onOpenNotifications = { navController.navigate(Routes.NOTIFICATIONS) }
                     )
                 }
+
                 composable(Routes.GAME_DETAIL) {
                     GameDetailScreen(
                         gameId = null,
@@ -63,6 +66,7 @@ fun AppNavHost() {
                         onOpenInvitations = { navController.navigate(Routes.INVITATIONS) }
                     )
                 }
+
                 composable(
                     Routes.GAME_DETAIL_WITH_ARG,
                     arguments = listOf(navArgument("gameId") { type = NavType.StringType })
@@ -73,12 +77,21 @@ fun AppNavHost() {
                         onOpenInvitations = { navController.navigate(Routes.INVITATIONS) }
                     )
                 }
+
                 composable(Routes.INVITATIONS) {
                     InvitationsScreen()
                 }
-                composable(Routes.NOTIFICATIONS) {
-                    NotificationsScreen(onOpenChangelog = { navController.navigate(Routes.CHANGELOG) })
+
+                composable(Routes.RADAR) {
+                    RadarScreen()
                 }
+
+                composable(Routes.NOTIFICATIONS) {
+                    NotificationsScreen(
+                        onOpenChangelog = { navController.navigate(Routes.CHANGELOG) }
+                    )
+                }
+
                 composable(Routes.CHANGELOG) {
                     ChangelogScreen(onBack = { navController.popBackStack() })
                 }
