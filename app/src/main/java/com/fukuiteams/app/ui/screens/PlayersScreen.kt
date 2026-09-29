@@ -48,6 +48,7 @@ import com.fukuiteams.app.data.GamePreview
 import com.fukuiteams.app.data.GamePreviewRepository
 import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.KeyPlayer
+import com.fukuiteams.app.data.BLOWINDS_OPP_KEY
 import com.fukuiteams.app.data.PlayerStats
 import com.fukuiteams.app.data.PlayersRepository
 import com.fukuiteams.app.data.TeamPlayers
@@ -98,6 +99,8 @@ fun PlayersScreen(onBack: () -> Unit) {
     var teamPlayers by remember { mutableStateOf<Map<String, TeamPlayers>>(emptyMap()) }
     // 並び順(背番号順・得点順・出場時間順・リバウンド順・アシスト順)
     var sortKey by remember { mutableStateOf(PlayerSort.NUMBER) }
+    // 対戦相手の全選手一覧の並び順(福井側とは別に選べる)
+    var oppSortKey by remember { mutableStateOf(PlayerSort.NUMBER) }
 
     // 自動更新の最終時刻(相手の注目選手・主な選手の「何日時点」表示に使う)
     var dataStatus by remember { mutableStateOf<DataStatus?>(null) }
@@ -184,38 +187,7 @@ fun PlayersScreen(onBack: () -> Unit) {
             val myPlayers = preview?.myKeyPlayers ?: emptyList()
             if (roster != null && roster.players.isNotEmpty()) {
                 SectionLabel("${selectedTeam.displayName}の選手")
-                // 何日時点の数字か(Bリーグ公式から取り直した日時と、その時点の今季の試合数)
-                val maxGames = roster.players.mapNotNull { it.games?.toIntOrNull() }.maxOrNull()
-                AsOfLine(roster.updatedAt, maxGames?.let { "今季${it}試合" })
-                Text(
-                    listOf(
-                        "出典:Bリーグ公式(クラブページの選手情報)",
-                        roster.season.takeIf { it.isNotBlank() }?.let { "${it}シーズン" } ?: ""
-                    ).filter { it.isNotBlank() }.joinToString("・"),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = InkSoft
-                )
-                // 並び順のボタン5つを1行に並べる。文字の長さに合わせて幅を配分し、画面幅いっぱいに収める
-                Text("並び順(背番号以外は数字の大きい順)", style = MaterialTheme.typography.labelSmall, color = InkSoft)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    PlayerSort.entries.forEach { key ->
-                        SortChip(
-                            key.label,
-                            sortKey == key,
-                            Modifier.weight(key.label.length + 1f)
-                        ) { sortKey = key }
-                    }
-                }
-                val sorted = sortPlayers(roster.players, sortKey)
-                Text(
-                    "数字は今季の1試合あたりの平均です(出場時間は「分:秒」)。選手を押すと、シュート成功率などの詳しい数字が開きます。",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = InkSoft
-                )
-                sorted.forEach { RosterCard(it) }
+                RosterSection(roster, sortKey) { sortKey = it }
             } else if (myPlayers.isNotEmpty()) {
                 SectionLabel("${selectedTeam.displayName}の主な選手")
                 AsOfLine(previewUpdatedAt(dataStatus), null)
@@ -248,8 +220,15 @@ fun PlayersScreen(onBack: () -> Unit) {
 
             ThinRule(modifier = Modifier.padding(vertical = 4.dp))
 
-            // 次の対戦相手の注目選手
-            SectionLabel("次の対戦相手の注目選手")
+            // 次の対戦相手。ブローウィンズは相手(Bリーグのクラブ)の全選手の成績があれば一覧で、無ければ注目選手(クラブリーダー)を出す
+            val oppRoster = if (selectedTeam == Team.BLOWINDS) {
+                teamPlayers[BLOWINDS_OPP_KEY]?.takeIf { r ->
+                    r.players.isNotEmpty() && (r.gameId.isBlank() || r.gameId == preview?.gameId)
+                }
+            } else {
+                null
+            }
+            SectionLabel(if (oppRoster != null) "次の対戦相手の選手" else "次の対戦相手の注目選手")
             if (nextGame != null) {
                 Text(
                     "${nextGame.dateLabel.split("/").drop(1).joinToString("/")}(${nextGame.dayOfWeek}) vs ${nextGame.opponent}",
@@ -257,7 +236,9 @@ fun PlayersScreen(onBack: () -> Unit) {
                 )
             }
             val oppPlayers = preview?.keyPlayers ?: emptyList()
-            if (oppPlayers.isNotEmpty()) {
+            if (oppRoster != null) {
+                RosterSection(oppRoster, oppSortKey) { oppSortKey = it }
+            } else if (oppPlayers.isNotEmpty()) {
                 AsOfLine(previewUpdatedAt(dataStatus), null)
                 oppPlayers.forEach { PlayerCard(it) }
                 if (!preview?.playersNote.isNullOrBlank()) {
@@ -285,6 +266,65 @@ fun PlayersScreen(onBack: () -> Unit) {
         }
     }
 }
+
+/**
+ * 1チーム分の全選手一覧。何日時点の数字か・出典・並び順のボタン・選手ごとのカード。
+ * ブローウィンズと、その次の対戦相手で共通に使う。
+ */
+@Composable
+private fun RosterSection(roster: TeamPlayers, sortKey: PlayerSort, onSortChange: (PlayerSort) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        // 何日時点の数字か(Bリーグ公式から取り直した日時と、その時点の今季の試合数)
+        val maxGames = roster.players.mapNotNull { it.games?.toIntOrNull() }.maxOrNull()
+        AsOfLine(roster.updatedAt, maxGames?.let { "今季${it}試合" })
+        Text(
+            listOf(
+                "出典:Bリーグ公式(クラブページの選手情報)",
+                // シーズンは「2026-27」の形のときだけ出す(読み取りに失敗した文字が出ないように)
+                roster.season.takeIf { SEASON_PATTERN.matches(it) }?.let { "${it}シーズン" } ?: ""
+            ).filter { it.isNotBlank() }.joinToString("・"),
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+        // 並び順のボタン5つを1行に並べる。文字の長さに合わせて幅を配分し、画面幅いっぱいに収める
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text("並び順(背番号以外は数字の大きい順)", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                PlayerSort.entries.forEach { key ->
+                    SortChip(
+                        key.label,
+                        sortKey == key,
+                        Modifier.weight(key.label.length + 1f)
+                    ) { onSortChange(key) }
+                }
+            }
+        }
+        Text(
+            "数字は今季の1試合あたりの平均です(出場時間は「分:秒」)。選手を押すと、シュート成功率などの詳しい数字が開きます。",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+        sortPlayers(roster.players, sortKey).forEach { RosterCard(it) }
+    }
+}
+
+/**
+ * 成功率を「50.0%」の形にそろえる。すでに % が付いていればそのまま。
+ * % の無い数字は、1以下なら割合(0.5 → 50.0%)、それより大きければ百分率(50 → 50.0%)とみなす。
+ */
+private fun percentText(value: String?): String? {
+    val v = value?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+    if (v.endsWith("%")) return v
+    val n = v.toDoubleOrNull() ?: return v
+    val pct = if (n <= 1.0) n * 100 else n
+    return "%.1f%%".format(pct)
+}
+
+/** シーズン表記(例 2026-27) */
+private val SEASON_PATTERN = Regex("""\d{4}-\d{2}""")
 
 /**
  * 「9月29日(火) 21:15 時点の数字」の1行。数字をいつ取り直したかを示す。
@@ -433,9 +473,9 @@ private fun RosterCard(player: PlayerStats) {
         }
         if (expanded) {
             Column {
-                StatRow("フィールドゴール成功率", player.fieldGoalPct ?: NO_DATA)
-                StatRow("3ポイント成功率", player.threePct ?: NO_DATA)
-                StatRow("フリースロー成功率", player.freeThrowPct ?: NO_DATA)
+                StatRow("フィールドゴール成功率", percentText(player.fieldGoalPct) ?: NO_DATA)
+                StatRow("3ポイント成功率", percentText(player.threePct) ?: NO_DATA)
+                StatRow("フリースロー成功率", percentText(player.freeThrowPct) ?: NO_DATA)
                 StatRow("スティール(平均)", player.steals ?: NO_DATA)
                 StatRow("ブロック(平均)", player.blocks ?: NO_DATA)
                 StatRow("貢献度(平均)", player.efficiency ?: NO_DATA)

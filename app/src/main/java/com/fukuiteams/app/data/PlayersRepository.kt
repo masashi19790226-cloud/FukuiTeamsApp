@@ -9,7 +9,7 @@ import java.net.URL
 /**
  * GitHub Actions(build_previews.py)が作っている data/players.json を読む。
  * 中身は Bリーグ公式のクラブページ「選手情報」(club_detail/?TeamID=2891&tab=1)の選手一覧と今季成績。
- * 今のところブローウィンズのみ。項目が無い数字は null(画面では「データなし」)。
+ * キーはチーム名(BLOWINDS)と、ブローウィンズの次の対戦相手(BLOWINDS_OPP)。項目が無い数字は null(画面では「データなし」)。
  */
 private const val PLAYERS_JSON_URL =
     "https://raw.githubusercontent.com/masashi19790226-cloud/FukuiTeamsApp/main/data/players.json"
@@ -35,8 +35,14 @@ data class TeamPlayers(
     val season: String,
     val sourceUrl: String,
     val updatedAt: java.time.Instant?,
-    val players: List<PlayerStats>
+    val players: List<PlayerStats>,
+    /** 対戦相手のデータのときだけ入る:相手のチーム名(例「金沢」)と、どの試合の相手か(試合ID) */
+    val teamName: String = "",
+    val gameId: String = ""
 )
+
+/** ブローウィンズの次の対戦相手の選手データのキー(players.json) */
+const val BLOWINDS_OPP_KEY = "BLOWINDS_OPP"
 
 object PlayersRepository {
 
@@ -80,7 +86,9 @@ object PlayersRepository {
                     updatedAt = o.optString("updated_at").takeIf { it.isNotBlank() }?.let {
                         runCatching { java.time.OffsetDateTime.parse(it).toInstant() }.getOrNull()
                     },
-                    players = players
+                    players = players,
+                    teamName = o.optString("team_name"),
+                    gameId = o.optString("game_id")
                 )
             }
             map

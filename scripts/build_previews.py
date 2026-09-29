@@ -9,6 +9,7 @@
 - 福井側の主力選手(ブローウィンズのみ。Bリーグ公式のクラブリーダー)
 - 上をつないだ短い展望文
 - 福井ブローウィンズの全選手の今季成績(data/players.json。アプリの「選手の数字」で使う)
+- ブローウィンズの次の対戦相手(Bリーグのクラブ)の全選手の今季成績(同じく data/players.json の BLOWINDS_OPP)
 
 データの出どころ
 - 3チーム共通 : data/games.json と data/results.json(福井側の成績・直近・前回対戦)
@@ -201,6 +202,7 @@ def blowinds_extra(next_game, preview):
         print(f"[WARN] Bリーグ 相手クラブページ取得に失敗 {e}")
         return
     preview["opp_link"] = opp["url"]
+    preview["opp_team_id"] = opp_id  # 相手の全選手の成績(players.json)を取りに行くのに使う
     season_recent = [g for g in opp.get("recent", []) if g["date"] >= start]
     preview["opp"].update({
         "record": opp.get("record", ""),
@@ -279,7 +281,11 @@ def parse_player_stats(page):
                  "position": rec.get("PO", "")}
             for code, key in STAT_KEYS.items():
                 if rec.get(code, "") != "":
-                    p[key] = rec[code]
+                    v = rec[code]
+                    # 成功率は必ず「50.0%」の形にする(% が抜けていたら付ける)
+                    if code.endswith("%") and re.fullmatch(r"[\d.]+", v):
+                        v += "%"
+                    p[key] = v
             if all(x["pid"] != pid for x in players):
                 players.append(p)
         if header and players:
@@ -308,8 +314,10 @@ def parse_roster(page):
     return roster
 
 
-def build_players():
-    page = fetch(ROSTER_URL)
+def build_team_players(team_id, label):
+    """Bリーグ公式のクラブページ「選手情報」から、1クラブ分の全選手の今季成績を作る。読めなければ None。"""
+    url = f"{BLEAGUE}/club_detail/?TeamID={team_id}&tab=1"
+    page = fetch(url)
     season, stats = parse_player_stats(page)
     roster = parse_roster(page)
     by_pid = {p["pid"]: p for p in stats}
@@ -327,13 +335,33 @@ def build_players():
         p.pop("pid", None)
     players.sort(key=lambda p: int(p["number"]) if str(p.get("number", "")).isdigit() else 999)
     if not players:
-        print("[WARN] 選手: Bリーグ公式から選手を読み取れませんでした")
+        print(f"[WARN] 選手: Bリーグ公式から{label}の選手を読み取れませんでした")
         return None
-    print(f"[選手] ブローウィンズ {len(players)}人(成績あり{len(stats)}人・選手一覧{len(roster)}人・{season or 'シーズン不明'})")
-    return {"BLOWINDS": {
-        "season": season or "", "source_url": ROSTER_URL,
+    print(f"[選手] {label} {len(players)}人(成績あり{len(stats)}人・選手一覧{len(roster)}人・{season or 'シーズン不明'})")
+    return {
+        "season": season or "", "source_url": url,
         "updated_at": datetime.now(timezone.utc).isoformat(), "players": players,
-    }}
+    }
+
+
+def build_players(previews):
+    """ブローウィンズと、次の対戦相手(Bリーグのクラブが分かったとき)の全選手の成績。
+    ブローウィンズが読めなければ None(前回のファイルを残す)。相手だけ読めないときは相手を入れない。"""
+    mine = build_team_players(BLOWINDS_TEAM_ID, "ブローウィンズ")
+    if not mine:
+        return None
+    result = {"BLOWINDS": mine}
+    p = next((x for x in previews.values() if x.get("team") == "BLOWINDS"), None)
+    if p and p.get("opp_team_id"):
+        try:
+            opp = build_team_players(p["opp_team_id"], p["opp"]["label"])
+            if opp:
+                opp["team_name"] = p["opp"]["label"]
+                opp["game_id"] = p["game_id"]
+                result["BLOWINDS_OPP"] = opp
+        except Exception as e:
+            print(f"[WARN] 選手: 対戦相手({p['opp']['label']})の取得に失敗しました {e!r}")
+    return result
 
 
 # ---------- ユナイテッド(公式サイトの順位表) ----------
@@ -437,7 +465,7 @@ def main():
 
     # 選手の成績。読み取れなかったときは前回のファイルを残す
     try:
-        players = build_players()
+        players = build_players(previews)
         if players:
             with open(PLAYERS_PATH, "w", encoding="utf-8") as f:
                 json.dump(players, f, ensure_ascii=False, indent=2)
