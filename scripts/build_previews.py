@@ -265,12 +265,15 @@ def parse_player_stats(page):
             pid, link_name = _player_link(row)
             if not pid or len(cells) < len(header):
                 continue
-            rec = dict(zip(header, cells))
+            # 背番号「#」の見出しは上の段だけ(2段ぶち抜き)にあり、英字の見出し段には無い。
+            # そのため選手の行はセルが見出しより多くなるので、右端(最後の列)でそろえて対応させる。
+            offset = len(cells) - len(header)
+            rec = dict(zip(header, cells[offset:]))
             # 表の先頭のシーズン(=今季)の行だけ使う
             season = season or rec.get("SEASON")
             if rec.get("SEASON") and rec.get("SEASON") != season:
                 continue
-            idx = header.index("PLAYER")
+            idx = header.index("PLAYER") + offset
             number = cells[idx - 1].strip() if idx > 0 else ""
             p = {"pid": pid, "number": number, "name": link_name or rec.get("PLAYER", ""),
                  "position": rec.get("PO", "")}
