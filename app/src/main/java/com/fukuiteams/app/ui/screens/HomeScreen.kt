@@ -1,5 +1,6 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.data.commentHeadline
 import com.fukuiteams.app.data.upcomingSpecialDay
 import com.fukuiteams.app.data.specialDay
 import com.fukuiteams.app.data.SpecialDaysRepository
@@ -655,15 +656,26 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
                 color = InkSoft
             )
         }
-        Headline(
-            "${game.team.displayName}\n${resultHeadline(game, result.myScore, result.opponentScore, outcome)}",
-            fontSize = 26
-        )
         val context = LocalContext.current
-        // 記事の書き出し(リード文)。試合結果と、試合画面で書いたコメント(観戦メモ)から組み立てる
         val leadPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+        val comment = recordedComment(game.id, leadPrefs)
+        val resultLine = resultHeadline(game, result.myScore, result.opponentScore, outcome)
+        // 試合画面でコメントを書いていれば、その言葉を大見出しにし、結果は袖見出し(小さめの見出し)にする
+        val commentTitle = commentHeadline(comment)
+        if (commentTitle != null) {
+            Headline(commentTitle, fontSize = 26)
+            Text(
+                "${game.team.displayName} $resultLine",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.ExtraBold,
+                color = game.team.color
+            )
+        } else {
+            Headline("${game.team.displayName}\n$resultLine", fontSize = 26)
+        }
+        // 記事の書き出し(リード文)。試合結果と、試合画面で書いたコメントから組み立てる
         Text(
-            resultLead(game, result, outcome, recordedComment(game.id, leadPrefs)),
+            resultLead(game, result, outcome, comment),
             style = MaterialTheme.typography.bodyMedium,
             color = Ink
         )

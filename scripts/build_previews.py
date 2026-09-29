@@ -232,8 +232,14 @@ STAT_KEYS = {
 
 
 def _cells(row_html):
-    return [text_of(c).replace("\n", " ").strip()
-            for c in re.findall(r"<t[dh]\b[^>]*>(.*?)</t[dh]>", row_html, flags=re.S | re.I)]
+    """1行分の各セルの文字。セルの終わりの印(</td>)が省略されていても読めるよう、セルの始まりで区切る。"""
+    parts = re.split(r"<t[dh]\b[^>]*>", row_html, flags=re.I)[1:]
+    return [text_of(re.sub(r"</t[dh]>.*", "", c, flags=re.S | re.I)).replace("\n", " ").strip() for c in parts]
+
+
+def _rows(table_html):
+    """表の各行。行の終わりの印(</tr>)が省略されていても1行ずつに分かれるよう、行の始まりで区切る。"""
+    return re.split(r"<tr\b[^>]*>", table_html, flags=re.I)[1:]
 
 
 def _player_link(html):
@@ -250,7 +256,7 @@ def parse_player_stats(page):
     見出し行(PLAYER・PPG などの英字の略語)で列を決め、選手は PlayerID で見分ける。"""
     for table in re.findall(r"<table\b.*?</table>", page, flags=re.S | re.I):
         header, players, season = None, [], None
-        for row in re.findall(r"<tr\b[^>]*>(.*?)</tr>", table, flags=re.S | re.I):
+        for row in _rows(table):
             cells = _cells(row)
             if header is None:
                 if "PLAYER" in cells and "PPG" in cells and "G" in cells:

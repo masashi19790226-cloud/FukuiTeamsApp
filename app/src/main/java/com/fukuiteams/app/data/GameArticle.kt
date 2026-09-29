@@ -21,7 +21,7 @@ private fun outcomeVerb(outcome: GameOutcome?): String = when (outcome) {
 /**
  * 一面「速報」のリード文。例:
  * 「10/3(土)、セーレン・ドリームアリーナで行われた金沢戦。福井ブローウィンズは85-80で勝利。
- *   観戦メモより:『最後の3ポイントで会場が揺れた』」
+ *   最後の3ポイントで会場が揺れた!」(コメントは記事の続きとしてそのまま載せる)
  */
 fun resultLead(game: Game, result: RemoteGameResult?, outcome: GameOutcome?, comment: String): String {
     val venue = game.venue.takeIf { it.isNotBlank() && !it.contains("調整中") }
@@ -33,8 +33,35 @@ fun resultLead(game: Game, result: RemoteGameResult?, outcome: GameOutcome?, com
         outcome != null -> "${game.team.displayName}は${outcomeVerb(outcome).removePrefix("で")}。"
         else -> ""
     }
-    val memo = comment.trim().takeIf { it.isNotEmpty() }?.let { "観戦メモより:「$it」" }.orEmpty()
-    return first + second + memo
+    // コメントは引用の形にせず、記事の続きの文としてそのまま載せる(文末に句点が無ければ付ける)
+    val body = comment.trim().replace("\n", "").let { c ->
+        when {
+            c.isEmpty() -> ""
+            c.last() in "。!?!?」)" -> c
+            else -> "$c。"
+        }
+    }
+    return first + second + body
+}
+
+/**
+ * コメントから一面「速報」の大見出しを作る。コメントが無ければ null(いつもの見出しを使う)。
+ * ・最初の一文(。!?や改行までの部分)を使う
+ * ・見出しらしく文末の「。」は取る(「!」は残す)
+ * ・20字を超えるときは読点「、」の手前で区切り、区切れなければ18字+「…」
+ * 例:「最後の3ポイントで会場が揺れた!ブラウン選手すごかった」→「最後の3ポイントで会場が揺れた!」
+ */
+fun commentHeadline(comment: String): String? {
+    val first = comment.trim()
+        .split(Regex("(?<=[。!?!?])|\n"))
+        .map { it.trim() }
+        .firstOrNull { it.isNotEmpty() } ?: return null
+    var h = first.removeSuffix("。").trim()
+    if (h.length > 20) {
+        val cut = h.lastIndexOf('、', 20)
+        h = if (cut >= 8) h.substring(0, cut) else h.take(18) + "…"
+    }
+    return h.ifBlank { null }
 }
 
 /** 投稿用のハッシュタグ(チーム名から空白や記号を除いたもの)。 */
