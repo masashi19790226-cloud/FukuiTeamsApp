@@ -120,8 +120,7 @@ fun AppNavHost(initialRoute: String? = null) {
                 composable(Routes.NOTIFICATIONS) {
                     NotificationsScreen(
                         onOpenChangelog = { navController.navigate(Routes.CHANGELOG) },
-                        onOpenHowToUse = { navController.navigate(Routes.HOW_TO_USE) },
-                        onOpenPlayers = { navigateTab(Routes.PLAYERS) }
+                        onOpenHowToUse = { navController.navigate(Routes.HOW_TO_USE) }
                     )
                 }
                 composable(Routes.CHANGELOG) {
