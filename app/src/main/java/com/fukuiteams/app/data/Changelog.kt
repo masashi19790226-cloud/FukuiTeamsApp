@@ -13,6 +13,15 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年9月29日",
+        title = "ウィジェットと「本日の試合」",
+        items = listOf(
+            "ホーム画面に置けるウィジェット「次の試合」を追加しました(日付・相手・HOME/AWAY・会場・招待あり)",
+            "試合当日は一面の一番上に、試合開始の時刻・会場の地図・試合時間ごろの天気をまとめて表示するようにしました",
+            "一面の一番下に、データの最終更新時刻と、自動更新で取得に失敗したものを表示するようにしました"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年9月28日",
         title = "次の試合に「データで見る展望」",
         items = listOf(

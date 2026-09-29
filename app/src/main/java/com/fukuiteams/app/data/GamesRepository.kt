@@ -48,6 +48,17 @@ object GamesRepository {
         return games
     }
 
+    /**
+     * ウィジェット用。画面が開いていなくても、端末に保存した日程(なければ通信して取得)を返す。
+     */
+    suspend fun loadForWidget(context: Context): List<Game> {
+        val appContext = context.applicationContext
+        val downloaded = withContext(Dispatchers.IO) { download(appContext) }
+        if (!downloaded.isNullOrEmpty()) return downloaded
+        val cached = withContext(Dispatchers.IO) { readCache(appContext) }
+        return if (!cached.isNullOrEmpty()) cached else games
+    }
+
     private fun download(context: Context): List<Game>? = try {
         val connection = URL(GAMES_JSON_URL).openConnection() as HttpURLConnection
         connection.connectTimeout = 10_000

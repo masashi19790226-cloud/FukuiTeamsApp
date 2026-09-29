@@ -20,6 +20,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- ホーム画面ウィジェット「次の試合」 -->
+        <receiver
+            android:name=".widget.NextGameWidget"
+            android:exported="false"
+            android:label="ふくスポ 次の試合">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_next_game_info" />
+        </receiver>
     </application>
 
 </manifest>

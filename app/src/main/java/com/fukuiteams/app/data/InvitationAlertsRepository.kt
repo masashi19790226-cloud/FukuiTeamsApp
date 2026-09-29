@@ -170,3 +170,28 @@ object InvitationAlertsRepository {
         }
     }
 }
+
+/**
+ * この試合向けの招待情報があるか。
+ * 招待の見出し・本文抜粋に試合日(「10/3」「10月3日」など)が書かれていれば該当とみなす。
+ * 日付が1つも書かれていない招待は、対戦相手名が書かれている場合だけ該当とみなす。
+ */
+fun com.fukuiteams.app.model.Game.hasMatchingInvite(invites: List<RemoteInvitationAlert>): Boolean {
+    val parts = dateLabel.split("/").mapNotNull { it.trim().toIntOrNull() }
+    if (parts.size < 3) return false
+    val month = parts[1]
+    val day = parts[2]
+    val datePattern = Regex("""(?<!\d)$month\s*[/月]\s*$day(?!\d)""")
+    val anyDate = Regex("""(?<!\d)\d{1,2}\s*[/月]\s*\d{1,2}(?!\d)""")
+    return invites.any { invite ->
+        if (invite.teamId != team.name) return@any false
+        val text = "${invite.title} ${invite.snippet}"
+        when {
+            datePattern.containsMatchIn(text) -> true
+            // 「10/3(土)・4(日)」のような2日連戦の書き方
+            Regex("""(?<!\d)$month\s*[/月]\s*\d{1,2}[^\d]{0,6}[・、,&～~-]\s*$day(?!\d)""").containsMatchIn(text) -> true
+            anyDate.containsMatchIn(text) -> false
+            else -> opponent.isNotBlank() && text.contains(opponent)
+        }
+    }
+}

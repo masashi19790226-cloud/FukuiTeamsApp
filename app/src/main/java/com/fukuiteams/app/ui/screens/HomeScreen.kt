@@ -83,6 +83,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.AlertsResult
+import com.fukuiteams.app.data.DataStatus
+import com.fukuiteams.app.data.DataStatusRepository
+import com.fukuiteams.app.data.MatchWeather
+import com.fukuiteams.app.data.WeatherRepository
+import com.fukuiteams.app.data.isToday
+import com.fukuiteams.app.widget.NextGameWidget
+import com.fukuiteams.app.data.hasMatchingInvite
 import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.GamePreview
@@ -118,6 +125,8 @@ fun HomeScreen(
 
     var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
     var previews by remember { mutableStateOf<Map<String, GamePreview>>(emptyMap()) }
+    var dataStatus by remember { mutableStateOf<DataStatus?>(null) }
+    var weathers by remember { mutableStateOf<Map<String, MatchWeather>>(emptyMap()) }
 
     suspend fun refreshAll() {
         GamesRepository.refresh(appContext)
@@ -125,6 +134,13 @@ fun HomeScreen(
         invitationsResult = InvitationAlertsRepository.fetch()
         newsResult = NewsAlertsRepository.fetch()
         previews = GamePreviewRepository.fetch()
+        dataStatus = DataStatusRepository.fetch()
+        // 今日の試合の天気
+        weathers = GamesRepository.games.filter { it.isToday() }
+            .mapNotNull { g -> WeatherRepository.forGame(g)?.let { g.id to it } }
+            .toMap()
+        // ホーム画面のウィジェットも最新にする
+        NextGameWidget.requestUpdate(appContext)
     }
 
     LaunchedEffect(Unit) { refreshAll() }
@@ -173,6 +189,20 @@ fun HomeScreen(
                     onSelect = { t -> selectedTeam = if (t != null && t == selectedTeam) null else t },
                     showAll = true
                 )
+            }
+
+            // 試合当日だけ、一番上に当日のまとめ(開始時刻・会場の地図・天気)
+            val todayGames = GamesRepository.games
+                .filter { (selectedTeam == null || it.team == selectedTeam) && it.isToday() && !autoResults.containsKey(it.id) }
+                .sortedBy { it.sortKey }
+            if (todayGames.isNotEmpty()) {
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        todayGames.forEach { g ->
+                            MatchDayCard(g, weathers[g.id], onOpen = { onOpenGame(g.id) })
+                        }
+                    }
+                }
             }
 
             item {
@@ -265,6 +295,8 @@ fun HomeScreen(
                 }
             }
 
+            item { DataStatusLine(dataStatus) }
+
             item { Spacer(modifier = Modifier.height(8.dp)) }
         }
         PullToRefreshContainer(
@@ -272,6 +304,82 @@ fun HomeScreen(
             modifier = Modifier.align(Alignment.TopCenter)
         )
         }
+    }
+}
+
+/** 試合当日のまとめ。赤い見出しで目立たせ、開始時刻・会場(地図)・天気をまとめて出す。 */
+@Composable
+private fun MatchDayCard(game: Game, weather: MatchWeather?, onOpen: () -> Unit) {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(2.dp, NewsRed)
+            .background(Paper)
+            .clickable(onClick = onOpen)
+            .padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        SectionLabel("本日の試合", red = true)
+        Text(game.team.displayName, style = MaterialTheme.typography.labelMedium, color = game.team.color)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Headline("${game.timeLabel} 試合開始", fontSize = 20)
+            HomeAwayTag(isHome = game.isHome)
+        }
+        Headline("vs ${game.opponent}", fontSize = 17)
+        Text(
+            "会場:${game.venue} ›地図",
+            style = MaterialTheme.typography.bodyMedium,
+            color = Accent,
+            modifier = Modifier.clickable {
+                openUrl(context, "https://www.google.com/maps/search/?api=1&query=" +
+                    java.net.URLEncoder.encode(game.venue, "UTF-8"))
+            }
+        )
+        if (weather != null) {
+            Text(
+                "${weather.placeLabel}の${game.timeLabel.substringBefore(":")}時ごろの天気:${weather.summary} ${weather.temperature}℃" +
+                    (weather.rainChance?.let { " 降水確率$it%" } ?: ""),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Ink
+            )
+        }
+        Text("チケット:${game.ticketStatus}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+    }
+}
+
+/** 一面の最後に出す、自動更新(GitHub)の最終更新時刻と取得の失敗。 */
+@Composable
+private fun DataStatusLine(status: DataStatus?) {
+    val updated = status?.updatedAt
+    val text: String
+    var warn = false
+    if (status == null || updated == null) {
+        text = "データの最終更新:確認できませんでした"
+        warn = status != null
+    } else {
+        val zoned = updated.atZone(java.time.ZoneId.of("Asia/Tokyo"))
+        val minutes = (System.currentTimeMillis() - updated.toEpochMilli()) / 60_000
+        val ago = when {
+            minutes < 60 -> "${minutes.coerceAtLeast(0)}分前"
+            minutes < 24 * 60 -> "${minutes / 60}時間前"
+            else -> "${minutes / (24 * 60)}日前"
+        }
+        val base = "データの最終更新:%d/%d %02d:%02d(%s)".format(zoned.monthValue, zoned.dayOfMonth, zoned.hour, zoned.minute, ago)
+        text = when {
+            minutes > 3 * 60 -> { warn = true; "$base・自動更新が止まっている可能性があります" }
+            status.failedSteps.isNotEmpty() -> { warn = true; "$base・取得に失敗:${status.failedSteps.joinToString("、")}" }
+            else -> base
+        }
+    }
+    Column {
+        ThinRule()
+        Text(
+            text,
+            style = MaterialTheme.typography.labelSmall,
+            color = if (warn) NewsRed else InkSoft,
+            modifier = Modifier.padding(top = 6.dp)
+        )
     }
 }
 
@@ -771,27 +879,3 @@ private fun Team.shortLabelForFront(): String = when (this) {
 
 
 
-/**
- * この試合向けの招待情報があるか。
- * 招待の見出し・本文抜粋に試合日(「10/3」「10月3日」など)が書かれていれば該当とみなす。
- * 日付が1つも書かれていない招待は、対戦相手名が書かれている場合だけ該当とみなす。
- */
-private fun Game.hasMatchingInvite(invites: List<com.fukuiteams.app.data.RemoteInvitationAlert>): Boolean {
-    val parts = dateLabel.split("/").mapNotNull { it.trim().toIntOrNull() }
-    if (parts.size < 3) return false
-    val month = parts[1]
-    val day = parts[2]
-    val datePattern = Regex("""(?<!\d)$month\s*[/月]\s*$day(?!\d)""")
-    val anyDate = Regex("""(?<!\d)\d{1,2}\s*[/月]\s*\d{1,2}(?!\d)""")
-    return invites.any { invite ->
-        if (invite.teamId != team.name) return@any false
-        val text = "${invite.title} ${invite.snippet}"
-        when {
-            datePattern.containsMatchIn(text) -> true
-            // 「10/3(土)・4(日)」のような2日連戦の書き方
-            Regex("""(?<!\d)$month\s*[/月]\s*\d{1,2}[^\d]{0,6}[・、,&～~-]\s*$day(?!\d)""").containsMatchIn(text) -> true
-            anyDate.containsMatchIn(text) -> false
-            else -> opponent.isNotBlank() && text.contains(opponent)
-        }
-    }
-}

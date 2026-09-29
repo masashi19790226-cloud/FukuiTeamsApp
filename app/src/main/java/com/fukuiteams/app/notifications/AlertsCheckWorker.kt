@@ -58,6 +58,9 @@ class AlertsCheckWorker(
             )
         }
 
+        // ホーム画面のウィジェット(次の試合・招待あり)も定期的に最新にする
+        com.fukuiteams.app.widget.NextGameWidget.requestUpdate(applicationContext)
+
         return Result.success()
     }
 

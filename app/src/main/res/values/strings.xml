@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ふくスポ</string>
+    <string name="widget_description">3チームの次の試合を表示します</string>
 </resources>

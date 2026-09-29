@@ -41,3 +41,11 @@ fun currentSortKey(): String {
 
 /** この試合がまだ始まっていない(=一覧に表示すべき)かどうか。 */
 fun Game.isUpcoming(): Boolean = sortKey >= currentSortKey()
+
+
+/** 今日(日本時間)の試合か。 */
+fun Game.isToday(): Boolean {
+    val today = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"))
+    val parts = dateLabel.split("/").mapNotNull { it.trim().toIntOrNull() }
+    return parts.size == 3 && parts[0] == today.year && parts[1] == today.monthValue && parts[2] == today.dayOfMonth
+}

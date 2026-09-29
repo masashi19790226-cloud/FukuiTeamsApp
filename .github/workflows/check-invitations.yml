@@ -22,35 +22,58 @@ jobs:
           python-version: '3.12'
 
       - name: Run alert check
+        id: alerts
         # 1つのサイトの不調で、後の処理と保存が止まらないようにする
         continue-on-error: true
         run: python3 scripts/check_alerts.py
 
       - name: Check official sites for invitations
+        id: official
         # 1つのサイトの不調で、後の処理と保存が止まらないようにする
         continue-on-error: true
         run: python3 scripts/check_official_invites.py
 
       - name: Update schedule
+        id: schedule
         # 1つのサイトの不調で、後の処理と保存が止まらないようにする
         continue-on-error: true
         run: python3 scripts/update_schedule.py
 
       - name: Run result check
+        id: results
         # 1つのサイトの不調で、後の処理と保存が止まらないようにする
         continue-on-error: true
         run: python3 scripts/check_results.py
 
       - name: Build next-game previews
+        id: previews
         # 1つのサイトの不調で、後の処理と保存が止まらないようにする
         continue-on-error: true
         run: python3 scripts/build_previews.py
+
+      - name: Write status
+        # アプリの「データの最終更新」表示用。各処理が成功したかどうかも残す
+        env:
+          S_ALERTS: ${{ steps.alerts.outcome }}
+          S_OFFICIAL: ${{ steps.official.outcome }}
+          S_SCHEDULE: ${{ steps.schedule.outcome }}
+          S_RESULTS: ${{ steps.results.outcome }}
+          S_PREVIEWS: ${{ steps.previews.outcome }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          steps = {k: os.environ.get("S_" + k.upper(), "") for k in ["alerts", "official", "schedule", "results", "previews"]}
+          with open("data/status.json", "w", encoding="utf-8") as f:
+              json.dump({"updated_at": datetime.now(timezone.utc).isoformat(), "steps": steps}, f, ensure_ascii=False, indent=2)
+          print(steps)
+          PY
 
       - name: Commit changes if any
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/invitations_raw.json data/official_seen.json data/news_raw.json data/results.json data/games.json data/previews.json
+          git add data/invitations_raw.json data/official_seen.json data/news_raw.json data/results.json data/games.json data/previews.json data/status.json
           if git diff --cached --quiet; then
             echo "変更なし"
             exit 0
