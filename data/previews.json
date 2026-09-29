@@ -1,0 +1,65 @@
+{
+  "bw03": {
+    "game_id": "bw03",
+    "team": "BLOWINDS",
+    "my": {
+      "label": "福井",
+      "record": "1勝1敗",
+      "form": "○●",
+      "rank": "中地区 2位"
+    },
+    "opp": {
+      "label": "金沢",
+      "record": "2勝0敗",
+      "rank": "中地区 1位",
+      "form": "○○"
+    },
+    "last_meeting": null,
+    "key_players": [
+      {
+        "number": "14",
+        "name": "キーガン・レコード",
+        "position": "C",
+        "stat": "平均24.0点"
+      },
+      {
+        "number": "33",
+        "name": "ローカス・ガスティス",
+        "position": "C",
+        "stat": "平均7.0リバウンド"
+      },
+      {
+        "number": "9",
+        "name": "請田 祐哉",
+        "position": "PG",
+        "stat": "平均4.0アシスト"
+      }
+    ],
+    "players_note": "今季2試合の成績から",
+    "opp_link": "https://www.bleague.jp/club_detail/?TeamID=750",
+    "summary": "福井は直近2試合で1勝1敗。金沢は2勝0敗。今季初対戦。金沢は#14 キーガン・レコード(平均24.0点)に注意。",
+    "updated_at": "2026-09-29T00:36:11.184625+00:00"
+  },
+  "un02": {
+    "game_id": "un02",
+    "team": "UNITED",
+    "my": {
+      "label": "福井",
+      "record": "",
+      "form": "",
+      "rank": "1位(勝点32)"
+    },
+    "opp": {
+      "label": "富山新庄クラブ",
+      "record": "",
+      "rank": "3位(勝点25)",
+      "form": ""
+    },
+    "last_meeting": null,
+    "key_players": [],
+    "players_note": "",
+    "opp_link": null,
+    "summary": "1位の福井と3位の富山新庄クラブの対戦。",
+    "updated_at": "2026-09-29T00:36:13.094193+00:00"
+  }
+}
