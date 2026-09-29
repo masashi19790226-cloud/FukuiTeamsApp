@@ -106,20 +106,6 @@ fun NotificationsScreen(
                 DoubleRule(modifier = Modifier.padding(top = 6.dp))
             }
 
-            // 通知の見本を「号外」風に
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.5.dp, Ink)
-                    .background(Paper)
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                SectionLabel("号外・見本", red = true)
-                Text("新しい無料招待:福井ブローウィンズ", style = MaterialTheme.typography.titleMedium)
-                Text("ホームゲーム ペア招待券プレゼント・締切まであと18時間", style = MaterialTheme.typography.bodyMedium, color = InkSoft)
-            }
-
             Column {
                 SectionLabel("チーム", modifier = Modifier.padding(bottom = 6.dp))
                 Card(

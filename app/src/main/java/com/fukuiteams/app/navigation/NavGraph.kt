@@ -32,7 +32,7 @@ object Routes {
     const val RADAR = "radar"
     // トピック画面を分類・チームを指定して開く。category は INVITE / ALL など、team は BLOWINDS などで省略可
     const val RADAR_WITH_ARG = "radar/{category}?team={team}"
-    // トピック画面を「招待・プレゼント」(3チームすべて)で開く
+    // トピック画面を「招待」(3チームすべて)で開く
     const val RADAR_INVITES = "radar/INVITE"
 
     /** トピック画面を「すべての分類」で開くルート。team が null なら3チームすべて。 */

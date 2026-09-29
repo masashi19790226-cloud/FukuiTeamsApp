@@ -1,5 +1,12 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.data.upcomingSpecialDay
+import com.fukuiteams.app.data.specialDay
+import com.fukuiteams.app.data.SpecialDaysRepository
+import com.fukuiteams.app.ui.components.SpecialDayBanner
+import com.fukuiteams.app.ui.components.SpecialDayBadge
+import com.fukuiteams.app.data.resultLead
+import com.fukuiteams.app.data.recordedComment
 import com.fukuiteams.app.ui.components.SourceTag
 import com.fukuiteams.app.data.sourceLabel
 import androidx.compose.runtime.collectAsState
@@ -132,6 +139,7 @@ fun HomeScreen(
     var weathers by remember { mutableStateOf<Map<String, MatchWeather>>(emptyMap()) }
 
     suspend fun refreshAll() {
+        SpecialDaysRepository.refresh()
         GamesRepository.refresh(appContext)
         autoResults = GameResultsRepository.fetch()
         invitationsResult = InvitationAlertsRepository.fetch()
@@ -206,6 +214,12 @@ fun HomeScreen(
                         }
                     }
                 }
+            }
+
+            // コラボ企画など特別な日が45日以内にあれば、特集枠を出す(選んでいるチームが関係するときだけ)
+            val special = upcomingSpecialDay()
+            if (special != null && (selectedTeam == null || selectedTeam in special.teams)) {
+                item { SpecialDayBanner(special, onOpenGame = { g -> onOpenGame(g.id) }) }
             }
 
             item {
@@ -492,6 +506,7 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
             }
             TeamBadge(game.team, size = 34.dp, fontSize = 14.sp)
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                if (game.specialDay() != null) SpecialDayBadge()
                 Text(
                     game.team.displayName,
                     color = game.team.color,
@@ -645,6 +660,13 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
             fontSize = 26
         )
         val context = LocalContext.current
+        // 記事の書き出し(リード文)。試合結果と、試合画面で書いたコメント(観戦メモ)から組み立てる
+        val leadPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+        Text(
+            resultLead(game, result, outcome, recordedComment(game.id, leadPrefs)),
+            style = MaterialTheme.typography.bodyMedium,
+            color = Ink
+        )
         // その試合に写真が登録されていれば、1枚目を写真説明付きで載せる
         val photos = remember(game.id, GamePhotos.version) { GamePhotos.list(context, game.id) }
         if (photos.isNotEmpty()) {

@@ -1,9 +1,14 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.data.specialDay
+import com.fukuiteams.app.ui.components.SpecialDayBanner
+import com.fukuiteams.app.ui.components.SpecialDayBadge
 import com.fukuiteams.app.ui.components.photoCaption
 import com.fukuiteams.app.ui.components.HomeAwayRecordCard
 import com.fukuiteams.app.ui.components.MenuLinkRow
 import com.fukuiteams.app.ui.components.PackingChecklistCard
+import com.fukuiteams.app.ui.components.GameCommentEditor
+import com.fukuiteams.app.ui.components.GameShareCard
 import com.fukuiteams.app.data.computeHomeAwaySummary
 import com.fukuiteams.app.data.isToday
 import com.fukuiteams.app.ui.components.PhotoStrip
@@ -298,6 +303,8 @@ fun GameDetailScreen(
                                     watchMethod = recordedWatchMethod(g.id, gameLogPrefs),
                                     manualOutcome = recordedOutcome(g.id, gameLogPrefs),
                                     hasAutoResult = autoResults[g.id] != null,
+                                    autoResult = autoResults[g.id],
+                                    outcome = resolveOutcome(g.id, gameLogPrefs, autoResults),
                                     photoCaption = photoCaption(
                                         g,
                                         autoResults[g.id],
@@ -377,6 +384,8 @@ private fun QuickRecordPanel(
     watchMethod: WatchMethod?,
     manualOutcome: GameOutcome?,
     hasAutoResult: Boolean,
+    autoResult: RemoteGameResult?,
+    outcome: GameOutcome?,
     photoCaption: String
 ) {
     val context = LocalContext.current
@@ -419,6 +428,9 @@ private fun QuickRecordPanel(
         }
         Text("写真", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         PhotoStrip(game, photoCaption)
+        // コメント(一面の速報記事とSNS投稿に使う)と、X・Instagramへの投稿
+        GameCommentEditor(game)
+        GameShareCard(game, autoResult, outcome)
     }
 }
 
@@ -646,6 +658,7 @@ private fun ScheduleRow(
                 HomeAwayLabel(isHome = game.isHome)
             }
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                if (game.specialDay() != null) SpecialDayBadge()
                 Text(
                     if (showResult) resultHeadline(game, score?.myScore, score?.opponentScore, outcome) else "vs ${game.opponent}",
                     style = MaterialTheme.typography.titleMedium
@@ -748,6 +761,9 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         MatchHeaderCard(game, isPast)
 
+        // コラボ企画など特別な日の試合なら、特集枠を出す
+        game.specialDay()?.let { day -> SpecialDayBanner(day, showCountdown = !isPast) }
+
         // 試合前と試合当日は持ち物チェックを出す(チェックは試合ごとに保存)
         if (!isPast || game.isToday()) {
             PackingChecklistCard(game)
@@ -770,6 +786,9 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
         if (isPast) {
             PastGameResultCard(game, autoResult)
             WatchMethodPicker(game)
+            GameCommentEditor(game)
+            val autoMap = autoResult?.let { mapOf(game.id to it) } ?: emptyMap()
+            GameShareCard(game, autoResult, resolveOutcome(game.id, detailPrefs, autoMap))
             return@Column
         }
 
@@ -796,7 +815,7 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text("無料招待・プレゼント情報を見る", style = MaterialTheme.typography.bodyLarge)
+                    Text("無料招待の情報を見る", style = MaterialTheme.typography.bodyLarge)
                     Text("自動検知した最新情報はこちらから確認できます", style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 }
                 Text("›", color = Accent, style = MaterialTheme.typography.titleMedium)

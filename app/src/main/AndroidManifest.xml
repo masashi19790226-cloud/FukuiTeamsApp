@@ -33,6 +33,17 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_next_game_info" />
         </receiver>
+
+        <!-- 観戦の写真を X・Instagram などへ渡すための仕組み(アプリ内の photos フォルダだけを共有できる) -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

@@ -139,3 +139,17 @@ fun recordedWatchMethod(gameId: String, prefs: Preferences?): WatchMethod? =
 /** 手動で記録した勝敗(未記録なら null)。画面の表示用。 */
 fun recordedOutcome(gameId: String, prefs: Preferences?): GameOutcome? =
     GameOutcome.values().find { it.name == prefs?.get(outcomeKey(gameId)) }
+
+// ---- 試合ごとのコメント(観戦メモ)。一面の「速報」の記事づくりと、SNS投稿の文章に使う ----
+
+private fun commentKey(gameId: String) = stringPreferencesKey("comment_$gameId")
+
+suspend fun saveGameComment(context: Context, gameId: String, comment: String) {
+    context.gameLogDataStore.edit { prefs ->
+        val text = comment.trim()
+        if (text.isEmpty()) prefs.remove(commentKey(gameId)) else prefs[commentKey(gameId)] = text
+    }
+}
+
+/** 記録したコメント。無ければ空文字。 */
+fun recordedComment(gameId: String, prefs: Preferences?): String = prefs?.get(commentKey(gameId)).orEmpty()

@@ -1,5 +1,7 @@
 package com.fukuiteams.app.widget
 
+import com.fukuiteams.app.data.SpecialDaysRepository
+import com.fukuiteams.app.data.specialDay
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -71,6 +73,7 @@ class NextGameWidget : AppWidgetProvider() {
         private suspend fun render(context: Context, manager: AppWidgetManager, ids: IntArray) {
             val games = GamesRepository.loadForWidget(context)
             val results = GameResultsRepository.fetch()
+            val specialDays = SpecialDaysRepository.refresh()
             val invites = (InvitationAlertsRepository.fetch() as? AlertsResult.Success)?.items
                 ?.filterNot { it.isLikelyClosed() } ?: emptyList()
 
@@ -100,7 +103,13 @@ class NextGameWidget : AppWidgetProvider() {
                         if (next.isHome) R.drawable.widget_home_bg else R.drawable.widget_away_bg
                     )
                     views.setTextColor(row.homeAway, Color.WHITE)
-                    views.setViewVisibility(row.invite, if (next.hasMatchingInvite(invites)) View.VISIBLE else View.GONE)
+                    // 右端の印:コラボ企画など特別な日は「★コラボ」、招待があれば「招待あり」
+                    val marks = listOfNotNull(
+                        if (next.specialDay(specialDays) != null) "★コラボ" else null,
+                        if (next.hasMatchingInvite(invites)) "招待あり" else null
+                    )
+                    views.setTextViewText(row.invite, marks.joinToString("・"))
+                    views.setViewVisibility(row.invite, if (marks.isEmpty()) View.GONE else View.VISIBLE)
                 }
             }
 

@@ -33,7 +33,7 @@ fun ensureAlertsNotificationChannel(context: Context) {
 
 /**
  * 通知を出す。openRoute を渡すと、通知を押したときにアプリのその画面を開く
- * (例:"radar/INVITE" = トピックの招待・プレゼント、"game_detail/bw03" = その試合)。
+ * (例:"radar/INVITE" = トピックの招待、"game_detail/bw03" = その試合)。
  * 渡さないときはアプリの一面を開く。
  */
 fun showAlertNotification(context: Context, notificationId: Int, title: String, text: String, openRoute: String? = null) {

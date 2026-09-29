@@ -23,7 +23,7 @@ data class PackingItem(val id: String, val label: String, val group: String = ""
 
 // ブローウィンズ以外の試合の持ち物
 private val BASE_ITEMS = listOf(
-    PackingItem("ticket", "チケット(紙・スマホのチケット画面)"),
+    PackingItem("ticket", "チケット"),
     PackingItem("phone", "スマートフォン"),
     PackingItem("wallet", "財布"),
     PackingItem("battery", "モバイルバッテリー"),
@@ -47,7 +47,7 @@ private const val G_PLAY = "あそび・その他"
  * (ケータイ=phone、サイフ=wallet、モバイルバッテリー=battery、タオル=towel など)。
  */
 private val BLOWINDS_ITEMS = listOf(
-    PackingItem("ticket", "チケット(紙・スマホのチケット画面)", G_MUST),
+    PackingItem("ticket", "チケット", G_MUST),
     PackingItem("member_card", "メンバーカード", G_MUST),
     PackingItem("phone", "ケータイ", G_MUST),
     PackingItem("wallet", "サイフ", G_MUST),
@@ -56,7 +56,7 @@ private val BLOWINDS_ITEMS = listOf(
     PackingItem("eco_bag", "エコバッグ", G_MUST),
 
     PackingItem("uniform", "ユニフォーム", G_CHEER),
-    PackingItem("hairband", "ヘアバンド(BOOZ)", G_CHEER),
+    PackingItem("hairband", "BOOZヘアバンド", G_CHEER),
     PackingItem("booz_sunglasses", "BOOZサングラス", G_CHEER),
     PackingItem("megaphone", "メガホン", G_CHEER),
     PackingItem("penlight", "ペンライト", G_CHEER),

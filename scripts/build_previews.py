@@ -236,8 +236,18 @@ def _cells(row_html):
             for c in re.findall(r"<t[dh]\b[^>]*>(.*?)</t[dh]>", row_html, flags=re.S | re.I)]
 
 
+def _player_link(html):
+    """選手ページへのリンクから (PlayerID, リンクの文字) を取り出す。無ければ (None, "")。"""
+    m = re.search(r"<a\b[^>]*href=[\"'][^\"']*roster_detail/\?PlayerID=(\d+)[^\"']*[\"'][^>]*>(.*?)</a>",
+                  html, flags=re.S | re.I)
+    if not m:
+        return None, ""
+    return m.group(1), text_of(m.group(2)).replace("\n", " ").strip()
+
+
 def parse_player_stats(page):
-    """「選手シーズン成績」の表(平均)から、選手ごとの成績を取り出す。見出し行の略語で列を決める。"""
+    """「選手シーズン成績」の表(平均)から、選手ごとの成績を取り出す。
+    見出し行(PLAYER・PPG などの英字の略語)で列を決め、選手は PlayerID で見分ける。"""
     for table in re.findall(r"<table\b.*?</table>", page, flags=re.S | re.I):
         header, players, season = None, [], None
         for row in re.findall(r"<tr\b[^>]*>(.*?)</tr>", table, flags=re.S | re.I):
@@ -246,23 +256,22 @@ def parse_player_stats(page):
                 if "PLAYER" in cells and "PPG" in cells and "G" in cells:
                     header = cells
                 continue
-            if "roster_detail" not in row or len(cells) < len(header):
+            pid, link_name = _player_link(row)
+            if not pid or len(cells) < len(header):
                 continue
             rec = dict(zip(header, cells))
-            name = rec.get("PLAYER", "").strip()
-            if not name:
-                continue
             # 表の先頭のシーズン(=今季)の行だけ使う
             season = season or rec.get("SEASON")
             if rec.get("SEASON") and rec.get("SEASON") != season:
                 continue
             idx = header.index("PLAYER")
             number = cells[idx - 1].strip() if idx > 0 else ""
-            p = {"number": number, "name": name, "position": rec.get("PO", "")}
+            p = {"pid": pid, "number": number, "name": link_name or rec.get("PLAYER", ""),
+                 "position": rec.get("PO", "")}
             for code, key in STAT_KEYS.items():
                 if rec.get(code, "") != "":
                     p[key] = rec[code]
-            if all(x["name"] != name for x in players):
+            if all(x["pid"] != pid for x in players):
                 players.append(p)
         if header and players:
             return season, players
@@ -272,8 +281,10 @@ def parse_player_stats(page):
 def parse_roster(page):
     """ページ下の「選手」一覧(背番号・名前・ポジション)。試合に出ていない選手もここには載る。"""
     roster = []
-    for m in re.finditer(r"<a\b[^>]*href=[\"'][^\"']*roster_detail[^\"']*[\"'][^>]*>(.*?)</a>", page, flags=re.S | re.I):
-        t = text_of(m.group(1)).replace("\n", " ")
+    for m in re.finditer(r"<a\b[^>]*href=[\"'][^\"']*roster_detail/\?PlayerID=(\d+)[^\"']*[\"'][^>]*>(.*?)</a>",
+                         page, flags=re.S | re.I):
+        pid = m.group(1)
+        t = text_of(m.group(2)).replace("\n", " ")
         if "背番号" in t:  # クラブリーダー欄のリンクは除く
             continue
         rm = re.match(r"\s*(\d+)\s+(.+?)\s+ポジション\s*[:：]\s*(\S+)\s*#\s*(\d+)", t)
@@ -283,8 +294,8 @@ def parse_roster(page):
         half = len(words) // 2
         # 画像の代替文字と名前で同じ名前が2回並ぶので、同じなら1回分にする
         name = " ".join(words[:half]) if half and words[:half] == words[half:] else rm.group(2).strip()
-        if all(x["number"] != rm.group(4) for x in roster):
-            roster.append({"number": rm.group(4), "name": name, "position": rm.group(3)})
+        if all(x["pid"] != pid for x in roster):
+            roster.append({"pid": pid, "number": rm.group(4), "name": name, "position": rm.group(3)})
     return roster
 
 
@@ -292,18 +303,24 @@ def build_players():
     page = fetch(ROSTER_URL)
     season, stats = parse_player_stats(page)
     roster = parse_roster(page)
-    by_name = {p["name"]: p for p in stats}
+    by_pid = {p["pid"]: p for p in stats}
     players = []
     for r in roster:
-        players.append(by_name.pop(r["name"], None) or r)
-        players[-1].setdefault("position", r["position"])
-        players[-1]["number"] = players[-1].get("number") or r["number"]
-    players += list(by_name.values())  # 一覧に無いが成績表にはいる選手
+        p = by_pid.pop(r["pid"], None)
+        if p:
+            # 名前・背番号・ポジションは選手一覧の表記にそろえ、成績を付ける
+            p.update({k: v for k, v in r.items() if v})
+            players.append(p)
+        else:
+            players.append(dict(r))  # 今季まだ試合に出ていない選手(成績はデータなし)
+    players += list(by_pid.values())  # 一覧に無いが成績表にはいる選手
+    for p in players:
+        p.pop("pid", None)
     players.sort(key=lambda p: int(p["number"]) if str(p.get("number", "")).isdigit() else 999)
     if not players:
         print("[WARN] 選手: Bリーグ公式から選手を読み取れませんでした")
         return None
-    print(f"[選手] ブローウィンズ {len(players)}人(成績あり{len(stats)}人・{season or 'シーズン不明'})")
+    print(f"[選手] ブローウィンズ {len(players)}人(成績あり{len(stats)}人・選手一覧{len(roster)}人・{season or 'シーズン不明'})")
     return {"BLOWINDS": {
         "season": season or "", "source_url": ROSTER_URL,
         "updated_at": datetime.now(timezone.utc).isoformat(), "players": players,

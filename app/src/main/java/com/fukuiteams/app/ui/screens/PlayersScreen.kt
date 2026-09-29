@@ -24,6 +24,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -99,6 +102,15 @@ fun PlayersScreen(onBack: () -> Unit) {
 
     LaunchedEffect(Unit) { load() }
 
+    // 画面を下に引っ張る・右上の更新ボタンで、選手データを読み込み直す
+    val pullToRefreshState = rememberPullToRefreshState()
+    if (pullToRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            load()
+            pullToRefreshState.endRefresh()
+        }
+    }
+
     // 選択中のチームの展望データ(次の試合1つ分)。team 項目が無い古いデータは試合IDからチームを探す
     val preview = previews?.values?.firstOrNull { p ->
         p.team.equals(selectedTeam.name, ignoreCase = true) ||
@@ -117,10 +129,7 @@ fun PlayersScreen(onBack: () -> Unit) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        previews = null
-                        scope.launch { load() }
-                    }) {
+                    IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "更新")
                     }
                 }
@@ -128,9 +137,14 @@ fun PlayersScreen(onBack: () -> Unit) {
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .padding(padding)
+                .fillMaxSize()
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
+        ) {
+        Column(
+            modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
@@ -241,6 +255,16 @@ fun PlayersScreen(onBack: () -> Unit) {
             preview?.oppLink?.let { link ->
                 LinkText("相手チームの情報を見る ›") { openPlayersUrl(context, link) }
             }
+            Text(
+                "選手の数字はGitHubの自動更新(1時間おき)でBリーグ公式から取り直しています。下に引っ張ると最新のデータを読み込みます。",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+        }
+        PullToRefreshContainer(
+            state = pullToRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
         }
     }
 }

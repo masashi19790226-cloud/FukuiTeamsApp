@@ -173,6 +173,43 @@ def scrape_ruck():
     return games
 
 
+# ---------- 手動の日程(scripts/manual_schedule.json) ----------
+
+MANUAL_PATH = os.path.join(os.path.dirname(__file__), "manual_schedule.json")
+
+
+def scrape_manual():
+    """ポスターなどから手で入れた日程。公式サイトの情報を優先し、足りない試合・時刻・会場だけを補う。"""
+    if not os.path.exists(MANUAL_PATH):
+        return []
+    with open(MANUAL_PATH, "r", encoding="utf-8") as f:
+        rows = json.load(f).get("games", [])
+    games = []
+    for r in rows:
+        y, m, d = (int(x) for x in r["date"].split("-"))
+        extra = {"placeholder_until": r.get("placeholder_until"), "placeholder_from": r.get("placeholder_from")}
+        games.append(make_game(r["team"], y, m, d, r.get("time", ""), r["opponent"], r.get("venue", ""),
+                               bool(r.get("is_home")), **extra))
+    print(f"[INFO] 手動の日程: {len(games)} 件を確認")
+    return games
+
+
+def remove_settled_placeholders(games):
+    """仮の行(placeholder_until 付き)は、その期間に本当の試合が入ったら消す。"""
+    real = [g for g in games if not g.get("placeholder_until")]
+    kept, removed = [], 0
+    for g in games:
+        until = g.get("placeholder_until")
+        start = g.get("placeholder_from") or g["date"]
+        if until and any(r["team"] == g["team"] and start <= r["date"] <= until for r in real):
+            removed += 1
+            print(f"[INFO] 仮の行を削除: {g['id']} {g['date']} {g['opponent']}")
+            continue
+        kept.append(g)
+    games[:] = kept
+    return removed
+
+
 # ---------- 福井ユナイテッド ----------
 
 def parse_united_page(page: str):
@@ -261,6 +298,12 @@ def next_id(games, team):
 def merge(games, scraped):
     added, updated = 0, 0
     for s in scraped:
+        until = s.get("placeholder_until")
+        # 仮の行は、その期間にもう本当の試合があれば入れない
+        start = s.get("placeholder_from") or s["date"]
+        if until and any(g.get("team") == s["team"] and not g.get("placeholder_until")
+                         and start <= g.get("date", "") <= until for g in games):
+            continue
         same = [g for g in games if g.get("team") == s["team"] and g.get("date") == s["date"]]
         if not same:
             new = {"id": next_id(games, s["team"]), **s,
@@ -273,6 +316,17 @@ def merge(games, scraped):
 
         g = same[0]
         changes = []
+        # 仮の行と同じ日に本当の試合が見つかったら、仮の行を本当の試合の内容に置き換える
+        if g.get("placeholder_until") and not s.get("placeholder_until"):
+            for key in ["time", "day_of_week", "opponent", "venue", "is_home", "gid"]:
+                if s.get(key) is not None:
+                    g[key] = s[key]
+            g.pop("placeholder_until", None)
+            g.pop("placeholder_from", None)
+            g["sort_key"] = sort_key_of(g)
+            updated += 1
+            print(f"[INFO] 仮の行を確定: {g['id']} {g['date']} vs {g['opponent']}")
+            continue
         if not valid_time(g.get("time", "")) and valid_time(s["time"]):
             g["time"] = s["time"]
             g["sort_key"] = sort_key_of(g)
@@ -294,7 +348,8 @@ def main():
         games = json.load(f)
 
     total_added = total_updated = 0
-    for name, scraper in [("BW", scrape_blowinds), ("RUCK", scrape_ruck), ("UNITED", scrape_united)]:
+    # 公式サイトを先に読み、最後に手動の日程で足りない分を補う
+    for name, scraper in [("BW", scrape_blowinds), ("RUCK", scrape_ruck), ("UNITED", scrape_united), ("MANUAL", scrape_manual)]:
         try:
             scraped = scraper()
         except Exception as e:
@@ -305,7 +360,8 @@ def main():
         total_added += a
         total_updated += u
 
-    if total_added or total_updated:
+    removed = remove_settled_placeholders(games)
+    if total_added or total_updated or removed:
         games.sort(key=lambda g: (list(ID_PREFIX).index(g.get("team", "blowinds")), g.get("sort_key", "")))
         with open(GAMES_PATH, "w", encoding="utf-8") as f:
             f.write("[\n" + ",\n".join("  " + json.dumps(g, ensure_ascii=False) for g in games) + "\n]\n")
