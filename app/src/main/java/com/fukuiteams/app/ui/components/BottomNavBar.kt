@@ -4,7 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.SportsSoccer
+import androidx.compose.material.icons.filled.Stadium
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Icon
 import androidx.compose.ui.text.font.FontWeight
@@ -25,7 +25,7 @@ data class NavItem(val route: String, val label: String, val icon: androidx.comp
 
 val bottomNavItems = listOf(
     NavItem(Routes.HOME, "一面", Icons.Filled.Home),
-    NavItem(Routes.GAME_DETAIL, "試合", Icons.Filled.SportsSoccer),
+    NavItem(Routes.GAME_DETAIL, "試合", Icons.Filled.Stadium),
     NavItem(Routes.INVITATIONS, "招待", Icons.Filled.CardGiftcard),
     NavItem(Routes.NOTIFICATIONS, "通知", Icons.Filled.Notifications)
 )

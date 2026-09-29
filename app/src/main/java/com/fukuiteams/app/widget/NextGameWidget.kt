@@ -20,6 +20,7 @@ import com.fukuiteams.app.data.hasMatchingInvite
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isUpcoming
 import com.fukuiteams.app.model.Game
+import com.fukuiteams.app.model.Team
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
 
 /**
  * ホーム画面のウィジェット「次の試合」。
- * 3チームの中で一番近い試合の日付・相手・HOME/AWAY・会場と、その試合向けの招待があれば「招待あり」を出す。
+ * 3チームそれぞれの次の試合(日付・相手・会場・HOME/AWAY)を1行ずつ出し、その試合向けの招待があれば「招待あり」を出す。
  * 更新のきっかけ: ウィジェットの定期更新(約1時間)・アプリの一面を開いたとき・招待の定期チェック。
  */
 class NextGameWidget : AppWidgetProvider() {
@@ -43,7 +44,19 @@ class NextGameWidget : AppWidgetProvider() {
         }
     }
 
+    /** ウィジェットの1行分(チームごと)の部品。 */
+    private class Row(
+        val team: Team, val label: String,
+        val bar: Int, val teamLabel: Int, val date: Int, val homeAway: Int, val opponent: Int, val invite: Int
+    )
+
     companion object {
+        private val ROWS = listOf(
+            Row(Team.BLOWINDS, "ブローウィンズ", R.id.bar_b, R.id.team_b, R.id.date_b, R.id.homeaway_b, R.id.opp_b, R.id.invite_b),
+            Row(Team.RAC, "丸岡RUCK", R.id.bar_r, R.id.team_r, R.id.date_r, R.id.homeaway_r, R.id.opp_r, R.id.invite_r),
+            Row(Team.UNITED, "ユナイテッド", R.id.bar_u, R.id.team_u, R.id.date_u, R.id.homeaway_u, R.id.opp_u, R.id.invite_u)
+        )
+
         private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
         /** アプリ側から「ウィジェットも最新にして」と頼むときに呼ぶ。 */
@@ -58,39 +71,40 @@ class NextGameWidget : AppWidgetProvider() {
         private suspend fun render(context: Context, manager: AppWidgetManager, ids: IntArray) {
             val games = GamesRepository.loadForWidget(context)
             val results = GameResultsRepository.fetch()
-            val next: Game? = games.filter { it.isUpcoming() && !results.containsKey(it.id) }.minByOrNull { it.sortKey }
             val invites = (InvitationAlertsRepository.fetch() as? AlertsResult.Success)?.items
                 ?.filterNot { it.isLikelyClosed() } ?: emptyList()
 
             val views = RemoteViews(context.packageName, R.layout.widget_next_game)
-            if (next == null) {
-                views.setTextViewText(R.id.widget_team, "")
-                views.setTextViewText(R.id.widget_date, "予定はまだ発表されていません")
-                views.setTextViewText(R.id.widget_opponent, "")
-                views.setTextViewText(R.id.widget_venue, "")
-                views.setViewVisibility(R.id.widget_homeaway, View.GONE)
-                views.setViewVisibility(R.id.widget_invite, View.GONE)
-            } else {
-                val md = next.dateLabel.split("/").drop(1).joinToString("/")
-                views.setTextViewText(R.id.widget_team, next.team.displayName)
-                views.setTextColor(R.id.widget_team, next.team.color.toArgb())
-                views.setTextViewText(R.id.widget_date, "$md(${next.dayOfWeek}) ${next.timeLabel}")
-                views.setTextViewText(R.id.widget_opponent, "vs ${next.opponent}")
-                views.setTextViewText(R.id.widget_venue, next.venue)
-                views.setViewVisibility(R.id.widget_homeaway, View.VISIBLE)
-                views.setTextViewText(R.id.widget_homeaway, if (next.isHome) "HOME" else "AWAY")
-                if (next.isHome) {
-                    views.setInt(R.id.widget_homeaway, "setBackgroundResource", R.drawable.widget_home_bg)
-                    views.setTextColor(R.id.widget_homeaway, Color.WHITE)
+            // 3チームそれぞれの次の試合を1行ずつ
+            ROWS.forEach { row ->
+                val next: Game? = games
+                    .filter { it.team == row.team && it.isUpcoming() && !results.containsKey(it.id) }
+                    .minByOrNull { it.sortKey }
+                views.setInt(row.bar, "setBackgroundColor", row.team.color.toArgb())
+                views.setTextViewText(row.teamLabel, row.label)
+                views.setTextColor(row.teamLabel, row.team.color.toArgb())
+                if (next == null) {
+                    views.setTextViewText(row.date, "")
+                    views.setTextViewText(row.opponent, "次の試合は未発表")
+                    views.setViewVisibility(row.homeAway, View.GONE)
+                    views.setViewVisibility(row.invite, View.GONE)
                 } else {
-                    views.setInt(R.id.widget_homeaway, "setBackgroundResource", R.drawable.widget_away_bg)
-                    views.setTextColor(R.id.widget_homeaway, Color.parseColor("#2B4C7E"))
+                    val md = next.dateLabel.split("/").drop(1).joinToString("/")
+                    views.setTextViewText(row.date, "$md(${next.dayOfWeek}) ${next.timeLabel}")
+                    views.setTextViewText(row.opponent, "vs ${next.opponent}・${next.venue}")
+                    views.setViewVisibility(row.homeAway, View.VISIBLE)
+                    views.setTextViewText(row.homeAway, if (next.isHome) "HOME" else "AWAY")
+                    if (next.isHome) {
+                        views.setInt(row.homeAway, "setBackgroundResource", R.drawable.widget_home_bg)
+                        views.setTextColor(row.homeAway, Color.WHITE)
+                    } else {
+                        views.setInt(row.homeAway, "setBackgroundResource", R.drawable.widget_away_bg)
+                        views.setTextColor(row.homeAway, Color.parseColor("#2B4C7E"))
+                    }
+                    views.setViewVisibility(row.invite, if (next.hasMatchingInvite(invites)) View.VISIBLE else View.GONE)
                 }
-                views.setViewVisibility(
-                    R.id.widget_invite,
-                    if (next.hasMatchingInvite(invites)) View.VISIBLE else View.GONE
-                )
             }
+
             // タップでアプリを開く
             val intent = Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             val pi = PendingIntent.getActivity(

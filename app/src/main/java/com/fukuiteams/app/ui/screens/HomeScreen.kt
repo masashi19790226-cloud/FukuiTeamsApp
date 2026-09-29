@@ -291,11 +291,11 @@ fun HomeScreen(
                             Icon(Icons.Filled.Refresh, contentDescription = "ニュースを更新")
                         }
                     }
+                    // ニュース・招待などの自動更新が最後に動いた時刻
+                    DataStatusLine(dataStatus)
                     NewsSection(newsResult, selectedTeam)
                 }
             }
-
-            item { DataStatusLine(dataStatus) }
 
             item { Spacer(modifier = Modifier.height(8.dp)) }
         }
@@ -348,7 +348,7 @@ private fun MatchDayCard(game: Game, weather: MatchWeather?, onOpen: () -> Unit)
     }
 }
 
-/** 一面の最後に出す、自動更新(GitHub)の最終更新時刻と取得の失敗。 */
+/** ニュース欄に出す、自動更新(GitHub)の最終更新時刻と取得の失敗。 */
 @Composable
 private fun DataStatusLine(status: DataStatus?) {
     val updated = status?.updatedAt
@@ -372,15 +372,12 @@ private fun DataStatusLine(status: DataStatus?) {
             else -> base
         }
     }
-    Column {
-        ThinRule()
-        Text(
-            text,
-            style = MaterialTheme.typography.labelSmall,
-            color = if (warn) NewsRed else InkSoft,
-            modifier = Modifier.padding(top = 6.dp)
-        )
-    }
+    Text(
+        text,
+        style = MaterialTheme.typography.labelSmall,
+        color = if (warn) NewsRed else InkSoft,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
