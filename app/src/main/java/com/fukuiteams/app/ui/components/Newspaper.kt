@@ -266,3 +266,23 @@ fun resultMark(outcome: GameOutcome?): String = when (outcome) {
     GameOutcome.DRAW -> "△"
     null -> ""
 }
+
+
+/** HOME/AWAY の表示。HOMEは赤地に白抜き、AWAYは紺の枠と文字で、ひと目で区別できるようにする。 */
+@androidx.compose.runtime.Composable
+fun HomeAwayTag(isHome: Boolean, modifier: androidx.compose.ui.Modifier = androidx.compose.ui.Modifier) {
+    val away = androidx.compose.ui.graphics.Color(0xFF2B4C7E)
+    androidx.compose.material3.Text(
+        if (isHome) "HOME" else "AWAY",
+        modifier = modifier
+            .then(androidx.compose.ui.Modifier.border(1.dp, if (isHome) com.fukuiteams.app.ui.theme.NewsRed else away))
+            .background(if (isHome) com.fukuiteams.app.ui.theme.NewsRed else com.fukuiteams.app.ui.theme.Paper)
+            .padding(horizontal = 5.dp, vertical = 1.dp),
+        color = if (isHome) com.fukuiteams.app.ui.theme.White else away,
+        fontSize = 10.sp,
+        fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold,
+        letterSpacing = 0.5.sp,
+        maxLines = 1,
+        softWrap = false
+    )
+}

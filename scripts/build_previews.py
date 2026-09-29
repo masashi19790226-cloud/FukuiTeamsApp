@@ -86,6 +86,9 @@ def md(date_str):
 
 def own_summary(team, games, results, next_game):
     start = SEASON_START.get(team, "2000-01-01")
+    # スコアが数字で入っている結果だけ使う
+    results = {k: v for k, v in results.items()
+               if isinstance(v, dict) and isinstance(v.get("my_score"), int) and isinstance(v.get("opponent_score"), int)}
     finished = sorted(
         [g for g in games if g["team"].upper() == team and g["id"] in results and g["date"] >= start],
         key=lambda g: g.get("sort_key", g["date"]),
@@ -173,6 +176,8 @@ def blowinds_extra(next_game, preview):
     except Exception as e:
         print(f"[WARN] Bリーグ 福井のクラブページ取得に失敗 {e}")
         mine = {}
+    if mine.get("recent"):
+        preview["h2h_checked"] = True  # Bリーグ側の直近試合も確認できた
     if mine.get("record"):
         preview["my"]["record"] = mine["record"]
     if mine.get("rank"):
@@ -252,12 +257,41 @@ def build_summary(team, next_game, p):
         parts.append(f"{them}は{opp['record']}。")
     if p.get("last_meeting"):
         parts.append(f"前回対戦は{p['last_meeting']}。")
-    elif team == "BLOWINDS":
+    elif team == "BLOWINDS" and p.get("h2h_checked"):
         parts.append("今季初対戦。")  # ブローウィンズは今季の全試合の結果がそろっているので言い切れる
     if p.get("key_players"):
         k = p["key_players"][0]
         parts.append(f"{them}は#{k['number']} {k['name']}({k['stat']})に注意。")
     return "".join(parts)
+
+
+def build_one(team, games, results, today, previews):
+    upcoming = sorted(
+        [g for g in games if g["team"].upper() == team and g["date"] >= today and g["id"] not in results],
+        key=lambda g: g.get("sort_key", g["date"]),
+    )
+    if not upcoming:
+        return
+    game = upcoming[0]
+    my, last_meeting = own_summary(team, games, results, game)
+    # アプリ側の結果データが少ないチームは、成績が実際より悪く見えることがあるので出さない
+    if team != "BLOWINDS" and len(my["form"]) < 3:
+        my = {"record": "", "form": ""}
+    p = {
+        "game_id": game["id"], "team": team,
+        "my": {"label": MY_LABEL[team], **my, "rank": ""},
+        "opp": {"label": game["opponent"], "record": "", "rank": "", "form": ""},
+        "last_meeting": last_meeting, "key_players": [], "players_note": "", "opp_link": None,
+    }
+    try:
+        {"BLOWINDS": blowinds_extra, "UNITED": united_extra, "RAC": ruck_extra}[team](game, p)
+    except Exception as e:
+        print(f"[WARN] {team}: 追加データの取得中にエラー {e}")
+    p["summary"] = build_summary(team, game, p)
+    p["updated_at"] = datetime.now(timezone.utc).isoformat()
+    previews[game["id"]] = p
+    print(f"[展望] {team} {game['date']} vs {game['opponent']}: {p['summary']}")
+
 
 
 def main():
@@ -267,31 +301,11 @@ def main():
     previews = {}
 
     for team in ["BLOWINDS", "RAC", "UNITED"]:
-        upcoming = sorted(
-            [g for g in games if g["team"].upper() == team and g["date"] >= today and g["id"] not in results],
-            key=lambda g: g.get("sort_key", g["date"]),
-        )
-        if not upcoming:
-            continue
-        game = upcoming[0]
-        my, last_meeting = own_summary(team, games, results, game)
-        # アプリ側の結果データが少ないチームは、成績が実際より悪く見えることがあるので出さない
-        if team != "BLOWINDS" and len(my["form"]) < 3:
-            my = {"record": "", "form": ""}
-        p = {
-            "game_id": game["id"], "team": team,
-            "my": {"label": MY_LABEL[team], **my, "rank": ""},
-            "opp": {"label": game["opponent"], "record": "", "rank": "", "form": ""},
-            "last_meeting": last_meeting, "key_players": [], "players_note": "", "opp_link": None,
-        }
         try:
-            {"BLOWINDS": blowinds_extra, "UNITED": united_extra, "RAC": ruck_extra}[team](game, p)
+            build_one(team, games, results, today, previews)
         except Exception as e:
-            print(f"[WARN] {team}: 追加データの取得中にエラー {e}")
-        p["summary"] = build_summary(team, game, p)
-        p["updated_at"] = datetime.now(timezone.utc).isoformat()
-        previews[game["id"]] = p
-        print(f"[展望] {team} {game['date']} vs {game['opponent']}: {p['summary']}")
+            # 1チームで失敗しても、他のチームの展望は書き出す
+            print(f"[WARN] {team}: 展望を作れませんでした {e!r}")
 
     with open(PREVIEWS_PATH, "w", encoding="utf-8") as f:
         json.dump(previews, f, ensure_ascii=False, indent=2)

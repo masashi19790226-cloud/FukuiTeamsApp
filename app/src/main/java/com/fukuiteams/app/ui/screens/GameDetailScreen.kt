@@ -14,6 +14,7 @@ import com.fukuiteams.app.ui.components.resultHeadline
 import com.fukuiteams.app.ui.components.ThinRule
 import com.fukuiteams.app.ui.components.shortLabel
 import com.fukuiteams.app.ui.components.Headline
+import com.fukuiteams.app.ui.components.HomeAwayTag
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.components.MastheadTopBar
@@ -169,10 +170,15 @@ fun GameDetailScreen(
     }
 
     // Xの個人投稿は「チーム名+チケット+譲」で広めに検索。
-    // 一方、企業広告は「譲ります」という言い方をしないため、広告検索は「チーム名+招待」のみにする。
     val personalSearchKeyword = "${selectedTeam.displayName} チケット 譲"
     val encodedPersonalKeyword = URLEncoder.encode(personalSearchKeyword, "UTF-8")
-    val adSearchKeyword = "${selectedTeam.displayName} 招待"
+    // 広告文にはチームの略称だけが書かれていることが多いので、「招待」などは付けずにチーム名だけで探す。
+    // ユナイテッドは「ユナイテッド」だけだと海外サッカーの広告まで出るので「福井」を付ける。
+    val adSearchKeyword = when (selectedTeam) {
+        Team.BLOWINDS -> "ブローウィンズ"
+        Team.UNITED -> "福井ユナイテッド"
+        Team.RAC -> "丸岡ラック"
+    }
     val encodedAdKeyword = URLEncoder.encode(adSearchKeyword, "UTF-8")
 
     Scaffold(
@@ -221,7 +227,7 @@ fun GameDetailScreen(
                 onSearchAd = {
                     openUrl(
                         context,
-                        "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=JP&q=$encodedAdKeyword&search_type=keyword_unordered&media_type=all"
+                        "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=JP&q=$encodedAdKeyword&search_type=keyword_unordered&media_type=all"
                     )
                 }
             )
@@ -1138,19 +1144,7 @@ private fun MatchHeaderCard(game: Game, isPast: Boolean = false) {
 /** 紙面風の HOME / AWAY 表示。HOME は黒地に白抜き、AWAY は黒枠。 */
 @Composable
 private fun HomeAwayLabel(isHome: Boolean) {
-    Text(
-        if (isHome) "HOME" else "AWAY",
-        modifier = Modifier
-            .border(1.dp, Ink)
-            .background(if (isHome) Ink else Paper)
-            .padding(horizontal = 4.dp, vertical = 1.dp),
-        color = if (isHome) Ivory else Ink,
-        fontSize = 9.sp,
-        fontWeight = FontWeight.ExtraBold,
-        letterSpacing = 0.5.sp,
-        maxLines = 1,
-        softWrap = false
-    )
+    HomeAwayTag(isHome = isHome, modifier = Modifier.padding(top = 2.dp))
 }
 
 @Composable

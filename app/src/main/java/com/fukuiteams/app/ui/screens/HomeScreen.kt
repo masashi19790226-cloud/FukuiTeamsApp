@@ -22,6 +22,7 @@ import com.fukuiteams.app.ui.components.resultHeadline
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.ThinRule
 import com.fukuiteams.app.ui.components.Headline
+import com.fukuiteams.app.ui.components.HomeAwayTag
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.components.MastheadTopBar
@@ -391,20 +392,17 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
                     maxLines = 1,
                     softWrap = false
                 )
+                HomeAwayLabel(isHome = game.isHome)
             }
             TeamBadge(game.team, size = 34.dp, fontSize = 14.sp)
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(
-                        game.team.displayName,
-                        color = game.team.color,
-                        style = MaterialTheme.typography.labelMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false)
-                    )
-                    HomeAwayLabel(isHome = game.isHome)
-                }
+                Text(
+                    game.team.displayName,
+                    color = game.team.color,
+                    style = MaterialTheme.typography.labelMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
                 Text("vs ${game.opponent}", style = MaterialTheme.typography.titleMedium)
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
                     Icon(Icons.Filled.Schedule, contentDescription = null, tint = InkSoft, modifier = Modifier.size(13.dp))
@@ -440,19 +438,7 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
 /** 紙面風の HOME / AWAY 表示。HOME は黒地に白抜き、AWAY は黒枠。 */
 @Composable
 private fun HomeAwayLabel(isHome: Boolean) {
-    Text(
-        if (isHome) "HOME" else "AWAY",
-        modifier = Modifier
-            .border(1.dp, Ink)
-            .background(if (isHome) Ink else Paper)
-            .padding(horizontal = 4.dp, vertical = 1.dp),
-        color = if (isHome) Ivory else Ink,
-        fontSize = 9.sp,
-        fontWeight = FontWeight.ExtraBold,
-        letterSpacing = 0.5.sp,
-        maxLines = 1,
-        softWrap = false
-    )
+    HomeAwayTag(isHome = isHome, modifier = Modifier.padding(top = 2.dp))
 }
 
 @Composable
