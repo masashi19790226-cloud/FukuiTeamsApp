@@ -14,6 +14,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年9月29日",
+        title = "トピックに一面のニュースをすべて反映",
+        items = listOf(
+            "見出しに去年以前の年(「2025-26シーズン」など)が入ったニュースが、トピックに出ないことがあったのを直しました",
+            "トピックの「ニュース」で、チケット・イベント・招待に分類した記事も含めて、一面のニュース欄と同じ記事をすべて見られるようにしました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年9月29日",
         title = "12/20 ブローウィンズ×丸岡RUCK コラボデー",
         items = listOf(
             "コラボ企画など特別な日を、一面の特集枠(10日前からカウントダウン)・日程の「★コラボ」・試合詳細・ウィジェットで目立たせるようにしました",

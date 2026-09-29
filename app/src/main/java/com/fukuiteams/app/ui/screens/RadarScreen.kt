@@ -91,8 +91,18 @@ private enum class RadarCategory(val label: String) {
 private data class RadarItem(
     val alert: RemoteInvitationAlert,
     val category: RadarCategory,
-    val fromInvitations: Boolean
-)
+    val fromInvitations: Boolean,
+    /** 一面のニュース欄にも出ている記事(ニュースとして集めたもの)なら true */
+    val inNews: Boolean
+) {
+    /**
+     * この分類で絞り込んだときに出すか。
+     * 「ニュース」には、一面のニュース欄に出ている記事をすべて含める
+     * (チケット・イベントなどに分類した記事や、招待と同じ記事も「ニュース」で見られるように)。
+     */
+    fun matches(cat: RadarCategory?): Boolean =
+        cat == null || category == cat || (cat == RadarCategory.NEWS && inNews)
+}
 
 // 見出し・本文抜粋に含まれる言葉で分類する(上から順に当てはめる)
 private val INVITE_WORDS = listOf("招待", "プレゼント", "抽選", "当選", "無料")
@@ -177,21 +187,24 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     val newsItems = (newsResult as? AlertsResult.Success)?.items ?: emptyList()
     val inviteItems = (inviteResult as? AlertsResult.Success)?.items ?: emptyList()
 
-    // 同じ記事がニュースと招待の両方にあるときは、招待として1件だけ出す
+    // 同じ記事がニュースと招待の両方にあるときは、招待として1件だけ出す(「ニュース」の絞り込みにも出す)
     val inviteLinks = inviteItems.map { it.link }.filter { it.isNotBlank() }.toSet()
+    val newsLinks = newsItems.map { it.link }.filter { it.isNotBlank() }.toSet()
     val allItems = (
-        inviteItems.map { RadarItem(it, classify(it, true), true) } +
+        inviteItems.map { RadarItem(it, classify(it, true), true, inNews = it.link.isNotBlank() && it.link in newsLinks) } +
             newsItems.filterNot { it.link.isNotBlank() && it.link in inviteLinks }
-                .map { RadarItem(it, classify(it, false), false) }
+                .map { RadarItem(it, classify(it, false), false, inNews = true) }
         )
-        .filterNot { it.alert.isTooOld() }
+        // 古い情報の除外は招待だけにかける。ニュースは一面と同じものをすべて出す
+        // (ニュースは自動更新の側で45日より前のものを除いている)
+        .filterNot { !it.inNews && it.alert.isTooOld() }
     // 新しい順(日時が分からないものは最後)。並べ方は既存の sortedNewestFirst() と同じ
     val sorted = allItems.sortedWith(
         compareByDescending<RadarItem> { it.alert.eventInstant() != null }
             .thenByDescending { it.alert.eventInstant() }
     )
     val teamItems = sorted.filter { selectedTeam == null || it.alert.teamId == selectedTeam?.name }
-    val categoryItems = teamItems.filter { selectedCategory == null || it.category == selectedCategory }
+    val categoryItems = teamItems.filter { it.matches(selectedCategory) }
     // 招待は、旧・招待タブと同じ判定(isLikelyClosed)で受付中と過去に分ける
     val openInvites = categoryItems.filterNot { it.alert.isLikelyClosed() }
     val pastInvites = categoryItems.filter { it.alert.isLikelyClosed() }
@@ -273,7 +286,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                             CategoryChip("すべて ${teamItems.size}", selectedCategory == null) { selectedCategory = null }
                         }
                         items(RadarCategory.values().toList()) { cat ->
-                            val count = teamItems.count { it.category == cat }
+                            val count = teamItems.count { it.matches(cat) }
                             CategoryChip("${cat.label} $count", selectedCategory == cat) {
                                 selectedCategory = if (selectedCategory == cat) null else cat
                                 inviteTab = 0
