@@ -1,0 +1,90 @@
+{
+  "BLOWINDS": {
+    "season": "高橋 育実",
+    "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
+    "updated_at": "2026-09-29T06:13:10.874162+00:00",
+    "players": [
+      {
+        "number": "1",
+        "name": "藤永 佳昭",
+        "position": "PG"
+      },
+      {
+        "number": "3",
+        "name": "塚本 智裕",
+        "position": "PG"
+      },
+      {
+        "number": "10",
+        "name": "ヒシグバータル・オーギル",
+        "position": "C/PF"
+      },
+      {
+        "number": "11",
+        "name": "内藤 英真",
+        "position": "PG"
+      },
+      {
+        "number": "12",
+        "name": "西野 曜",
+        "position": "SF"
+      },
+      {
+        "number": "13",
+        "name": "川島 聖那",
+        "position": "SG"
+      },
+      {
+        "number": "14",
+        "name": "ドゥシャン・リスティッチ",
+        "position": "C"
+      },
+      {
+        "number": "15",
+        "name": "チョンディー・ブラウン ジュニア",
+        "position": "SF"
+      },
+      {
+        "number": "17",
+        "name": "常田 耕平",
+        "position": "PG"
+      },
+      {
+        "number": "21",
+        "name": "満田 丈太郎",
+        "position": "SG/SF"
+      },
+      {
+        "number": "41",
+        "name": "デヴィン・ウィリアムズ",
+        "position": "C/PF"
+      },
+      {
+        "number": "73",
+        "name": "田渡 修人",
+        "position": "SG"
+      },
+      {
+        "number": "93",
+        "name": "高橋 育実",
+        "position": "SG"
+      },
+      {
+        "number": "",
+        "name": "93",
+        "position": "BO",
+        "games": "SG",
+        "min_pg": "7:19",
+        "ppg": "3:39",
+        "rpg": "0.0",
+        "apg": "0.0",
+        "spg": "0.0",
+        "bpg": "0.5",
+        "fg_pct": "1.0",
+        "three_pct": "0.5",
+        "ft_pct": "2.0",
+        "eff": "1.0"
+      }
+    ]
+  }
+}
