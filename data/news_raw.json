@@ -820,5 +820,14 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/aoids_fukui/status/2104672595731968030&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3FUdNrg7zhSHQY3DCY3Ukv",
     "published": "2026-09-29T02:27:42Z",
     "detected_at": "2026-09-30T02:28:13.906550+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51682",
+    "team": "BLOWINDS",
+    "title": "カスタマイズサービス「BLOWINDS LAB」2026-27シーズン出展概要決定！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51682",
+    "published": "2026-09-30T09:00:00+09:00",
+    "detected_at": "2026-09-30T06:35:46.928794+00:00",
+    "source": "ブローウィンズ公式"
   }
 ]
