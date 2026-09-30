@@ -796,5 +796,29 @@
     "published": "2026-09-29T09:00:00+09:00",
     "detected_at": "2026-09-29T10:31:12.071371+00:00",
     "source": "ブローウィンズ公式"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7951496874294929862",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                         青ユニ販売のお知らせ  【訂正 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2105072216908222650/photo/1&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2dAul-iDK1T11WJmvy41LJ",
+    "published": "2026-09-29T23:41:03Z",
+    "detected_at": "2026-09-30T02:28:13.906503+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9272714499155432476",
+    "team": "RAC",
+    "title": "joschi on X: \"福井ブルー 福井丸岡RUCKのアウェイ戦は いろいろ考え 信用信頼出来る人の意見 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/joschi19/status/2104513673134023138&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3EgBQPUXKZi4lmMfb_zHip",
+    "published": "2026-09-29T21:13:21Z",
+    "detected_at": "2026-09-30T02:28:13.906532+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1126240868006547529",
+    "team": "RAC",
+    "title": "AOIドライビングスクール福井校【公式】 on X: \"上位リーグがんばって   免許もね   #福井丸岡 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/aoids_fukui/status/2104672595731968030&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3FUdNrg7zhSHQY3DCY3Ukv",
+    "published": "2026-09-29T02:27:42Z",
+    "detected_at": "2026-09-30T02:28:13.906550+00:00"
   }
 ]
