@@ -221,17 +221,21 @@ fun GameDetailScreen(
                 .fillMaxSize()
                 .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
+        // チームの切り替えボタンは一番上に固定し、下にスクロールしても常に表示する
+        Column(modifier = Modifier.fillMaxSize()) {
+        TeamSelectorRow(
+            selectedTeam = selectedTeam,
+            onSelect = { t -> if (t != null) selectedTeam = t },
+            showAll = false,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
+        )
         Column(
             modifier = Modifier
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            TeamSelectorRow(
-                selectedTeam = selectedTeam,
-                onSelect = { t -> if (t != null) selectedTeam = t },
-                showAll = false
-            )
 
             WatchStatsCard(watchRecords, onOpenList = { statsFilter = it })
 
@@ -317,6 +321,7 @@ fun GameDetailScreen(
                     }
                 }
             }
+        }
         }
         PullToRefreshContainer(
             state = pullToRefreshState,

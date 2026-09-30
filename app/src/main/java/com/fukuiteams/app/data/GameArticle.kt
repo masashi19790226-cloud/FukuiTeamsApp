@@ -64,23 +64,38 @@ fun commentHeadline(comment: String): String? {
     return h.ifBlank { null }
 }
 
-/** 投稿用のハッシュタグ(チーム名から空白や記号を除いたもの)。 */
-private fun Game.hashtag(): String = "#" + team.displayName.replace(Regex("[\\s・]"), "")
+/** 投稿用のハッシュタグ。丸岡RUCKは公式の表記に合わせて「#福井丸岡RUCK」。 */
+private fun Game.hashtag(): String = when (team) {
+    com.fukuiteams.app.model.Team.BLOWINDS -> "#福井ブローウィンズ"
+    com.fukuiteams.app.model.Team.RAC -> "#福井丸岡RUCK"
+    com.fukuiteams.app.model.Team.UNITED -> "#福井ユナイテッド"
+}
+
+/** 投稿用の日付「2026年9月27日(土)」。 */
+private fun Game.fullDate(): String {
+    val p = dateLabel.split("/")
+    return if (p.size == 3) "${p[0]}年${p[1]}月${p[2]}日($dayOfWeek)" else "$dateLabel($dayOfWeek)"
+}
 
 /**
  * X / Instagram などへ投稿する文章。Xの文字数制限(日本語はおよそ140字)に収まるよう、コメントは短く切る。
  */
 fun shareText(game: Game, result: RemoteGameResult?, outcome: GameOutcome?, comment: String): String {
     val mark = when (outcome) {
-        GameOutcome.WIN -> "WIN"
-        GameOutcome.LOSE -> "LOSE"
-        GameOutcome.DRAW -> "DRAW"
+        GameOutcome.WIN -> "勝利"
+        GameOutcome.LOSE -> "敗戦"
+        GameOutcome.DRAW -> "引き分け"
         null -> ""
     }
-    val score = result?.let { " ${it.myScore}-${it.opponentScore}" }.orEmpty()
-    val head = "【${game.team.displayName}】${game.shortDate()} vs ${game.opponent}$score $mark".trim()
-    val tags = "${game.hashtag()} #ふくスポ"
-    val room = 130 - head.length - tags.length
+    // 1行目:日付とHOME/AWAY 2行目:スコア(結果が取れていれば「福井ブローウィンズ 85-80 金沢」)と勝敗
+    val dateLine = "【試合結果】${game.fullDate()} ${if (game.isHome) "HOME" else "AWAY"}"
+    val scoreLine = if (result != null) {
+        "${game.team.displayName} ${result.myScore}-${result.opponentScore} ${game.opponent} $mark"
+    } else {
+        "${game.team.displayName} vs ${game.opponent} $mark"
+    }.trim()
+    val tags = game.hashtag()
+    val room = 130 - dateLine.length - scoreLine.length - tags.length
     val memo = comment.trim().let { if (it.length > room && room > 1) it.take(room - 1) + "…" else it }
-    return listOf(head, memo, tags).filter { it.isNotBlank() }.joinToString("\n")
+    return listOf(dateLine, scoreLine, memo, tags).filter { it.isNotBlank() }.joinToString("\n")
 }

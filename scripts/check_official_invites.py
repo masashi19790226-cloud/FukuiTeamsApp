@@ -22,6 +22,8 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urljoin
 
+from invite_filter import ALWAYS_KEEP_SOURCES, clean_title, filter_invites, is_real_invite
+
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 INVITATIONS_PATH = os.path.join(BASE_DIR, "invitations_raw.json")
 SEEN_PATH = os.path.join(BASE_DIR, "official_seen.json")
@@ -126,12 +128,15 @@ def body_text(page_html: str) -> str:
 
 
 def find_snippet(body: str):
-    """本文から招待らしい文を1つ返す。定型文だけなら None。"""
+    """本文から招待らしい文を1つ返す。定型文だけ・招待ではない文(来場者プレゼントなど)だけなら None。"""
     for sentence in re.split(r"[。\n]", body):
         s = sentence.strip()
         if len(s) < 6 or not BODY_WORDS.search(s):
             continue
         if BOILERPLATE.search(s) and not re.search(r"無料招待|ご招待(?!券)|抽選で|先着\d+名", s):
+            continue
+        # 観戦・チケット・招待に関わる文だけを招待とみなす(invite_filter.py)
+        if not is_real_invite(s):
             continue
         return s[:90]
     return None
@@ -197,6 +202,10 @@ class Collector:
     def add(self, team, title, url, date, snippet, source):
         if f"official:{url}" in self.known_links or url in self.known_links:
             return
+        title = clean_title(title)
+        if source not in ALWAYS_KEEP_SOURCES and not is_real_invite(title, snippet or ""):
+            print(f"  - 招待ではないので除外: [{team}] {title}")
+            return
         published = date.isoformat() if date else self.now.isoformat()
         detected = self.now
         # 何日も前の記事を今さら見つけた場合は、通知が一斉に来ないよう検知日時を公開日に合わせる
@@ -231,7 +240,8 @@ class Collector:
             self.add_news(team, title, url, date, source)
             if self.is_seen(url):
                 continue
-            if TITLE_WORDS.search(title):
+            # 見出しだけで招待とはっきり分かるときは本文を読まない。それ以外は本文で確かめる
+            if is_real_invite(title):
                 self.add(team, title, url, date, None, source)
                 self.mark_seen(url)
                 continue
@@ -288,8 +298,8 @@ class Collector:
                 or next((t for t, rx in TEAM_WORDS if rx.search(body)), None)
             if team is None:
                 continue  # チームと関係ないページ
-            snippet = None if TITLE_WORDS.search(title) else find_snippet(body)
-            if TITLE_WORDS.search(title) or snippet:
+            snippet = None if is_real_invite(title) else find_snippet(body)
+            if is_real_invite(title) or snippet:
                 self.add(team, title, url, page_date(body), snippet, source)
             time.sleep(1)
 
@@ -356,7 +366,7 @@ class Collector:
             if self.is_seen(link):
                 continue
             self.mark_seen(link)
-            if TITLE_WORDS.search(title):
+            if is_real_invite(title):
                 self.add("RAC", title, link, date, None, "公式サイト")
                 continue
             snippet = find_snippet(body)
@@ -365,6 +375,10 @@ class Collector:
         print(f"[丸岡RUCK] RSSから {count} 件")
 
     def save(self):
+        # 以前の判定で集めた「招待ではないもの」(来場者プレゼント・入会特典・開催報告など)を取り除く
+        self.items, removed = filter_invites(self.items)
+        if removed:
+            print(f"[公式サイト] 招待ではない{removed}件を取り除きました")
         save_json(INVITATIONS_PATH, self.items)
         # 記録は新しい600件だけ残す
         trimmed = dict(sorted(self.seen.items(), key=lambda kv: kv[1], reverse=True)[:600])

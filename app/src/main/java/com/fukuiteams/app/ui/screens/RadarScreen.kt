@@ -105,7 +105,22 @@ private data class RadarItem(
 }
 
 // 見出し・本文抜粋に含まれる言葉で分類する(上から順に当てはめる)
-private val INVITE_WORDS = listOf("招待", "プレゼント", "抽選", "当選", "無料")
+// 招待は「試合の観戦チケットが無料でもらえる」言い方があるものだけ(scripts/invite_filter.py と同じ考え方)。
+// 以前は「プレゼント」「抽選」「無料」だけで招待にしていたため、来場者プレゼントや入会特典なども混ざっていた
+private val INVITE_RE = Regex(
+    "無料招待|ご招待(?!券は不要)|招待(します|いたします|企画|キャンペーン|席|チケット)|" +
+        "無料観戦|観戦無料|無料で(ご)?観戦|" +
+        "(観戦|ホームゲーム|試合)?(チケット|観戦券|招待券).{0,15}(プレゼント|進呈|差し上げ|配布|お渡し|当た)|" +
+        "(ペア|\\d+組).{0,15}(招待|プレゼント)|\\d+名(様)?.{0,15}招待"
+)
+private val NOT_INVITE_RE = Regex(
+    "来場者プレゼント|来場プレゼント|入会|スクール|アンバサダー|会員特典|" +
+        "開催しました|実施しました|終了しました|" +
+        "ファンクラブ.{0,20}招待券|招待券.{0,15}(利用方法|引換|ご利用)|ご招待券は不要"
+)
+
+/** 無料招待(観戦チケットが無料でもらえる情報)か。 */
+private fun isRealInvite(text: String): Boolean = !NOT_INVITE_RE.containsMatchIn(text) && INVITE_RE.containsMatchIn(text)
 private val TICKET_WORDS = listOf(
     "チケット", "ticket", "TICKET", "前売", "先行販売", "先行抽選", "一般販売", "販売開始", "発売", "完売",
     "当日券", "観戦券", "座席", "シーズンシート", "リセール", "Bリーグチケット"
@@ -116,9 +131,10 @@ private val OTHER_WORDS = listOf("出演", "放送", "中継", "グッズ", "募
 private fun classify(alert: RemoteInvitationAlert, fromInvitations: Boolean): RadarCategory {
     val text = "${alert.title} ${alert.snippet}"
     return when {
-        // 招待情報として集めたものは、すべて「招待」
-        fromInvitations -> RadarCategory.INVITE
-        INVITE_WORDS.any { text.contains(it) } -> RadarCategory.INVITE
+        // 招待情報として集めたものも、ニュースも、無料招待の言い方があるときだけ「招待」
+        // (公式ストアの¥0チケット・招待特設ページは、それ自体が招待の受付なので必ず「招待」)
+        fromInvitations && alert.sourceLabel().let { it.contains("公式ストア") || it.contains("特設") } -> RadarCategory.INVITE
+        isRealInvite(text) -> RadarCategory.INVITE
         TICKET_WORDS.any { text.contains(it) } -> RadarCategory.TICKET
         EVENT_WORDS.any { text.contains(it) } -> RadarCategory.EVENT
         OTHER_WORDS.any { text.contains(it) } -> RadarCategory.OTHER
@@ -135,7 +151,7 @@ private fun RemoteInvitationAlert.isNewArrival(): Boolean =
 /**
  * トピック(旧RADAR)。既存のニュース(news_raw.json)と招待情報(invitations_raw.json)をまとめ、
  * 「ニュース・チケット・イベント・招待・その他」に分けて絞り込めるようにした画面。
- * 初期表示はブローウィンズ。チーム切替で他チームや「すべて」も見られる。
+ * 初期表示は「すべて」(3チーム)。チーム切替で1チームに絞り込める。
  * 旧・招待タブの役割もここに移した:「招待」では受付中と過去の招待を切り替えられる。
  * initialCategory に "INVITE" を渡すと招待、"ALL" を渡すとすべての分類で開く(チームは initialTeam、なければ3チームすべて)。
  */
@@ -145,16 +161,9 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     val startCategory = remember(initialCategory) {
         RadarCategory.values().find { it.name.equals(initialCategory, ignoreCase = true) }
     }
-    // 下のメニューから開いたときはブローウィンズ。一面・通知などから分類を指定して開いたときは、
-    // 指定のチーム(なければ3チームすべて)
+    // 最初は3チームすべて(「すべて」)。一面などからチームを指定して開いたときは、そのチーム
     var selectedTeam by remember {
-        mutableStateOf<Team?>(
-            when {
-                initialTeam != null -> Team.values().find { it.name == initialTeam }
-                initialCategory != null -> null
-                else -> Team.BLOWINDS
-            }
-        )
+        mutableStateOf<Team?>(initialTeam?.let { id -> Team.values().find { it.name == id } })
     }
     var selectedCategory by remember { mutableStateOf(startCategory) }
     // 招待の中の切り替え(0 = 受付中、1 = 過去の招待)
@@ -236,18 +245,20 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                 .fillMaxSize()
                 .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
+            // チームの切り替えボタンは一番上に固定し、下にスクロールしても常に表示する
+            Column(modifier = Modifier.fillMaxSize()) {
+            TeamSelectorRow(
+                selectedTeam = selectedTeam,
+                onSelect = { t -> selectedTeam = t },
+                showAll = true,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+            )
             LazyColumn(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                item {
-                    TeamSelectorRow(
-                        selectedTeam = selectedTeam,
-                        onSelect = { t -> selectedTeam = t },
-                        showAll = true,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         SectionLabel(selectedTeam?.let { "${it.displayName}のトピック" } ?: "3チームのトピック", red = true)
@@ -349,6 +360,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                     }
                 }
                 item { Spacer(modifier = Modifier.height(12.dp)) }
+            }
             }
             PullToRefreshContainer(
                 state = pullToRefreshState,
@@ -466,6 +478,19 @@ private fun RadarRow(
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
+        // どのチームの情報かは、途中で切れないよう一番上の左に1行で出す
+        if (team != null) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Box(modifier = Modifier.width(4.dp).height(14.dp).background(team.color))
+                Text(
+                    team.displayName,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = team.color,
+                    maxLines = 1
+                )
+            }
+        }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             if (alert.isNewArrival()) SectionLabel("NEW", red = true)
             when (inviteStatus?.status) {
@@ -483,17 +508,6 @@ private fun RadarRow(
                 maxLines = 1,
                 softWrap = false
             )
-            if (team != null) {
-                Box(modifier = Modifier.width(4.dp).height(12.dp).background(team.color))
-                Text(
-                    team.displayName,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = team.color,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f, fill = false)
-                )
-            }
         }
         Text(alert.title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = Ink)
         if (alert.snippet.isNotBlank()) {

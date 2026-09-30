@@ -191,18 +191,20 @@ fun HomeScreen(
                 .fillMaxSize()
                 .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
+        // チームの切り替えボタンは一番上に固定し、下にスクロールしても常に表示する
+        Column(modifier = Modifier.fillMaxSize()) {
+        TeamSelectorRow(
+            selectedTeam = selectedTeam,
+            onSelect = { t -> selectedTeam = if (t != null && t == selectedTeam) null else t },
+            showAll = true,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+        )
         LazyColumn(
             modifier = Modifier
+                .weight(1f)
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            item {
-                TeamSelectorRow(
-                    selectedTeam = selectedTeam,
-                    onSelect = { t -> selectedTeam = if (t != null && t == selectedTeam) null else t },
-                    showAll = true
-                )
-            }
 
             // 試合当日だけ、一番上に当日のまとめ(開始時刻・会場の地図・天気)
             val todayGames = GamesRepository.games
@@ -316,6 +318,7 @@ fun HomeScreen(
             }
 
             item { Spacer(modifier = Modifier.height(8.dp)) }
+        }
         }
         PullToRefreshContainer(
             state = pullToRefreshState,

@@ -14,6 +14,8 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 
+from invite_filter import filter_invites, is_real_invite
+
 # 無料招待・プレゼント関連(「招待 OR プレゼント」で絞り込み済み)
 INVITATION_FEEDS = {
     "BLOWINDS": "https://www.google.com/alerts/feeds/17849435109291614678/858967028642974105",
@@ -165,6 +167,11 @@ def check_feeds(feeds: dict, path: str, label: str, is_news: bool = False) -> in
         existing, removed = clean_news(existing)
         if removed:
             print(f"[{label}] 関係ない・古い記事を{removed}件取り除きました")
+    if not is_news:
+        # 招待:以前の判定で集めた「招待ではないもの」を取り除く
+        existing, removed = filter_invites(existing)
+        if removed:
+            print(f"[{label}] 招待ではない{removed}件を取り除きました")
     repaired = repair_existing(existing)
     if repaired:
         print(f"[{label}] 既存の{repaired}件のタイトル・チームを修正しました")
@@ -182,6 +189,12 @@ def check_feeds(feeds: dict, path: str, label: str, is_news: bool = False) -> in
             if not entry["id"] or entry["id"] in existing_ids:
                 continue
             if is_news and not is_good_news(entry["title"]):
+                existing_ids.add(entry["id"])
+                skipped += 1
+                continue
+            # 招待のアラートは、見出しから招待とはっきり分かるものだけ入れる
+            # (Googleアラートは本文の「招待」「プレゼント」でも引っかかるため、関係ない記事が多い)
+            if not is_news and not is_real_invite(entry["title"]):
                 existing_ids.add(entry["id"])
                 skipped += 1
                 continue

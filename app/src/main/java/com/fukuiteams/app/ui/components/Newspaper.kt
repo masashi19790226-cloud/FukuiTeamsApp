@@ -1,6 +1,8 @@
 package com.fukuiteams.app.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -56,48 +58,33 @@ fun MastheadTopBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {}
 ) {
+    // 題字(「ふくスポ」のロゴ)はなくし、画面名・日付と左右のボタンだけの細い帯にした(画面を広く使うため)
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Ivory)
-            .padding(start = 12.dp, end = 12.dp, top = 8.dp)
+            .padding(horizontal = 8.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxWidth().heightIn(min = 44.dp)) {
             Row(modifier = Modifier.align(Alignment.CenterStart)) { navigationIcon() }
             Column(
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier.align(Alignment.Center).padding(horizontal = 48.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "ふくスポ",
+                    listOfNotNull(section, edition).joinToString("・"),
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Black,
-                    fontSize = 24.sp,
-                    letterSpacing = 2.sp,
-                    color = Ink
+                    fontSize = 15.sp,
+                    color = Ink,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    "FUKUI MATCHDAY TIMES",
-                    fontSize = 8.sp,
-                    letterSpacing = 3.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Ink
-                )
+                Text(todayLabel(), fontSize = 10.sp, color = InkSoft, maxLines = 1)
             }
             Row(modifier = Modifier.align(Alignment.CenterEnd), content = actions)
         }
-        Spacer(modifier = Modifier.height(6.dp))
-        Box(modifier = Modifier.fillMaxWidth().height(3.dp).background(Ink))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 3.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(todayLabel(), fontSize = 10.sp, color = Ink)
-            Text(listOfNotNull(section, edition).joinToString("・"), fontSize = 10.sp, color = Ink)
-        }
-        Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Ink))
+        Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(Ink))
     }
 }
 

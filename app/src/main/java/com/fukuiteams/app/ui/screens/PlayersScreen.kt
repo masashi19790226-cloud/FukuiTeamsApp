@@ -36,6 +36,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.fukuiteams.app.ui.components.shortLabel
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -102,6 +106,18 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
     // 対戦相手の全選手一覧の並び順(福井側とは別に選べる)
     var oppSortKey by remember { mutableStateOf(PlayerSort.NUMBER) }
 
+    // 上の「自チーム」「相手」リンクで、その見出しの位置まで画面を動かすための情報
+    val scrollState = rememberScrollState()
+    // (画面の描き直しを起こさないよう、状態(State)ではなくただの入れ物に位置を覚えておく)
+    val marks = remember { JumpMarks() }
+    fun jumpTo(target: LayoutCoordinates?) {
+        val viewport = marks.viewport ?: return
+        val t = target ?: return
+        if (!viewport.isAttached || !t.isAttached) return
+        val dy = t.positionInRoot().y - viewport.positionInRoot().y
+        scope.launch { scrollState.animateScrollTo((scrollState.value + dy).toInt().coerceAtLeast(0)) }
+    }
+
     // 自動更新の最終時刻(相手の注目選手・主な選手の「何日時点」表示に使う)
     var dataStatus by remember { mutableStateOf<DataStatus?>(null) }
 
@@ -157,18 +173,31 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 .fillMaxSize()
                 .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
+        // チームの切り替えボタンと「自チーム/相手チーム」へ飛ぶリンクは一番上に固定し、常に表示する
+        Column(modifier = Modifier.fillMaxSize()) {
+        TeamSelectorRow(
+            selectedTeam = selectedTeam,
+            onSelect = { t -> if (t != null) selectedTeam = t },
+            showAll = false,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            JumpLink("▼ ${selectedTeam.shortLabel()}", Modifier.weight(1f)) { jumpTo(marks.own) }
+            JumpLink("▼ 相手:${nextGame?.opponent ?: "次の対戦相手"}", Modifier.weight(1f)) { jumpTo(marks.opp) }
+        }
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .weight(1f)
+                .onGloballyPositioned { marks.viewport = it }
+                .verticalScroll(scrollState)
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            TeamSelectorRow(
-                selectedTeam = selectedTeam,
-                onSelect = { t -> if (t != null) selectedTeam = t },
-                showAll = false
-            )
 
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Headline("選手の数字", fontSize = 22)
@@ -189,10 +218,10 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             val roster = teamPlayers[selectedTeam.name]
             val myPlayers = preview?.myKeyPlayers ?: emptyList()
             if (roster != null && roster.players.isNotEmpty()) {
-                SectionLabel("${selectedTeam.displayName}の選手")
+                SectionLabel("${selectedTeam.displayName}の選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
                 RosterSection(roster, sortKey) { sortKey = it }
             } else if (myPlayers.isNotEmpty()) {
-                SectionLabel("${selectedTeam.displayName}の主な選手")
+                SectionLabel("${selectedTeam.displayName}の主な選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
                 AsOfLine(previewUpdatedAt(dataStatus), null)
                 Text(
                     "Bリーグ公式の「クラブリーダー」(平均得点・リバウンド・アシストの各部門でチーム1位の選手)です。" +
@@ -205,7 +234,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                     Text("※${preview?.myPlayersNote}(チームの試合数)", style = MaterialTheme.typography.labelSmall, color = InkSoft)
                 }
             } else {
-                SectionLabel("${selectedTeam.displayName}の選手")
+                SectionLabel("${selectedTeam.displayName}の選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
                 NoDataBox(
                     when (selectedTeam) {
                         Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(1時間おき)が動くと、Bリーグ公式の選手情報から全選手の成績が表示されます。"
@@ -231,7 +260,10 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             } else {
                 null
             }
-            SectionLabel(if (oppRoster != null) "次の対戦相手の選手" else "次の対戦相手の注目選手")
+            SectionLabel(
+                if (oppRoster != null) "次の対戦相手の選手" else "次の対戦相手の注目選手",
+                modifier = Modifier.onGloballyPositioned { marks.opp = it }
+            )
             if (nextGame != null) {
                 Text(
                     "${nextGame.dateLabel.split("/").drop(1).joinToString("/")}(${nextGame.dayOfWeek}) vs ${nextGame.opponent}",
@@ -261,6 +293,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
+        }
         }
         PullToRefreshContainer(
             state = pullToRefreshState,
@@ -353,6 +386,32 @@ private fun AsOfLine(updatedAt: java.time.Instant?, extra: String?) {
 /** 展望データ(相手の注目選手・主な選手)を作った時刻。自動更新で展望の作成に失敗していれば分からないので null。 */
 private fun previewUpdatedAt(status: DataStatus?): java.time.Instant? =
     status?.takeIf { "展望" !in it.failedSteps }?.updatedAt
+
+/** 「自チーム」「相手」へ飛ぶための位置の入れ物(スクロールする部分と、それぞれの見出し)。 */
+private class JumpMarks {
+    var viewport: LayoutCoordinates? = null
+    var own: LayoutCoordinates? = null
+    var opp: LayoutCoordinates? = null
+}
+
+/** 上に固定する「自チーム」「相手」へ飛ぶリンク。 */
+@Composable
+private fun JumpLink(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Text(
+        label,
+        modifier = modifier
+            .border(1.dp, Ink)
+            .background(Paper)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 7.dp),
+        color = Ink,
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
 
 /** 全選手一覧の並び順(ボタンはこの順に左から並ぶ)。1行に収めるため、ボタンの文字は「順」を省く。 */
 private enum class PlayerSort(val label: String) {
