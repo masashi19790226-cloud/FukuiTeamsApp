@@ -51,6 +51,12 @@ jobs:
         continue-on-error: true
         run: python3 scripts/build_previews.py
 
+      - name: Read Blowinds game-day pages
+        id: gamelp
+        # ブローウィンズの試合情報ページ(開場・当日スケジュール・イベント)。1つのサイトの不調で止まらないようにする
+        continue-on-error: true
+        run: python3 scripts/build_game_lp.py
+
       - name: Write status
         # アプリの「データの最終更新」表示用。各処理が成功したかどうかも残す
         env:
@@ -59,11 +65,12 @@ jobs:
           S_SCHEDULE: ${{ steps.schedule.outcome }}
           S_RESULTS: ${{ steps.results.outcome }}
           S_PREVIEWS: ${{ steps.previews.outcome }}
+          S_GAMELP: ${{ steps.gamelp.outcome }}
         run: |
           python3 - <<'PY'
           import json, os
           from datetime import datetime, timezone
-          steps = {k: os.environ.get("S_" + k.upper(), "") for k in ["alerts", "official", "schedule", "results", "previews"]}
+          steps = {k: os.environ.get("S_" + k.upper(), "") for k in ["alerts", "official", "schedule", "results", "previews", "gamelp"]}
           with open("data/status.json", "w", encoding="utf-8") as f:
               json.dump({"updated_at": datetime.now(timezone.utc).isoformat(), "steps": steps}, f, ensure_ascii=False, indent=2)
           print(steps)
@@ -76,6 +83,8 @@ jobs:
           git add data/invitations_raw.json data/official_seen.json data/news_raw.json data/results.json data/games.json data/previews.json data/status.json
           # 選手の成績(初回に取得できなかったときはファイルが無いので、あるときだけ追加する)
           if [ -f data/players.json ]; then git add data/players.json; fi
+          # ブローウィンズの試合情報ページ(初回に取得できなかったときはファイルが無いので、あるときだけ追加する)
+          if [ -f data/game_lp.json ]; then git add data/game_lp.json; fi
           if git diff --cached --quiet; then
             echo "変更なし"
             exit 0

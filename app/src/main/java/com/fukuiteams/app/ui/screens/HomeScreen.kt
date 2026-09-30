@@ -99,6 +99,9 @@ import com.fukuiteams.app.data.MatchWeather
 import com.fukuiteams.app.data.WeatherRepository
 import com.fukuiteams.app.data.countdownLabel
 import com.fukuiteams.app.data.isToday
+import com.fukuiteams.app.data.GameLp
+import com.fukuiteams.app.data.GameLpRepository
+import com.fukuiteams.app.ui.components.GameLpSection
 import com.fukuiteams.app.widget.NextGameWidget
 import com.fukuiteams.app.data.hasMatchingInvite
 import com.fukuiteams.app.data.InvitationAlertsRepository
@@ -148,6 +151,8 @@ fun HomeScreen(
         newsResult = NewsAlertsRepository.fetch()
         previews = GamePreviewRepository.fetch()
         dataStatus = DataStatusRepository.fetch()
+        // ブローウィンズの試合情報ページ(開場・当日スケジュール・イベント)
+        GameLpRepository.fetch()
         // 今日の試合の天気
         weathers = GamesRepository.games.filter { it.isToday() }
             .mapNotNull { g -> WeatherRepository.forGame(g)?.let { g.id to it } }
@@ -173,12 +178,13 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
+            // 通知設定は下のメニューの「通知」から開くので、ここにはボタンを置かない。右端は更新ボタン
             MastheadTopBar(
                 section = "一面",
                 edition = selectedTeam?.let { "${it.displayName}版" },
                 actions = {
-                    IconButton(onClick = onOpenNotifications) {
-                        Icon(Icons.Filled.Notifications, contentDescription = "通知設定")
+                    IconButton(onClick = { pullToRefreshState.startRefresh() }) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "更新")
                     }
                 }
             )
@@ -214,7 +220,7 @@ fun HomeScreen(
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         todayGames.forEach { g ->
-                            MatchDayCard(g, weathers[g.id], onOpen = { onOpenGame(g.id) })
+                            MatchDayCard(g, weathers[g.id], GameLpRepository.latest[g.id], onOpen = { onOpenGame(g.id) })
                         }
                     }
                 }
@@ -330,7 +336,7 @@ fun HomeScreen(
 
 /** 試合当日のまとめ。赤い見出しで目立たせ、開始時刻・会場(地図)・天気をまとめて出す。 */
 @Composable
-private fun MatchDayCard(game: Game, weather: MatchWeather?, onOpen: () -> Unit) {
+private fun MatchDayCard(game: Game, weather: MatchWeather?, lp: GameLp?, onOpen: () -> Unit) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -366,6 +372,11 @@ private fun MatchDayCard(game: Game, weather: MatchWeather?, onOpen: () -> Unit)
             )
         }
         Text("チケット:${game.ticketStatus}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントも出す
+        if (lp != null) {
+            ThinRule(modifier = Modifier.padding(vertical = 4.dp))
+            GameLpSection(lp, startExpanded = true)
+        }
     }
 }
 

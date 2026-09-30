@@ -1,6 +1,16 @@
 package com.fukuiteams.app.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import com.fukuiteams.app.data.DataStatusRepository
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.border
@@ -48,8 +58,8 @@ fun todayLabel(): String {
 }
 
 /**
- * 各画面の一番上に置く、新聞の題字風ヘッダー。
- * section は「一面」「試合面」など、edition は「ブローウィンズ版」など(省略可)。
+ * 各画面の一番上に置く細い帯。現在の日時と、データの最終更新日時(GitHubの自動更新が最後に動いた時刻)を出す。
+ * 左に戻るボタン、右に更新ボタンなどを置ける。section・edition は今は表示しない(呼び出し元との互換のため残している)。
  */
 @Composable
 fun MastheadTopBar(
@@ -58,35 +68,70 @@ fun MastheadTopBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {}
 ) {
-    // 題字(「ふくスポ」のロゴ)はなくし、画面名・日付と左右のボタンだけの細い帯にした(画面を広く使うため)
+    // 帯には「現在の日時」と「データの最終更新日時」だけを出す(画面名・通知ボタンは出さない)。
+    // section・edition は、これまでの呼び出し元をそのまま使えるよう引数として残してある
+    val now by produceState(initialValue = java.time.ZonedDateTime.now(JST)) {
+        // 分が変わるたびに表示を更新する
+        while (true) {
+            value = java.time.ZonedDateTime.now(JST)
+            kotlinx.coroutines.delay(60_000L - (System.currentTimeMillis() % 60_000L))
+        }
+    }
+    LaunchedEffect(Unit) { DataStatusRepository.refreshIfStale() }
+    val status = DataStatusRepository.latest
+    val updated = status?.updatedAt?.atZone(JST)
+    // 3時間より前なら、自動更新が止まっているかもしれないので赤字にする
+    val stale = updated != null && java.time.Duration.between(updated, now).toMinutes() > 180
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Ivory)
             .padding(horizontal = 8.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth().heightIn(min = 44.dp)) {
-            Row(modifier = Modifier.align(Alignment.CenterStart)) { navigationIcon() }
-            Column(
-                modifier = Modifier.align(Alignment.Center).padding(horizontal = 48.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    listOfNotNull(section, edition).joinToString("・"),
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 15.sp,
-                    color = Ink,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(todayLabel(), fontSize = 10.sp, color = InkSoft, maxLines = 1)
-            }
-            Row(modifier = Modifier.align(Alignment.CenterEnd), content = actions)
+        // 左右のボタンの残りの幅に、現在の日時と最終更新日時を同じ形(9/30(水) 22:45)で1行に並べる。
+        // 入りきらない画面(左右にボタンがある画面など)では、1行に収まるまで文字を小さくする
+        var fontSizeSp by remember { mutableStateOf(13f) }
+        Row(
+            modifier = Modifier.fillMaxWidth().heightIn(min = 44.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            navigationIcon()
+            Text(
+                buildAnnotatedString {
+                    append(shortDateTime(now))
+                    append("  |  最終更新 ")
+                    if (updated != null) {
+                        if (stale) {
+                            withStyle(SpanStyle(color = NewsRed, fontWeight = FontWeight.Bold)) { append(shortDateTime(updated)) }
+                        } else {
+                            append(shortDateTime(updated))
+                        }
+                    } else {
+                        append("確認中")
+                    }
+                },
+                modifier = Modifier.weight(1f).padding(horizontal = 4.dp, vertical = 4.dp),
+                fontSize = fontSizeSp.sp,
+                fontWeight = FontWeight.Bold,
+                color = Ink,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                softWrap = false,
+                onTextLayout = { result ->
+                    if (result.hasVisualOverflow && fontSizeSp > 9f) fontSizeSp -= 0.5f
+                }
+            )
+            Row(content = actions)
         }
         Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(Ink))
     }
 }
+
+private val JST: java.time.ZoneId = java.time.ZoneId.of("Asia/Tokyo")
+
+/** 帯に出す日時の形「9/30(水) 22:45」。現在の日時と最終更新日時で同じ形にそろえる。 */
+private fun shortDateTime(t: java.time.ZonedDateTime): String =
+    "%d/%d(%s) %02d:%02d".format(t.monthValue, t.dayOfMonth, WEEKDAYS[t.dayOfWeek.value - 1], t.hour, t.minute)
 
 /** 黒地(または赤地)に白抜きの小見出し。「試合結果」「ニュース」など。 */
 @Composable

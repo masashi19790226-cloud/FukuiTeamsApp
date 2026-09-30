@@ -1,5 +1,8 @@
 package com.fukuiteams.app.data
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -24,10 +27,26 @@ private val STEP_LABELS = mapOf(
     "official" to "公式サイトの巡回",
     "schedule" to "日程",
     "results" to "試合結果",
-    "previews" to "展望"
+    "previews" to "展望",
+    "gamelp" to "試合情報ページ"
 )
 
 object DataStatusRepository {
+    /**
+     * いちばん最近読み込んだ更新状況。画面の一番上の帯(「最終更新」)が使う。
+     * どの画面で読み込んでも、ここが新しくなり、帯の表示も切り替わる。
+     */
+    var latest by mutableStateOf<DataStatus?>(null)
+        private set
+
+    /** 最後に読み込んだ時刻(読み込みすぎないように使う) */
+    private var lastFetchedAtMillis = 0L
+
+    /** 前回の読み込みから minIntervalMillis 以上たっていれば読み込み直す(帯から呼ぶ用)。 */
+    suspend fun refreshIfStale(minIntervalMillis: Long = 5 * 60_000L) {
+        if (latest == null || System.currentTimeMillis() - lastFetchedAtMillis >= minIntervalMillis) fetch()
+    }
+
     suspend fun fetch(): DataStatus? = withContext(Dispatchers.IO) {
         try {
             val connection = URL(STATUS_JSON_URL).openConnection() as HttpURLConnection
@@ -45,7 +64,10 @@ object DataStatusRepository {
                 val v = steps.optString(key)
                 if (v.isNotBlank() && v != "success") failed.add(STEP_LABELS[key] ?: key)
             }
-            DataStatus(updated, failed)
+            DataStatus(updated, failed).also {
+                latest = it
+                lastFetchedAtMillis = System.currentTimeMillis()
+            }
         } catch (e: Exception) {
             null
         }

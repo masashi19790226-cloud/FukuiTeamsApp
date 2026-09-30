@@ -11,6 +11,8 @@ import com.fukuiteams.app.ui.components.GameCommentEditor
 import com.fukuiteams.app.ui.components.GameShareCard
 import com.fukuiteams.app.data.computeHomeAwaySummary
 import com.fukuiteams.app.data.isToday
+import com.fukuiteams.app.data.GameLpRepository
+import com.fukuiteams.app.ui.components.GameLpSection
 import com.fukuiteams.app.ui.components.PhotoStrip
 import com.fukuiteams.app.ui.components.GamePhotoSpread
 import com.fukuiteams.app.data.GamePhotos
@@ -768,6 +770,23 @@ private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpen
 
         // コラボ企画など特別な日の試合なら、特集枠を出す
         game.specialDay()?.let { day -> SpecialDayBanner(day, showCountdown = !isPast) }
+
+        // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントを出す
+        val lp = GameLpRepository.latest[game.id]
+        LaunchedEffect(game.id) { if (GameLpRepository.latest.isEmpty()) GameLpRepository.fetch() }
+        if (lp != null && (!isPast || game.isToday())) {
+            Card(
+                shape = RoundedCornerShape(3.dp),
+                colors = CardDefaults.cardColors(containerColor = Paper),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, Ink)
+            ) {
+                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    SectionTitle("試合情報(公式)")
+                    GameLpSection(lp, startExpanded = game.isToday())
+                }
+            }
+        }
 
         // 試合前と試合当日は持ち物チェックを出す(チェックは試合ごとに保存)
         if (!isPast || game.isToday()) {
