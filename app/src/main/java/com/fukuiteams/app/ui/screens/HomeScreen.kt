@@ -255,6 +255,7 @@ fun HomeScreen(
                     sideTeams = sideTeams,
                     autoResults = autoResults,
                     preview = nextGame?.let { previews[it.id] },
+                    lp = nextGame?.let { GameLpRepository.latest[it.id] },
                     onOpenGame = onOpenGame
                 )
             }
@@ -752,6 +753,7 @@ private fun TwoColumnFront(
     sideTeams: List<Team>,
     autoResults: Map<String, RemoteGameResult>,
     preview: GamePreview?,
+    lp: GameLp?,
     onOpenGame: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -798,6 +800,13 @@ private fun TwoColumnFront(
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
+
+                // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントを出す
+                // (スケジュールとイベントは押すと開く。試合当日は上の「本日の試合」に出すので、ここでは出さない)
+                if (lp != null && !nextGame.isToday()) {
+                    ThinRule(modifier = Modifier.padding(vertical = 4.dp))
+                    GameLpSection(lp, startExpanded = false)
+                }
 
                 if (preview != null) {
                     DoubleRule(modifier = Modifier.padding(vertical = 6.dp))
