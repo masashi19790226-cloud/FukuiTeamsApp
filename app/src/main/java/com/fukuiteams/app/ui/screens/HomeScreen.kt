@@ -178,7 +178,7 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            // 通知設定は下のメニューの「通知」から開くので、ここにはボタンを置かない。右端は更新ボタン
+            // 通知設定は下のメニューの「メニュー」から開くので、ここにはボタンを置かない。右端は更新ボタン
             MastheadTopBar(
                 section = "一面",
                 edition = selectedTeam?.let { "${it.displayName}版" },
@@ -299,12 +299,7 @@ fun HomeScreen(
                 }
             }
 
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    SectionLabel("公式サイト")
-                    OfficialSiteLinks(selectedTeam)
-                }
-            }
+            // 公式サイトへのリンクは、下のメニューの「メニュー」に移した
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {

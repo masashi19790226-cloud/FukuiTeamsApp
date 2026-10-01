@@ -2,7 +2,7 @@ package com.fukuiteams.app.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Stadium
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.BarChart
@@ -29,7 +29,7 @@ val bottomNavItems = listOf(
     NavItem(Routes.GAME_DETAIL, "試合", Icons.Filled.Stadium),
     NavItem(Routes.PLAYERS, "選手", Icons.Filled.BarChart),
     NavItem(Routes.RADAR, "トピック", Icons.Filled.Article),
-    NavItem(Routes.NOTIFICATIONS, "通知", Icons.Filled.Notifications)
+    NavItem(Routes.NOTIFICATIONS, "メニュー", Icons.Filled.Menu)
 )
 
 @Composable

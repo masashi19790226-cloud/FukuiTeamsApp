@@ -31,11 +31,10 @@
     {"team": "blowinds", "date": "2027-04-11", "time": "時間未定", "opponent": "越谷", "venue": "調整中", "is_home": true},
     {"team": "blowinds", "date": "2027-04-24", "time": "時間未定", "opponent": "愛媛", "venue": "調整中", "is_home": true},
     {"team": "blowinds", "date": "2027-04-25", "time": "時間未定", "opponent": "愛媛", "venue": "調整中", "is_home": true},
-
-    {"team": "rac", "date": "2026-11-13", "time": "日時未定", "opponent": "未定(ファイナルシーズン第12節・11/13〜15のいずれか)", "venue": "セーレン・ドリームアリーナ", "is_home": true, "placeholder_until": "2026-11-15"},
-    {"team": "rac", "date": "2026-11-28", "time": "日時未定", "opponent": "未定(ファイナルシーズン第13節・11/28〜29のいずれか)", "venue": "未定(北ガスアリーナ札幌46・バルドラール浦安アリーナ・ひがしんアリーナのいずれか)", "is_home": false, "placeholder_until": "2026-11-29"},
-    {"team": "rac", "date": "2026-12-12", "time": "日時未定", "opponent": "未定(ファイナルシーズン第14節・12/12〜13のいずれか)", "venue": "未定(ひがしんアリーナ・俵田翁記念体育館のいずれか)", "is_home": false, "placeholder_until": "2026-12-13"},
-    {"team": "rac", "date": "2026-12-20", "time": "日時未定", "opponent": "未定(ファイナルシーズン第15節・12/20開催の見込み)", "venue": "セーレン・ドリームアリーナ", "is_home": true, "placeholder_from": "2026-12-19", "placeholder_until": "2026-12-20"},
-    {"team": "rac", "date": "2027-02-13", "time": "日時未定", "opponent": "未定(ファイナルシーズン第16節・2/13〜14のいずれか)", "venue": "セーレン・ドリームアリーナ", "is_home": true, "placeholder_until": "2027-02-14"}
+    {"team": "rac", "date": "2026-11-15", "time": "14:00", "opponent": "バルドラール浦安ラス・ボニータス", "venue": "セーレン・ドリームアリーナ", "is_home": true},
+    {"team": "rac", "date": "2026-11-28", "time": "16:00", "opponent": "立川アスレティックFCレディース", "venue": "バルドラール浦安アリーナ", "is_home": false},
+    {"team": "rac", "date": "2026-12-12", "time": "13:30", "opponent": "アルコ神戸", "venue": "俵田翁記念体育館", "is_home": false},
+    {"team": "rac", "date": "2026-12-20", "time": "17:00", "opponent": "SWHレディース西宮", "venue": "セーレン・ドリームアリーナ", "is_home": true},
+    {"team": "rac", "date": "2027-02-14", "time": "14:00", "opponent": "フウガドールすみだレディース", "venue": "セーレン・ドリームアリーナ", "is_home": true}
   ]
 }

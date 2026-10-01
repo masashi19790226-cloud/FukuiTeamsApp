@@ -104,7 +104,7 @@ fun NotificationsScreen(
 
     Scaffold(
         topBar = {
-            MastheadTopBar(section = "通知設定")
+            MastheadTopBar(section = "メニュー")
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
@@ -115,8 +115,9 @@ fun NotificationsScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // 下のメニューの「メニュー」画面。上から 通知の設定 → 公式サイト → アプリの使い方 → 更新履歴
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Headline("号外の届け先を\n選べます", fontSize = 22)
+                Headline("通知の設定", fontSize = 22)
                 Text(
                     "チームごと・内容ごとに、スマホへの通知(号外)を受け取るか選べます。",
                     style = MaterialTheme.typography.bodySmall,
@@ -225,9 +226,27 @@ fun NotificationsScreen(
                 }
             }
 
+            // 3チームの公式サイト(一面から移した)
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("公式サイト")
+                Team.values().forEach { team ->
+                    team.officialSiteUrl?.let { url ->
+                        MenuLinkRow(
+                            title = team.displayName,
+                            sub = "公式サイトを開く",
+                            onClick = {
+                                runCatching {
+                                    context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url)))
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+
             // 使い方への入口(選手の数字は下のメニューの「選手」から開くので、ここには置かない)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                SectionLabel("メニュー")
+                SectionLabel("使い方")
                 MenuLinkRow(
                     title = "アプリの使い方",
                     sub = "各画面でできることの説明",

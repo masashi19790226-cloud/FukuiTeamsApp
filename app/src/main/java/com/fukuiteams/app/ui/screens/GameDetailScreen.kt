@@ -87,6 +87,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.fukuiteams.app.data.HomeAwaySummary
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -148,7 +152,10 @@ fun GameDetailScreen(
     val upcomingTeamGames = remember(allTeamGames) { allTeamGames.filter { it.isUpcoming() } }
     val pastTeamGames = remember(allTeamGames) { allTeamGames.filterNot { it.isUpcoming() }.sortedByDescending { it.sortKey } }
 
-    var scheduleTabIndex by remember(selectedTeam) { mutableStateOf(0) }
+    // 一面の「速報」などから終わった試合を開いたときは、「過去の試合」を開いておく(その試合を一覧に出すため)
+    var scheduleTabIndex by remember(selectedTeam) {
+        mutableStateOf(if (gameId != null && pastTeamGames.any { it.id == gameId }) 1 else 0)
+    }
 
     // ホーム画面から特定の試合を選んで遷移してきた場合はそれを表示。
     // 「試合」タブを直接開いた場合は、何も自動選択しない。
@@ -167,6 +174,20 @@ fun GameDetailScreen(
     // ホーム・アウェイ別成績(観戦成績と同じ勝敗の決め方で集計)
     val homeAwaySummary = remember(allTeamGames, gameLogPrefs, autoResults) {
         computeHomeAwaySummary(allTeamGames, gameLogPrefs, autoResults)
+    }
+    // 一面などから特定の試合を開いたときに、その試合の位置まで画面を動かすための情報
+    val listScroll = rememberScrollState()
+    val jumpMarks = remember { ListJumpMarks() }
+    LaunchedEffect(gameId) {
+        if (gameId == null) return@LaunchedEffect
+        // 一覧が描かれるのを少し待ってから動かす
+        kotlinx.coroutines.delay(350)
+        val viewport = jumpMarks.viewport
+        val target = jumpMarks.selected
+        if (viewport != null && target != null && viewport.isAttached && target.isAttached) {
+            val dy = target.positionInRoot().y - viewport.positionInRoot().y
+            listScroll.animateScrollTo((listScroll.value + dy - 8f).toInt().coerceAtLeast(0))
+        }
     }
     // 観戦成績のタイルをタップしたときに開く試合一覧(null なら閉じている)
     var statsFilter by remember(selectedTeam) { mutableStateOf<StatsFilter?>(null) }
@@ -234,36 +255,14 @@ fun GameDetailScreen(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
+                .onGloballyPositioned { jumpMarks.viewport = it }
+                .verticalScroll(listScroll)
                 .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            WatchStatsCard(watchRecords, onOpenList = { statsFilter = it })
-
-            HomeAwayRecordCard(homeAwaySummary)
-
-            MenuLinkRow(
-                title = "選手の数字を見る",
-                sub = "背番号・選手名と、公式サイトから取得した成績",
-                onClick = onOpenPlayers
-            )
-
-            TicketSearchSection(
-                personalSearchKeyword = personalSearchKeyword,
-                adSearchKeyword = adSearchKeyword,
-                onSearchX = { openUrl(context, "https://x.com/search?q=$encodedPersonalKeyword&f=live") },
-                onSearchAd = {
-                    openUrl(
-                        context,
-                        "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=JP&q=$encodedAdKeyword&search_type=keyword_unordered&media_type=all"
-                    )
-                }
-            )
-
-            if (game != null) {
-                SelectedGameDetail(game, autoResults[game.id], onOpenInvitations)
-            }
+            // 成績(観戦成績とホーム・アウェイ別成績を1つにまとめた)。見出しと要点1行だけ出し、押すと開く
+            StatsSummarySection(watchRecords, homeAwaySummary, onOpenList = { statsFilter = it })
 
             if (allTeamGames.isEmpty()) {
                 EmptyTeamState(selectedTeam)
@@ -281,43 +280,75 @@ fun GameDetailScreen(
                             onClick = { scheduleTabIndex = 1 }
                         )
                     }
-                    val listToShow = if (scheduleTabIndex == 0) upcomingTeamGames else pastTeamGames
+                    val isPastTab = scheduleTabIndex == 1
+                    val listToShow = if (isPastTab) pastTeamGames else upcomingTeamGames
                     if (listToShow.isEmpty()) {
                         Text(
-                            if (scheduleTabIndex == 0) "今後の試合予定はありません" else "過去の試合の記録はまだありません",
+                            if (!isPastTab) "今後の試合予定はありません" else "過去の試合の記録はまだありません",
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
                     } else {
-                        listToShow.forEach { g ->
-                            val isPastTab = scheduleTabIndex == 1
-                            val isSelected = g.id == selectedGameId
-                            val photoCount = remember(g.id, GamePhotos.version) { GamePhotos.list(context, g.id).size }
-                            ScheduleRow(
-                                game = g,
-                                selected = isSelected,
-                                // 過去の試合はもう一度タップすると閉じる(次々に記録しやすいように)
-                                onClick = { selectedGameId = if (isPastTab && isSelected) null else g.id },
-                                score = if (isPastTab) autoResults[g.id] else null,
-                                outcome = if (isPastTab) resolveOutcome(g.id, gameLogPrefs, autoResults) else null,
-                                showResult = isPastTab,
-                                photoCount = photoCount
-                            )
-                            if (isPastTab && isSelected) {
-                                QuickRecordPanel(
-                                    game = g,
-                                    watchMethod = recordedWatchMethod(g.id, gameLogPrefs),
-                                    manualOutcome = recordedOutcome(g.id, gameLogPrefs),
-                                    hasAutoResult = autoResults[g.id] != null,
-                                    autoResult = autoResults[g.id],
-                                    outcome = resolveOutcome(g.id, gameLogPrefs, autoResults),
-                                    photoCaption = photoCaption(
-                                        g,
-                                        autoResults[g.id],
-                                        resolveOutcome(g.id, gameLogPrefs, autoResults),
-                                        recordedWatchMethod(g.id, gameLogPrefs)
-                                    )
+                        // 月ごとにまとめる(並び順はそのまま:今後の試合は古い月から、過去の試合は新しい月から)
+                        val groups = listToShow.groupBy { it.monthKey() }
+                        // 最初に開いておく月:いちばん上の月と、選ばれている試合の月
+                        var openMonths by remember(selectedTeam, scheduleTabIndex) {
+                            mutableStateOf(
+                                setOfNotNull(
+                                    groups.keys.firstOrNull(),
+                                    listToShow.firstOrNull { it.id == selectedGameId }?.monthKey()
                                 )
+                            )
+                        }
+                        var prevYear: Int? = null
+                        groups.forEach { (month, monthGames) ->
+                            val open = month in openMonths
+                            MonthHeader(
+                                month = month,
+                                showYear = prevYear == null || prevYear != month.first,
+                                gameCount = monthGames.size,
+                                homeCount = monthGames.count { it.isHome },
+                                open = open,
+                                onClick = { openMonths = if (open) openMonths - month else openMonths + month }
+                            )
+                            prevYear = month.first
+                            if (open) {
+                                monthGames.forEach { g ->
+                                    val isSelected = g.id == selectedGameId
+                                    val photoCount = remember(g.id, GamePhotos.version) { GamePhotos.list(context, g.id).size }
+                                    Box(modifier = if (isSelected) Modifier.onGloballyPositioned { jumpMarks.selected = it } else Modifier) {
+                                        ScheduleRow(
+                                            game = g,
+                                            selected = isSelected,
+                                            // もう一度押すと閉じる
+                                            onClick = { selectedGameId = if (isSelected) null else g.id },
+                                            score = if (isPastTab) autoResults[g.id] else null,
+                                            outcome = if (isPastTab) resolveOutcome(g.id, gameLogPrefs, autoResults) else null,
+                                            showResult = isPastTab,
+                                            photoCount = photoCount
+                                        )
+                                    }
+                                    // 押した試合は、その行のすぐ下に詳細を開く
+                                    if (isSelected) {
+                                        if (isPastTab) {
+                                            PastGameInline(g, autoResults[g.id], gameLogPrefs, autoResults)
+                                        } else {
+                                            UpcomingGameInline(
+                                                game = g,
+                                                onOpenInvitations = onOpenInvitations,
+                                                personalSearchKeyword = personalSearchKeyword,
+                                                adSearchKeyword = adSearchKeyword,
+                                                onSearchX = { openUrl(context, "https://x.com/search?q=$encodedPersonalKeyword&f=live") },
+                                                onSearchAd = {
+                                                    openUrl(
+                                                        context,
+                                                        "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=JP&q=$encodedAdKeyword&search_type=keyword_unordered&media_type=all"
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -757,119 +788,227 @@ private fun EmptyTeamState(team: Team) {
     }
 }
 
+/** 「今後の試合」一覧で試合を押したとき、その行のすぐ下に開く詳細。中の項目は見出しだけにして、押すと開く。 */
 @Composable
-private fun SelectedGameDetail(game: Game, autoResult: RemoteGameResult?, onOpenInvitations: () -> Unit) {
+private fun UpcomingGameInline(
+    game: Game,
+    onOpenInvitations: () -> Unit,
+    personalSearchKeyword: String,
+    adSearchKeyword: String,
+    onSearchX: () -> Unit,
+    onSearchAd: () -> Unit
+) {
     val context = LocalContext.current
-    val isPast = !game.isUpcoming()
-
-    val detailPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
-    val photos = remember(game.id, GamePhotos.version) { GamePhotos.list(context, game.id) }
-
-    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        MatchHeaderCard(game, isPast)
-
+    val lp = GameLpRepository.latest[game.id]
+    LaunchedEffect(game.id) { if (GameLpRepository.latest.isEmpty()) GameLpRepository.fetch() }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(2.dp, game.team.color)
+            .background(White)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            "会場:${game.venue} ›地図 ・ チケット:${game.ticketStatus}",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft,
+            modifier = Modifier.clickable {
+                openUrl(context, "https://www.google.com/maps/search/?api=1&query=" + URLEncoder.encode(game.venue, "UTF-8"))
+            }
+        )
         // コラボ企画など特別な日の試合なら、特集枠を出す
-        game.specialDay()?.let { day -> SpecialDayBanner(day, showCountdown = !isPast) }
+        game.specialDay()?.let { day -> SpecialDayBanner(day, showCountdown = true) }
 
-        // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントを出す
-        val lp = GameLpRepository.latest[game.id]
-        LaunchedEffect(game.id) { if (GameLpRepository.latest.isEmpty()) GameLpRepository.fetch() }
-        if (lp != null && (!isPast || game.isToday())) {
-            Card(
-                shape = RoundedCornerShape(3.dp),
-                colors = CardDefaults.cardColors(containerColor = Paper),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                border = BorderStroke(1.dp, Ink)
-            ) {
-                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    SectionTitle("試合情報(公式)")
-                    GameLpSection(lp, startExpanded = game.isToday())
-                }
+        // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベント
+        if (lp != null) {
+            ToggleBlock(
+                title = "試合情報(公式)",
+                summary = listOfNotNull(
+                    lp.openTime.takeIf { it.isNotBlank() }?.let { "開場 $it" },
+                    lp.events.size.takeIf { it > 0 }?.let { "イベント${it}件" }
+                ).joinToString("・"),
+                startOpen = game.isToday()
+            ) { GameLpSection(lp, startExpanded = game.isToday()) }
+        }
+
+        // 持ち物チェック(見出しを押すと開く。試合当日は最初から開いている)
+        PackingChecklistCard(game)
+
+        // チケット:公式の販売状況・無料招待・譲渡チケット探しをまとめる
+        ToggleBlock(title = "チケット", summary = "公式・無料招待・譲渡を探す", startOpen = false) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("販売状況:${game.ticketStatus}・一般販売開始 ${game.ticketSaleStart}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                Text(
+                    "無料招待の情報を見る(トピックの「招待」) ›",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Accent,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(onClick = onOpenInvitations)
+                        .padding(vertical = 4.dp)
+                )
+                TicketSearchSection(
+                    personalSearchKeyword = personalSearchKeyword,
+                    adSearchKeyword = adSearchKeyword,
+                    onSearchX = onSearchX,
+                    onSearchAd = onSearchAd
+                )
             }
         }
 
-        // 試合前と試合当日は持ち物チェックを出す(チェックは試合ごとに保存)
-        if (!isPast || game.isToday()) {
-            PackingChecklistCard(game)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedButton(
+                onClick = { addToCalendar(context, game) },
+                modifier = Modifier.weight(1f)
+            ) { Text("カレンダーに追加", maxLines = 1, softWrap = false, fontSize = 13.sp) }
+            Button(
+                onClick = {
+                    val url = game.team.officialSiteUrl
+                        ?: "https://www.google.com/search?q=" + URLEncoder.encode("${game.team.displayName} チケット", "UTF-8")
+                    openUrl(context, url)
+                },
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Ink),
+                modifier = Modifier.weight(1f)
+            ) { Text("チケットを買う", maxLines = 1, softWrap = false, fontSize = 13.sp) }
         }
+    }
+}
 
-        if (isPast && photos.isNotEmpty()) {
-            val autoMap = autoResult?.let { mapOf(game.id to it) } ?: emptyMap()
+/** 「過去の試合」一覧で試合を押したとき、その行のすぐ下に開く詳細。結果・写真と、観戦の記録・コメント・SNS投稿。 */
+@Composable
+private fun PastGameInline(
+    game: Game,
+    autoResult: RemoteGameResult?,
+    prefs: Preferences?,
+    autoResults: Map<String, RemoteGameResult>
+) {
+    val context = LocalContext.current
+    val photos = remember(game.id, GamePhotos.version) { GamePhotos.list(context, game.id) }
+    val outcome = resolveOutcome(game.id, prefs, autoResults)
+    val watchMethod = recordedWatchMethod(game.id, prefs)
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        PastGameResultCard(game, autoResult)
+        if (photos.isNotEmpty()) {
             GamePhotoSpread(
                 game = game,
                 photos = photos,
-                leadCaption = photoCaption(
-                    game,
-                    autoResult,
-                    resolveOutcome(game.id, detailPrefs, autoMap),
-                    recordedWatchMethod(game.id, detailPrefs)
-                )
+                leadCaption = photoCaption(game, autoResult, outcome, watchMethod)
             )
         }
+        QuickRecordPanel(
+            game = game,
+            watchMethod = watchMethod,
+            manualOutcome = recordedOutcome(game.id, prefs),
+            hasAutoResult = autoResult != null,
+            autoResult = autoResult,
+            outcome = outcome,
+            photoCaption = photoCaption(game, autoResult, outcome, watchMethod)
+        )
+    }
+}
 
-        if (isPast) {
-            PastGameResultCard(game, autoResult)
-            WatchMethodPicker(game)
-            GameCommentEditor(game)
-            val autoMap = autoResult?.let { mapOf(game.id to it) } ?: emptyMap()
-            GameShareCard(game, autoResult, resolveOutcome(game.id, detailPrefs, autoMap))
-            return@Column
-        }
-
-        OutlinedButton(
-            onClick = { addToCalendar(context, game) },
-            modifier = Modifier.fillMaxWidth()
-        ) { Text("Googleカレンダーに追加") }
-
-        SectionTitle("無料招待")
-        Card(
+/** 見出し(▼/▲)と要点1行。押すと中身が開く。 */
+@Composable
+private fun ToggleBlock(title: String, summary: String, startOpen: Boolean, content: @Composable () -> Unit) {
+    var open by remember(title) { mutableStateOf(startOpen) }
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        ThinRule(color = LineGray)
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onOpenInvitations),
-            shape = RoundedCornerShape(3.dp),
-            colors = CardDefaults.cardColors(containerColor = Paper),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-            border = BorderStroke(2.dp, Accent)
+                .clickable { open = !open }
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(14.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text("無料招待の情報を見る", style = MaterialTheme.typography.bodyLarge)
-                    Text("自動検知した最新情報はこちらから確認できます", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                }
-                Text("›", color = Accent, style = MaterialTheme.typography.titleMedium)
+            Text("${if (open) "▲" else "▼"} $title", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.ExtraBold, color = Ink)
+            if (summary.isNotBlank()) {
+                Text(
+                    summary,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
+        if (open) content()
+    }
+}
 
-        SectionTitle("公式チケット")
-        Card(
-            shape = RoundedCornerShape(3.dp),
-            colors = CardDefaults.cardColors(containerColor = Paper),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-            border = BorderStroke(1.dp, Ink)
+/** 試合の年と月(並べ替え・まとめ用)。dateLabel は「2026/10/3」の形。 */
+private fun Game.monthKey(): Pair<Int, Int> {
+    val p = dateLabel.split("/")
+    return (p.getOrNull(0)?.toIntOrNull() ?: 0) to (p.getOrNull(1)?.toIntOrNull() ?: 0)
+}
+
+/** 月の見出し「2026年10月 10試合(HOME 5)」。押すとその月の試合が開閉する。 */
+@Composable
+private fun MonthHeader(
+    month: Pair<Int, Int>,
+    showYear: Boolean,
+    gameCount: Int,
+    homeCount: Int,
+    open: Boolean,
+    onClick: () -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(14.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Text("販売状況:${game.ticketStatus}・一般販売開始 ${game.ticketSaleStart}", style = MaterialTheme.typography.bodyMedium, color = InkSoft)
-                Button(
-                    onClick = {
-                        val url = game.team.officialSiteUrl
-                            ?: "https://www.google.com/search?q=" + URLEncoder.encode("${game.team.displayName} チケット", "UTF-8")
-                        openUrl(context, url)
-                    },
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Ink),
-                    modifier = Modifier.fillMaxWidth()
-                ) { Text("チケットを購入する(公式サイト)") }
-            }
+            Headline(if (showYear) "${month.first}年${month.second}月" else "${month.second}月", fontSize = 20)
+            Text("${gameCount}試合(HOME $homeCount)", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            Spacer(modifier = Modifier.weight(1f))
+            Text(if (open) "▲" else "▼", style = MaterialTheme.typography.titleMedium, color = Ink)
+        }
+        Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(Ink))
+    }
+}
+
+/**
+ * 成績(観戦成績とホーム・アウェイ別成績)。ふだんは見出しと要点1行だけで、押すと両方の表が開く。
+ */
+@Composable
+private fun StatsSummarySection(
+    records: Map<WatchMethod, WatchRecord>,
+    homeAway: HomeAwaySummary,
+    onOpenList: (StatsFilter) -> Unit
+) {
+    var open by remember { mutableStateOf(false) }
+    val onSite = records[WatchMethod.ON_SITE] ?: WatchRecord()
+    val summary = if (homeAway.total.games == 0 && onSite.watched == 0) {
+        "まだ終了した試合はありません"
+    } else {
+        "観戦 現地${onSite.summaryLabel()} ・ 全体 ${homeAway.total.recordLabel()}" +
+            "(HOME ${homeAway.home.recordLabel()} / AWAY ${homeAway.away.recordLabel()})"
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Ink)
+            .background(Paper)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Column(modifier = Modifier.fillMaxWidth().clickable { open = !open }) {
+            Text("${if (open) "▲" else "▼"} 成績", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.ExtraBold, color = Ink)
+            Text(summary, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        }
+        if (open) {
+            WatchStatsCard(records, onOpenList)
+            HomeAwayRecordCard(homeAway)
         }
     }
+}
+
+/** 一面などから開いた試合の位置まで画面を動かすための入れ物(スクロールする部分と、選ばれた試合の行)。 */
+private class ListJumpMarks {
+    var viewport: LayoutCoordinates? = null
+    var selected: LayoutCoordinates? = null
 }
 
 /** スコアの両側にチーム名を置いた得点板。左が福井側、右が対戦相手。 */
