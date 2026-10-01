@@ -76,6 +76,9 @@ def tab_dates(section: str, year: int):
 
 def parse_lp(url: str, page: str):
     """試合情報ページ1つ分を、日付ごとの情報にする。{日付: {...}}"""
+    # HTMLのコメント(<!-- -->)で隠された古い行は画面に出ないので読まない
+    # (以前、ハーフタイム・試合終了後の行が2回ずつ出ていた原因)
+    page = re.sub(r"<!--.*?-->", "", page, flags=re.S)
     ym = re.search(r"/lp/game_(\d{4})", url)
     year = int(ym.group(1)) if ym else datetime.now(JST).year
     title_m = re.search(r"<title>(.*?)</title>", page, flags=re.S)
