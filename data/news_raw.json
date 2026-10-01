@@ -992,5 +992,38 @@
     "published": "2026-10-01T09:00:00+09:00",
     "detected_at": "2026-10-01T05:29:54.097921+00:00",
     "source": "ブローウィンズ公式"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12749424720207031517",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【メディア情報  】 10/2(金)放送のFM福井「Highlight Friday」に ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2105492916231663776&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw13rpWYsI65qSJTwKSGCPzo",
+    "published": "2026-10-01T04:56:21Z",
+    "detected_at": "2026-10-01T08:33:32.955796+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4050281877666506527",
+    "team": "UNITED",
+    "title": "福井ユナイテッドＦＣ情報局 - X",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/JurakuFukui12/status/2105224233219772646&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2T6GuAiaW7kooiPKj1TcUz",
+    "published": "2026-09-30T17:06:53Z",
+    "detected_at": "2026-10-01T08:33:32.955842+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:608299428471459850",
+    "team": "UNITED",
+    "title": "株式会社武生製麺×福井ユナイテッド株式会社「福井ユナイテッドFC選手考案メニュー」 - YouTube",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://youtu.be/73QUKXBq8cg%3Fsi%3DV4GbH0WTr3-NoaE6&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3QJkzAfSEkHKBc7LBHE5t5",
+    "published": "2026-09-29T17:02:03Z",
+    "detected_at": "2026-10-01T08:33:32.955863+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51690",
+    "team": "BLOWINDS",
+    "title": "【ホーム開幕節】アリーナDJ 決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51690",
+    "published": "2026-10-01T09:00:00+09:00",
+    "detected_at": "2026-10-01T08:33:33.052895+00:00",
+    "source": "ブローウィンズ公式"
   }
 ]
