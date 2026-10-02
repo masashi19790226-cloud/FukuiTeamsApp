@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-02T21:29:46.386580+00:00",
+    "updated_at": "2026-10-02T22:29:38.686881+00:00",
     "players": [
       {
         "number": "1",
@@ -24,6 +24,11 @@
         "three_pct": "0.0%",
         "ft_pct": "0.0%",
         "eff": "3.0"
+      },
+      {
+        "number": "8",
+        "name": "岡本 飛竜",
+        "position": "PG"
       },
       {
         "number": "10",
@@ -206,7 +211,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=750&tab=1",
-    "updated_at": "2026-10-02T21:29:48.949654+00:00",
+    "updated_at": "2026-10-02T22:29:41.178436+00:00",
     "players": [
       {
         "number": "1",
