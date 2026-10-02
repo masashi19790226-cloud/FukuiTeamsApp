@@ -24,6 +24,8 @@ import os
 import re
 import time
 import urllib.request
+
+import standings
 from datetime import datetime, timedelta, timezone
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
@@ -31,6 +33,7 @@ GAMES_PATH = os.path.join(BASE_DIR, "games.json")
 RESULTS_PATH = os.path.join(BASE_DIR, "results.json")
 PREVIEWS_PATH = os.path.join(BASE_DIR, "previews.json")
 PLAYERS_PATH = os.path.join(BASE_DIR, "players.json")
+STANDINGS_PATH = os.path.join(BASE_DIR, "standings.json")
 
 JST = timezone(timedelta(hours=9))
 UA = "Mozilla/5.0 (Linux; Android 14) FukuiSpoBot/1.0 (+https://github.com/masashi19790226-cloud/FukuiTeamsApp)"
@@ -366,23 +369,38 @@ def build_players(previews):
 
 # ---------- ユナイテッド(公式サイトの順位表) ----------
 
-def united_extra(next_game, preview):
+# 丸岡RUCK・ユナイテッドの順位表(main で1回だけ作り、展望と data/standings.json の両方で使う)
+STANDINGS = {}
+WFL_MATCHES = []
+
+
+def load_standings():
+    """丸岡RUCK(女子Fリーグ)とユナイテッド(北信越リーグ1部)の順位表を作る。読めなかったリーグは入れない。"""
+    global WFL_MATCHES
     try:
-        text = text_of(fetch("https://fukuiunited.co.jp/"))
+        page = fetch(standings.WFL_TOP)
+        WFL_MATCHES = standings.wfleague_matches(page)
+        STANDINGS["RAC"] = standings.ruck_standings(page)
     except Exception as e:
-        print(f"[WARN] ユナイテッド公式サイトの取得に失敗 {e}")
-        return
-    part = text.split("LEAGUE RANKING", 1)[-1][:1500]
-    table = {}
-    for m in re.finditer(r"(\d+)\s*位\s*(.+?)\s+(\d+)\s*(?=\n|$)", part):
-        table[m.group(2).strip()] = (int(m.group(1)), int(m.group(3)))
-    for name, (rank, pts) in table.items():
+        print(f"[WARN] 順位: 女子Fリーグ公式サイトの取得に失敗 {e!r}")
+    try:
+        u = standings.united_standings(text_of(fetch("https://fukuiunited.co.jp/")))
+        if u:
+            STANDINGS["UNITED"] = u
+        else:
+            print("[WARN] ユナイテッド: 順位表が読み取れませんでした")
+    except Exception as e:
+        print(f"[WARN] ユナイテッド公式サイトの取得に失敗 {e!r}")
+
+
+def united_extra(next_game, preview):
+    table = STANDINGS.get("UNITED", {}).get("regular", {}).get("table", [])
+    for r in table:
+        name = r["team"]
         if "福井ユナイテッド" in name:
-            preview["my"]["rank"] = f"{rank}位(勝点{pts})"
+            preview["my"]["rank"] = f"{r['rank']}位(勝点{r['points']})"
         elif next_game["opponent"] in name or name in next_game["opponent"]:
-            preview["opp"]["rank"] = f"{rank}位(勝点{pts})"
-    if not table:
-        print("[WARN] ユナイテッド: 順位表が読み取れませんでした")
+            preview["opp"]["rank"] = f"{r['rank']}位(勝点{r['points']})"
 
 
 # ---------- 丸岡RUCK ----------
@@ -392,6 +410,29 @@ def ruck_extra(next_game, preview):
         if key in next_game["opponent"]:
             preview["opp_link"] = f"https://w-fleague.jp/club/{slug}/"
             break
+    # 女子Fリーグの全試合結果から計算した順位表で、両チームの順位・勝敗・直近の調子を入れる
+    st = STANDINGS.get("RAC")
+    if not st:
+        return
+    for side, name in (("my", standings.RUCK_NAME), ("opp", next_game["opponent"])):
+        part, row = standings.find_row(st, name)
+        if not row:
+            continue
+        # レギュラーシーズンは「4位(勝点20)」、ファイナルシーズンは「FS 2位(勝点6)」
+        label = "FS " if part == "final" else ""
+        preview[side]["rank"] = f"{label}{row['rank']}位(勝点{row['points']})"
+        preview[side]["record"] = row["record"]
+        preview[side]["form"] = row["form"]
+    # 前回対戦(今季、終わった試合でいちばん新しいもの)
+    if not preview.get("last_meeting"):
+        for m in reversed(WFL_MATCHES):
+            if m["hs"] is None or standings.RUCK_NAME not in (m["home"], m["away"]):
+                continue
+            other = m["away"] if m["home"] == standings.RUCK_NAME else m["home"]
+            if next_game["opponent"] in other or other in next_game["opponent"]:
+                gf, ga = (m["hs"], m["as"]) if m["home"] == standings.RUCK_NAME else (m["as"], m["hs"])
+                preview["last_meeting"] = f"{md(m['date'])} {mark(gf, ga)}{gf}-{ga}"
+                break
 
 
 # ---------- 展望文 ----------
@@ -452,6 +493,8 @@ def main():
     today = datetime.now(JST).strftime("%Y-%m-%d")
     previews = {}
 
+    load_standings()
+
     for team in ["BLOWINDS", "RAC", "UNITED"]:
         try:
             build_one(team, games, results, today, previews)
@@ -462,6 +505,17 @@ def main():
     with open(PREVIEWS_PATH, "w", encoding="utf-8") as f:
         json.dump(previews, f, ensure_ascii=False, indent=2)
     print(f"[展望] {len(previews)}試合分を書き出しました")
+
+    # 丸岡RUCK・ユナイテッドの順位表。読めなかったリーグは前回の内容を残す
+    if STANDINGS:
+        merged = load_json(STANDINGS_PATH, {})
+        now = datetime.now(timezone.utc).isoformat()
+        for k, v in STANDINGS.items():
+            v["updated_at"] = now
+            merged[k] = v
+        with open(STANDINGS_PATH, "w", encoding="utf-8") as f:
+            json.dump(merged, f, ensure_ascii=False, indent=2)
+        print(f"[順位] {', '.join(STANDINGS)} を書き出しました")
 
     # 選手の成績。読み取れなかったときは前回のファイルを残す
     try:

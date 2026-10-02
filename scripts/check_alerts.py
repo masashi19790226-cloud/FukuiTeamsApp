@@ -70,9 +70,21 @@ def is_old_title(title: str) -> bool:
     return bool(mentioned) and max(mentioned) < this_year
 
 
+# X(旧Twitter)の投稿。Googleアラートでは「○○ on X: "…"」「… / X」「… - X」の形の見出しになる
+X_POST = re.compile(r"\bon X\b|[/\-]\s*X\s*$|^X$")
+
+
+def is_personal_x_post(title: str) -> bool:
+    """個人のXの投稿か。チームの【公式】アカウントの投稿は残す。"""
+    t = title or ""
+    return bool(X_POST.search(t)) and "【公式】" not in t
+
+
 def is_good_news(title: str) -> bool:
-    """3チームのどれかがはっきり書かれていて、ノイズでも古い情報でもない記事だけ残す。"""
+    """3チームのどれかがはっきり書かれていて、ノイズでも古い情報でも個人のXの投稿でもない記事だけ残す。"""
     if not any(rx.search(title or "") for rx in TEAM_WORDS.values()):
+        return False
+    if is_personal_x_post(title):
         return False
     if NEWS_NOISE.search(title or ""):
         return False

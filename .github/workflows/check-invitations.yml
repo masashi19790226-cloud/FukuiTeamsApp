@@ -85,6 +85,8 @@ jobs:
           if [ -f data/players.json ]; then git add data/players.json; fi
           # ブローウィンズの試合情報ページ(初回に取得できなかったときはファイルが無いので、あるときだけ追加する)
           if [ -f data/game_lp.json ]; then git add data/game_lp.json; fi
+          # 丸岡RUCK・ユナイテッドの順位表(初回に取得できなかったときはファイルが無いので、あるときだけ追加する)
+          if [ -f data/standings.json ]; then git add data/standings.json; fi
           if git diff --cached --quiet; then
             echo "変更なし"
             exit 0

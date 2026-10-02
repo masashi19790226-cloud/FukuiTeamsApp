@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -78,12 +77,15 @@ import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.theme.Paper
 
 /** トピック画面の分類。 */
-// 並び順がそのまま絞り込みボタンの順になる(招待をニュースの左に置く)
+// 並び順がそのまま絞り込みボタンの順になる。
+// 以前は、どれにも当てはまらない記事がすべて入る「ニュース」があり、ほとんどの記事がそこに偏っていたので、
+// 中身(試合・グッズなど)で分けるようにした
 private enum class RadarCategory(val label: String) {
     INVITE("招待"),
-    NEWS("ニュース"),
+    GAME("試合"),
     TICKET("チケット"),
     EVENT("イベント"),
+    GOODS("グッズ"),
     OTHER("その他")
 }
 
@@ -93,15 +95,14 @@ private data class RadarItem(
     val category: RadarCategory,
     val fromInvitations: Boolean,
     /** 一面のニュース欄にも出ている記事(ニュースとして集めたもの)なら true */
-    val inNews: Boolean
+    val inNews: Boolean,
+    /** 同じ記事が別のサイトにも載っていた件数(この1件にまとめた数) */
+    val sameCount: Int = 0,
+    /** まとめた記事の引用元(例「au Webポータル」) */
+    val sameSources: List<String> = emptyList()
 ) {
-    /**
-     * この分類で絞り込んだときに出すか。
-     * 「ニュース」には、一面のニュース欄に出ている記事をすべて含める
-     * (チケット・イベントなどに分類した記事や、招待と同じ記事も「ニュース」で見られるように)。
-     */
-    fun matches(cat: RadarCategory?): Boolean =
-        cat == null || category == cat || (cat == RadarCategory.NEWS && inNews)
+    /** この分類で絞り込んだときに出すか(null は「すべて」)。 */
+    fun matches(cat: RadarCategory?): Boolean = cat == null || category == cat
 }
 
 // 見出し・本文抜粋に含まれる言葉で分類する(上から順に当てはめる)
@@ -119,14 +120,29 @@ private val NOT_INVITE_RE = Regex(
         "ファンクラブ.{0,20}招待券|招待券.{0,15}(利用方法|引換|ご利用)|ご招待券は不要"
 )
 
+/**
+ * 同じ記事かどうかを見分けるための見出しの頭。サイト名(「 - au Webポータル」「 | 福井新聞」など)や
+ * 空白・記号を除いた最初の20文字が同じなら、同じ記事とみなす。
+ */
+private fun sameArticleKey(alert: RemoteInvitationAlert): String {
+    val title = alert.title
+        .split(" - ", " | ", "｜", " – ").first()
+        .replace(Regex("[\\s\u3000、。・「」『』【】()（）!！?？…\\.,]"), "")
+    return alert.teamId + ":" + title.take(20)
+}
+
 /** 無料招待(観戦チケットが無料でもらえる情報)か。 */
 private fun isRealInvite(text: String): Boolean = !NOT_INVITE_RE.containsMatchIn(text) && INVITE_RE.containsMatchIn(text)
-private val TICKET_WORDS = listOf(
-    "チケット", "ticket", "TICKET", "前売", "先行販売", "先行抽選", "一般販売", "販売開始", "発売", "完売",
-    "当日券", "観戦券", "座席", "シーズンシート", "リセール", "Bリーグチケット"
+private val TICKET_RE = Regex(
+    "チケット|ticket|TICKET|前売|先行販売|先行抽選|一般販売|当日券|観戦券|座席|シーズンシート|リセール|立ち見"
 )
-private val EVENT_WORDS = listOf("イベント", "ファン", "感謝", "観戦会", "パブリックビューイング", "サイン会", "握手", "キャンペーン", "フェス", "祭", "体験", "教室")
-private val OTHER_WORDS = listOf("出演", "放送", "中継", "グッズ", "募集", "ボランティア", "スポンサー", "パートナー")
+// 試合の結果・お知らせ・試合の話題
+private val GAME_RE = Regex(
+    "勝|敗|引き分け|第\\d+節|開幕|戦[】」 ]|戦$|vs|VS|ＶＳ|試合|得点|ゴール|ハイライト|速報|プレーオフ|" +
+        "優勝|昇格|連勝|連敗|黒星|白星|スコア|MATCH|結果|GAME|Game|MVP|FINAL SCORE|PHOTO|フォト"
+)
+private val EVENT_RE = Regex("イベント|ファン|感謝|観戦会|パブリックビューイング|サイン会|握手|キャンペーン|フェス|祭|体験|教室|交流会")
+private val GOODS_RE = Regex("グッズ|販売|発売|ユニフォーム|ユニ|限定|メニュー|コラボ商品|ウォッチ|タオル|ストア")
 
 private fun classify(alert: RemoteInvitationAlert, fromInvitations: Boolean): RadarCategory {
     val text = "${alert.title} ${alert.snippet}"
@@ -135,10 +151,11 @@ private fun classify(alert: RemoteInvitationAlert, fromInvitations: Boolean): Ra
         // (公式ストアの¥0チケット・招待特設ページは、それ自体が招待の受付なので必ず「招待」)
         fromInvitations && alert.sourceLabel().let { it.contains("公式ストア") || it.contains("特設") } -> RadarCategory.INVITE
         isRealInvite(text) -> RadarCategory.INVITE
-        TICKET_WORDS.any { text.contains(it) } -> RadarCategory.TICKET
-        EVENT_WORDS.any { text.contains(it) } -> RadarCategory.EVENT
-        OTHER_WORDS.any { text.contains(it) } -> RadarCategory.OTHER
-        else -> RadarCategory.NEWS
+        TICKET_RE.containsMatchIn(text) -> RadarCategory.TICKET
+        GAME_RE.containsMatchIn(text) -> RadarCategory.GAME
+        EVENT_RE.containsMatchIn(text) -> RadarCategory.EVENT
+        GOODS_RE.containsMatchIn(text) -> RadarCategory.GOODS
+        else -> RadarCategory.OTHER
     }
 }
 
@@ -208,10 +225,18 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
         // (ニュースは自動更新の側で45日より前のものを除いている)
         .filterNot { !it.inNews && it.alert.isTooOld() }
     // 新しい順(日時が分からないものは最後)。並べ方は既存の sortedNewestFirst() と同じ
-    val sorted = allItems.sortedWith(
+    val sortedAll = allItems.sortedWith(
         compareByDescending<RadarItem> { it.alert.eventInstant() != null }
             .thenByDescending { it.alert.eventInstant() }
     )
+    // 同じ記事が別のサイトにも載っているもの(見出しの頭が同じ)は、いちばん新しい1件にまとめる
+    val sorted = sortedAll.groupBy { sameArticleKey(it.alert) }.values.map { group ->
+        val first = group.first()
+        first.copy(
+            sameCount = group.size - 1,
+            sameSources = group.drop(1).map { it.alert.sourceLabel() }.filter { it.isNotBlank() }.distinct()
+        )
+    }
     val teamItems = sorted.filter { selectedTeam == null || it.alert.teamId == selectedTeam?.name }
     val categoryItems = teamItems.filter { it.matches(selectedCategory) }
     // 招待は、旧・招待タブと同じ判定(isLikelyClosed)で受付中と過去に分ける
@@ -291,16 +316,22 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                     }
                 }
                 item {
-                    // 分類で絞り込み(横にスクロールできる)
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        item {
-                            CategoryChip("すべて ${teamItems.size}", selectedCategory == null) { selectedCategory = null }
-                        }
-                        items(RadarCategory.values().toList()) { cat ->
-                            val count = teamItems.count { it.matches(cat) }
-                            CategoryChip("${cat.label} $count", selectedCategory == cat) {
-                                selectedCategory = if (selectedCategory == cat) null else cat
-                                inviteTab = 0
+                    // 分類で絞り込み。ボタンは2行に分けて、横にスクロールしなくても全部見えるようにする
+                    val chips = listOf<RadarCategory?>(null) + RadarCategory.values().toList()
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        chips.chunked(4).forEach { line ->
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                line.forEach { cat ->
+                                    if (cat == null) {
+                                        CategoryChip("すべて ${teamItems.size}", selectedCategory == null) { selectedCategory = null }
+                                    } else {
+                                        val count = teamItems.count { it.matches(cat) }
+                                        CategoryChip("${cat.label} $count", selectedCategory == cat) {
+                                            selectedCategory = if (selectedCategory == cat) null else cat
+                                            inviteTab = 0
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -515,7 +546,12 @@ private fun RadarRow(
         }
         val details = listOf(
             alert.timeLabel().ifBlank { "日時不明" },
-            if (showClosedNote && item.fromInvitations && alert.isLikelyClosed()) "受付終了の可能性" else ""
+            if (showClosedNote && item.fromInvitations && alert.isLikelyClosed()) "受付終了の可能性" else "",
+            // 同じ記事が別のサイトにも載っていたら、その件数と引用元を添える
+            if (item.sameCount > 0) {
+                "同じ記事ほか${item.sameCount}件" +
+                    (item.sameSources.take(2).takeIf { it.isNotEmpty() }?.joinToString("・", prefix = "(", postfix = "など)") ?: "")
+            } else ""
         ).filter { it.isNotBlank() }.joinToString("・")
         Text(details, style = MaterialTheme.typography.bodySmall, color = InkSoft)
         if (inviteStatus != null) {
