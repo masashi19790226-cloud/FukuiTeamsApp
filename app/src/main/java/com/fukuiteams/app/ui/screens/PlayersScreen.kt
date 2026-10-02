@@ -61,6 +61,7 @@ import com.fukuiteams.app.data.ScorerRow
 import com.fukuiteams.app.data.StandingRow
 import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.TeamPlayers
+import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
@@ -103,7 +104,8 @@ private fun parseStat(stat: String): PlayerNumbers {
 fun PlayersScreen(onBack: (() -> Unit)? = null) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var selectedTeam by remember { mutableStateOf(Team.BLOWINDS) }
+    // ほかのタブで選んでいたチームで開く(「すべて」のときは直前に選んでいたチーム)
+    var selectedTeam by remember { mutableStateOf(TeamSelection.teamForSingle()) }
     var previews by remember { mutableStateOf<Map<String, GamePreview>?>(null) }
     var teamPlayers by remember { mutableStateOf<Map<String, TeamPlayers>>(emptyMap()) }
     // 並び順(背番号順・得点順・出場時間順・リバウンド順・アシスト順)
@@ -186,7 +188,12 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
         Column(modifier = Modifier.fillMaxSize()) {
         TeamSelectorRow(
             selectedTeam = selectedTeam,
-            onSelect = { t -> if (t != null) selectedTeam = t },
+            onSelect = { t ->
+                if (t != null) {
+                    selectedTeam = t
+                    TeamSelection.select(t)
+                }
+            },
             showAll = false,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
         )

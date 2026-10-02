@@ -13,6 +13,15 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月3日",
+        title = "タブを切り替えてもチームをそのままに",
+        items = listOf(
+            "一面・試合・選手・トピックで選んだチームが、ほかのタブに切り替えてもそのまま引き継がれるようにしました",
+            "試合・選手タブには「すべて」が無いため、一面・トピックで「すべて」を選んでいるときは、直前に選んでいたチームを表示します",
+            "一面から試合を開いたときは、試合・選手タブがその試合のチームになります(一面の「すべて」はそのままです)"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月2日",
         title = "丸岡RUCK・ユナイテッドの選手の得点",
         items = listOf(

@@ -115,6 +115,7 @@ import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isUpcoming
 import com.fukuiteams.app.model.Game
+import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -132,7 +133,8 @@ fun HomeScreen(
     // 「ニュースをもっと見る」:一面で選んでいるチーム(null = すべて)でトピックを開く
     onOpenRadar: (Team?) -> Unit = {}
 ) {
-    var selectedTeam by remember { mutableStateOf<Team?>(null) }
+    // 選んでいるチーム(null = すべて)。ほかのタブと共通なので、タブを切り替えても変わらない
+    val selectedTeam = TeamSelection.current
     var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
     var invitationsResult by remember { mutableStateOf<AlertsResult?>(null) }
     val pullToRefreshState = rememberPullToRefreshState()
@@ -201,7 +203,7 @@ fun HomeScreen(
         Column(modifier = Modifier.fillMaxSize()) {
         TeamSelectorRow(
             selectedTeam = selectedTeam,
-            onSelect = { t -> selectedTeam = if (t != null && t == selectedTeam) null else t },
+            onSelect = { t -> TeamSelection.select(if (t != null && t == selectedTeam) null else t) },
             showAll = true,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
         )

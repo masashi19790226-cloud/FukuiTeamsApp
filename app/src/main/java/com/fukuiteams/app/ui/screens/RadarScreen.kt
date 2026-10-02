@@ -63,6 +63,7 @@ import com.fukuiteams.app.data.eventInstant
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isTooOld
 import com.fukuiteams.app.data.timeLabel
+import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
@@ -179,9 +180,12 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
         RadarCategory.values().find { it.name.equals(initialCategory, ignoreCase = true) }
     }
     // 最初は3チームすべて(「すべて」)。一面などからチームを指定して開いたときは、そのチーム
-    var selectedTeam by remember {
-        mutableStateOf<Team?>(initialTeam?.let { id -> Team.values().find { it.name == id } })
+    // 選んでいるチーム(null = すべて)。ほかのタブと共通なので、タブを切り替えても変わらない。
+    // 一面などからチームを指定して開いたときは、そのチームにする
+    LaunchedEffect(initialTeam) {
+        initialTeam?.let { id -> Team.values().find { it.name == id } }?.let { TeamSelection.select(it) }
     }
+    val selectedTeam = TeamSelection.current
     var selectedCategory by remember { mutableStateOf(startCategory) }
     // 招待の中の切り替え(0 = 受付中、1 = 過去の招待)
     var inviteTab by remember { mutableStateOf(0) }
@@ -274,7 +278,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
             Column(modifier = Modifier.fillMaxSize()) {
             TeamSelectorRow(
                 selectedTeam = selectedTeam,
-                onSelect = { t -> selectedTeam = t },
+                onSelect = { t -> TeamSelection.select(t) },
                 showAll = true,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
             )

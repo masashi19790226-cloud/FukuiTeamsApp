@@ -117,6 +117,7 @@ import com.fukuiteams.app.data.recordedOutcome
 import com.fukuiteams.app.data.gameLogDataStore
 import androidx.compose.runtime.collectAsState
 import androidx.datastore.preferences.core.Preferences
+import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -143,8 +144,13 @@ fun GameDetailScreen(
     onOpenPlayers: () -> Unit = {}
 ) {
     val allGames = GamesRepository.games
-    val initialTeam = allGames.firstOrNull { it.id == gameId }?.team ?: Team.BLOWINDS
+    // 試合を指定して開いたときはその試合のチーム、それ以外はほかのタブで選んでいたチーム
+    val openedGameTeam = allGames.firstOrNull { it.id == gameId }?.team
+    val initialTeam = openedGameTeam ?: TeamSelection.teamForSingle()
     var selectedTeam by remember { mutableStateOf(initialTeam) }
+    LaunchedEffect(openedGameTeam) {
+        openedGameTeam?.let { TeamSelection.focus(it) }
+    }
 
     val allTeamGames = remember(selectedTeam, allGames) {
         allGames.filter { it.team == selectedTeam }.sortedBy { it.sortKey }
@@ -248,7 +254,12 @@ fun GameDetailScreen(
         Column(modifier = Modifier.fillMaxSize()) {
         TeamSelectorRow(
             selectedTeam = selectedTeam,
-            onSelect = { t -> if (t != null) selectedTeam = t },
+            onSelect = { t ->
+                if (t != null) {
+                    selectedTeam = t
+                    TeamSelection.select(t)
+                }
+            },
             showAll = false,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
         )
