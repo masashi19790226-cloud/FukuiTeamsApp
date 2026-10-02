@@ -251,7 +251,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-02T14:33:10.863336+00:00"
+    "updated_at": "2026-10-02T14:51:21.834723+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -302,6 +302,1567 @@
         }
       ]
     },
-    "updated_at": "2026-10-02T14:33:10.863336+00:00"
+    "match_cache": {
+      "6371": {
+        "my": 1,
+        "opp": 0,
+        "goals": [
+          "杉浦 秀謙"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "眞古 大輔",
+            "number": "5",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "今道 恭",
+            "number": "17",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "北脇 健慈",
+            "number": "11",
+            "position": "FW"
+          },
+          {
+            "name": "杉浦 秀謙",
+            "number": "13",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "和泉 颯",
+            "number": "21",
+            "position": "DF"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "和田 俊星",
+            "number": "15",
+            "position": "FW"
+          }
+        ]
+      },
+      "6372": {
+        "my": 1,
+        "opp": 0,
+        "goals": [
+          "鬼京 大翔"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "眞古 大輔",
+            "number": "5",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "今道 恭",
+            "number": "17",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "杉浦 秀謙",
+            "number": "13",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "和泉 颯",
+            "number": "21",
+            "position": "GK"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "和田 俊星",
+            "number": "15",
+            "position": "FW"
+          },
+          {
+            "name": "杉本 大雅",
+            "number": "16",
+            "position": "FW"
+          }
+        ]
+      },
+      "6373": {
+        "my": 3,
+        "opp": 2,
+        "goals": [
+          "立山 大祐",
+          "立山 大祐",
+          "杉浦 秀謙"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "眞古 大輔",
+            "number": "5",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "今道 恭",
+            "number": "17",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "杉浦 秀謙",
+            "number": "13",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "和泉 颯",
+            "number": "21",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "和田 俊星",
+            "number": "15",
+            "position": "FW"
+          },
+          {
+            "name": "杉本 大雅",
+            "number": "16",
+            "position": "FW"
+          }
+        ]
+      },
+      "6374": {
+        "my": 4,
+        "opp": 0,
+        "goals": [
+          "山口 哲平",
+          "山口 哲平",
+          "和田 俊星",
+          "若月 尋"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "中島 修斗",
+            "number": "20",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "和田 俊星",
+            "number": "15",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "和泉 颯",
+            "number": "21",
+            "position": "GK"
+          },
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "眞古 大輔",
+            "number": "5",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          }
+        ]
+      },
+      "6375": {
+        "my": 0,
+        "opp": 0,
+        "goals": [],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "中島 修斗",
+            "number": "20",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "和泉 颯",
+            "number": "21",
+            "position": "GK"
+          },
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "眞古 大輔",
+            "number": "5",
+            "position": "DF"
+          }
+        ]
+      },
+      "6376": {
+        "my": 2,
+        "opp": 2,
+        "goals": [
+          "加納 大",
+          "中島 修斗"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "中島 修斗",
+            "number": "20",
+            "position": "DF"
+          },
+          {
+            "name": "辻岡 招真",
+            "number": "22",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "加納 大",
+            "number": "23",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "和泉 颯",
+            "number": "21",
+            "position": "GK"
+          },
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "眞古 大輔",
+            "number": "5",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          }
+        ]
+      },
+      "6377": {
+        "my": 2,
+        "opp": 0,
+        "goals": [
+          "清水 雅仁",
+          "廣岡 睦樹"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "中島 修斗",
+            "number": "20",
+            "position": "DF"
+          },
+          {
+            "name": "辻岡 招真",
+            "number": "22",
+            "position": "DF"
+          },
+          {
+            "name": "前田 稜太",
+            "number": "25",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "加納 大",
+            "number": "23",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "眞古 大輔",
+            "number": "5",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "北脇 健慈",
+            "number": "11",
+            "position": "FW"
+          },
+          {
+            "name": "和田 俊星",
+            "number": "15",
+            "position": "FW"
+          },
+          {
+            "name": "杉本 大雅",
+            "number": "16",
+            "position": "FW"
+          }
+        ]
+      },
+      "6378": {
+        "my": 2,
+        "opp": 0,
+        "goals": [
+          "若月 尋",
+          "野村 魁"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "中島 修斗",
+            "number": "20",
+            "position": "DF"
+          },
+          {
+            "name": "辻岡 招真",
+            "number": "22",
+            "position": "DF"
+          },
+          {
+            "name": "前田 稜太",
+            "number": "25",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "杉本 大雅",
+            "number": "16",
+            "position": "FW"
+          },
+          {
+            "name": "加納 大",
+            "number": "23",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "眞古 大輔",
+            "number": "5",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "菅野 雅俊",
+            "number": "27",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "萩原 正太郎",
+            "number": "26",
+            "position": "MF"
+          },
+          {
+            "name": "北脇 健慈",
+            "number": "11",
+            "position": "FW"
+          }
+        ]
+      },
+      "6379": {
+        "my": 3,
+        "opp": 0,
+        "goals": [
+          "加納 大",
+          "野村 魁",
+          "前田 稜太"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "中島 修斗",
+            "number": "20",
+            "position": "DF"
+          },
+          {
+            "name": "辻岡 招真",
+            "number": "22",
+            "position": "DF"
+          },
+          {
+            "name": "前田 稜太",
+            "number": "25",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "杉本 大雅",
+            "number": "16",
+            "position": "FW"
+          },
+          {
+            "name": "加納 大",
+            "number": "23",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "和泉 颯",
+            "number": "21",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "眞古 大輔",
+            "number": "5",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "竹葉 大樹",
+            "number": "24",
+            "position": "DF"
+          },
+          {
+            "name": "菅野 雅俊",
+            "number": "27",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "北脇 健慈",
+            "number": "11",
+            "position": "FW"
+          }
+        ]
+      },
+      "6380": {
+        "my": 2,
+        "opp": 0,
+        "goals": [
+          "杉浦 秀謙",
+          "和田 俊星"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "中島 修斗",
+            "number": "20",
+            "position": "DF"
+          },
+          {
+            "name": "辻岡 招真",
+            "number": "22",
+            "position": "DF"
+          },
+          {
+            "name": "前田 稜太",
+            "number": "25",
+            "position": "DF"
+          },
+          {
+            "name": "廣岡 睦樹",
+            "number": "4",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "杉浦 秀謙",
+            "number": "13",
+            "position": "FW"
+          },
+          {
+            "name": "加納 大",
+            "number": "23",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "今道 恭",
+            "number": "17",
+            "position": "MF"
+          },
+          {
+            "name": "和田 俊星",
+            "number": "15",
+            "position": "FW"
+          }
+        ]
+      },
+      "6381": {
+        "my": 4,
+        "opp": 0,
+        "goals": [
+          "杉浦 秀謙",
+          "野村 魁",
+          "杉浦 秀謙",
+          "北脇 健慈"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "中島 修斗",
+            "number": "20",
+            "position": "DF"
+          },
+          {
+            "name": "前田 稜太",
+            "number": "25",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "杉浦 秀謙",
+            "number": "13",
+            "position": "FW"
+          },
+          {
+            "name": "加納 大",
+            "number": "23",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "今道 恭",
+            "number": "17",
+            "position": "MF"
+          },
+          {
+            "name": "萩原 正太郎",
+            "number": "26",
+            "position": "MF"
+          },
+          {
+            "name": "北脇 健慈",
+            "number": "11",
+            "position": "FW"
+          },
+          {
+            "name": "和田 俊星",
+            "number": "15",
+            "position": "FW"
+          },
+          {
+            "name": "杉本 大雅",
+            "number": "16",
+            "position": "FW"
+          }
+        ]
+      },
+      "6382": {
+        "my": 2,
+        "opp": 1,
+        "goals": [
+          "野村 魁",
+          "加納 大"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "辻岡 招真",
+            "number": "22",
+            "position": "DF"
+          },
+          {
+            "name": "前田 稜太",
+            "number": "25",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "若月 尋",
+            "number": "19",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "杉浦 秀謙",
+            "number": "13",
+            "position": "FW"
+          },
+          {
+            "name": "加納 大",
+            "number": "23",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "中島 修斗",
+            "number": "20",
+            "position": "DF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "今道 恭",
+            "number": "17",
+            "position": "MF"
+          },
+          {
+            "name": "萩原 正太郎",
+            "number": "26",
+            "position": "MF"
+          },
+          {
+            "name": "北脇 健慈",
+            "number": "11",
+            "position": "FW"
+          },
+          {
+            "name": "和田 俊星",
+            "number": "15",
+            "position": "FW"
+          }
+        ]
+      },
+      "6383": {
+        "my": 1,
+        "opp": 2,
+        "goals": [
+          "和田 俊星"
+        ],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "清水 雅仁",
+            "number": "2",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "辻岡 招真",
+            "number": "22",
+            "position": "DF"
+          },
+          {
+            "name": "前田 稜太",
+            "number": "25",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "杉浦 秀謙",
+            "number": "13",
+            "position": "FW"
+          },
+          {
+            "name": "加納 大",
+            "number": "23",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "今道 恭",
+            "number": "17",
+            "position": "MF"
+          },
+          {
+            "name": "萩原 正太郎",
+            "number": "26",
+            "position": "MF"
+          },
+          {
+            "name": "北脇 健慈",
+            "number": "11",
+            "position": "FW"
+          },
+          {
+            "name": "和田 俊星",
+            "number": "15",
+            "position": "FW"
+          },
+          {
+            "name": "杉本 大雅",
+            "number": "16",
+            "position": "FW"
+          }
+        ]
+      }
+    },
+    "scorers": {
+      "label": "チーム内の得点",
+      "note": "ユナイテッド公式の試合結果(北信越リーグ13試合)から集計",
+      "source_url": "https://fukuiunited.co.jp/match/",
+      "games": 13,
+      "rows": [
+        {
+          "name": "杉浦 秀謙",
+          "number": "13",
+          "position": "FW",
+          "goals": 5,
+          "starts": 7,
+          "bench": 0,
+          "team": "福井ユナイテッドFC",
+          "rank": 1
+        },
+        {
+          "name": "野村 魁",
+          "number": "7",
+          "position": "FW",
+          "goals": 4,
+          "starts": 13,
+          "bench": 0,
+          "team": "福井ユナイテッドFC",
+          "rank": 2
+        },
+        {
+          "name": "加納 大",
+          "number": "23",
+          "position": "FW",
+          "goals": 3,
+          "starts": 8,
+          "bench": 0,
+          "team": "福井ユナイテッドFC",
+          "rank": 3
+        },
+        {
+          "name": "和田 俊星",
+          "number": "15",
+          "position": "FW",
+          "goals": 3,
+          "starts": 1,
+          "bench": 8,
+          "team": "福井ユナイテッドFC",
+          "rank": 3
+        },
+        {
+          "name": "若月 尋",
+          "number": "19",
+          "position": "MF",
+          "goals": 2,
+          "starts": 11,
+          "bench": 0,
+          "team": "福井ユナイテッドFC",
+          "rank": 5
+        },
+        {
+          "name": "立山 大祐",
+          "number": "6",
+          "position": "MF",
+          "goals": 2,
+          "starts": 6,
+          "bench": 7,
+          "team": "福井ユナイテッドFC",
+          "rank": 5
+        },
+        {
+          "name": "山口 哲平",
+          "number": "8",
+          "position": "MF",
+          "goals": 2,
+          "starts": 5,
+          "bench": 4,
+          "team": "福井ユナイテッドFC",
+          "rank": 5
+        },
+        {
+          "name": "鬼京 大翔",
+          "number": "18",
+          "position": "MF",
+          "goals": 1,
+          "starts": 13,
+          "bench": 0,
+          "team": "福井ユナイテッドFC",
+          "rank": 8
+        },
+        {
+          "name": "清水 雅仁",
+          "number": "2",
+          "position": "DF",
+          "goals": 1,
+          "starts": 10,
+          "bench": 1,
+          "team": "福井ユナイテッドFC",
+          "rank": 8
+        },
+        {
+          "name": "廣岡 睦樹",
+          "number": "4",
+          "position": "MF",
+          "goals": 1,
+          "starts": 10,
+          "bench": 0,
+          "team": "福井ユナイテッドFC",
+          "rank": 8
+        },
+        {
+          "name": "中島 修斗",
+          "number": "20",
+          "position": "DF",
+          "goals": 1,
+          "starts": 8,
+          "bench": 1,
+          "team": "福井ユナイテッドFC",
+          "rank": 8
+        },
+        {
+          "name": "前田 稜太",
+          "number": "25",
+          "position": "DF",
+          "goals": 1,
+          "starts": 7,
+          "bench": 0,
+          "team": "福井ユナイテッドFC",
+          "rank": 8
+        },
+        {
+          "name": "北脇 健慈",
+          "number": "11",
+          "position": "FW",
+          "goals": 1,
+          "starts": 1,
+          "bench": 6,
+          "team": "福井ユナイテッドFC",
+          "rank": 8
+        },
+        {
+          "name": "杉本 拓也",
+          "number": "1",
+          "position": "GK",
+          "goals": 0,
+          "starts": 13,
+          "bench": 0,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "辻岡 招真",
+          "number": "22",
+          "position": "DF",
+          "goals": 0,
+          "starts": 7,
+          "bench": 0,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "中村 晃大",
+          "number": "10",
+          "position": "MF",
+          "goals": 0,
+          "starts": 6,
+          "bench": 4,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "中山 和紀",
+          "number": "3",
+          "position": "DF",
+          "goals": 0,
+          "starts": 5,
+          "bench": 7,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "井出 龍志",
+          "number": "14",
+          "position": "DF",
+          "goals": 0,
+          "starts": 4,
+          "bench": 7,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "眞古 大輔",
+          "number": "5",
+          "position": "DF",
+          "goals": 0,
+          "starts": 3,
+          "bench": 6,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "今道 恭",
+          "number": "17",
+          "position": "MF",
+          "goals": 0,
+          "starts": 3,
+          "bench": 4,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "杉本 大雅",
+          "number": "16",
+          "position": "FW",
+          "goals": 0,
+          "starts": 2,
+          "bench": 5,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "岩島 巧",
+          "number": "31",
+          "position": "GK",
+          "goals": 0,
+          "starts": 0,
+          "bench": 10,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "和泉 颯",
+          "number": "21",
+          "position": "GK",
+          "goals": 0,
+          "starts": 0,
+          "bench": 7,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "萩原 正太郎",
+          "number": "26",
+          "position": "MF",
+          "goals": 0,
+          "starts": 0,
+          "bench": 4,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "菅野 雅俊",
+          "number": "27",
+          "position": "DF",
+          "goals": 0,
+          "starts": 0,
+          "bench": 2,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "竹葉 大樹",
+          "number": "24",
+          "position": "DF",
+          "goals": 0,
+          "starts": 0,
+          "bench": 1,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        }
+      ]
+    },
+    "updated_at": "2026-10-02T14:51:21.834723+00:00"
   }
 }
