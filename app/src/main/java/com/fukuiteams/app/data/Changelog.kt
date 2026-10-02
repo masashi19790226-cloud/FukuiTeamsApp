@@ -14,6 +14,16 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月2日",
+        title = "丸岡RUCK・ユナイテッドの選手の得点",
+        items = listOf(
+            "選手タブの丸岡RUCKに、選手ごとの得点・シュート数・出場試合数を表示するようにしました(女子Fリーグ公式の得点ランキングから。次の対戦相手の得点者も表示)",
+            "選手タブのユナイテッドに、選手ごとの得点・先発・ベンチ入りの回数を表示するようにしました(ユナイテッド公式の試合結果から集計)",
+            "一面の「次の試合」の「相手の注目選手」に、丸岡RUCKの相手チームの得点の多い選手が出るようにしました",
+            "ユナイテッドの「データで見る展望」に、チーム得点王を書き添えるようにしました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月2日",
         title = "トピックの整理・丸岡RUCKとユナイテッドの順位",
         items = listOf(
             "トピックの分類を「招待・試合・チケット・イベント・グッズ・その他」にしました(何でも入っていた「ニュース」をやめ、中身で分けるようにしました)",

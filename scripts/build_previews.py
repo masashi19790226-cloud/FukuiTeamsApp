@@ -15,7 +15,8 @@
 - 3チーム共通 : data/games.json と data/results.json(福井側の成績・直近・前回対戦)
 - ブローウィンズ: Bリーグ公式サイトのクラブページ(両チームの成績・順位・直近、相手のクラブリーダー)
 - ユナイテッド : 公式サイトトップの北信越リーグ順位表
-- 丸岡RUCK      : 女子Fリーグの相手クラブページへのリンクのみ(順位表などはページ内で後から読み込まれるため取れない)
+- ユナイテッド : 選手の得点は公式サイトの試合結果ページから集計(standings.py)
+- 丸岡RUCK      : 女子Fリーグ公式の試合結果から計算した順位表と、公式の得点ランキング(standings.py)
 """
 
 import html as htmllib
@@ -61,6 +62,18 @@ def fetch(url: str) -> str:
         charset = res.headers.get_content_charset() or "utf-8"
     time.sleep(1)
     return raw.decode(charset, errors="replace")
+
+
+def post_json(url: str, body: dict):
+    """JSONを送ってJSONを受け取る(ユナイテッド公式サイトの試合一覧の読み込みと同じ方法)。"""
+    req = urllib.request.Request(
+        url, data=json.dumps(body).encode("utf-8"), method="POST",
+        headers={"User-Agent": UA, "Accept-Language": "ja", "Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=25) as res:
+        raw = res.read()
+    time.sleep(1)
+    return json.loads(raw.decode("utf-8", errors="replace"))
 
 
 def text_of(fragment: str) -> str:
@@ -391,6 +404,40 @@ def load_standings():
             print("[WARN] ユナイテッド: 順位表が読み取れませんでした")
     except Exception as e:
         print(f"[WARN] ユナイテッド公式サイトの取得に失敗 {e!r}")
+    # 選手の得点。読めなかったときは前回の内容を残す(main で standings.json にまとめるときに前回分を使う)
+    old = load_json(STANDINGS_PATH, {})
+    if "RAC" in STANDINGS:
+        try:
+            sc = standings.ruck_scorers(fetch)
+            if sc:
+                STANDINGS["RAC"]["scorers"] = sc
+            elif old.get("RAC", {}).get("scorers"):
+                STANDINGS["RAC"]["scorers"] = old["RAC"]["scorers"]
+        except Exception as e:
+            print(f"[WARN] 得点: 女子Fリーグの得点ランキングの取得に失敗 {e!r}")
+            if old.get("RAC", {}).get("scorers"):
+                STANDINGS["RAC"]["scorers"] = old["RAC"]["scorers"]
+    if "UNITED" in STANDINGS:
+        old_u = old.get("UNITED", {})
+        try:
+            sc, cache = standings.united_scorers(fetch, post_json, old_u.get("match_cache", {}))
+            STANDINGS["UNITED"]["match_cache"] = cache
+            if sc:
+                STANDINGS["UNITED"]["scorers"] = sc
+            elif old_u.get("scorers"):
+                STANDINGS["UNITED"]["scorers"] = old_u["scorers"]
+        except Exception as e:
+            print(f"[WARN] 得点: ユナイテッドの試合結果の取得に失敗 {e!r}")
+            for k in ("scorers", "match_cache"):
+                if old_u.get(k):
+                    STANDINGS["UNITED"][k] = old_u[k]
+
+
+def team_scorers(team_key, name, limit=3):
+    """得点の一覧から、名前にその文字が入っているチームの得点者を多い順に。"""
+    rows = STANDINGS.get(team_key, {}).get("scorers", {}).get("rows", [])
+    hit = [r for r in rows if r.get("goals", 0) > 0 and name and (name in r["team"] or r["team"] in name)]
+    return sorted(hit, key=lambda r: -r["goals"])[:limit]
 
 
 def united_extra(next_game, preview):
@@ -433,6 +480,15 @@ def ruck_extra(next_game, preview):
                 gf, ga = (m["hs"], m["as"]) if m["home"] == standings.RUCK_NAME else (m["as"], m["hs"])
                 preview["last_meeting"] = f"{md(m['date'])} {mark(gf, ga)}{gf}-{ga}"
                 break
+    # 相手の注目選手 = 相手チームで得点の多い選手(女子Fリーグ公式の得点ランキングから)
+    top = team_scorers("RAC", next_game["opponent"])
+    if top:
+        preview["key_players"] = [
+            {"number": "", "name": r["name"], "position": "",
+             "stat": f"今季{r['goals']}得点(リーグ{r['rank']}位)・シュート{r['shots']}本"}
+            for r in top
+        ]
+        preview["players_note"] = "女子Fリーグ公式の得点ランキングから"
 
 
 # ---------- 展望文 ----------
@@ -454,7 +510,12 @@ def build_summary(team, next_game, p):
         parts.append("今季初対戦。")  # ブローウィンズは今季の全試合の結果がそろっているので言い切れる
     if p.get("key_players"):
         k = p["key_players"][0]
-        parts.append(f"{them}は#{k['number']} {k['name']}({k['stat']})に注意。")
+        no = f"#{k['number']} " if k.get("number") else ""
+        parts.append(f"{them}は{no}{k['name']}({re.sub(r'[(（].*?[)）]', '', k['stat'].split('・')[0])})に注意。")
+    if team == "UNITED":
+        top = team_scorers("UNITED", "福井ユナイテッド", limit=1)
+        if top:
+            parts.append(f"{me}のチーム得点王は{top[0]['name']}({top[0]['goals']}得点)。")
     return "".join(parts)
 
 

@@ -11,7 +11,7 @@
 
 import html as htmllib
 import re
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 WFL_TOP = "https://w-fleague.jp/"
 RUCK_NAME = "福井丸岡ラック"
@@ -141,3 +141,157 @@ def united_standings(text: str):
         "note": "ユナイテッド公式サイトの順位表(順位・勝点のみ)" + (f"・{asof.group(1)}" if asof else ""),
         "regular": {"label": "順位表", "table": table},
     }
+
+
+# ---------- 選手の得点 ----------
+
+WFL_GOALRANK = "https://w-fleague.jp/score/goalrank.html"
+UNITED_SITE = "https://fukuiunited.co.jp"
+UNITED_NAME = "福井ユナイテッドFC"
+
+
+def _num(s):
+    m = re.search(r"-?\d+", s or "")
+    return int(m.group(0)) if m else 0
+
+
+def ruck_scorers(fetch):
+    """女子Fリーグ公式の「個人ランキング(ゴール)」。リーグ全体の得点者(1点以上)の一覧。
+    ページの表は後から読み込まれる作りなので、ページ内に書かれている読み込み先(tid=今季の番号)を見つけて直接読む。
+    ファイナルシーズンに入ると公式側の番号が変わるので、毎回ページから探す。"""
+    page = fetch(WFL_GOALRANK)
+    m = re.search(r'(/modules/php/FlGoalRanking[\w]*\.php)["\'].*?tid=(\d+)', page, flags=re.S)
+    if not m:
+        print("[WARN] 得点: 女子Fリーグの得点ランキングの読み込み先が見つかりません")
+        return None
+    body = fetch(f"https://w-fleague.jp{m.group(1)}?tid={m.group(2)}&rn=500")
+    body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
+    rows = []
+    for tr in re.findall(r"<tr>(.*?)</tr>", body, flags=re.S):
+        tds = [_text(x) for x in re.findall(r"<td[^>]*>(.*?)</td>", tr, flags=re.S)]
+        if len(tds) < 8 or not tds[0].isdigit():
+            continue
+        rows.append({
+            "rank": int(tds[0]), "name": re.sub(r"[\s　]+", " ", tds[1]).strip(), "team": tds[2],
+            "goals": _num(tds[3]), "pk": _num(tds[4]) + _num(tds[5]), "shots": _num(tds[6]), "games": _num(tds[7]),
+        })
+    print(f"[得点] 女子Fリーグ: 得点者{len(rows)}人(丸岡{sum(1 for r in rows if RUCK_NAME in r['team'])}人)")
+    if not rows:
+        return None
+    return {
+        "label": "得点ランキング",
+        "note": "女子Fリーグ公式の個人ランキング(1点以上の選手)",
+        "source_url": WFL_GOALRANK,
+        "rows": rows,
+    }
+
+
+def parse_united_result(page: str):
+    """ユナイテッド公式の試合結果ページ1つ分。ユナイテッド側の得点者・先発・サブ(ベンチ入り)。
+    スコア・得点者・メンバー表は、どれもユナイテッドが左(1つめ)に並ぶ作り。念のためチーム名で左右を確かめる。"""
+    team_block = re.search(r'match-result-score__team">(.*?)</ul>', page, flags=re.S)
+    num_block = re.search(r'match-result-score__number">(.*?)</ul>', page, flags=re.S)
+    if not (team_block and num_block):
+        return None
+    teams = [_text(x) for x in re.findall(r"<p>(.*?)</p>", team_block.group(1), flags=re.S)]
+    nums = [int(x) for x in re.findall(r"<li>\s*(\d+)\s*</li>", num_block.group(1))]
+    if UNITED_NAME not in teams or len(nums) != 2:
+        return None
+    ui = teams.index(UNITED_NAME)
+    goals = []
+    gb = re.search(r'class="match-result-goal">.*?<ul>(.*?)</ul>', page, flags=re.S)
+    if gb:
+        sides = re.split(r"<li>", gb.group(1))[1:]
+        if len(sides) > ui:
+            goals = [_text(x) for x in re.findall(r"<span>(.*?)</span>", sides[ui], flags=re.S)]
+    # 得点者の数がスコアと合わないとき(オウンゴールの書き方の違いなど)は、そのまま使う(数え直さない)
+    members = {"start": [], "sub": []}
+    for sec in page.split('class="match-main-data-menber"')[1:]:
+        kind = "start" if "STARTING" in sec[:300] else ("sub" if "SUBSTITUTE" in sec[:300] else None)
+        if not kind:
+            continue
+        uls = re.findall(r"<ul>(.*?)</ul>", sec.split('class="match-main-data-menber"')[0], flags=re.S)
+        if len(uls) <= ui:
+            continue
+        for li in re.findall(r"<li>(.*?)</li>", uls[ui], flags=re.S):
+            name = re.search(r'class="name">(.*?)</p>', li, flags=re.S)
+            no = re.search(r'class="number"><span>(.*?)</span><strong>(.*?)</strong>', li, flags=re.S)
+            if name:
+                members[kind].append({"name": _text(name.group(1)), "number": _text(no.group(1)) if no else "",
+                                      "position": _text(no.group(2)) if no else ""})
+    return {"my": nums[ui], "opp": nums[1 - ui], "goals": goals, **members}
+
+
+def united_scorers(fetch, post_json, cache):
+    """ユナイテッドの今季の北信越リーグの試合結果ページを全部読み、選手ごとの得点・先発・ベンチ入りを数える。
+    終わった試合の結果ページは変わらないので、一度読んだ試合は cache(standings.json に保存)から使う。"""
+    # 試合開始時刻は日本時間なので、日本時間で比べる(GitHub Actions の時計は世界標準時)
+    now = datetime.now(timezone(timedelta(hours=9))).replace(tzinfo=None)
+    year = now.year
+    pt = post_json(f"{UNITED_SITE}/system/async/async.php",
+                   {"className": "PostTypes", "method": "get", "slug": ["match"], "post_type_options": True})
+    ptid = pt["data"][0]["post_type_id"]
+    res = post_json(f"{UNITED_SITE}/system/async/async.php",
+                    {"className": "MatchInfo", "method": "get", "post_type_id": [ptid], "category": "",
+                     "orderby": [{"column": "kickoff", "order": "asc"}], "offset": 0, "limit": 300})
+    games = []
+    for g in res.get("data", []):
+        title, ko = g.get("title", ""), g.get("kickoff", "")
+        if "北信越フットボールリーグ" not in title or not ko.startswith(str(year)):
+            continue
+        try:
+            kt = datetime.strptime(ko, "%Y/%m/%d %H:%M")
+        except ValueError:
+            continue
+        if kt + timedelta(hours=3) > now:  # まだ終わっていない試合
+            continue
+        games.append((str(g["id"]), title))
+    new_cache = {}
+    for gid, title in games:
+        if gid in cache:
+            new_cache[gid] = cache[gid]
+            continue
+        try:
+            r = parse_united_result(fetch(f"{UNITED_SITE}/match/result.php?id={gid}"))
+        except Exception as e:
+            print(f"[WARN] 得点: ユナイテッド {title} の結果ページの取得に失敗 {e!r}")
+            continue
+        if r:
+            new_cache[gid] = r
+    players = {}
+
+    def pl(m):
+        p = players.setdefault(m["name"], {"name": m["name"], "number": "", "position": "",
+                                            "goals": 0, "starts": 0, "bench": 0})
+        if m.get("number"):
+            p["number"], p["position"] = m["number"], m.get("position", "")
+        return p
+
+    for gid, _ in games:  # 古い試合から順に(背番号は新しい試合のものが残る)
+        r = new_cache.get(gid)
+        if not r:
+            continue
+        for m in r["start"]:
+            pl(m)["starts"] += 1
+        for m in r["sub"]:
+            pl(m)["bench"] += 1
+        for name in r["goals"]:
+            pl({"name": name})["goals"] += 1
+    rows = sorted(players.values(), key=lambda p: (-p["goals"], -p["starts"], -p["bench"], p["name"]))
+    for p in rows:
+        p["team"] = UNITED_NAME
+    rank = 0
+    for i, p in enumerate(rows):
+        if p["goals"] > 0 and (i == 0 or rows[i - 1]["goals"] != p["goals"]):
+            rank = i + 1
+        p["rank"] = rank if p["goals"] > 0 else 0
+    print(f"[得点] ユナイテッド: 今季{len(new_cache)}試合・選手{len(rows)}人・得点{sum(p['goals'] for p in rows)}")
+    if not rows:
+        return None, new_cache
+    return {
+        "label": "チーム内の得点",
+        "note": f"ユナイテッド公式の試合結果(北信越リーグ{len(new_cache)}試合)から集計",
+        "source_url": f"{UNITED_SITE}/match/",
+        "games": len(new_cache),
+        "rows": rows,
+    }, new_cache

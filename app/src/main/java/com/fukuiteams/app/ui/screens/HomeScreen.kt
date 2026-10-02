@@ -884,7 +884,8 @@ private fun PreviewTable(preview: GamePreview) {
 private fun KeyPlayerRow(player: KeyPlayer) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.padding(vertical = 2.dp)) {
-        Headline("#${player.number}", fontSize = 20, modifier = Modifier.width(52.dp))
+        // 丸岡RUCKの相手の得点者は背番号が分からないので「-」
+        Headline(if (player.number.isNotBlank()) "#${player.number}" else "#-", fontSize = 20, modifier = Modifier.width(52.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(player.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold,
                 maxLines = 1, overflow = TextOverflow.Ellipsis)

@@ -55,7 +55,9 @@ import com.fukuiteams.app.data.KeyPlayer
 import com.fukuiteams.app.data.BLOWINDS_OPP_KEY
 import com.fukuiteams.app.data.PlayerStats
 import com.fukuiteams.app.data.PlayersRepository
+import com.fukuiteams.app.data.LeagueScorers
 import com.fukuiteams.app.data.LeagueStandings
+import com.fukuiteams.app.data.ScorerRow
 import com.fukuiteams.app.data.StandingRow
 import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.TeamPlayers
@@ -243,8 +245,22 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             } else {
                 val st = leagueStandings[selectedTeam.name]
                 if (selectedTeam != Team.BLOWINDS && st != null) {
-                    // 丸岡RUCK・ユナイテッドは選手の成績が公式に公開されていないので、リーグの順位表を出す
-                    SectionLabel("${st.league}の順位", modifier = Modifier.onGloballyPositioned { marks.own = it })
+                    // 丸岡RUCK・ユナイテッドは、選手の得点(取れたとき)とリーグの順位表を出す
+                    val scorers = st.scorers
+                    if (scorers != null) {
+                        SectionLabel("${selectedTeam.displayName}の得点", modifier = Modifier.onGloballyPositioned { marks.own = it })
+                        ScorersSection(
+                            scorers = scorers,
+                            rows = scorers.rows.filter { it.team.contains(teamWord(selectedTeam)) },
+                            team = selectedTeam,
+                            updatedAt = st.updatedAt,
+                            emptyMessage = "まだ得点した選手はいません。"
+                        )
+                    }
+                    SectionLabel(
+                        "${st.league}の順位",
+                        modifier = if (scorers == null) Modifier.onGloballyPositioned { marks.own = it } else Modifier
+                    )
                     StandingsSection(
                         standings = st,
                         ownTeam = selectedTeam,
@@ -278,8 +294,18 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             } else {
                 null
             }
+            // 丸岡RUCKは、相手チームの得点者(女子Fリーグ公式の得点ランキングから)を表で出す
+            val oppScorers = if (selectedTeam == Team.RAC && nextGame != null) {
+                leagueStandings[Team.RAC.name]?.scorers
+            } else {
+                null
+            }
             SectionLabel(
-                if (oppRoster != null) "次の対戦相手の選手" else "次の対戦相手の注目選手",
+                when {
+                    oppRoster != null -> "次の対戦相手の選手"
+                    oppScorers != null -> "次の対戦相手の得点"
+                    else -> "次の対戦相手の注目選手"
+                },
                 modifier = Modifier.onGloballyPositioned { marks.opp = it }
             )
             if (nextGame != null) {
@@ -291,6 +317,16 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             val oppPlayers = preview?.keyPlayers ?: emptyList()
             if (oppRoster != null) {
                 RosterSection(oppRoster, oppSortKey) { oppSortKey = it }
+            } else if (oppScorers != null && nextGame != null) {
+                ScorersSection(
+                    scorers = oppScorers,
+                    rows = oppScorers.rows.filter { r ->
+                        r.team.contains(nextGame.opponent) || nextGame.opponent.contains(r.team)
+                    },
+                    team = selectedTeam,
+                    updatedAt = leagueStandings[Team.RAC.name]?.updatedAt,
+                    emptyMessage = "${nextGame.opponent}の選手は得点ランキングに載っていません。"
+                )
             } else if (oppPlayers.isNotEmpty()) {
                 AsOfLine(previewUpdatedAt(dataStatus), null)
                 oppPlayers.forEach { PlayerCard(it) }
@@ -307,7 +343,13 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 LinkText("相手チームの情報を見る ›") { openPlayersUrl(context, link) }
             }
             Text(
-                "選手の数字はGitHubの自動更新(1時間おき)でBリーグ公式から取り直しています。下に引っ張ると最新のデータを読み込みます。",
+                "選手の数字はGitHubの自動更新(1時間おき)で" +
+                    when (selectedTeam) {
+                        Team.BLOWINDS -> "Bリーグ公式"
+                        Team.RAC -> "女子Fリーグ公式"
+                        Team.UNITED -> "ユナイテッド公式"
+                    } +
+                    "から取り直しています。下に引っ張ると最新のデータを読み込みます。",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
@@ -432,11 +474,110 @@ private fun StandingsSection(standings: LeagueStandings, ownTeam: Team, nextOppo
             Text(part.label, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.ExtraBold, color = Ink)
             StandingsTable(part.rows, ownWord, ownTeam.color, nextOpponent)
         }
+    }
+}
+
+/** 順位表・得点の表で、そのチームの行を見分けるための文字 */
+private fun teamWord(team: Team): String = when (team) {
+    Team.RAC -> "丸岡"
+    Team.UNITED -> "福井ユナイテッド"
+    Team.BLOWINDS -> "ブローウィンズ"
+}
+
+/**
+ * 選手の得点(丸岡RUCK・ユナイテッド)。何日時点か・出典・表。
+ * 丸岡RUCKは女子Fリーグ公式の得点ランキング(1点以上の選手だけ)、ユナイテッドは公式サイトの試合結果から集計した全選手。
+ */
+@Composable
+private fun ScorersSection(
+    scorers: LeagueScorers,
+    rows: List<ScorerRow>,
+    team: Team,
+    updatedAt: java.time.Instant?,
+    emptyMessage: String
+) {
+    val isUnited = team == Team.UNITED
+    // ユナイテッドは得点のない選手も含むので、最初は得点した選手だけを出し、ボタンで全員を出す
+    var showAll by remember(scorers, team) { mutableStateOf(false) }
+    val shown = if (isUnited && !showAll) rows.filter { it.goals > 0 } else rows
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        AsOfLine(updatedAt, null)
         Text(
-            "選手ごとの成績は公式サイトで公開されていないため、表示していません。",
+            listOf(scorers.note, "出典:${scorers.sourceUrl}").filter { it.isNotBlank() }.joinToString("\n"),
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
+        if (shown.isEmpty()) {
+            NoDataBox(emptyMessage)
+        } else {
+            ScorersTable(shown, isUnited, team.color)
+        }
+        if (isUnited && rows.any { it.goals == 0 }) {
+            Text(
+                if (showAll) "▲ 得点した選手だけにする" else "▼ 全選手(${rows.size}人)を表示",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color = Accent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showAll = !showAll }
+                    .padding(vertical = 4.dp)
+            )
+        }
+        Text(
+            if (isUnited) {
+                "先発=先発メンバーに入った試合数、ベンチ=控えでメンバー入りした試合数です(途中から出たかどうかは公式に載っていないため数えていません)。"
+            } else {
+                "順位はリーグ全体の得点ランキングの順位です。出場・アシストなど、ほかの数字は公式に載っていないため表示していません。"
+            },
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+    }
+}
+
+@Composable
+private fun ScorersTable(rows: List<ScorerRow>, isUnited: Boolean, ownColor: androidx.compose.ui.graphics.Color) {
+    val headers = if (isUnited) listOf("番号", "選手", "得点", "先発", "ベンチ") else listOf("順位", "選手", "得点", "シュート", "出場")
+    val weights = listOf(1f, 3.4f, 1f, 1.2f, 1f)
+    Column(modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper)) {
+        Row(modifier = Modifier.fillMaxWidth().background(Ink).padding(vertical = 5.dp, horizontal = 6.dp)) {
+            headers.forEachIndexed { i, h ->
+                Text(h, modifier = Modifier.weight(weights[i]), color = Paper, fontSize = 11.sp, fontWeight = FontWeight.Bold,
+                    textAlign = if (i == 1) TextAlign.Start else TextAlign.Center, maxLines = 1)
+            }
+        }
+        rows.forEach { r ->
+            val cells = if (isUnited) {
+                listOf(
+                    r.number.ifBlank { "-" },
+                    r.name + if (r.position.isNotBlank()) " ${r.position}" else "",
+                    "${r.goals}",
+                    "${r.starts ?: "-"}",
+                    "${r.bench ?: "-"}"
+                )
+            } else {
+                listOf("${r.rank}位", r.name, "${r.goals}", "${r.shots ?: "-"}", r.games?.let { "${it}試合" } ?: "-")
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp, horizontal = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                cells.forEachIndexed { i, c ->
+                    Text(
+                        c,
+                        modifier = Modifier.weight(weights[i]),
+                        fontSize = 12.sp,
+                        fontWeight = if (i == 2 && r.goals > 0) FontWeight.ExtraBold else FontWeight.Normal,
+                        color = if (i == 2 && r.goals > 0) ownColor else Ink,
+                        textAlign = if (i == 1) TextAlign.Start else TextAlign.Center,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            ThinRule(color = LineGray)
+        }
     }
 }
 
