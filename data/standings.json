@@ -1,0 +1,307 @@
+{
+  "RAC": {
+    "league": "女子Fリーグ",
+    "source_url": "https://w-fleague.jp/",
+    "note": "公式サイトの試合結果からアプリで計算(勝点→得失点差→総得点の順)",
+    "regular": {
+      "label": "レギュラーシーズン",
+      "table": [
+        {
+          "team": "バルドラール浦安ラス・ボニータス",
+          "played": 10,
+          "win": 9,
+          "draw": 1,
+          "lose": 0,
+          "gf": 67,
+          "ga": 7,
+          "points": 28,
+          "gd": 60,
+          "form": "○○○○△",
+          "record": "9勝0敗1分",
+          "rank": 1
+        },
+        {
+          "team": "SWHレディース西宮",
+          "played": 10,
+          "win": 9,
+          "draw": 1,
+          "lose": 0,
+          "gf": 47,
+          "ga": 9,
+          "points": 28,
+          "gd": 38,
+          "form": "○○○○△",
+          "record": "9勝0敗1分",
+          "rank": 2
+        },
+        {
+          "team": "アルコ神戸",
+          "played": 10,
+          "win": 8,
+          "draw": 0,
+          "lose": 2,
+          "gf": 53,
+          "ga": 16,
+          "points": 24,
+          "gd": 37,
+          "form": "○○●●○",
+          "record": "8勝2敗",
+          "rank": 3
+        },
+        {
+          "team": "フウガドールすみだレディース",
+          "played": 10,
+          "win": 6,
+          "draw": 0,
+          "lose": 4,
+          "gf": 40,
+          "ga": 34,
+          "points": 18,
+          "gd": 6,
+          "form": "●●○○○",
+          "record": "6勝4敗",
+          "rank": 4
+        },
+        {
+          "team": "立川アスレティックFCレディース",
+          "played": 10,
+          "win": 5,
+          "draw": 0,
+          "lose": 5,
+          "gf": 34,
+          "ga": 26,
+          "points": 15,
+          "gd": 8,
+          "form": "●●●●○",
+          "record": "5勝5敗",
+          "rank": 5
+        },
+        {
+          "team": "福井丸岡ラック",
+          "played": 10,
+          "win": 4,
+          "draw": 1,
+          "lose": 5,
+          "gf": 27,
+          "ga": 24,
+          "points": 13,
+          "gd": 3,
+          "form": "●○●○△",
+          "record": "4勝5敗1分",
+          "rank": 6
+        },
+        {
+          "team": "エスポラーダ北海道イルネーヴェ",
+          "played": 10,
+          "win": 4,
+          "draw": 1,
+          "lose": 5,
+          "gf": 20,
+          "ga": 31,
+          "points": 13,
+          "gd": -11,
+          "form": "○○○○△",
+          "record": "4勝5敗1分",
+          "rank": 7
+        },
+        {
+          "team": "ミネルバ宇部",
+          "played": 10,
+          "win": 3,
+          "draw": 0,
+          "lose": 7,
+          "gf": 23,
+          "ga": 43,
+          "points": 9,
+          "gd": -20,
+          "form": "●●●○●",
+          "record": "3勝7敗",
+          "rank": 8
+        },
+        {
+          "team": "アニージャ湘南",
+          "played": 10,
+          "win": 3,
+          "draw": 0,
+          "lose": 7,
+          "gf": 15,
+          "ga": 35,
+          "points": 9,
+          "gd": -20,
+          "form": "●○○○●",
+          "record": "3勝7敗",
+          "rank": 9
+        },
+        {
+          "team": "流経大メニーナ龍ケ崎",
+          "played": 10,
+          "win": 2,
+          "draw": 0,
+          "lose": 8,
+          "gf": 24,
+          "ga": 74,
+          "points": 6,
+          "gd": -50,
+          "form": "●●○●●",
+          "record": "2勝8敗",
+          "rank": 10
+        },
+        {
+          "team": "さいたまサイコロ",
+          "played": 10,
+          "win": 0,
+          "draw": 0,
+          "lose": 10,
+          "gf": 9,
+          "ga": 60,
+          "points": 0,
+          "gd": -51,
+          "form": "●●●●●",
+          "record": "0勝10敗",
+          "rank": 11
+        }
+      ]
+    },
+    "final": {
+      "label": "ファイナルシーズン",
+      "table": [
+        {
+          "team": "SWHレディース西宮",
+          "played": 0,
+          "win": 0,
+          "draw": 0,
+          "lose": 0,
+          "gf": 0,
+          "ga": 0,
+          "points": 0,
+          "gd": 0,
+          "form": "",
+          "record": "0勝0敗",
+          "rank": 1
+        },
+        {
+          "team": "アルコ神戸",
+          "played": 0,
+          "win": 0,
+          "draw": 0,
+          "lose": 0,
+          "gf": 0,
+          "ga": 0,
+          "points": 0,
+          "gd": 0,
+          "form": "",
+          "record": "0勝0敗",
+          "rank": 2
+        },
+        {
+          "team": "バルドラール浦安ラス・ボニータス",
+          "played": 0,
+          "win": 0,
+          "draw": 0,
+          "lose": 0,
+          "gf": 0,
+          "ga": 0,
+          "points": 0,
+          "gd": 0,
+          "form": "",
+          "record": "0勝0敗",
+          "rank": 3
+        },
+        {
+          "team": "フウガドールすみだレディース",
+          "played": 0,
+          "win": 0,
+          "draw": 0,
+          "lose": 0,
+          "gf": 0,
+          "ga": 0,
+          "points": 0,
+          "gd": 0,
+          "form": "",
+          "record": "0勝0敗",
+          "rank": 4
+        },
+        {
+          "team": "福井丸岡ラック",
+          "played": 0,
+          "win": 0,
+          "draw": 0,
+          "lose": 0,
+          "gf": 0,
+          "ga": 0,
+          "points": 0,
+          "gd": 0,
+          "form": "",
+          "record": "0勝0敗",
+          "rank": 5
+        },
+        {
+          "team": "立川アスレティックFCレディース",
+          "played": 0,
+          "win": 0,
+          "draw": 0,
+          "lose": 0,
+          "gf": 0,
+          "ga": 0,
+          "points": 0,
+          "gd": 0,
+          "form": "",
+          "record": "0勝0敗",
+          "rank": 6
+        }
+      ]
+    },
+    "updated_at": "2026-10-02T14:22:49.246708+00:00"
+  },
+  "UNITED": {
+    "league": "北信越リーグ1部",
+    "source_url": "https://fukuiunited.co.jp/",
+    "note": "ユナイテッド公式サイトの順位表(順位・勝点のみ)・第13節終了時点",
+    "regular": {
+      "label": "順位表",
+      "table": [
+        {
+          "rank": 1,
+          "team": "福井ユナイテッドFC",
+          "points": 32
+        },
+        {
+          "rank": 2,
+          "team": "新潟医療福祉大学FC",
+          "points": 27
+        },
+        {
+          "rank": 3,
+          "team": "富山新庄クラブ",
+          "points": 25
+        },
+        {
+          "rank": 4,
+          "team": "JAPAN.S.C.",
+          "points": 25
+        },
+        {
+          "rank": 5,
+          "team": "アルティスタ浅間",
+          "points": 25
+        },
+        {
+          "rank": 6,
+          "team": "新潟経営大学FC",
+          "points": 5
+        },
+        {
+          "rank": 7,
+          "team": "FC北陸",
+          "points": 4
+        },
+        {
+          "rank": 8,
+          "team": "FCマツセロナ",
+          "points": 4
+        }
+      ]
+    },
+    "updated_at": "2026-10-02T14:22:49.246708+00:00"
+  }
+}
