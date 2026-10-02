@@ -55,8 +55,8 @@ WFLEAGUE_CLUBS = {
 
 # ---------- 共通 ----------
 
-def fetch(url: str) -> str:
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "ja"})
+def fetch(url: str, headers: dict = None) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "ja", **(headers or {})})
     with urllib.request.urlopen(req, timeout=25) as res:
         raw = res.read()
         charset = res.headers.get_content_charset() or "utf-8"

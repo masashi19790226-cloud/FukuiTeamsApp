@@ -164,7 +164,8 @@ def ruck_scorers(fetch):
     if not m:
         print("[WARN] 得点: 女子Fリーグの得点ランキングの読み込み先が見つかりません")
         return None
-    body = fetch(f"https://w-fleague.jp{m.group(1)}?tid={m.group(2)}&rn=500")
+    # 公式のページから読み込んだとき(Referer付き)だけ表の中身が返ってくる作りなので、Referer を付ける
+    body = fetch(f"https://w-fleague.jp{m.group(1)}?tid={m.group(2)}&rn=500", {"Referer": WFL_GOALRANK})
     body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
     rows = []
     for tr in re.findall(r"<tr>(.*?)</tr>", body, flags=re.S):
@@ -175,7 +176,8 @@ def ruck_scorers(fetch):
             "rank": int(tds[0]), "name": re.sub(r"[\s　]+", " ", tds[1]).strip(), "team": tds[2],
             "goals": _num(tds[3]), "pk": _num(tds[4]) + _num(tds[5]), "shots": _num(tds[6]), "games": _num(tds[7]),
         })
-    print(f"[得点] 女子Fリーグ: 得点者{len(rows)}人(丸岡{sum(1 for r in rows if RUCK_NAME in r['team'])}人)")
+    print(f"[得点] 女子Fリーグ: 得点者{len(rows)}人(丸岡{sum(1 for r in rows if RUCK_NAME in r['team'])}人)"
+          + ("" if rows else f" ※表が空でした(受け取った文字数{len(body)})"))
     if not rows:
         return None
     return {
