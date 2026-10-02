@@ -251,7 +251,923 @@
         }
       ]
     },
-    "updated_at": "2026-10-02T14:54:54.399645+00:00"
+    "scorers": {
+      "label": "得点ランキング",
+      "note": "女子Fリーグ公式の個人ランキング(1点以上の選手)",
+      "source_url": "https://w-fleague.jp/score/goalrank.html",
+      "rows": [
+        {
+          "rank": 1,
+          "name": "塚本 夏希",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 13,
+          "pk": 0,
+          "shots": 64,
+          "games": 10
+        },
+        {
+          "rank": 2,
+          "name": "中村 美月",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 12,
+          "pk": 0,
+          "shots": 47,
+          "games": 10
+        },
+        {
+          "rank": 2,
+          "name": "江口 未珂",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 12,
+          "pk": 0,
+          "shots": 75,
+          "games": 10
+        },
+        {
+          "rank": 4,
+          "name": "平井 成美",
+          "team": "立川アスレティックFCレディース",
+          "goals": 10,
+          "pk": 0,
+          "shots": 46,
+          "games": 10
+        },
+        {
+          "rank": 5,
+          "name": "鈴木 心菜",
+          "team": "アルコ神戸",
+          "goals": 9,
+          "pk": 0,
+          "shots": 31,
+          "games": 10
+        },
+        {
+          "rank": 5,
+          "name": "高橋 京花",
+          "team": "アルコ神戸",
+          "goals": 9,
+          "pk": 0,
+          "shots": 44,
+          "games": 10
+        },
+        {
+          "rank": 7,
+          "name": "澁川 鈴菜",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 8,
+          "pk": 0,
+          "shots": 54,
+          "games": 10
+        },
+        {
+          "rank": 8,
+          "name": "岩崎 裕加",
+          "team": "フウガドールすみだレディース",
+          "goals": 7,
+          "pk": 0,
+          "shots": 41,
+          "games": 9
+        },
+        {
+          "rank": 8,
+          "name": "尾川 奈穂",
+          "team": "SWHレディース西宮",
+          "goals": 7,
+          "pk": 0,
+          "shots": 48,
+          "games": 10
+        },
+        {
+          "rank": 8,
+          "name": "伊藤 沙世",
+          "team": "アルコ神戸",
+          "goals": 7,
+          "pk": 0,
+          "shots": 72,
+          "games": 10
+        },
+        {
+          "rank": 11,
+          "name": "新垣 杏奈",
+          "team": "流経大メニーナ龍ケ崎",
+          "goals": 6,
+          "pk": 0,
+          "shots": 21,
+          "games": 7
+        },
+        {
+          "rank": 11,
+          "name": "アナ シュルハ",
+          "team": "ミネルバ宇部",
+          "goals": 6,
+          "pk": 0,
+          "shots": 23,
+          "games": 7
+        },
+        {
+          "rank": 11,
+          "name": "倉持 杏子",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 6,
+          "pk": 0,
+          "shots": 25,
+          "games": 10
+        },
+        {
+          "rank": 11,
+          "name": "高橋 菜津希",
+          "team": "流経大メニーナ龍ケ崎",
+          "goals": 6,
+          "pk": 0,
+          "shots": 35,
+          "games": 7
+        },
+        {
+          "rank": 11,
+          "name": "江川 涼",
+          "team": "SWHレディース西宮",
+          "goals": 6,
+          "pk": 0,
+          "shots": 36,
+          "games": 10
+        },
+        {
+          "rank": 11,
+          "name": "飯干 絵里",
+          "team": "SWHレディース西宮",
+          "goals": 6,
+          "pk": 0,
+          "shots": 43,
+          "games": 10
+        },
+        {
+          "rank": 11,
+          "name": "高尾 茜利",
+          "team": "SWHレディース西宮",
+          "goals": 6,
+          "pk": 0,
+          "shots": 44,
+          "games": 10
+        },
+        {
+          "rank": 11,
+          "name": "尾田 緩奈",
+          "team": "立川アスレティックFCレディース",
+          "goals": 6,
+          "pk": 0,
+          "shots": 48,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "木村 美桜",
+          "team": "アルコ神戸",
+          "goals": 5,
+          "pk": 0,
+          "shots": 22,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "勝俣 里穗",
+          "team": "フウガドールすみだレディース",
+          "goals": 5,
+          "pk": 0,
+          "shots": 23,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "高畠 早奈恵",
+          "team": "アルコ神戸",
+          "goals": 5,
+          "pk": 0,
+          "shots": 25,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "荒井 一花",
+          "team": "福井丸岡ラック",
+          "goals": 5,
+          "pk": 0,
+          "shots": 27,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "平田 梨豊",
+          "team": "福井丸岡ラック",
+          "goals": 5,
+          "pk": 0,
+          "shots": 27,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "黒田 茉耶",
+          "team": "フウガドールすみだレディース",
+          "goals": 5,
+          "pk": 1,
+          "shots": 30,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "渡邊 優和",
+          "team": "福井丸岡ラック",
+          "goals": 5,
+          "pk": 0,
+          "shots": 34,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "井口 優",
+          "team": "SWHレディース西宮",
+          "goals": 5,
+          "pk": 0,
+          "shots": 37,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "吉野 遥菜",
+          "team": "SWHレディース西宮",
+          "goals": 5,
+          "pk": 0,
+          "shots": 38,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "川村 このは",
+          "team": "アニージャ湘南",
+          "goals": 5,
+          "pk": 0,
+          "shots": 38,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "中島 菜月",
+          "team": "アルコ神戸",
+          "goals": 5,
+          "pk": 0,
+          "shots": 41,
+          "games": 10
+        },
+        {
+          "rank": 19,
+          "name": "中村 みづき",
+          "team": "立川アスレティックFCレディース",
+          "goals": 5,
+          "pk": 0,
+          "shots": 65,
+          "games": 10
+        },
+        {
+          "rank": 31,
+          "name": "小倉 杏梨沙",
+          "team": "立川アスレティックFCレディース",
+          "goals": 4,
+          "pk": 0,
+          "shots": 10,
+          "games": 4
+        },
+        {
+          "rank": 31,
+          "name": "伊藤 沙莉",
+          "team": "エスポラーダ北海道イルネーヴェ",
+          "goals": 4,
+          "pk": 0,
+          "shots": 11,
+          "games": 10
+        },
+        {
+          "rank": 31,
+          "name": "吉田 恋々菜",
+          "team": "フウガドールすみだレディース",
+          "goals": 4,
+          "pk": 0,
+          "shots": 16,
+          "games": 10
+        },
+        {
+          "rank": 31,
+          "name": "高田 夏恋",
+          "team": "流経大メニーナ龍ケ崎",
+          "goals": 4,
+          "pk": 0,
+          "shots": 16,
+          "games": 6
+        },
+        {
+          "rank": 31,
+          "name": "小川 汐音",
+          "team": "アニージャ湘南",
+          "goals": 4,
+          "pk": 0,
+          "shots": 17,
+          "games": 10
+        },
+        {
+          "rank": 31,
+          "name": "大西 恋花",
+          "team": "エスポラーダ北海道イルネーヴェ",
+          "goals": 4,
+          "pk": 0,
+          "shots": 25,
+          "games": 10
+        },
+        {
+          "rank": 31,
+          "name": "山森 しおん",
+          "team": "福井丸岡ラック",
+          "goals": 4,
+          "pk": 0,
+          "shots": 26,
+          "games": 10
+        },
+        {
+          "rank": 31,
+          "name": "矢津田 明莉",
+          "team": "エスポラーダ北海道イルネーヴェ",
+          "goals": 4,
+          "pk": 0,
+          "shots": 27,
+          "games": 6
+        },
+        {
+          "rank": 31,
+          "name": "肥尾 明里",
+          "team": "フウガドールすみだレディース",
+          "goals": 4,
+          "pk": 0,
+          "shots": 30,
+          "games": 10
+        },
+        {
+          "rank": 40,
+          "name": "江川 凜",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 3,
+          "pk": 0,
+          "shots": 9,
+          "games": 10
+        },
+        {
+          "rank": 40,
+          "name": "山本 奈波",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 3,
+          "pk": 0,
+          "shots": 9,
+          "games": 10
+        },
+        {
+          "rank": 40,
+          "name": "米田 夢宝",
+          "team": "流経大メニーナ龍ケ崎",
+          "goals": 3,
+          "pk": 0,
+          "shots": 12,
+          "games": 5
+        },
+        {
+          "rank": 40,
+          "name": "中野 瑞己",
+          "team": "フウガドールすみだレディース",
+          "goals": 3,
+          "pk": 0,
+          "shots": 16,
+          "games": 10
+        },
+        {
+          "rank": 40,
+          "name": "若尾 和美",
+          "team": "フウガドールすみだレディース",
+          "goals": 3,
+          "pk": 0,
+          "shots": 17,
+          "games": 10
+        },
+        {
+          "rank": 40,
+          "name": "濵田 莉那",
+          "team": "ミネルバ宇部",
+          "goals": 3,
+          "pk": 0,
+          "shots": 18,
+          "games": 8
+        },
+        {
+          "rank": 40,
+          "name": "野田 桜菜",
+          "team": "アルコ神戸",
+          "goals": 3,
+          "pk": 0,
+          "shots": 22,
+          "games": 10
+        },
+        {
+          "rank": 40,
+          "name": "仲井 里奈",
+          "team": "さいたまサイコロ",
+          "goals": 3,
+          "pk": 0,
+          "shots": 22,
+          "games": 10
+        },
+        {
+          "rank": 40,
+          "name": "松本 直美",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 3,
+          "pk": 0,
+          "shots": 23,
+          "games": 7
+        },
+        {
+          "rank": 40,
+          "name": "田中 夢",
+          "team": "ミネルバ宇部",
+          "goals": 3,
+          "pk": 0,
+          "shots": 23,
+          "games": 8
+        },
+        {
+          "rank": 40,
+          "name": "土谷 美晴",
+          "team": "エスポラーダ北海道イルネーヴェ",
+          "goals": 3,
+          "pk": 0,
+          "shots": 24,
+          "games": 9
+        },
+        {
+          "rank": 40,
+          "name": "玉川 華帆",
+          "team": "フウガドールすみだレディース",
+          "goals": 3,
+          "pk": 0,
+          "shots": 26,
+          "games": 8
+        },
+        {
+          "rank": 40,
+          "name": "舘山 香緒里",
+          "team": "アニージャ湘南",
+          "goals": 3,
+          "pk": 0,
+          "shots": 46,
+          "games": 10
+        },
+        {
+          "rank": 40,
+          "name": "田中 ちひろ",
+          "team": "アルコ神戸",
+          "goals": 3,
+          "pk": 0,
+          "shots": 63,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "庄子 彩",
+          "team": "フウガドールすみだレディース",
+          "goals": 2,
+          "pk": 0,
+          "shots": 4,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "後藤 穂香",
+          "team": "さいたまサイコロ",
+          "goals": 2,
+          "pk": 0,
+          "shots": 5,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "岡部 茉帆",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 2,
+          "pk": 0,
+          "shots": 6,
+          "games": 9
+        },
+        {
+          "rank": 54,
+          "name": "島田 有嘉",
+          "team": "アルコ神戸",
+          "goals": 2,
+          "pk": 0,
+          "shots": 8,
+          "games": 4
+        },
+        {
+          "rank": 54,
+          "name": "野口 はな",
+          "team": "ミネルバ宇部",
+          "goals": 2,
+          "pk": 0,
+          "shots": 10,
+          "games": 6
+        },
+        {
+          "rank": 54,
+          "name": "松木 里緒",
+          "team": "立川アスレティックFCレディース",
+          "goals": 2,
+          "pk": 0,
+          "shots": 12,
+          "games": 6
+        },
+        {
+          "rank": 54,
+          "name": "足立 紗菜",
+          "team": "福井丸岡ラック",
+          "goals": 2,
+          "pk": 0,
+          "shots": 15,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "三宅 怜",
+          "team": "アルコ神戸",
+          "goals": 2,
+          "pk": 0,
+          "shots": 18,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "横川 四葉",
+          "team": "福井丸岡ラック",
+          "goals": 2,
+          "pk": 0,
+          "shots": 21,
+          "games": 9
+        },
+        {
+          "rank": 54,
+          "name": "加藤 鈴菜",
+          "team": "SWHレディース西宮",
+          "goals": 2,
+          "pk": 0,
+          "shots": 21,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "タイス デリマ オリベイラ",
+          "team": "ミネルバ宇部",
+          "goals": 2,
+          "pk": 1,
+          "shots": 21,
+          "games": 5
+        },
+        {
+          "rank": 54,
+          "name": "パオラ ニコリ レオン アラウジョ",
+          "team": "ミネルバ宇部",
+          "goals": 2,
+          "pk": 1,
+          "shots": 21,
+          "games": 5
+        },
+        {
+          "rank": 54,
+          "name": "稲垣 遙",
+          "team": "流経大メニーナ龍ケ崎",
+          "goals": 2,
+          "pk": 0,
+          "shots": 22,
+          "games": 8
+        },
+        {
+          "rank": 54,
+          "name": "倉元 美鈴",
+          "team": "流経大メニーナ龍ケ崎",
+          "goals": 2,
+          "pk": 0,
+          "shots": 23,
+          "games": 7
+        },
+        {
+          "rank": 54,
+          "name": "原田 絢未",
+          "team": "さいたまサイコロ",
+          "goals": 2,
+          "pk": 0,
+          "shots": 24,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "鈴木 里歩",
+          "team": "立川アスレティックFCレディース",
+          "goals": 2,
+          "pk": 0,
+          "shots": 24,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "米山 涼美",
+          "team": "立川アスレティックFCレディース",
+          "goals": 2,
+          "pk": 0,
+          "shots": 26,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "山本 想",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 2,
+          "pk": 0,
+          "shots": 30,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "長木 希果",
+          "team": "エスポラーダ北海道イルネーヴェ",
+          "goals": 2,
+          "pk": 0,
+          "shots": 35,
+          "games": 10
+        },
+        {
+          "rank": 54,
+          "name": "網城 安奈",
+          "team": "SWHレディース西宮",
+          "goals": 2,
+          "pk": 0,
+          "shots": 38,
+          "games": 9
+        },
+        {
+          "rank": 54,
+          "name": "山川 里佳子",
+          "team": "アルコ神戸",
+          "goals": 2,
+          "pk": 0,
+          "shots": 43,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "愛沢 南",
+          "team": "立川アスレティックFCレディース",
+          "goals": 1,
+          "pk": 0,
+          "shots": 1,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "外村 美空",
+          "team": "さいたまサイコロ",
+          "goals": 1,
+          "pk": 0,
+          "shots": 2,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "小林 愛心",
+          "team": "福井丸岡ラック",
+          "goals": 1,
+          "pk": 0,
+          "shots": 3,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "塚本 明日香",
+          "team": "SWHレディース西宮",
+          "goals": 1,
+          "pk": 0,
+          "shots": 3,
+          "games": 9
+        },
+        {
+          "rank": 75,
+          "name": "秋原 美優",
+          "team": "SWHレディース西宮",
+          "goals": 1,
+          "pk": 0,
+          "shots": 4,
+          "games": 3
+        },
+        {
+          "rank": 75,
+          "name": "西澤 結菜",
+          "team": "ミネルバ宇部",
+          "goals": 1,
+          "pk": 0,
+          "shots": 4,
+          "games": 5
+        },
+        {
+          "rank": 75,
+          "name": "宮下 みのり",
+          "team": "立川アスレティックFCレディース",
+          "goals": 1,
+          "pk": 0,
+          "shots": 4,
+          "games": 5
+        },
+        {
+          "rank": 75,
+          "name": "小笹 璃緒",
+          "team": "アニージャ湘南",
+          "goals": 1,
+          "pk": 0,
+          "shots": 4,
+          "games": 5
+        },
+        {
+          "rank": 75,
+          "name": "大濱 あみ",
+          "team": "流経大メニーナ龍ケ崎",
+          "goals": 1,
+          "pk": 0,
+          "shots": 5,
+          "games": 5
+        },
+        {
+          "rank": 75,
+          "name": "見矢 明日香",
+          "team": "アルコ神戸",
+          "goals": 1,
+          "pk": 0,
+          "shots": 6,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "児島 希里子",
+          "team": "ミネルバ宇部",
+          "goals": 1,
+          "pk": 0,
+          "shots": 6,
+          "games": 3
+        },
+        {
+          "rank": 75,
+          "name": "鎮守 遥",
+          "team": "ミネルバ宇部",
+          "goals": 1,
+          "pk": 0,
+          "shots": 6,
+          "games": 3
+        },
+        {
+          "rank": 75,
+          "name": "岡野 未央",
+          "team": "SWHレディース西宮",
+          "goals": 1,
+          "pk": 0,
+          "shots": 7,
+          "games": 8
+        },
+        {
+          "rank": 75,
+          "name": "本間 桃",
+          "team": "フウガドールすみだレディース",
+          "goals": 1,
+          "pk": 0,
+          "shots": 9,
+          "games": 9
+        },
+        {
+          "rank": 75,
+          "name": "齊藤 日向子",
+          "team": "エスポラーダ北海道イルネーヴェ",
+          "goals": 1,
+          "pk": 0,
+          "shots": 11,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "勝又 野乃花",
+          "team": "立川アスレティックFCレディース",
+          "goals": 1,
+          "pk": 0,
+          "shots": 11,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "山田 ひかる",
+          "team": "さいたまサイコロ",
+          "goals": 1,
+          "pk": 0,
+          "shots": 12,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "伊藤 かの果",
+          "team": "ミネルバ宇部",
+          "goals": 1,
+          "pk": 0,
+          "shots": 13,
+          "games": 7
+        },
+        {
+          "rank": 75,
+          "name": "太田 涼日",
+          "team": "エスポラーダ北海道イルネーヴェ",
+          "goals": 1,
+          "pk": 0,
+          "shots": 15,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "加藤 はるな",
+          "team": "福井丸岡ラック",
+          "goals": 1,
+          "pk": 0,
+          "shots": 16,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "井戸 里咲",
+          "team": "SWHレディース西宮",
+          "goals": 1,
+          "pk": 0,
+          "shots": 16,
+          "games": 9
+        },
+        {
+          "rank": 75,
+          "name": "大西 紗瑛",
+          "team": "アニージャ湘南",
+          "goals": 1,
+          "pk": 0,
+          "shots": 17,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "池内 天紀",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 1,
+          "pk": 0,
+          "shots": 18,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "宮崎 愛",
+          "team": "SWHレディース西宮",
+          "goals": 1,
+          "pk": 0,
+          "shots": 19,
+          "games": 9
+        },
+        {
+          "rank": 75,
+          "name": "加藤 ほのか",
+          "team": "福井丸岡ラック",
+          "goals": 1,
+          "pk": 0,
+          "shots": 21,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "小林 望月",
+          "team": "福井丸岡ラック",
+          "goals": 1,
+          "pk": 0,
+          "shots": 21,
+          "games": 10
+        },
+        {
+          "rank": 75,
+          "name": "武井 柚香",
+          "team": "エスポラーダ北海道イルネーヴェ",
+          "goals": 1,
+          "pk": 0,
+          "shots": 27,
+          "games": 10
+        }
+      ]
+    },
+    "updated_at": "2026-10-02T15:08:57.496278+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -1863,6 +2779,6 @@
         }
       ]
     },
-    "updated_at": "2026-10-02T14:54:54.399645+00:00"
+    "updated_at": "2026-10-02T15:08:57.496278+00:00"
   }
 }
