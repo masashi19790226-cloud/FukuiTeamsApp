@@ -246,18 +246,27 @@ fun HomeScreen(
 
 
             item {
-                // 一面の2段組:左に「次の試合」、右に他チームの近況
-                val nextGame = GamesRepository.games
+                // 一面の「次の試合」と他チームの近況。
+                // 次の試合の日にほかのチームの試合もあれば、同じ日の試合をすべて「次の試合」に並べる
+                // (並びは開始時刻順。「時間未定」の試合は後ろ)
+                val upcoming = GamesRepository.games
                     .filter { (selectedTeam == null || it.team == selectedTeam) && it.isUpcoming() }
-                    .minByOrNull { it.sortKey }
-                val sideTeams = Team.values().filter { it != (selectedTeam ?: nextGame?.team) }
+                val firstDay = upcoming.minByOrNull { it.sortKey }?.sortKey?.take(8)
+                val nextGames = upcoming
+                    .filter { firstDay != null && it.sortKey.take(8) == firstDay }
+                    .sortedBy { g -> if (Regex("""\d{1,2}:\d{2}""").matches(g.timeLabel.trim())) g.sortKey else g.sortKey.take(8) + "-9999" }
+                val sideTeams = if (selectedTeam != null) {
+                    Team.values().filter { it != selectedTeam }
+                } else {
+                    Team.values().filter { t -> nextGames.none { it.team == t } }
+                }
                 TwoColumnFront(
-                    nextGame = nextGame,
-                    hasOpenInvite = nextGame != null && nextGame.hasMatchingInvite(openInvites),
+                    nextGames = nextGames,
+                    hasOpenInvite = { g -> g.hasMatchingInvite(openInvites) },
                     sideTeams = sideTeams,
                     autoResults = autoResults,
-                    preview = nextGame?.let { previews[it.id] },
-                    lp = nextGame?.let { GameLpRepository.latest[it.id] },
+                    previews = previews,
+                    lps = GameLpRepository.latest,
                     onOpenGame = onOpenGame
                 )
             }
@@ -742,111 +751,149 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
 /**
  * 一面の「次の試合」欄。横幅いっぱいに次の試合と「データで見る展望」「相手の注目選手」を載せ、
  * その下に他チームの近況を2段で並べる。展望データがまだないときは試合情報だけを出す。
+ * 同じ日にほかのチームの試合もあるときは、同じ日の試合をすべて(区切り線をはさんで)縦に並べる。
  */
 @Composable
 private fun TwoColumnFront(
-    nextGame: Game?,
-    hasOpenInvite: Boolean,
+    nextGames: List<Game>,
+    hasOpenInvite: (Game) -> Boolean,
     sideTeams: List<Team>,
     autoResults: Map<String, RemoteGameResult>,
-    preview: GamePreview?,
-    lp: GameLp?,
+    previews: Map<String, GamePreview>,
+    lps: Map<String, GameLp>,
     onOpenGame: (String) -> Unit
 ) {
-    val context = LocalContext.current
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .border(1.5.dp, Ink)
                 .background(Paper)
-                .then(if (nextGame != null) Modifier.clickable { onOpenGame(nextGame.id) } else Modifier)
                 .padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            SectionLabel("次の試合")
-            if (nextGame == null) {
+            SectionLabel(if (nextGames.size > 1) "次の試合(同じ日に${nextGames.size}試合)" else "次の試合")
+            if (nextGames.isEmpty()) {
                 Text("予定はまだ発表されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-            } else {
-                // チーム名の右に、試合まであと何日かを赤い札で出す
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        nextGame.team.displayName,
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = nextGame.team.color
+            }
+            nextGames.forEachIndexed { index, game ->
+                if (index > 0) {
+                    // 試合と試合の区切り(チームの色の太線)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp)
+                            .height(3.dp)
+                            .background(game.team.color)
                     )
-                    nextGame.countdownLabel()?.let { label ->
-                        Text(
-                            label,
-                            modifier = Modifier
-                                .background(NewsRed)
-                                .padding(horizontal = 8.dp, vertical = 2.dp),
-                            color = Paper,
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                    }
                 }
-                Headline(
-                    "${nextGame.dateLabel.split("/").drop(1).joinToString("/")}(${nextGame.dayOfWeek}) ${nextGame.timeLabel}\n${nextGame.opponent}戦",
-                    fontSize = 19
+                NextGameBlock(
+                    nextGame = game,
+                    hasOpenInvite = hasOpenInvite(game),
+                    preview = previews[game.id],
+                    lp = lps[game.id],
+                    onOpenGame = onOpenGame
                 )
-                Text(
-                    "${if (nextGame.isHome) "HOME" else "AWAY"}・${nextGame.venue}・チケット:${nextGame.ticketStatus}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = InkSoft
-                )
-
-                // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントを出す
-                // (スケジュールとイベントは押すと開く。試合当日は上の「本日の試合」に出すので、ここでは出さない)
-                if (lp != null && !nextGame.isToday()) {
-                    ThinRule(modifier = Modifier.padding(vertical = 4.dp))
-                    GameLpSection(lp, startExpanded = false)
-                }
-
-                if (preview != null) {
-                    DoubleRule(modifier = Modifier.padding(vertical = 6.dp))
-                    SectionLabel("データで見る展望", red = true)
-                    PreviewTable(preview)
-                    if (preview.summary.isNotBlank()) {
-                        Text(preview.summary, style = MaterialTheme.typography.bodyMedium, color = Ink)
-                    }
-
-                    ThinRule(modifier = Modifier.padding(vertical = 6.dp))
-                    SectionLabel("相手の注目選手")
-                    if (preview.keyPlayers.isNotEmpty()) {
-                        preview.keyPlayers.forEach { KeyPlayerRow(it) }
-                        if (preview.playersNote.isNotBlank()) {
-                            Text("※${preview.playersNote}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
-                        }
-                    } else {
-                        Text("相手の選手データは公開されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                    }
-                    preview.oppLink?.let { link ->
-                        Text(
-                            "相手チームの情報を見る ›",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = Accent,
-                            modifier = Modifier.clickable { openUrl(context, link) }.padding(top = 2.dp)
-                        )
-                    }
-                }
-                if (hasOpenInvite) {
-                    Text("無料招待あり ›", style = MaterialTheme.typography.labelMedium, color = NewsRed, modifier = Modifier.padding(top = 4.dp))
-                }
             }
         }
 
-        // 他チームの近況(2段)
-        SectionLabel("各チームの近況", modifier = Modifier.padding(top = 6.dp))
-        Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-            sideTeams.forEachIndexed { index, team ->
-                if (index > 0) Box(modifier = Modifier.padding(horizontal = 8.dp).width(1.dp).fillMaxHeight().background(Ink))
-                Box(modifier = Modifier.weight(1f)) { TeamBrief(team, autoResults, onOpenGame) }
+        // 他チームの近況(2段)。同じ日に3チームとも試合があるときは出さない
+        if (sideTeams.isNotEmpty()) {
+            SectionLabel("各チームの近況", modifier = Modifier.padding(top = 6.dp))
+            Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+                sideTeams.forEachIndexed { index, team ->
+                    if (index > 0) Box(modifier = Modifier.padding(horizontal = 8.dp).width(1.dp).fillMaxHeight().background(Ink))
+                    Box(modifier = Modifier.weight(1f)) { TeamBrief(team, autoResults, onOpenGame) }
+                }
             }
         }
         DoubleRule(modifier = Modifier.padding(top = 6.dp))
+    }
+}
+
+/** 「次の試合」欄の1試合分。押すとその試合の詳細を開く。 */
+@Composable
+private fun NextGameBlock(
+    nextGame: Game,
+    hasOpenInvite: Boolean,
+    preview: GamePreview?,
+    lp: GameLp?,
+    onOpenGame: (String) -> Unit
+) {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onOpenGame(nextGame.id) },
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        // チーム名の右に、試合まであと何日かを赤い札で出す
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                nextGame.team.displayName,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.labelMedium,
+                color = nextGame.team.color
+            )
+            nextGame.countdownLabel()?.let { label ->
+                Text(
+                    label,
+                    modifier = Modifier
+                        .background(NewsRed)
+                        .padding(horizontal = 8.dp, vertical = 2.dp),
+                    color = Paper,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+        }
+        Headline(
+            "${nextGame.dateLabel.split("/").drop(1).joinToString("/")}(${nextGame.dayOfWeek}) ${nextGame.timeLabel}\n${nextGame.opponent}戦",
+            fontSize = 19
+        )
+        Text(
+            "${if (nextGame.isHome) "HOME" else "AWAY"}・${nextGame.venue}・チケット:${nextGame.ticketStatus}",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+
+        // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントを出す
+        // (スケジュールとイベントは押すと開く。試合当日は上の「本日の試合」に出すので、ここでは出さない)
+        if (lp != null && !nextGame.isToday()) {
+            ThinRule(modifier = Modifier.padding(vertical = 4.dp))
+            GameLpSection(lp, startExpanded = false)
+        }
+
+        if (preview != null) {
+            DoubleRule(modifier = Modifier.padding(vertical = 6.dp))
+            SectionLabel("データで見る展望", red = true)
+            PreviewTable(preview)
+            if (preview.summary.isNotBlank()) {
+                Text(preview.summary, style = MaterialTheme.typography.bodyMedium, color = Ink)
+            }
+
+            ThinRule(modifier = Modifier.padding(vertical = 6.dp))
+            SectionLabel("相手の注目選手")
+            if (preview.keyPlayers.isNotEmpty()) {
+                preview.keyPlayers.forEach { KeyPlayerRow(it) }
+                if (preview.playersNote.isNotBlank()) {
+                    Text("※${preview.playersNote}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                }
+            } else {
+                Text("相手の選手データは公開されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            }
+            preview.oppLink?.let { link ->
+                Text(
+                    "相手チームの情報を見る ›",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Accent,
+                    modifier = Modifier.clickable { openUrl(context, link) }.padding(top = 2.dp)
+                )
+            }
+        }
+        if (hasOpenInvite) {
+            Text("無料招待あり ›", style = MaterialTheme.typography.labelMedium, color = NewsRed, modifier = Modifier.padding(top = 4.dp))
+        }
     }
 }
 
