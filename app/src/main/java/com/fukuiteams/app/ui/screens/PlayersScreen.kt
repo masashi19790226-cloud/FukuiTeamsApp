@@ -62,6 +62,7 @@ import com.fukuiteams.app.data.StandingRow
 import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.TeamPlayers
 import com.fukuiteams.app.data.TeamSelection
+import com.fukuiteams.app.data.DataRefresher
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
@@ -142,9 +143,14 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
 
     // 画面を下に引っ張る・右上の更新ボタンで、選手データを読み込み直す
     val pullToRefreshState = rememberPullToRefreshState()
+    // 手動で更新したときは、アプリのすべての情報を読み直す
     if (pullToRefreshState.isRefreshing) {
         LaunchedEffect(true) {
-            load()
+            val d = DataRefresher.refreshAll(context)
+            teamPlayers = d.players
+            leagueStandings = d.standings
+            previews = d.previews
+            dataStatus = d.status
             pullToRefreshState.endRefresh()
         }
     }

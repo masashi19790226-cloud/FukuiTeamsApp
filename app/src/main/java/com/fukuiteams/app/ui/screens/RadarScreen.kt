@@ -64,6 +64,7 @@ import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isTooOld
 import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.data.TeamSelection
+import com.fukuiteams.app.data.DataRefresher
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
@@ -206,9 +207,13 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
 
     LaunchedEffect(Unit) { refresh() }
 
+    // 手動で更新したときは、アプリのすべての情報を読み直す
     if (pullToRefreshState.isRefreshing) {
         LaunchedEffect(true) {
-            refresh()
+            val d = DataRefresher.refreshAll(context)
+            newsResult = d.news
+            inviteResult = d.invitations
+            dataStatus = d.status
             pullToRefreshState.endRefresh()
         }
     }

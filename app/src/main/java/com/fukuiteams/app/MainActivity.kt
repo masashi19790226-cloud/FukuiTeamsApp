@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.fukuiteams.app.navigation.AppNavHost
+import com.fukuiteams.app.ui.components.PinchZoomContainer
 import com.fukuiteams.app.notifications.EXTRA_OPEN_ROUTE
 import com.fukuiteams.app.notifications.ensureAlertsNotificationChannel
 import com.fukuiteams.app.notifications.rescheduleGameStartNotifications
@@ -48,7 +49,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             FukuiTeamsAppTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AppNavHost(initialRoute = openRoute)
+                    // 二本指で広げる・つまむと、アプリ全体の表示の大きさが変わる
+                    PinchZoomContainer {
+                        AppNavHost(initialRoute = openRoute)
+                    }
                 }
             }
         }

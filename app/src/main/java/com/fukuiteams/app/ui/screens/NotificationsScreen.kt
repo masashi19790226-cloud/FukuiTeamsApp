@@ -14,6 +14,7 @@ import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.MastheadTopBar
 import com.fukuiteams.app.ui.components.MenuLinkRow
+import com.fukuiteams.app.ui.components.UiScale
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -242,6 +243,20 @@ fun NotificationsScreen(
                         )
                     }
                 }
+            }
+
+            // 表示の大きさ(二本指で変えた大きさを元に戻す)
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("表示の大きさ")
+                Text(
+                    "どの画面でも、二本指で広げると大きく、つまむと小さく表示できます(${(UiScale.MIN * 100).toInt()}%〜${(UiScale.MAX * 100).toInt()}%)。いまの大きさ:${UiScale.percentLabel()}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                MenuLinkRow(
+                    title = "表示の大きさを標準(100%)に戻す",
+                    onClick = { UiScale.reset(context) }
+                )
             }
 
             // 使い方への入口(選手の数字は下のメニューの「選手」から開くので、ここには置かない)

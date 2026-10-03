@@ -116,6 +116,7 @@ import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isUpcoming
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.data.TeamSelection
+import com.fukuiteams.app.data.DataRefresher
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -145,22 +146,19 @@ fun HomeScreen(
     var dataStatus by remember { mutableStateOf<DataStatus?>(null) }
     var weathers by remember { mutableStateOf<Map<String, MatchWeather>>(emptyMap()) }
 
+    // アプリのすべての情報(日程・結果・招待・ニュース・展望・選手・順位・試合情報ページなど)を読み直す。
+    // 選手や順位はこの画面では使わないが、ほかのタブに切り替えたときに新しい内容を出せるよう一緒に読み直す
     suspend fun refreshAll() {
-        SpecialDaysRepository.refresh()
-        GamesRepository.refresh(appContext)
-        autoResults = GameResultsRepository.fetch()
-        invitationsResult = InvitationAlertsRepository.fetch()
-        newsResult = NewsAlertsRepository.fetch()
-        previews = GamePreviewRepository.fetch()
-        dataStatus = DataStatusRepository.fetch()
-        // ブローウィンズの試合情報ページ(開場・当日スケジュール・イベント)
-        GameLpRepository.fetch()
+        val d = DataRefresher.refreshAll(appContext)
+        autoResults = d.results
+        invitationsResult = d.invitations
+        newsResult = d.news
+        previews = d.previews
+        dataStatus = d.status
         // 今日の試合の天気
         weathers = GamesRepository.games.filter { it.isToday() }
             .mapNotNull { g -> WeatherRepository.forGame(g)?.let { g.id to it } }
             .toMap()
-        // ホーム画面のウィジェットも最新にする
-        NextGameWidget.requestUpdate(appContext)
     }
 
     LaunchedEffect(Unit) { refreshAll() }
@@ -670,15 +668,37 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
             .clickable(onClick = onClick),
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
+        val context = LocalContext.current
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             SectionLabel("速報", red = true)
+            HomeAwayTag(isHome = game.isHome)
             Text(
-                "${game.dateLabel.split("/").drop(1).joinToString("/")}(${game.dayOfWeek})・${if (game.isHome) "HOME" else "AWAY"}",
+                "${game.dateLabel.split("/").drop(1).joinToString("/")}(${game.dayOfWeek}) ${game.timeLabel} 試合開始",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
         }
-        val context = LocalContext.current
+        // 会場(押すと地図)と、その日の試合開始ごろの天気
+        Text(
+            "会場:${game.venue} ›地図",
+            style = MaterialTheme.typography.bodySmall,
+            color = Accent,
+            modifier = Modifier.clickable {
+                openUrl(context, "https://www.google.com/maps/search/?api=1&query=" +
+                    java.net.URLEncoder.encode(game.venue, "UTF-8"))
+            }
+        )
+        var weather by remember(game.id) { mutableStateOf<MatchWeather?>(null) }
+        LaunchedEffect(game.id) { weather = WeatherRepository.forGame(game) }
+        weather?.let { w ->
+            val hour = game.timeLabel.substringBefore(":").toIntOrNull()
+            Text(
+                "天気(${w.placeLabel}${hour?.let { "・${it}時ごろ" } ?: ""}):${w.summary} ${w.temperature}℃" +
+                    (w.rainChance?.let { " 降水確率$it%" } ?: ""),
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+        }
         val leadPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
         val comment = recordedComment(game.id, leadPrefs)
         val resultLine = resultHeadline(game, result.myScore, result.opponentScore, outcome)

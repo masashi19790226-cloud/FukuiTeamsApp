@@ -27,13 +27,15 @@ object WeatherRepository {
             } else {
                 geocode(game.opponent) ?: geocode(game.opponent.take(2)) ?: return@withContext null
             }
+            // 試合の日の分だけ取る(終わった試合の「速報」でも、その日の天気を出せるように日付で指定する)
+            val date = game.dateLabel.split("/").let { "%04d-%02d-%02d".format(it[0].toInt(), it[1].toInt(), it[2].toInt()) }
             val url = "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
-                "&hourly=temperature_2m,precipitation_probability,weather_code&timezone=Asia%2FTokyo&forecast_days=3"
+                "&hourly=temperature_2m,precipitation_probability,weather_code&timezone=Asia%2FTokyo" +
+                "&start_date=$date&end_date=$date"
             val o = JSONObject(get(url))
             val hourly = o.getJSONObject("hourly")
             val times = hourly.getJSONArray("time")
             // 試合開始の時刻(「15:05」なら15時)の予報を使う
-            val date = game.dateLabel.split("/").let { "%04d-%02d-%02d".format(it[0].toInt(), it[1].toInt(), it[2].toInt()) }
             val hour = game.timeLabel.substringBefore(":").toIntOrNull() ?: 12
             val target = "%sT%02d:00".format(date, hour)
             val idx = (0 until times.length()).firstOrNull { times.getString(it) == target } ?: return@withContext null

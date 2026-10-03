@@ -119,6 +119,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.datastore.preferences.core.Preferences
 import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.data.openLabel
+import com.fukuiteams.app.data.DataRefresher
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -207,9 +208,10 @@ fun GameDetailScreen(
 
     LaunchedEffect(Unit) { refreshResults() }
 
+    // 手動で更新したときは、アプリのすべての情報を読み直す
     if (pullToRefreshState.isRefreshing) {
         LaunchedEffect(true) {
-            refreshResults()
+            autoResults = DataRefresher.refreshAll(context).results
             pullToRefreshState.endRefresh()
         }
     }
