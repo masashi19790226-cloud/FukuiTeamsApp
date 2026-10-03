@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fukuiteams.app.data.GameLp
+import com.fukuiteams.app.data.openLabel
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
@@ -37,8 +38,9 @@ fun GameLpSection(lp: GameLp, startExpanded: Boolean) {
     var showSchedule by remember(lp.url) { mutableStateOf(startExpanded) }
     var showEvents by remember(lp.url) { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        if (lp.openTime.isNotBlank()) {
-            Text("開場 ${lp.openTime}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.ExtraBold, color = Ink)
+        // シルバー会員の先行入場の時刻(無ければ一般の開場時刻)
+        lp.openLabel?.let { label ->
+            Text(label, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.ExtraBold, color = Ink)
         }
         if (lp.timeline.isNotEmpty()) {
             ToggleHeading("当日のスケジュール(公式)", showSchedule) { showSchedule = !showSchedule }

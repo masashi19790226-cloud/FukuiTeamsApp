@@ -118,6 +118,7 @@ import com.fukuiteams.app.data.gameLogDataStore
 import androidx.compose.runtime.collectAsState
 import androidx.datastore.preferences.core.Preferences
 import com.fukuiteams.app.data.TeamSelection
+import com.fukuiteams.app.data.openLabel
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -836,7 +837,7 @@ private fun UpcomingGameInline(
             ToggleBlock(
                 title = "試合情報(公式)",
                 summary = listOfNotNull(
-                    lp.openTime.takeIf { it.isNotBlank() }?.let { "開場 $it" },
+                    lp.openLabel,
                     lp.events.size.takeIf { it > 0 }?.let { "イベント${it}件" }
                 ).joinToString("・"),
                 startOpen = game.isToday()

@@ -29,6 +29,21 @@ data class GameLp(
     val events: List<LpEvent>
 )
 
+/**
+ * 一面・試合詳細に出す開場時刻。
+ * 当日のスケジュールに「シルバー会員先行入場開始」の行があればその時刻を、無ければ一般の開場時刻(チケット欄)を使う。
+ * どちらも無ければ null。
+ */
+val GameLp.openLabel: String?
+    get() {
+        val silver = timeline.firstOrNull { it.text.contains("シルバー") && it.text.contains("入場") && it.time.isNotBlank() }
+        return when {
+            silver != null -> "開場 ${silver.time}(シルバー会員)"
+            openTime.isNotBlank() -> "開場 $openTime"
+            else -> null
+        }
+    }
+
 object GameLpRepository {
     /** いちばん最近読み込んだデータ(試合ID → 試合情報)。一面と試合詳細で共通に使う。 */
     var latest by mutableStateOf<Map<String, GameLp>>(emptyMap())
