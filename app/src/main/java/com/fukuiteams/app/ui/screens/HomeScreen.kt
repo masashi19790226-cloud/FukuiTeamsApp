@@ -827,14 +827,21 @@ private fun NextGameBlock(
             .clickable { onOpenGame(nextGame.id) },
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // チーム名の右に、試合まであと何日かを赤い札で出す
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        // チーム名の左に HOME/AWAY の札(大きめ)、右端に試合まであと何日かを赤い札で出す
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            HomeAwayTag(isHome = nextGame.isHome, fontSize = 14.sp)
             Text(
                 nextGame.team.displayName,
-                modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.labelMedium,
-                color = nextGame.team.color
+                color = nextGame.team.color,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
+            Spacer(modifier = Modifier.weight(1f))
             nextGame.countdownLabel()?.let { label ->
                 Text(
                     label,
@@ -852,7 +859,7 @@ private fun NextGameBlock(
             fontSize = 19
         )
         Text(
-            "${if (nextGame.isHome) "HOME" else "AWAY"}・${nextGame.venue}・チケット:${nextGame.ticketStatus}",
+            "${nextGame.venue}・チケット:${nextGame.ticketStatus}",
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
