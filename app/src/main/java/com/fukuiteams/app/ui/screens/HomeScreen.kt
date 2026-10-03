@@ -842,13 +842,15 @@ private fun NextGameBlock(
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.weight(1f))
+            // 「あと○日」は赤い枠と赤い文字(塗りつぶしにすると、赤地に白文字の HOME の札と見分けにくいため)
             nextGame.countdownLabel()?.let { label ->
                 Text(
                     label,
                     modifier = Modifier
-                        .background(NewsRed)
+                        .border(1.5.dp, NewsRed)
+                        .background(Paper)
                         .padding(horizontal = 8.dp, vertical = 2.dp),
-                    color = Paper,
+                    color = NewsRed,
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -873,7 +875,7 @@ private fun NextGameBlock(
 
         if (preview != null) {
             DoubleRule(modifier = Modifier.padding(vertical = 6.dp))
-            SectionLabel("データで見る展望", red = true)
+            SectionLabel("データで見る展望")
             PreviewTable(preview)
             if (preview.summary.isNotBlank()) {
                 Text(preview.summary, style = MaterialTheme.typography.bodyMedium, color = Ink)
