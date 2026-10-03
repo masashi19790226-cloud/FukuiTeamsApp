@@ -97,6 +97,7 @@ import com.fukuiteams.app.data.DataStatus
 import com.fukuiteams.app.data.DataStatusRepository
 import com.fukuiteams.app.data.MatchWeather
 import com.fukuiteams.app.data.WeatherRepository
+import com.fukuiteams.app.data.buildResultContext
 import com.fukuiteams.app.data.countdownLabel
 import com.fukuiteams.app.data.isToday
 import com.fukuiteams.app.data.GameLp
@@ -238,7 +239,7 @@ fun HomeScreen(
                     .filter { (selectedTeam == null || it.team == selectedTeam) && autoResults.containsKey(it.id) }
                     .maxByOrNull { it.sortKey }
                 if (latest != null) {
-                    LatestResultHero(latest, autoResults.getValue(latest.id), onClick = { onOpenGame(latest.id) })
+                    LatestResultHero(latest, autoResults.getValue(latest.id), autoResults, onClick = { onOpenGame(latest.id) })
                 }
             }
 
@@ -656,7 +657,16 @@ private fun openUrl(context: Context, url: String) {
 
 /** 一面トップの「速報」。最新の試合結果を大見出しとスコアボックスで見せる。 */
 @Composable
-private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -> Unit) {
+private fun LatestResultHero(
+    game: Game,
+    result: RemoteGameResult,
+    allResults: Map<String, RemoteGameResult>,
+    onClick: () -> Unit
+) {
+    // 連勝・連敗、前回対戦、今季の成績(見出しと記事に使う)
+    val ctx = remember(game.id, allResults, GamesRepository.games) {
+        buildResultContext(game, GamesRepository.games, allResults)
+    }
     val outcome = when {
         result.myScore > result.opponentScore -> GameOutcome.WIN
         result.myScore < result.opponentScore -> GameOutcome.LOSE
@@ -701,7 +711,7 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
         }
         val leadPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
         val comment = recordedComment(game.id, leadPrefs)
-        val resultLine = resultHeadline(game, result.myScore, result.opponentScore, outcome)
+        val resultLine = resultHeadline(game, result.myScore, result.opponentScore, outcome, ctx)
         // 試合画面でコメントを書いていれば、その言葉を大見出しにし、結果は袖見出し(小さめの見出し)にする
         val commentTitle = commentHeadline(comment)
         if (commentTitle != null) {
@@ -717,7 +727,7 @@ private fun LatestResultHero(game: Game, result: RemoteGameResult, onClick: () -
         }
         // 記事の書き出し(リード文)。試合結果と、試合画面で書いたコメントから組み立てる
         Text(
-            resultLead(game, result, outcome, comment),
+            resultLead(game, result, outcome, comment, ctx),
             style = MaterialTheme.typography.bodyMedium,
             color = Ink
         )
