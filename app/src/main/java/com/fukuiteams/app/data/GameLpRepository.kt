@@ -44,6 +44,11 @@ val GameLp.openLabel: String?
         }
     }
 
+/** 天気予報に使う入場の時刻(シルバー会員の先行入場、無ければ一般の開場)。「13:00」の形。分からなければ null */
+val GameLp.entryTime: String?
+    get() = timeline.firstOrNull { it.text.contains("シルバー") && it.text.contains("入場") && it.time.isNotBlank() }?.time
+        ?: openTime.takeIf { it.isNotBlank() }
+
 object GameLpRepository {
     /** いちばん最近読み込んだデータ(試合ID → 試合情報)。一面と試合詳細で共通に使う。 */
     var latest by mutableStateOf<Map<String, GameLp>>(emptyMap())

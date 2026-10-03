@@ -96,9 +96,12 @@ import com.fukuiteams.app.data.AlertsResult
 import com.fukuiteams.app.data.DataStatus
 import com.fukuiteams.app.data.DataStatusRepository
 import com.fukuiteams.app.data.MatchWeather
+import com.fukuiteams.app.data.GameForecast
+import com.fukuiteams.app.data.entryTime
 import com.fukuiteams.app.data.WeatherRepository
 import com.fukuiteams.app.data.buildResultContext
 import com.fukuiteams.app.data.countdownLabel
+import com.fukuiteams.app.data.daysUntil
 import com.fukuiteams.app.data.isToday
 import com.fukuiteams.app.data.GameLp
 import com.fukuiteams.app.data.GameLpRepository
@@ -146,6 +149,8 @@ fun HomeScreen(
     var previews by remember { mutableStateOf<Map<String, GamePreview>>(emptyMap()) }
     var dataStatus by remember { mutableStateOf<DataStatus?>(null) }
     var weathers by remember { mutableStateOf<Map<String, MatchWeather>>(emptyMap()) }
+    // 「次の試合」の天気予報(試合の3日前から。入場の時刻と試合開始の時刻)
+    var forecasts by remember { mutableStateOf<Map<String, GameForecast>>(emptyMap()) }
 
     // アプリのすべての情報(日程・結果・招待・ニュース・展望・選手・順位・試合情報ページなど)を読み直す。
     // 選手や順位はこの画面では使わないが、ほかのタブに切り替えたときに新しい内容を出せるよう一緒に読み直す
@@ -159,6 +164,13 @@ fun HomeScreen(
         // 今日の試合の天気
         weathers = GamesRepository.games.filter { it.isToday() }
             .mapNotNull { g -> WeatherRepository.forGame(g)?.let { g.id to it } }
+            .toMap()
+        // 3日以内に試合があれば、その天気予報(ブローウィンズのホームゲームは入場の時刻も)
+        forecasts = GamesRepository.games
+            .filter { g -> g.isUpcoming() && (g.daysUntil() ?: 99L) in 0L..3L }
+            .mapNotNull { g ->
+                WeatherRepository.preGameForecast(g, GameLpRepository.latest[g.id]?.entryTime)?.let { g.id to it }
+            }
             .toMap()
     }
 
@@ -266,6 +278,7 @@ fun HomeScreen(
                     autoResults = autoResults,
                     previews = previews,
                     lps = GameLpRepository.latest,
+                    forecasts = forecasts,
                     onOpenGame = onOpenGame
                 )
             }
@@ -775,6 +788,7 @@ private fun TwoColumnFront(
     autoResults: Map<String, RemoteGameResult>,
     previews: Map<String, GamePreview>,
     lps: Map<String, GameLp>,
+    forecasts: Map<String, GameForecast>,
     onOpenGame: (String) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -806,6 +820,7 @@ private fun TwoColumnFront(
                     hasOpenInvite = hasOpenInvite(game),
                     preview = previews[game.id],
                     lp = lps[game.id],
+                    forecast = forecasts[game.id],
                     onOpenGame = onOpenGame
                 )
             }
@@ -832,6 +847,7 @@ private fun NextGameBlock(
     hasOpenInvite: Boolean,
     preview: GamePreview?,
     lp: GameLp?,
+    forecast: GameForecast?,
     onOpenGame: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -879,6 +895,27 @@ private fun NextGameBlock(
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
+        // 天気予報(試合の3日前から。入場の時刻 → 試合開始の時刻の順)
+        if (forecast != null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, LineGray)
+                    .padding(horizontal = 8.dp, vertical = 5.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    "天気予報(${(forecast.start ?: forecast.entry)?.placeLabel ?: ""})",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Ink
+                )
+                if (forecast.entryTime != null && forecast.entry != null) {
+                    ForecastLine("入場 ${forecast.entryTime}ごろ", forecast.entry)
+                }
+                forecast.start?.let { ForecastLine("試合開始 ${forecast.startTime}ごろ", it) }
+            }
+        }
 
         // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントを出す
         // (スケジュールとイベントは押すと開く。試合当日は上の「本日の試合」に出すので、ここでは出さない)
@@ -917,6 +954,20 @@ private fun NextGameBlock(
         if (hasOpenInvite) {
             Text("無料招待あり ›", style = MaterialTheme.typography.labelMedium, color = NewsRed, modifier = Modifier.padding(top = 4.dp))
         }
+    }
+}
+
+/** 天気予報の1行。例「入場 13:00ごろ  晴れ 24℃ 降水確率10%」 */
+@Composable
+private fun ForecastLine(label: String, w: MatchWeather) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(label, modifier = Modifier.width(120.dp), style = MaterialTheme.typography.bodySmall, color = InkSoft, maxLines = 1)
+        Text(
+            "${w.summary} ${w.temperature}℃" + (w.rainChance?.let { " 降水確率$it%" } ?: ""),
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Bold,
+            color = Ink
+        )
     }
 }
 
