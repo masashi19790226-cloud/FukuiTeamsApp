@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -179,7 +181,10 @@ fun GamePhotoSpread(game: Game, photos: List<File>, leadCaption: String) {
     }
 }
 
-/** 写真を画面いっぱいに表示。「前へ」「次へ」で切り替え、外側タップで閉じる。 */
+/**
+ * 写真を画面いっぱいに表示。指で左右に払う(スワイプ)か、「前へ」「次へ」で切り替える。外側タップで閉じる。
+ */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PhotoViewerDialog(
     photos: List<File>,
@@ -187,7 +192,9 @@ fun PhotoViewerDialog(
     captionFor: (Int) -> String,
     onDismiss: () -> Unit
 ) {
-    var index by remember { mutableStateOf(startIndex.coerceIn(0, photos.lastIndex)) }
+    if (photos.isEmpty()) return
+    val pagerState = rememberPagerState(initialPage = startIndex.coerceIn(0, photos.lastIndex)) { photos.size }
+    val scope = rememberCoroutineScope()
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Column(
             modifier = Modifier
@@ -196,17 +203,35 @@ fun PhotoViewerDialog(
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            val image = rememberPhoto(photos[index])
-            Box(modifier = Modifier.fillMaxWidth().height(420.dp), contentAlignment = Alignment.Center) {
-                if (image != null) {
-                    Image(bitmap = image, contentDescription = null, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
+            // 左右に払うと前後の写真に切り替わる
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxWidth().height(420.dp),
+                pageSpacing = 12.dp
+            ) { page ->
+                val image = rememberPhoto(photos[page])
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    if (image != null) {
+                        Image(bitmap = image, contentDescription = null, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
+                    }
                 }
             }
+            val index = pagerState.currentPage
             Text("▲${captionFor(index)}", color = Ivory, fontSize = 12.sp)
             Row(verticalAlignment = Alignment.CenterVertically) {
-                TextButton(onClick = { if (index > 0) index-- }, enabled = index > 0) { Text("‹ 前へ", color = Ivory) }
+                TextButton(
+                    onClick = { scope.launch { pagerState.animateScrollToPage(index - 1) } },
+                    enabled = index > 0
+                ) { Text("‹ 前へ", color = Ivory) }
                 Text("${index + 1} / ${photos.size}", color = Ivory, fontSize = 12.sp, modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-                TextButton(onClick = { if (index < photos.lastIndex) index++ }, enabled = index < photos.lastIndex) { Text("次へ ›", color = Ivory) }
+                TextButton(
+                    onClick = { scope.launch { pagerState.animateScrollToPage(index + 1) } },
+                    enabled = index < photos.lastIndex
+                ) { Text("次へ ›", color = Ivory) }
+            }
+            if (photos.size > 1) {
+                Text("左右に指を動かしても切り替えられます", color = Ivory.copy(alpha = 0.7f), fontSize = 10.sp,
+                    modifier = Modifier.align(Alignment.CenterHorizontally))
             }
             TextButton(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) { Text("閉じる", color = Ivory) }
         }

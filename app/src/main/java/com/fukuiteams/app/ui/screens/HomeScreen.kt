@@ -688,26 +688,10 @@ private fun LatestResultHero(
                 color = InkSoft
             )
         }
-        // 会場(押すと地図)と、その日の試合開始ごろの天気
-        Text(
-            "会場:${game.venue} ›地図",
-            style = MaterialTheme.typography.bodySmall,
-            color = Accent,
-            modifier = Modifier.clickable {
-                openUrl(context, "https://www.google.com/maps/search/?api=1&query=" +
-                    java.net.URLEncoder.encode(game.venue, "UTF-8"))
-            }
-        )
+        // ユナイテッド(屋外のサッカー)の試合だけ、その日の試合開始ごろの天気を記事に盛り込む
         var weather by remember(game.id) { mutableStateOf<MatchWeather?>(null) }
-        LaunchedEffect(game.id) { weather = WeatherRepository.forGame(game) }
-        weather?.let { w ->
-            val hour = game.timeLabel.substringBefore(":").toIntOrNull()
-            Text(
-                "天気(${w.placeLabel}${hour?.let { "・${it}時ごろ" } ?: ""}):${w.summary} ${w.temperature}℃" +
-                    (w.rainChance?.let { " 降水確率$it%" } ?: ""),
-                style = MaterialTheme.typography.bodySmall,
-                color = InkSoft
-            )
+        if (game.team == Team.UNITED) {
+            LaunchedEffect(game.id) { weather = WeatherRepository.forGame(game) }
         }
         val leadPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
         val comment = recordedComment(game.id, leadPrefs)
@@ -727,7 +711,7 @@ private fun LatestResultHero(
         }
         // 記事の書き出し(リード文)。試合結果と、試合画面で書いたコメントから組み立てる
         Text(
-            resultLead(game, result, outcome, comment, ctx),
+            resultLead(game, result, outcome, comment, ctx, weather),
             style = MaterialTheme.typography.bodyMedium,
             color = Ink
         )

@@ -31,7 +31,9 @@ fun resultLead(
     result: RemoteGameResult?,
     outcome: GameOutcome?,
     comment: String,
-    ctx: ResultContext? = null
+    ctx: ResultContext? = null,
+    // その日の試合開始ごろの天気(ユナイテッドの試合だけ渡す)
+    weather: MatchWeather? = null
 ): String {
     val venue = game.venue.takeIf { it.isNotBlank() && !it.contains("調整中") }
     val where = if (game.isHome) "ホームの" else "敵地・"
@@ -88,8 +90,21 @@ fun resultLead(
         else -> ""
     }
 
-    // 試合の中身(点差・得点の多さ。スコアから分かることだけ)
+    // 試合の中身(天気・点差・得点の多さ。取得した情報から分かることだけ)
     val flow = StringBuilder()
+    weather?.takeIf { it.summary != "−" }?.let { w ->
+        val hour = game.timeLabel.substringBefore(":").toIntOrNull()
+        val rain = w.rainChance?.let { "、降水確率${it}%" }.orEmpty()
+        flow.append(
+            game.pick(
+                listOf(
+                    "試合開始${hour?.let { "の${it}時" } ?: ""}ごろの${w.placeLabel}は${w.summary}、気温${w.temperature}℃${rain}。",
+                    "${w.summary}の${w.placeLabel}、気温${w.temperature}℃の中でのキックオフとなった。"
+                ),
+                salt = 6
+            )
+        )
+    }
     if (result != null && outcome != null) {
         val diff = kotlin.math.abs(result.myScore - result.opponentScore)
         val sum = result.myScore + result.opponentScore
