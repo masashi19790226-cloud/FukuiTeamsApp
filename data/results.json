@@ -88,5 +88,11 @@
     "opponent_score": 72,
     "checked_at": "2026-10-04T10:23:56.136161",
     "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507198"
+  },
+  "un02": {
+    "my_score": 0,
+    "opponent_score": 1,
+    "checked_at": "2026-10-04T10:50:19.869173",
+    "source_url": "https://fukuiunited.co.jp/"
   }
 }
