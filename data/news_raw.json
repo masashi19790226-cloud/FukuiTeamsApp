@@ -1383,5 +1383,15 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.t9xByERrMekvP-ZkrjaI2g&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-04T21:59:11.191761+00:00"
+  },
+  {
+    "id": "bing:https://www.sankei.com/pressrelease/prtimes/POLCLOZELBNDBLEF7BFSWQBTZI/",
+    "team": "BLOWINDS",
+    "title": "【(株)アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
+    "link": "https://www.sankei.com/pressrelease/prtimes/POLCLOZELBNDBLEF7BFSWQBTZI/",
+    "published": "2026-10-01T06:00:00+00:00",
+    "source": "産経ニュース",
+    "image": "https://www.bing.com/th?id=ONUT.O10-x2yGtcyjn_chYsxRQg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-04T22:41:40.556559+00:00"
   }
 ]
