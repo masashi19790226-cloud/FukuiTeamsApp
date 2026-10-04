@@ -182,30 +182,74 @@ def ruck_score(parsed, game: dict):
 def parse_united_latest(page: str):
     """
     LATEST MATCH欄から (月, 日, 時刻, 左チーム名, 左得点, 右得点, 右チーム名) を取り出す。
-    表示例:
-      9.27(Sun)11:00KICKOFF / 福井ユナイテッドFC / 1 / 0-1 / 1-1 / 2 / 新潟医療福祉大学FC
+    公式トップのHTML(2026年10月時点):
+      <h2>LATEST  MATCH</h2>  ※LATEST と MATCH の間は空白2つ
+      <p class="latest-main-info">10.4<span>(Sun)</span>13:30<small>KICKOFF</small></p>
+      <div class="latest-main-score__name">福井ユナイテッドFC</div>
+      <ul><li>0</li><li><p>0-1</p><p>0-0</p></li><li>1</li></ul>   ※真ん中は前半・後半の得点
+      <div class="latest-main-score__name">富山新庄クラブ</div>
+    以前は「LATEST MATCH」(空白1つ)で探していたため見つからず、さらに前半・後半の得点を
+    試合の得点と取り違えるおそれがあったので、HTMLの作りから直接読むように変更した。
     """
-    lines = html_to_lines(page)
-    try:
-        start = next(i for i, ln in enumerate(lines) if "LATEST MATCH" in ln)
-    except StopIteration:
+    m = re.search(r"LATEST\s+MATCH(.*?)(LEAGUE\s+RANKING|</section>)", page, re.S | re.I)
+    if not m:
         print("[DEBUG] UNITED: LATEST MATCH 欄が見つからない")
         return None
-    block = lines[start:start + 40]
-    joined = " ".join(block)
-    dm = re.search(r"(\d{1,2})\.(\d{1,2})\s*\(\w+\)\s*(\d{1,2}:\d{2})\s*KICK\s*OFF", joined, re.I)
+    block = m.group(1)
+    info = re.search(r'latest-main-info">(.*?)</p>', block, re.S)
+    info_text = re.sub(r"<[^>]+>", " ", info.group(1)) if info else re.sub(r"<[^>]+>", " ", block)
+    dm = re.search(r"(\d{1,2})\.(\d{1,2})\s*\(\s*\w+\s*\)\s*(\d{1,2}:\d{2})\s*KICK\s*OFF", info_text, re.I)
     if not dm:
         print("[DEBUG] UNITED: 日付・キックオフ時刻が見つからない")
         return None
-    nums = [i for i, ln in enumerate(block) if re.fullmatch(r"\d{1,2}", ln)]
-    if len(nums) < 2:
-        print("[DEBUG] UNITED: まだスコアが出ていない")
+    names = [htmllib.unescape(re.sub(r"<[^>]+>", "", n)).strip()
+             for n in re.findall(r'latest-main-score__name">(.*?)</div>', block, re.S)]
+    score_ul = re.search(r'latest-main-score.*?<ul>(.*?)</ul>', block, re.S)
+    # ul の直下の li のうち、中身が数字だけのもの(左右の得点)。前半・後半の <p> は数えない
+    scores = re.findall(r"<li>\s*(\d{1,2})\s*</li>", score_ul.group(1)) if score_ul else []
+    if len(names) < 2 or len(scores) < 2:
+        print("[DEBUG] UNITED: まだスコアが出ていない(または読み取れない)")
         return None
-    i1, i2 = nums[0], nums[1]
-    left_team = block[i1 - 1] if i1 > 0 else ""
-    right_team = block[i2 + 1] if i2 + 1 < len(block) else ""
     return (int(dm.group(1)), int(dm.group(2)), dm.group(3).zfill(5),
-            left_team, int(block[i1]), int(block[i2]), right_team)
+            names[0], int(scores[0]), int(scores[-1]), names[1])
+
+
+UNITED_ASYNC = "https://fukuiunited.co.jp/system/async/async.php"
+
+
+def united_score_from_result_pages(game_dt: datetime, game: dict):
+    """
+    公式トップに出ていない試合(次の試合が終わってトップから外れた場合など)は、
+    公式サイトの試合一覧から同じ日・同じ時刻の試合の結果ページを探して読む。
+    戻り値:((福井の得点, 相手の得点), 結果ページのURL) / 見つからなければ (None, None)
+    """
+    try:
+        import standings  # scripts/standings.py(結果ページの読み取りを共通で使う)
+
+        def post(url, body):
+            req = urllib.request.Request(
+                url, data=json.dumps(body).encode("utf-8"), method="POST",
+                headers={"User-Agent": "Mozilla/5.0 FukuiTeamsAppBot/1.0", "Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=20) as res:
+                return json.loads(res.read().decode("utf-8", errors="ignore"))
+
+        pt = post(UNITED_ASYNC, {"className": "PostTypes", "method": "get", "slug": ["match"], "post_type_options": True})
+        ptid = pt["data"][0]["post_type_id"]
+        res = post(UNITED_ASYNC, {"className": "MatchInfo", "method": "get", "post_type_id": [ptid], "category": "",
+                                  "orderby": [{"column": "kickoff", "order": "asc"}], "offset": 0, "limit": 300})
+        want = game_dt.strftime("%Y/%m/%d %H:%M")
+        for g in res.get("data", []):
+            if g.get("kickoff", "") != want:
+                continue
+            url = f"https://fukuiunited.co.jp/match/result.php?id={g['id']}"
+            r = standings.parse_united_result(fetch_html(url))
+            if r:
+                return (r["my"], r["opp"]), url
+        return None, None
+    except Exception as e:
+        print(f"[WARN] UNITED: 結果ページからの取得に失敗 {e!r}")
+        return None, None
 
 
 def united_score(latest, game_dt: datetime, game: dict):
@@ -302,9 +346,14 @@ def main():
             score = ruck_score(ruck_parsed, game)
             gid = game.get("gid")
             source_url = f"https://w-fleague.jp/score/result.html?gid={gid}" if gid else RUCK_URL
-        elif team == "united" and un_page:
-            score = united_score(un_latest, game_dt, game)
+        elif team == "united":
+            score = united_score(un_latest, game_dt, game) if un_page else None
             source_url = UNITED_URL
+            if not score:
+                # トップの LATEST MATCH に無ければ、試合ごとの結果ページから探す
+                score, page_url = united_score_from_result_pages(game_dt, game)
+                if page_url:
+                    source_url = page_url
 
         label = f"{game['id']} ({game['date']} vs {game['opponent']})"
         if score:
