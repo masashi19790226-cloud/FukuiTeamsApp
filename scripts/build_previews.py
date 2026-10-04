@@ -347,8 +347,14 @@ def build_team_players(team_id, label):
         else:
             players.append(dict(r))  # 今季まだ試合に出ていない選手(成績はデータなし)
     players += list(by_pid.values())  # 一覧に無いが成績表にはいる選手
+    # 選手の顔写真(Bリーグ公式の画像。アプリの選手タブで小さく表示する)
+    # 画像の場所は「files/user/roster/<TeamID>/<シーズン>/<PlayerID>_03.png」。シーズンの部分はページ内の画像から読む
+    sm = re.search(rf"files/user/roster/{team_id}/([^/\"']+)/\d+_\d+\.(?:png|jpg)", page)
+    photo_season = sm.group(1) if sm else (season if re.fullmatch(r"\d{4}-\d{2}", season or "") else "")
     for p in players:
-        p.pop("pid", None)
+        pid = p.pop("pid", None)
+        if pid and photo_season:
+            p["photo"] = f"https://bleague.bl.kuroco-img.app/files/user/roster/{team_id}/{photo_season}/{pid}_03.png"
     players.sort(key=lambda p: int(p["number"]) if str(p.get("number", "")).isdigit() else 999)
     if not players:
         print(f"[WARN] 選手: Bリーグ公式から{label}の選手を読み取れませんでした")
@@ -431,6 +437,22 @@ def load_standings():
             for k in ("scorers", "match_cache"):
                 if old_u.get(k):
                     STANDINGS["UNITED"][k] = old_u[k]
+
+
+def attach_player_photos():
+    """丸岡RUCK・ユナイテッドの得点の表に、公式サイトの選手紹介の顔写真を付ける(読めなければ付けない)"""
+    rac = STANDINGS.get("RAC", {}).get("scorers")
+    if rac:
+        try:
+            standings.add_photos(rac.get("rows"), standings.RUCK_NAME, standings.ruck_members(fetch))
+        except Exception as e:
+            print(f"[WARN] 写真: 丸岡RUCKの選手紹介の取得に失敗 {e!r}")
+    uni = STANDINGS.get("UNITED", {}).get("scorers")
+    if uni:
+        try:
+            standings.add_photos(uni.get("rows"), standings.UNITED_NAME, standings.united_photos(fetch))
+        except Exception as e:
+            print(f"[WARN] 写真: ユナイテッドの選手ページの取得に失敗 {e!r}")
 
 
 def team_scorers(team_key, name, limit=3):
@@ -555,6 +577,7 @@ def main():
     previews = {}
 
     load_standings()
+    attach_player_photos()
 
     for team in ["BLOWINDS", "RAC", "UNITED"]:
         try:

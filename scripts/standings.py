@@ -297,3 +297,68 @@ def united_scorers(fetch, post_json, cache):
         "games": len(new_cache),
         "rows": rows,
     }, new_cache
+
+
+# ---------- 自チームの選手の顔写真(公式サイトの選手紹介) ----------
+
+RUCK_MEMBERS = "https://ruck-fukui.com/members"
+UNITED_TEAM = f"{UNITED_SITE}/team/"
+
+
+def _name_key(name: str) -> str:
+    """名前を比べるための形(空白を取る)"""
+    return re.sub(r"[\s\u3000]+", "", name or "")
+
+
+def ruck_members(fetch):
+    """丸岡RUCK公式の選手紹介から {名前: {photo, number, position}}。
+    <div class="member-item"><p><img src="...profile2026-17-300x300.jpg"></p><h4 class="team-name">荒井 一花(17 FP)</h4>"""
+    page = fetch(RUCK_MEMBERS)
+    out = {}
+    for block in page.split('class="member-item"')[1:]:
+        img = re.search(r'<img[^>]+src="([^"]+)"', block)
+        head = re.search(r'class="team-name">(.*?)</h4>', block, flags=re.S)
+        if not head:
+            continue
+        text = _text(head.group(1))
+        m = re.match(r"(.+?)\s*[（(]\s*(\d+)\s*([A-Za-z]+)?\s*[)）]", text)
+        name = (m.group(1) if m else text).strip()
+        photo = img.group(1) if img else ""
+        # 一覧用の小さい画像(150x150)があればそれを使う
+        photo = re.sub(r"-\d+x\d+(\.\w+)$", r"-150x150\1", photo)
+        out[_name_key(name)] = {"photo": photo, "number": m.group(2) if m else "", "position": (m.group(3) or "") if m else ""}
+    print(f"[写真] 丸岡RUCK: 選手紹介から{len(out)}人")
+    return out
+
+
+def united_photos(fetch):
+    """ユナイテッド公式のトップチームのページから {名前: 写真URL}。
+    <img class="teammate__photo" src="https://fukuiunited.co.jp/upload/team/....png" alt="杉本 拓也" />"""
+    page = fetch(UNITED_TEAM)
+    out = {}
+    for tag in re.findall(r"<img[^>]+teammate__photo[^>]*>", page):
+        src = re.search(r'src="([^"]+)"', tag)
+        alt = re.search(r'alt="([^"]*)"', tag)
+        if src and alt and alt.group(1).strip():
+            out[_name_key(htmllib.unescape(alt.group(1)))] = src.group(1)
+    print(f"[写真] ユナイテッド: トップチームのページから{len(out)}人")
+    return out
+
+
+def add_photos(rows, team_word, photos):
+    """得点の表の、自チームの選手の行に写真(と、分かれば背番号・ポジション)を付ける"""
+    for r in rows or []:
+        if team_word not in r.get("team", ""):
+            continue
+        info = photos.get(_name_key(r.get("name", "")))
+        if not info:
+            continue
+        if isinstance(info, dict):
+            if info.get("photo"):
+                r["photo"] = info["photo"]
+            if not r.get("number") and info.get("number"):
+                r["number"] = info["number"]
+            if not r.get("position") and info.get("position"):
+                r["position"] = info["position"]
+        else:
+            r["photo"] = info

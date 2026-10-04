@@ -57,6 +57,7 @@ import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.launch
 import com.fukuiteams.app.data.sourceLabel
 import com.fukuiteams.app.ui.components.SourceTag
+import com.fukuiteams.app.ui.components.RemoteThumbnail
 import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.NewsAlertsRepository
 import com.fukuiteams.app.data.RemoteInvitationAlert
@@ -241,7 +242,11 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     )
     // 同じ記事が別のサイトにも載っているもの(見出しの頭が同じ)は、いちばん新しい1件にまとめる
     val sorted = sortedAll.groupBy { sameArticleKey(it.alert) }.values.map { group ->
-        val first = group.first()
+        val first = group.first().let { f ->
+            // まとめた記事のどれかに画像があれば、それを使う
+            if (f.alert.image.isNotBlank()) f
+            else group.firstOrNull { it.alert.image.isNotBlank() }?.let { f.copy(alert = f.alert.copy(image = it.alert.image)) } ?: f
+        }
         first.copy(
             sameCount = group.size - 1,
             sameSources = group.drop(1).map { it.alert.sourceLabel() }.filter { it.isNotBlank() }.distinct()
@@ -383,7 +388,15 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                                 onValueChange = { query = it },
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true,
-                                placeholder = { Text("キーワードで検索(過去1年分・例:金沢 勝利)") },
+                                // 説明の文字が長いと2行に折り返して欄が高くなるので、1行に収める(はみ出す分は「…」)
+                                placeholder = {
+                                    Text(
+                                        "選手名・イベント名などで検索",
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        fontSize = 14.sp
+                                    )
+                                },
                                 trailingIcon = {
                                     if (query.isNotEmpty()) {
                                         Text(
@@ -693,7 +706,17 @@ private fun RadarRow(
                 softWrap = false
             )
         }
-        Text(alert.title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = Ink)
+        // 見出し。サムネイル画像があれば左に小さく出す(Bingニュース・公式サイトのお知らせ)
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
+            if (alert.image.isNotBlank()) RemoteThumbnail(alert.image, size = 64.dp)
+            Text(
+                alert.title,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = Ink
+            )
+        }
         if (alert.snippet.isNotBlank()) {
             Text("「${alert.snippet}」", style = MaterialTheme.typography.bodySmall, color = Ink, maxLines = 3)
         }

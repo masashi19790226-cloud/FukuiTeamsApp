@@ -58,7 +58,9 @@ data class ScorerRow(
     val starts: Int?,
     val bench: Int?,
     val number: String,
-    val position: String
+    val position: String,
+    /** 顔写真のURL(自チームの選手だけ。公式サイトの選手紹介から)。無ければ空 */
+    val photo: String = ""
 )
 
 data class LeagueScorers(
@@ -114,7 +116,8 @@ object StandingsRepository {
                 starts = intOrNull("starts"),
                 bench = intOrNull("bench"),
                 number = r.optString("number"),
-                position = r.optString("position")
+                position = r.optString("position"),
+                photo = r.optString("photo")
             )
         }
         if (rows.isEmpty()) return null

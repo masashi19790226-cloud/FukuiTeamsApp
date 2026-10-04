@@ -48,7 +48,8 @@ object NewsAlertsRepository {
                         link = obj.optString("link"),
                         published = obj.optString("published"),
                         detectedAt = obj.optString("detected_at"),
-                        source = obj.optString("source")
+                        source = obj.optString("source"),
+                        image = obj.optString("image")
                     )
                 )
             }

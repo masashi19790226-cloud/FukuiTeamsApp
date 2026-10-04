@@ -285,6 +285,16 @@ def check_feeds(feeds: dict, path: str, label: str, is_news: bool = False) -> in
     return new_count
 
 
+def bing_image(url: str) -> str:
+    """Bingのサムネイル画像のURLを、安全な https にして、小さめの大きさを指定する"""
+    url = (url or "").strip()
+    if not url:
+        return ""
+    if url.startswith("http://"):
+        url = "https://" + url[len("http://"):]
+    return url + ("&" if "?" in url else "?") + "w=160&h=160&c=7"
+
+
 def parse_bing_rss(xml_text: str):
     """BingニュースのRSSから記事を取り出す。リンクは Bing の転送用URLなので、中の元の記事のURLを使う。"""
     from email.utils import parsedate_to_datetime
@@ -309,6 +319,8 @@ def parse_bing_rss(xml_text: str):
                 "title": title,
                 "link": real,
                 "published": published,
+                # サムネイル画像(Bingが用意している小さな画像)。無ければ空
+                "image": bing_image(tag("News:Image")),
                 # 媒体名(「FNNプライムオンライン on MSN」→「FNNプライムオンライン」)
                 "source": re.sub(r"\s+on MSN$", "", strip_html(tag("News:Source"))),
             })
@@ -349,6 +361,7 @@ def check_bing_news() -> int:
                     "link": entry["link"],
                     "published": entry["published"],
                     "source": entry["source"],
+                    "image": entry["image"],
                     "detected_at": datetime.now(timezone.utc).isoformat(),
                 })
                 existing_ids.add(entry["id"])

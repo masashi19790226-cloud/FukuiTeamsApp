@@ -67,6 +67,7 @@ import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.MastheadTopBar
+import com.fukuiteams.app.ui.components.RemoteThumbnail
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.components.ThinRule
@@ -577,16 +578,35 @@ private fun ScorersTable(rows: List<ScorerRow>, isUnited: Boolean, ownColor: and
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 cells.forEachIndexed { i, c ->
-                    Text(
-                        c,
-                        modifier = Modifier.weight(weights[i]),
-                        fontSize = 12.sp,
-                        fontWeight = if (i == 2 && r.goals > 0) FontWeight.ExtraBold else FontWeight.Normal,
-                        color = if (i == 2 && r.goals > 0) ownColor else Ink,
-                        textAlign = if (i == 1) TextAlign.Start else TextAlign.Center,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    if (i == 1) {
+                        // 選手名の欄。自チームの選手は顔写真を名前の左に小さく出す(公式サイトの選手紹介から)
+                        Row(
+                            modifier = Modifier.weight(weights[i]),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            RemoteThumbnail(r.photo, width = 28.dp, height = 35.dp, alignTop = true)
+                            Text(
+                                c,
+                                modifier = Modifier.weight(1f),
+                                fontSize = 12.sp,
+                                color = Ink,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    } else {
+                        Text(
+                            c,
+                            modifier = Modifier.weight(weights[i]),
+                            fontSize = 12.sp,
+                            fontWeight = if (i == 2 && r.goals > 0) FontWeight.ExtraBold else FontWeight.Normal,
+                            color = if (i == 2 && r.goals > 0) ownColor else Ink,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
             ThinRule(color = LineGray)
@@ -746,6 +766,8 @@ private fun RosterCard(player: PlayerStats) {
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            // 顔写真(Bリーグ公式の画像。読み込めないときは出さない)
+            RemoteThumbnail(player.photo, width = 44.dp, height = 55.dp, alignTop = true)
             Headline(
                 if (player.number.isNotBlank()) "#${player.number}" else "#-",
                 fontSize = 22,

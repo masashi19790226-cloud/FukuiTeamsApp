@@ -374,6 +374,36 @@ class Collector:
                 self.add("RAC", title, link, date, snippet, "公式サイト")
         print(f"[丸岡RUCK] RSSから {count} 件")
 
+    def fill_news_images(self, limit=15):
+        """
+        公式サイトのお知らせに、トピックで表示するサムネイル画像を付ける。
+        お知らせのページに設定されている代表画像(SNSで共有したときに出る og:image)を使う。
+        1回の実行で読むのは limit 件まで(残りは次回)。画像が無いページは空にして、次からは読まない。
+        """
+        done = 0
+        for item in self.news:
+            if not str(item.get("id", "")).startswith("official-news:") or "image" in item:
+                continue
+            if done >= limit:
+                break
+            done += 1
+            try:
+                page = fetch(item["link"])
+            except Exception as e:
+                print(f"[WARN] 画像: ページの取得に失敗 {item['link']} {e}")
+                continue
+            m = (re.search(r'<meta[^>]+property=["\']og:image["\'][^>]*content=["\']([^"\']+)', page, flags=re.I)
+                 or re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]*property=["\']og:image', page, flags=re.I))
+            url = htmllib.unescape(m.group(1)).strip() if m else ""
+            if url:
+                url = urljoin(item["link"], url)
+                if url.startswith("http://"):
+                    url = "https://" + url[len("http://"):]
+            item["image"] = url
+            time.sleep(1)
+        if done:
+            print(f"[公式サイト] お知らせの画像を{done}件確認しました")
+
     def save(self):
         # 以前の判定で集めた「招待ではないもの」(来場者プレゼント・入会特典・開催報告など)を取り除く
         self.items, removed = filter_invites(self.items)
@@ -396,6 +426,7 @@ def main():
     c.check_united_store()
     c.check_ruck_feed()
     c.check_city(FUKUI_CITY_LISTS, r"/p\d{5,}\.html", "福井市")
+    c.fill_news_images()
     c.save()
 
 

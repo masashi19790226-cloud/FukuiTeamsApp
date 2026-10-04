@@ -28,7 +28,9 @@ data class PlayerStats(
     val fieldGoalPct: String?,
     val threePct: String?,
     val freeThrowPct: String?,
-    val efficiency: String?
+    val efficiency: String?,
+    /** 顔写真のURL(Bリーグ公式の画像)。無ければ空 */
+    val photo: String = ""
 )
 
 data class TeamPlayers(
@@ -77,7 +79,8 @@ object PlayersRepository {
                         fieldGoalPct = v("fg_pct"),
                         threePct = v("three_pct"),
                         freeThrowPct = v("ft_pct"),
-                        efficiency = v("eff")
+                        efficiency = v("eff"),
+                        photo = p.optString("photo")
                     )
                 }
                 map[team] = TeamPlayers(
