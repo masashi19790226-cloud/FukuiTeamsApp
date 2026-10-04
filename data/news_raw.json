@@ -420,7 +420,8 @@
     "link": "https://ruck-fukui.com/archives/6388",
     "published": "2026-09-11T05:07:00+00:00",
     "detected_at": "2026-09-11T05:07:00+00:00",
-    "source": "丸岡RUCK公式"
+    "source": "丸岡RUCK公式",
+    "image": ""
   },
   {
     "id": "official-news:https://ruck-fukui.com/archives/6361",
@@ -429,7 +430,8 @@
     "link": "https://ruck-fukui.com/archives/6361",
     "published": "2026-09-07T12:04:05+00:00",
     "detected_at": "2026-09-07T12:04:05+00:00",
-    "source": "丸岡RUCK公式"
+    "source": "丸岡RUCK公式",
+    "image": ""
   },
   {
     "id": "official-news:https://ruck-fukui.com/archives/6358",
@@ -438,7 +440,8 @@
     "link": "https://ruck-fukui.com/archives/6358",
     "published": "2026-09-06T14:17:43+00:00",
     "detected_at": "2026-09-06T14:17:43+00:00",
-    "source": "丸岡RUCK公式"
+    "source": "丸岡RUCK公式",
+    "image": ""
   },
   {
     "id": "official-news:https://ruck-fukui.com/archives/6355",
@@ -447,7 +450,8 @@
     "link": "https://ruck-fukui.com/archives/6355",
     "published": "2026-09-03T13:59:35+00:00",
     "detected_at": "2026-09-03T13:59:35+00:00",
-    "source": "丸岡RUCK公式"
+    "source": "丸岡RUCK公式",
+    "image": ""
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
@@ -472,7 +476,8 @@
     "link": "https://fukuiunited.co.jp/news/detail.php?id=7000",
     "published": "2026-09-29T09:00:00+09:00",
     "detected_at": "2026-09-29T03:30:19.352830+00:00",
-    "source": "ユナイテッド公式"
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:8843157544638087553",
@@ -553,7 +558,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51667",
     "published": "2026-09-29T09:00:00+09:00",
     "detected_at": "2026-09-29T09:31:29.269912+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E6%99%82%E8%A8%88.jpg"
   },
   {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51680",
@@ -562,7 +568,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51680",
     "published": "2026-09-29T09:00:00+09:00",
     "detected_at": "2026-09-29T10:31:12.071371+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/HP%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9%E7%94%BB%E5%83%8F.jpeg"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:7951496874294929862",
@@ -587,7 +594,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51682",
     "published": "2026-09-30T09:00:00+09:00",
     "detected_at": "2026-09-30T06:35:46.928794+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_blowinds%20lab.jpg"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:18068703005524745147",
@@ -628,7 +636,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51684",
     "published": "2026-09-30T09:00:00+09:00",
     "detected_at": "2026-09-30T08:33:10.940679+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TICKET.jpg"
   },
   {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51688",
@@ -637,7 +646,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51688",
     "published": "2026-10-01T09:00:00+09:00",
     "detected_at": "2026-10-01T01:29:25.928124+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/IMG_4582.jpg"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:3653584020705405531",
@@ -694,7 +704,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51689",
     "published": "2026-10-01T09:00:00+09:00",
     "detected_at": "2026-10-01T05:29:54.097921+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/button%20GAME.JPG"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:12749424720207031517",
@@ -719,7 +730,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51690",
     "published": "2026-10-01T09:00:00+09:00",
     "detected_at": "2026-10-01T08:33:33.052895+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
   },
   {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51668",
@@ -728,7 +740,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51668",
     "published": "2026-10-01T09:00:00+09:00",
     "detected_at": "2026-10-01T10:31:26.258448+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/202609262259_1-300x0.jpg"
   },
   {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51681",
@@ -737,7 +750,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51681",
     "published": "2026-10-02T09:00:00+09:00",
     "detected_at": "2026-10-02T04:30:44.243005+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E3%82%AB%E3%83%95%E3%82%9A%E3%82%BB%E3%83%AB%E3%83%88%E3%82%A4%E3%83%8F%E3%82%99%E3%83%8A%E3%83%BC.jpg"
   },
   {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51692",
@@ -746,7 +760,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51692",
     "published": "2026-10-02T09:00:00+09:00",
     "detected_at": "2026-10-02T06:36:03.776170+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TOPTEAM.JPG"
   },
   {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51695",
@@ -1265,5 +1280,25 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.5bozXqcyk9HPYAJF_3I21Q&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-04T14:15:12.406940+00:00"
+  },
+  {
+    "id": "bing:https://www.fnn.jp/articles/-/1122507",
+    "team": "BLOWINDS",
+    "title": "残り13秒で逆転弾 Bリーグワン「福井ブローウィンズ」初戦は劇的 ...",
+    "link": "https://www.fnn.jp/articles/-/1122507",
+    "published": "2026-09-28T02:45:00+00:00",
+    "source": "FNNプライムオンライン",
+    "image": "",
+    "detected_at": "2026-10-04T17:14:14.143636+00:00"
+  },
+  {
+    "id": "bing:https://www.msn.com/ja-jp/sports/soccer/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89%E3%81%8C%E5%84%AA%E5%8B%9D-2%E5%B9%B4%E3%81%B6%E3%82%8A6%E5%BA%A6%E7%9B%AE-%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E3%81%AE%E5%8C%97%E4%BF%A1%E8%B6%8A%E3%83%AA%E3%83%BC%E3%82%B01%E9%83%A8-2%E8%A9%A6%E5%90%88%E6%AE%8B%E3%81%97%E6%B1%BA%E5%AE%9A/ar-AA2cC8yY",
+    "team": "UNITED",
+    "title": "福井ユナイテッドが優勝、2年ぶり6度目 サッカーの北信越リーグ1部 ...",
+    "link": "https://www.msn.com/ja-jp/sports/soccer/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89%E3%81%8C%E5%84%AA%E5%8B%9D-2%E5%B9%B4%E3%81%B6%E3%82%8A6%E5%BA%A6%E7%9B%AE-%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E3%81%AE%E5%8C%97%E4%BF%A1%E8%B6%8A%E3%83%AA%E3%83%BC%E3%82%B01%E9%83%A8-2%E8%A9%A6%E5%90%88%E6%AE%8B%E3%81%97%E6%B1%BA%E5%AE%9A/ar-AA2cC8yY",
+    "published": "2026-09-20T04:55:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.YWEOAaiwDqJQD7rZ75YNLw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-04T17:14:14.738733+00:00"
   }
 ]
