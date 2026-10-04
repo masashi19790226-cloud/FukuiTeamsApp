@@ -1363,5 +1363,15 @@
     "source": "ORICON NEWS",
     "image": "https://www.bing.com/th?id=ONUT.0QH66vXQYsK7dUTmHaxRcw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-04T21:04:28.930076+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2714413",
+    "team": "UNITED",
+    "title": "福井U最終戦飾れず HFLサッカー北信越リーグ1部",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2714413",
+    "published": "2026-10-04T03:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.J1QbRygjZVrhtVKAt63ziQ&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-04T21:36:57.206422+00:00"
   }
 ]
