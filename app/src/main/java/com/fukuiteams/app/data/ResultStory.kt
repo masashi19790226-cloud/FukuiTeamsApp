@@ -62,7 +62,13 @@ fun buildResultContext(game: Game, games: List<Game>, results: Map<String, Remot
     val season = games
         .filter { it.team == game.team && it.sortKey.take(8) >= start && it.sortKey <= game.sortKey }
         .sortedBy { it.sortKey }
-    val known = season.all { results.containsKey(it.id) }
+    // アプリの日程データが今季の最初の試合から全部そろっているか。
+    // (ユナイテッドのように、途中から日程を集め始めたチームは、今季の成績や開幕戦などを数えられない)
+    // 今季の始まりの目安から60日以内に最初の試合があれば、そろっているとみなす
+    val covered = season.firstOrNull()?.let { first ->
+        daysBetween(start + "-0000", first.sortKey)?.let { it <= 60 }
+    } == true
+    val known = covered && season.all { results.containsKey(it.id) }
 
     // 連続:この試合からさかのぼって同じ結果が何試合続いたか。途中に結果不明の試合があれば分からない扱い
     val me = result.outcome()
@@ -76,6 +82,8 @@ fun buildResultContext(game: Game, games: List<Game>, results: Map<String, Remot
         streak++
         idx--
     }
+    // 日程データの最初の試合までさかのぼっても続いていて、それより前の試合が分からないときは、何連勝か分からない
+    if (idx < 0 && !covered) streakKnown = false
     // この試合の直前までの、反対の結果の連続(この試合で止まった連勝・連敗)
     var broken = 0
     var brokenKnown = streakKnown
@@ -89,6 +97,7 @@ fun buildResultContext(game: Game, games: List<Game>, results: Map<String, Remot
                 broken++
                 idx--
             }
+            if (idx < 0 && !covered) brokenKnown = false
         }
     }
 
@@ -100,7 +109,7 @@ fun buildResultContext(game: Game, games: List<Game>, results: Map<String, Remot
         b.opponent == game.opponent && daysBetween(b.sortKey, game.sortKey)?.let { it in 0..2 } == true
     }?.let { results[it.id] }
     val sameVenue = season.filter { it.isHome == game.isHome }
-    val venueKnown = sameVenue.all { results.containsKey(it.id) }
+    val venueKnown = covered && sameVenue.all { results.containsKey(it.id) }
     val venueOutcomes = sameVenue.mapNotNull { results[it.id]?.outcome() }
     // 次の試合(これから行われる試合だけ。結果が取れていない過去の試合は除く)
     val nowKey = java.time.LocalDateTime.now(java.time.ZoneId.of("Asia/Tokyo"))
@@ -109,8 +118,8 @@ fun buildResultContext(game: Game, games: List<Game>, results: Map<String, Remot
         .filter { it.team == game.team && it.sortKey > game.sortKey && it.sortKey.take(8) >= nowKey.take(8) && !results.containsKey(it.id) }
         .minByOrNull { it.sortKey }
     return ResultContext(
-        seasonOpener = season.size == 1,
-        homeOpener = game.isHome && season.size > 1 && season.count { it.isHome } == 1,
+        seasonOpener = covered && season.size == 1,
+        homeOpener = covered && game.isHome && season.size > 1 && season.count { it.isHome } == 1,
         backToBackResult = backToBack,
         venueWin = if (venueKnown) venueOutcomes.count { it == GameOutcome.WIN } else null,
         venueLose = if (venueKnown) venueOutcomes.count { it == GameOutcome.LOSE } else null,
