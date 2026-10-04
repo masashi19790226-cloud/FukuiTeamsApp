@@ -11,6 +11,11 @@ on:
 permissions:
   contents: write
 
+# 同じ処理が同時に2つ動くと保存(push)がぶつかるので、前の実行が終わるまで次は待たせる
+concurrency:
+  group: check-alerts
+  cancel-in-progress: false
+
 jobs:
   check-alerts:
     runs-on: ubuntu-latest
@@ -94,6 +99,16 @@ jobs:
             exit 0
           fi
           git commit -m "chore: 無料招待・ニュース・日程・結果・展望の自動更新"
-          # 実行中に手元からpushされていても保存できるよう、最新を取り込んでからpushする
-          git pull --rebase -X theirs origin main || git rebase --abort
-          git push
+          # 実行中に手元から(または別の実行が)pushしていても保存できるよう、最新を取り込んでからpushする。
+          # 取り込んだ直後にほかのpushと重なって断られることがあるので、少し待って最大5回までやり直す
+          for i in 1 2 3 4 5; do
+            git pull --rebase -X theirs origin main || git rebase --abort
+            if git push; then
+              echo "保存しました(${i}回目)"
+              exit 0
+            fi
+            echo "pushが重なったので、$((i * 10))秒待ってやり直します"
+            sleep $((i * 10))
+          done
+          echo "5回やり直しても保存できませんでした"
+          exit 1
