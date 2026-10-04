@@ -265,8 +265,10 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     var query by remember { mutableStateOf("") }
     // 45日より前の保管庫。「それより前」を開いたときに初めて読み込む(通信量を抑えるため)
     var archiveResult by remember { mutableStateOf<AlertsResult?>(null) }
-    LaunchedEffect(showPast) {
-        if (showPast && archiveResult == null) archiveResult = NewsAlertsRepository.fetchArchive()
+    // 検索中(1文字以上入力)も、過去1年分を探すために読み込む
+    val searching = query.isNotBlank()
+    LaunchedEffect(showPast, searching) {
+        if ((showPast || searching) && archiveResult == null) archiveResult = NewsAlertsRepository.fetchArchive()
     }
     val recentBorder = java.time.Instant.now().minus(java.time.Duration.ofDays(3))
     val recentItems = shown.filter { it.alert.eventInstant()?.isAfter(recentBorder) == true }
@@ -280,7 +282,8 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     val pastAll = (olderItems + archiveItems).sortedByDescending { it.alert.eventInstant() }
     // 検索:空白で区切った言葉がすべて見出し(または媒体名)に入っているもの
     val words = query.trim().split(Regex("[\\s　]+")).filter { it.isNotBlank() }
-    val pastShown = if (words.isEmpty()) pastAll else pastAll.filter { item ->
+    // 検索結果は、直近3日・それより前・過去1年分のすべてから探す(新しい順)
+    val searchResults = if (words.isEmpty()) emptyList() else (recentItems + pastAll).filter { item ->
         val text = item.alert.title + " " + item.alert.sourceLabel()
         words.all { w -> text.contains(w, ignoreCase = true) }
     }
@@ -334,7 +337,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                             fontSize = 22
                         )
                         Text(
-                            "ニュースと無料招待の情報をまとめて表示します。直近3日の情報を上に、それより前(過去1年)の情報は下の見出しを押すと表示し、キーワードで検索できます。2日以内のものに NEW が付きます。行をタップすると元の記事を開きます。",
+                            "ニュースと無料招待の情報をまとめて表示します。上の検索欄で過去1年分の記事をキーワードで探せます。直近3日の情報を上に、それより前(過去1年)は下の見出しを押すと表示します。2日以内のものに NEW が付きます。行をタップすると元の記事を開きます。",
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
@@ -367,6 +370,40 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                                         }
                                     }
                                 }
+                            }
+                        }
+                    }
+                }
+                // 検索欄(分類ボタンのすぐ下。直近3日〜過去1年分のすべてから探す。招待の表示では出さない)
+                if (!isInviteView) {
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            OutlinedTextField(
+                                value = query,
+                                onValueChange = { query = it },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true,
+                                placeholder = { Text("キーワードで検索(過去1年分・例:金沢 勝利)") },
+                                trailingIcon = {
+                                    if (query.isNotEmpty()) {
+                                        Text(
+                                            "✕",
+                                            modifier = Modifier.clickable { query = "" }.padding(8.dp),
+                                            color = InkSoft
+                                        )
+                                    }
+                                }
+                            )
+                            if (searching) {
+                                Text(
+                                    when {
+                                        archiveResult == null -> "過去1年分の記事を読み込んでいます…(読み込み中も直近45日分から探しています)"
+                                        archiveResult is AlertsResult.Failure -> "45日より前の記事を読み込めませんでした。直近45日分から探しています。"
+                                        else -> "「${words.joinToString(" ")}」を含む記事 ${searchResults.size}件(選んでいるチーム・分類の中から)"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = InkSoft
+                                )
                             }
                         }
                     }
@@ -404,7 +441,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                 }
                 if (loading) {
                     item { Text("読み込み中…", style = MaterialTheme.typography.bodySmall, color = InkSoft) }
-                } else if (shown.isEmpty()) {
+                } else if (shown.isEmpty() && !(searching && !isInviteView)) {
                     item {
                         Text(
                             "この分類の情報はありません",
@@ -419,6 +456,28 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                         RadarRow(
                             radarItem,
                             showClosedNote = !isInviteView,
+                            inviteStatus = if (isInvite) radarItem.alert.inviteStatus(statusPrefs) else null,
+                            onSetStatus = { status -> scope.launch { saveInviteStatus(context, radarItem.alert, status) } },
+                            onClick = { openRadarUrl(context, radarItem.alert.link) }
+                        )
+                    }
+                } else if (searching) {
+                    // 検索中は検索結果だけを出す
+                    if (searchResults.isEmpty()) {
+                        item {
+                            Text(
+                                "見つかりませんでした",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = InkSoft,
+                                modifier = Modifier.padding(vertical = 12.dp)
+                            )
+                        }
+                    }
+                    items(searchResults) { radarItem ->
+                        val isInvite = radarItem.category == RadarCategory.INVITE
+                        RadarRow(
+                            radarItem,
+                            showClosedNote = true,
                             inviteStatus = if (isInvite) radarItem.alert.inviteStatus(statusPrefs) else null,
                             onSetStatus = { status -> scope.launch { saveInviteStatus(context, radarItem.alert, status) } },
                             onClick = { openRadarUrl(context, radarItem.alert.link) }
@@ -442,7 +501,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                             onClick = { openRadarUrl(context, radarItem.alert.link) }
                         )
                     }
-                    // それより前(過去1年)。見出しを押すと開き、キーワードで検索できる
+                    // それより前(過去1年)。見出しを押すと開く
                     item {
                         val archiveLoaded = archiveResult is AlertsResult.Success
                         Text(
@@ -462,36 +521,17 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                     }
                     if (showPast) {
                         item {
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                OutlinedTextField(
-                                    value = query,
-                                    onValueChange = { query = it },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    singleLine = true,
-                                    placeholder = { Text("キーワードで検索(例:金沢 勝利)") },
-                                    trailingIcon = {
-                                        if (query.isNotEmpty()) {
-                                            Text(
-                                                "✕",
-                                                modifier = Modifier.clickable { query = "" }.padding(8.dp),
-                                                color = InkSoft
-                                            )
-                                        }
-                                    }
-                                )
-                                Text(
-                                    when {
-                                        archiveResult == null -> "過去の記事を読み込んでいます…"
-                                        archiveResult is AlertsResult.Failure -> "45日より前の記事を読み込めませんでした(通信環境をご確認ください)。"
-                                        words.isNotEmpty() -> "「${words.joinToString(" ")}」を含む記事 ${pastShown.size}件(選んでいるチーム・分類の中から)"
-                                        else -> "4日以上前〜1年前の記事です。空白で区切ると、すべての言葉を含む記事に絞り込みます。"
-                                    },
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = InkSoft
-                                )
-                            }
+                            Text(
+                                when {
+                                    archiveResult == null -> "過去の記事を読み込んでいます…"
+                                    archiveResult is AlertsResult.Failure -> "45日より前の記事を読み込めませんでした(通信環境をご確認ください)。"
+                                    else -> "4日以上前〜1年前の記事です。上の検索欄からキーワードで探せます。"
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = InkSoft
+                            )
                         }
-                        items(pastShown) { radarItem ->
+                        items(pastAll) { radarItem ->
                             val isInvite = radarItem.category == RadarCategory.INVITE
                             RadarRow(
                                 radarItem,

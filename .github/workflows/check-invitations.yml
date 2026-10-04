@@ -94,6 +94,8 @@ jobs:
           if [ -f data/game_lp.json ]; then git add data/game_lp.json; fi
           # 丸岡RUCK・ユナイテッドの順位表(初回に取得できなかったときはファイルが無いので、あるときだけ追加する)
           if [ -f data/standings.json ]; then git add data/standings.json; fi
+          # 45日より前のニュースの保管庫(1年分)
+          if [ -f data/news_archive.json ]; then git add data/news_archive.json; fi
           if git diff --cached --quiet; then
             echo "変更なし"
             exit 0
