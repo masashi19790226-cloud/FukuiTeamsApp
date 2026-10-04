@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -259,6 +260,31 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     }
     val newCount = teamItems.count { it.alert.isNewArrival() }
 
+    // ---- 直近3日と、それより前(過去1年)に分ける(招待の「受付中/過去」の表示は今までどおり) ----
+    var showPast by remember { mutableStateOf(false) }
+    var query by remember { mutableStateOf("") }
+    // 45日より前の保管庫。「それより前」を開いたときに初めて読み込む(通信量を抑えるため)
+    var archiveResult by remember { mutableStateOf<AlertsResult?>(null) }
+    LaunchedEffect(showPast) {
+        if (showPast && archiveResult == null) archiveResult = NewsAlertsRepository.fetchArchive()
+    }
+    val recentBorder = java.time.Instant.now().minus(java.time.Duration.ofDays(3))
+    val recentItems = shown.filter { it.alert.eventInstant()?.isAfter(recentBorder) == true }
+    val olderItems = shown.filterNot { it.alert.eventInstant()?.isAfter(recentBorder) == true }
+    val knownIds = sorted.map { it.alert.id }.toSet()
+    val knownLinks = sorted.map { it.alert.link }.filter { it.isNotBlank() }.toSet()
+    val archiveItems = ((archiveResult as? AlertsResult.Success)?.items ?: emptyList())
+        .filterNot { it.id in knownIds || (it.link.isNotBlank() && it.link in knownLinks) }
+        .map { RadarItem(it, classify(it, false), false, inNews = true) }
+        .filter { (selectedTeam == null || it.alert.teamId == selectedTeam?.name) && it.matches(selectedCategory) }
+    val pastAll = (olderItems + archiveItems).sortedByDescending { it.alert.eventInstant() }
+    // 検索:空白で区切った言葉がすべて見出し(または媒体名)に入っているもの
+    val words = query.trim().split(Regex("[\\s　]+")).filter { it.isNotBlank() }
+    val pastShown = if (words.isEmpty()) pastAll else pastAll.filter { item ->
+        val text = item.alert.title + " " + item.alert.sourceLabel()
+        words.all { w -> text.contains(w, ignoreCase = true) }
+    }
+
     Scaffold(
         topBar = {
             MastheadTopBar(
@@ -308,7 +334,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                             fontSize = 22
                         )
                         Text(
-                            "ニュースと無料招待の情報をまとめて表示します。2日以内のものに NEW が付きます。行をタップすると元の記事を開きます。",
+                            "ニュースと無料招待の情報をまとめて表示します。直近3日の情報を上に、それより前(過去1年)の情報は下の見出しを押すと表示し、キーワードで検索できます。2日以内のものに NEW が付きます。行をタップすると元の記事を開きます。",
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
@@ -387,7 +413,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                             modifier = Modifier.padding(vertical = 12.dp)
                         )
                     }
-                } else {
+                } else if (isInviteView) {
                     items(shown) { radarItem ->
                         val isInvite = radarItem.category == RadarCategory.INVITE
                         RadarRow(
@@ -397,6 +423,84 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                             onSetStatus = { status -> scope.launch { saveInviteStatus(context, radarItem.alert, status) } },
                             onClick = { openRadarUrl(context, radarItem.alert.link) }
                         )
+                    }
+                } else {
+                    // 直近3日
+                    item { SectionLabel("直近3日 ${recentItems.size}件") }
+                    if (recentItems.isEmpty()) {
+                        item {
+                            Text("直近3日の情報はありません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                        }
+                    }
+                    items(recentItems) { radarItem ->
+                        val isInvite = radarItem.category == RadarCategory.INVITE
+                        RadarRow(
+                            radarItem,
+                            showClosedNote = true,
+                            inviteStatus = if (isInvite) radarItem.alert.inviteStatus(statusPrefs) else null,
+                            onSetStatus = { status -> scope.launch { saveInviteStatus(context, radarItem.alert, status) } },
+                            onClick = { openRadarUrl(context, radarItem.alert.link) }
+                        )
+                    }
+                    // それより前(過去1年)。見出しを押すと開き、キーワードで検索できる
+                    item {
+                        val archiveLoaded = archiveResult is AlertsResult.Success
+                        Text(
+                            (if (showPast) "▲ " else "▼ ") + "それより前(過去1年) " +
+                                if (showPast && archiveLoaded) "${pastAll.size}件" else "${olderItems.size}件〜",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                                .border(1.dp, Ink)
+                                .background(if (showPast) Ink else Paper)
+                                .clickable { showPast = !showPast }
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                            color = if (showPast) Ivory else Ink,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 14.sp
+                        )
+                    }
+                    if (showPast) {
+                        item {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                OutlinedTextField(
+                                    value = query,
+                                    onValueChange = { query = it },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    singleLine = true,
+                                    placeholder = { Text("キーワードで検索(例:金沢 勝利)") },
+                                    trailingIcon = {
+                                        if (query.isNotEmpty()) {
+                                            Text(
+                                                "✕",
+                                                modifier = Modifier.clickable { query = "" }.padding(8.dp),
+                                                color = InkSoft
+                                            )
+                                        }
+                                    }
+                                )
+                                Text(
+                                    when {
+                                        archiveResult == null -> "過去の記事を読み込んでいます…"
+                                        archiveResult is AlertsResult.Failure -> "45日より前の記事を読み込めませんでした(通信環境をご確認ください)。"
+                                        words.isNotEmpty() -> "「${words.joinToString(" ")}」を含む記事 ${pastShown.size}件(選んでいるチーム・分類の中から)"
+                                        else -> "4日以上前〜1年前の記事です。空白で区切ると、すべての言葉を含む記事に絞り込みます。"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = InkSoft
+                                )
+                            }
+                        }
+                        items(pastShown) { radarItem ->
+                            val isInvite = radarItem.category == RadarCategory.INVITE
+                            RadarRow(
+                                radarItem,
+                                showClosedNote = true,
+                                inviteStatus = if (isInvite) radarItem.alert.inviteStatus(statusPrefs) else null,
+                                onSetStatus = { status -> scope.launch { saveInviteStatus(context, radarItem.alert, status) } },
+                                onClick = { openRadarUrl(context, radarItem.alert.link) }
+                            )
+                        }
                     }
                 }
                 item { Spacer(modifier = Modifier.height(12.dp)) }

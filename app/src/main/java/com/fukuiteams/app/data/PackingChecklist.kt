@@ -31,7 +31,9 @@ private val BASE_ITEMS = listOf(
     PackingItem("towel", "タオル"),
     PackingItem("drink", "飲み物"),
     PackingItem("binoculars", "双眼鏡"),
-    PackingItem("camera", "カメラ")
+    PackingItem("camera", "カメラ"),
+    PackingItem("mask", "マスク"),
+    PackingItem("wet_tissue", "手口ふき")
 )
 
 private const val G_MUST = "必需品"
@@ -80,6 +82,8 @@ private val BLOWINDS_ITEMS = listOf(
     PackingItem("glasses", "メガネ", G_BODY),
     PackingItem("contacts", "ワンデーコンタクト", G_BODY),
     PackingItem("eye_drops", "目薬", G_BODY),
+    PackingItem("mask", "マスク", G_BODY),
+    PackingItem("wet_tissue", "手口ふき", G_BODY),
     PackingItem("umbrella", "カサ", G_BODY),
 
     PackingItem("game_console", "スイッチ・DS", G_PLAY),

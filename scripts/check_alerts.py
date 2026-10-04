@@ -30,9 +30,21 @@ NEWS_FEEDS = {
     "RAC": "https://www.google.com/alerts/feeds/17849435109291614678/11869471234840652241",
 }
 
+# Bingニュースの検索結果(RSS)。Googleアラートより新しい記事が早く出ることが多いので、ニュースに加える。
+# (GoogleニュースのRSSは robots.txt で自動取得が禁止されているため使わない。Bingニュースの検索は禁止されていない)
+BING_NEWS_QUERIES = {
+    "BLOWINDS": ["福井ブローウィンズ"],
+    "RAC": ["丸岡RUCK", "丸岡ラック"],
+    "UNITED": ["福井ユナイテッド"],
+}
+BING_NEWS_URL = "https://www.bing.com/news/search?q={q}&format=rss&setlang=ja&cc=JP"
+
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 INVITATIONS_PATH = os.path.join(BASE_DIR, "invitations_raw.json")
 NEWS_PATH = os.path.join(BASE_DIR, "news_raw.json")
+# 45日より前のニュースの保管先(1年分)。アプリでは「過去のトピック」を開いたとき・検索したときだけ読み込む
+ARCHIVE_PATH = os.path.join(BASE_DIR, "news_archive.json")
+ARCHIVE_KEEP_DAYS = 365
 
 ATOM_NS = "{http://www.w3.org/2005/Atom}"
 
@@ -172,6 +184,49 @@ def save(path, data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def item_time(item):
+    """記事の日時(公開日、なければ見つけた日時)。読めなければ None"""
+    try:
+        when = datetime.fromisoformat(str(item.get("published") or item.get("detected_at")).replace("Z", "+00:00"))
+        return when if when.tzinfo else when.replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
+
+def archive_old_news():
+    """
+    ニュースのうち保存期間(45日)を過ぎたものを、捨てずに news_archive.json へ移す。
+    保管庫は1年分(365日)を残し、それより古いものは消す。関係ない記事(ノイズ)は移さない。
+    """
+    news = load_existing(NEWS_PATH)
+    archive = load_existing(ARCHIVE_PATH)
+    now = datetime.now(timezone.utc)
+    cutoff = now - timedelta(days=NEWS_KEEP_DAYS)
+    archive_cutoff = now - timedelta(days=ARCHIVE_KEEP_DAYS)
+    archive_ids = {a["id"] for a in archive}
+    moved = 0
+    for item in news:
+        when = item_time(item)
+        if when is None or when >= cutoff or item["id"] in archive_ids:
+            continue
+        official = str(item.get("id", "")).startswith("official")
+        if not official and not is_good_news(item.get("title", "")):
+            continue
+        archive.append(item)
+        archive_ids.add(item["id"])
+        moved += 1
+    before = len(archive)
+    archive = [a for a in archive if (item_time(a) or now) >= archive_cutoff]
+    archive.sort(key=lambda a: str(a.get("published") or a.get("detected_at") or ""), reverse=True)
+    save(ARCHIVE_PATH, archive)
+    print(f"[過去のニュース] {moved}件を保管庫へ移しました(1年より前の{before - len(archive)}件を削除、保管中 {len(archive)}件)")
+
+
+def archived_ids():
+    """保管庫にある記事のID(同じ記事を新着として入れ直さないため)"""
+    return {a["id"] for a in load_existing(ARCHIVE_PATH)}
+
+
 def check_feeds(feeds: dict, path: str, label: str, is_news: bool = False) -> int:
     existing = load_existing(path)
     skipped = 0
@@ -188,6 +243,8 @@ def check_feeds(feeds: dict, path: str, label: str, is_news: bool = False) -> in
     if repaired:
         print(f"[{label}] 既存の{repaired}件のタイトル・チームを修正しました")
     existing_ids = {item["id"] for item in existing}
+    if is_news:
+        existing_ids |= archived_ids()
     new_count = 0
 
     for team, url in feeds.items():
@@ -228,9 +285,93 @@ def check_feeds(feeds: dict, path: str, label: str, is_news: bool = False) -> in
     return new_count
 
 
+def parse_bing_rss(xml_text: str):
+    """BingニュースのRSSから記事を取り出す。リンクは Bing の転送用URLなので、中の元の記事のURLを使う。"""
+    from email.utils import parsedate_to_datetime
+    from urllib.parse import parse_qs, urlparse
+
+    entries = []
+    for item in re.findall(r"<item>(.*?)</item>", xml_text, flags=re.S):
+        def tag(name):
+            m = re.search(rf"<{name}>(.*?)</{name}>", item, flags=re.S)
+            return html.unescape(m.group(1)).strip() if m else ""
+
+        title = strip_html(tag("title"))
+        link = tag("link")
+        real = parse_qs(urlparse(link).query).get("url", [""])[0] or link
+        try:
+            published = parsedate_to_datetime(tag("pubDate")).astimezone(timezone.utc).isoformat()
+        except Exception:
+            published = ""
+        if title and real:
+            entries.append({
+                "id": "bing:" + real,
+                "title": title,
+                "link": real,
+                "published": published,
+                # 媒体名(「FNNプライムオンライン on MSN」→「FNNプライムオンライン」)
+                "source": re.sub(r"\s+on MSN$", "", strip_html(tag("News:Source"))),
+            })
+    return entries
+
+
+def check_bing_news() -> int:
+    """Bingニュースの新着を、ニュース(news_raw.json)に加える。Googleアラートと同じ基準で絞り込む。"""
+    existing = load_existing(NEWS_PATH)
+    existing_ids = {item["id"] for item in existing} | archived_ids()
+    existing_links = {item.get("link") for item in existing}
+    cutoff = datetime.now(timezone.utc) - timedelta(days=NEWS_KEEP_DAYS)
+    new_count, skipped = 0, 0
+    for team, queries in BING_NEWS_QUERIES.items():
+        for q in queries:
+            try:
+                url = BING_NEWS_URL.format(q=urllib.request.quote(q))
+                text = fetch_feed(url).decode("utf-8", errors="replace")
+            except Exception as e:
+                print(f"[WARN] Bingニュース/{q} の取得に失敗しました: {e}")
+                continue
+            for entry in parse_bing_rss(text):
+                if entry["id"] in existing_ids or entry["link"] in existing_links:
+                    continue
+                # 古い記事(公開日が保存期間より前)・関係ない記事は入れない
+                try:
+                    old = bool(entry["published"]) and datetime.fromisoformat(entry["published"]) < cutoff
+                except ValueError:
+                    old = False
+                if old or not entry["published"] or not is_good_news(entry["title"]):
+                    existing_ids.add(entry["id"])
+                    skipped += 1
+                    continue
+                existing.append({
+                    "id": entry["id"],
+                    "team": guess_team(entry["title"], team),
+                    "title": entry["title"],
+                    "link": entry["link"],
+                    "published": entry["published"],
+                    "source": entry["source"],
+                    "detected_at": datetime.now(timezone.utc).isoformat(),
+                })
+                existing_ids.add(entry["id"])
+                existing_links.add(entry["link"])
+                new_count += 1
+    save(NEWS_PATH, existing)
+    print(f"[Bingニュース] 新しく見つかった件数: {new_count}件(累計 {len(existing)}件)" + (f"、対象外{skipped}件" if skipped else ""))
+    return new_count
+
+
 def main():
     check_feeds(INVITATION_FEEDS, INVITATIONS_PATH, "無料招待")
+    # 45日を過ぎたニュースは、消す前に保管庫(1年分)へ移す
+    try:
+        archive_old_news()
+    except Exception as e:
+        print(f"[WARN] 過去のニュースの保管に失敗しました: {e!r}")
     check_feeds(NEWS_FEEDS, NEWS_PATH, "ニュース", is_news=True)
+    # Bingニュースは1か所が失敗しても、ほかの処理の結果は残す
+    try:
+        check_bing_news()
+    except Exception as e:
+        print(f"[WARN] Bingニュースの処理に失敗しました: {e!r}")
 
 
 if __name__ == "__main__":
