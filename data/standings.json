@@ -1167,7 +1167,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-04T10:24:39.105855+00:00"
+    "updated_at": "2026-10-04T10:32:46.331763+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -1183,18 +1183,18 @@
         },
         {
           "rank": 2,
-          "team": "新潟医療福祉大学FC",
-          "points": 27
+          "team": "富山新庄クラブ",
+          "points": 28
         },
         {
           "rank": 3,
-          "team": "富山新庄クラブ",
-          "points": 25
+          "team": "JAPAN.S.C.",
+          "points": 28
         },
         {
           "rank": 4,
-          "team": "JAPAN.S.C.",
-          "points": 25
+          "team": "新潟医療福祉大学FC",
+          "points": 27
         },
         {
           "rank": 5,
@@ -1204,7 +1204,7 @@
         {
           "rank": 6,
           "team": "新潟経営大学FC",
-          "points": 5
+          "points": 8
         },
         {
           "rank": 7,
@@ -2509,20 +2509,124 @@
             "position": "FW"
           }
         ]
+      },
+      "6384": {
+        "my": 0,
+        "opp": 1,
+        "goals": [],
+        "start": [
+          {
+            "name": "杉本 拓也",
+            "number": "1",
+            "position": "GK"
+          },
+          {
+            "name": "辻岡 招真",
+            "number": "22",
+            "position": "DF"
+          },
+          {
+            "name": "前田 稜太",
+            "number": "25",
+            "position": "DF"
+          },
+          {
+            "name": "立山 大祐",
+            "number": "6",
+            "position": "MF"
+          },
+          {
+            "name": "山口 哲平",
+            "number": "8",
+            "position": "MF"
+          },
+          {
+            "name": "中村 晃大",
+            "number": "10",
+            "position": "MF"
+          },
+          {
+            "name": "今道 恭",
+            "number": "17",
+            "position": "MF"
+          },
+          {
+            "name": "鬼京 大翔",
+            "number": "18",
+            "position": "MF"
+          },
+          {
+            "name": "野村 魁",
+            "number": "7",
+            "position": "FW"
+          },
+          {
+            "name": "杉浦 秀謙",
+            "number": "13",
+            "position": "FW"
+          },
+          {
+            "name": "加納 大",
+            "number": "23",
+            "position": "FW"
+          }
+        ],
+        "sub": [
+          {
+            "name": "和泉 颯",
+            "number": "21",
+            "position": "GK"
+          },
+          {
+            "name": "岩島 巧",
+            "number": "31",
+            "position": "GK"
+          },
+          {
+            "name": "中山 和紀",
+            "number": "3",
+            "position": "DF"
+          },
+          {
+            "name": "井出 龍志",
+            "number": "14",
+            "position": "DF"
+          },
+          {
+            "name": "竹葉 大樹",
+            "number": "24",
+            "position": "DF"
+          },
+          {
+            "name": "萩原 正太郎",
+            "number": "26",
+            "position": "MF"
+          },
+          {
+            "name": "北脇 健慈",
+            "number": "11",
+            "position": "FW"
+          },
+          {
+            "name": "杉本 大雅",
+            "number": "16",
+            "position": "FW"
+          }
+        ]
       }
     },
     "scorers": {
       "label": "チーム内の得点",
-      "note": "ユナイテッド公式の試合結果(北信越リーグ13試合)から集計",
+      "note": "ユナイテッド公式の試合結果(北信越リーグ14試合)から集計",
       "source_url": "https://fukuiunited.co.jp/match/",
-      "games": 13,
+      "games": 14,
       "rows": [
         {
           "name": "杉浦 秀謙",
           "number": "13",
           "position": "FW",
           "goals": 5,
-          "starts": 7,
+          "starts": 8,
           "bench": 0,
           "team": "福井ユナイテッドFC",
           "rank": 1
@@ -2532,7 +2636,7 @@
           "number": "7",
           "position": "FW",
           "goals": 4,
-          "starts": 13,
+          "starts": 14,
           "bench": 0,
           "team": "福井ユナイテッドFC",
           "rank": 2
@@ -2542,7 +2646,7 @@
           "number": "23",
           "position": "FW",
           "goals": 3,
-          "starts": 8,
+          "starts": 9,
           "bench": 0,
           "team": "福井ユナイテッドFC",
           "rank": 3
@@ -2572,7 +2676,7 @@
           "number": "6",
           "position": "MF",
           "goals": 2,
-          "starts": 6,
+          "starts": 7,
           "bench": 7,
           "team": "福井ユナイテッドFC",
           "rank": 5
@@ -2582,7 +2686,7 @@
           "number": "8",
           "position": "MF",
           "goals": 2,
-          "starts": 5,
+          "starts": 6,
           "bench": 4,
           "team": "福井ユナイテッドFC",
           "rank": 5
@@ -2592,7 +2696,7 @@
           "number": "18",
           "position": "MF",
           "goals": 1,
-          "starts": 13,
+          "starts": 14,
           "bench": 0,
           "team": "福井ユナイテッドFC",
           "rank": 8
@@ -2632,7 +2736,7 @@
           "number": "25",
           "position": "DF",
           "goals": 1,
-          "starts": 7,
+          "starts": 8,
           "bench": 0,
           "team": "福井ユナイテッドFC",
           "rank": 8
@@ -2643,7 +2747,7 @@
           "position": "FW",
           "goals": 1,
           "starts": 1,
-          "bench": 6,
+          "bench": 7,
           "team": "福井ユナイテッドFC",
           "rank": 8
         },
@@ -2652,7 +2756,7 @@
           "number": "1",
           "position": "GK",
           "goals": 0,
-          "starts": 13,
+          "starts": 14,
           "bench": 0,
           "team": "福井ユナイテッドFC",
           "rank": 0
@@ -2662,7 +2766,7 @@
           "number": "22",
           "position": "DF",
           "goals": 0,
-          "starts": 7,
+          "starts": 8,
           "bench": 0,
           "team": "福井ユナイテッドFC",
           "rank": 0
@@ -2672,7 +2776,7 @@
           "number": "10",
           "position": "MF",
           "goals": 0,
-          "starts": 6,
+          "starts": 7,
           "bench": 4,
           "team": "福井ユナイテッドFC",
           "rank": 0
@@ -2683,7 +2787,7 @@
           "position": "DF",
           "goals": 0,
           "starts": 5,
-          "bench": 7,
+          "bench": 8,
           "team": "福井ユナイテッドFC",
           "rank": 0
         },
@@ -2693,7 +2797,17 @@
           "position": "DF",
           "goals": 0,
           "starts": 4,
-          "bench": 7,
+          "bench": 8,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "今道 恭",
+          "number": "17",
+          "position": "MF",
+          "goals": 0,
+          "starts": 4,
+          "bench": 4,
           "team": "福井ユナイテッドFC",
           "rank": 0
         },
@@ -2708,22 +2822,12 @@
           "rank": 0
         },
         {
-          "name": "今道 恭",
-          "number": "17",
-          "position": "MF",
-          "goals": 0,
-          "starts": 3,
-          "bench": 4,
-          "team": "福井ユナイテッドFC",
-          "rank": 0
-        },
-        {
           "name": "杉本 大雅",
           "number": "16",
           "position": "FW",
           "goals": 0,
           "starts": 2,
-          "bench": 5,
+          "bench": 6,
           "team": "福井ユナイテッドFC",
           "rank": 0
         },
@@ -2733,7 +2837,7 @@
           "position": "GK",
           "goals": 0,
           "starts": 0,
-          "bench": 10,
+          "bench": 11,
           "team": "福井ユナイテッドFC",
           "rank": 0
         },
@@ -2743,7 +2847,7 @@
           "position": "GK",
           "goals": 0,
           "starts": 0,
-          "bench": 7,
+          "bench": 8,
           "team": "福井ユナイテッドFC",
           "rank": 0
         },
@@ -2753,7 +2857,17 @@
           "position": "MF",
           "goals": 0,
           "starts": 0,
-          "bench": 4,
+          "bench": 5,
+          "team": "福井ユナイテッドFC",
+          "rank": 0
+        },
+        {
+          "name": "竹葉 大樹",
+          "number": "24",
+          "position": "DF",
+          "goals": 0,
+          "starts": 0,
+          "bench": 2,
           "team": "福井ユナイテッドFC",
           "rank": 0
         },
@@ -2766,19 +2880,9 @@
           "bench": 2,
           "team": "福井ユナイテッドFC",
           "rank": 0
-        },
-        {
-          "name": "竹葉 大樹",
-          "number": "24",
-          "position": "DF",
-          "goals": 0,
-          "starts": 0,
-          "bench": 1,
-          "team": "福井ユナイテッドFC",
-          "rank": 0
         }
       ]
     },
-    "updated_at": "2026-10-04T10:24:39.105855+00:00"
+    "updated_at": "2026-10-04T10:32:46.331763+00:00"
   }
 }
