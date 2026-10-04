@@ -452,7 +452,10 @@
           "goals": 5,
           "pk": 0,
           "shots": 27,
-          "games": 10
+          "games": 10,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-17-150x150.jpg",
+          "number": "17",
+          "position": "FP"
         },
         {
           "rank": 19,
@@ -461,7 +464,10 @@
           "goals": 5,
           "pk": 0,
           "shots": 27,
-          "games": 10
+          "games": 10,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-10-150x150.jpg",
+          "number": "10",
+          "position": "FP"
         },
         {
           "rank": 19,
@@ -479,7 +485,10 @@
           "goals": 5,
           "pk": 0,
           "shots": 34,
-          "games": 10
+          "games": 10,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-09-150x150.jpg",
+          "number": "9",
+          "position": "FP"
         },
         {
           "rank": 19,
@@ -587,7 +596,10 @@
           "goals": 4,
           "pk": 0,
           "shots": 26,
-          "games": 10
+          "games": 10,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-06-150x150.jpg",
+          "number": "6",
+          "position": "FP"
         },
         {
           "rank": 31,
@@ -794,7 +806,10 @@
           "goals": 2,
           "pk": 0,
           "shots": 15,
-          "games": 10
+          "games": 10,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-11-150x150.jpg",
+          "number": "11",
+          "position": "FP"
         },
         {
           "rank": 54,
@@ -812,7 +827,10 @@
           "goals": 2,
           "pk": 0,
           "shots": 21,
-          "games": 9
+          "games": 9,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-04-150x150.jpg",
+          "number": "4",
+          "position": "FP"
         },
         {
           "rank": 54,
@@ -947,7 +965,10 @@
           "goals": 1,
           "pk": 0,
           "shots": 3,
-          "games": 10
+          "games": 10,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-19-150x150.jpg",
+          "number": "19",
+          "position": "FP"
         },
         {
           "rank": 75,
@@ -1100,7 +1121,10 @@
           "goals": 1,
           "pk": 0,
           "shots": 16,
-          "games": 10
+          "games": 10,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-05-150x150.jpg",
+          "number": "5",
+          "position": "FP"
         },
         {
           "rank": 75,
@@ -1145,7 +1169,10 @@
           "goals": 1,
           "pk": 0,
           "shots": 21,
-          "games": 10
+          "games": 10,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-07-150x150.jpg",
+          "number": "7",
+          "position": "FP"
         },
         {
           "rank": 75,
@@ -1154,7 +1181,10 @@
           "goals": 1,
           "pk": 0,
           "shots": 21,
-          "games": 10
+          "games": 10,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-01-150x150.jpg",
+          "number": "1",
+          "position": "GK"
         },
         {
           "rank": 75,
@@ -1167,7 +1197,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-04T13:53:01.674521+00:00"
+    "updated_at": "2026-10-04T14:16:24.415788+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -2629,7 +2659,8 @@
           "starts": 8,
           "bench": 0,
           "team": "福井ユナイテッドFC",
-          "rank": 1
+          "rank": 1,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/b71f584b42108d2130a748b25b6b5e46b9cab18a.png"
         },
         {
           "name": "野村 魁",
@@ -2639,7 +2670,8 @@
           "starts": 14,
           "bench": 0,
           "team": "福井ユナイテッドFC",
-          "rank": 2
+          "rank": 2,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ce138cd4d4ba4301c3a9708d1d47ae569312c10a.png"
         },
         {
           "name": "加納 大",
@@ -2649,7 +2681,8 @@
           "starts": 9,
           "bench": 0,
           "team": "福井ユナイテッドFC",
-          "rank": 3
+          "rank": 3,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/06/81b5546a913c4b71c84450a768488c928192dfca.png"
         },
         {
           "name": "和田 俊星",
@@ -2659,7 +2692,8 @@
           "starts": 1,
           "bench": 8,
           "team": "福井ユナイテッドFC",
-          "rank": 3
+          "rank": 3,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ee0faf4a7070b7f31ad4646547ab195413caf464.png"
         },
         {
           "name": "若月 尋",
@@ -2669,7 +2703,8 @@
           "starts": 11,
           "bench": 0,
           "team": "福井ユナイテッドFC",
-          "rank": 5
+          "rank": 5,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/04/9e3bc0b2291a5afe43acfb815e81dad1c5789c9f.png"
         },
         {
           "name": "立山 大祐",
@@ -2679,7 +2714,8 @@
           "starts": 7,
           "bench": 7,
           "team": "福井ユナイテッドFC",
-          "rank": 5
+          "rank": 5,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/3f40a3bdca97022cf658809194ddbffd64801cfc.png"
         },
         {
           "name": "山口 哲平",
@@ -2689,7 +2725,8 @@
           "starts": 6,
           "bench": 4,
           "team": "福井ユナイテッドFC",
-          "rank": 5
+          "rank": 5,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/cd7169b9c78b8448f75c2e6ed7397e4bcd0f58bc.png"
         },
         {
           "name": "鬼京 大翔",
@@ -2699,7 +2736,8 @@
           "starts": 14,
           "bench": 0,
           "team": "福井ユナイテッドFC",
-          "rank": 8
+          "rank": 8,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/c824fe1c331bacaaa8074aabff73520c814cea30.png"
         },
         {
           "name": "清水 雅仁",
@@ -2709,7 +2747,8 @@
           "starts": 10,
           "bench": 1,
           "team": "福井ユナイテッドFC",
-          "rank": 8
+          "rank": 8,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/465112dd152644efbe3821dc61693778e850b2a8.png"
         },
         {
           "name": "廣岡 睦樹",
@@ -2719,7 +2758,8 @@
           "starts": 10,
           "bench": 0,
           "team": "福井ユナイテッドFC",
-          "rank": 8
+          "rank": 8,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/1d9315d63eb12a772d1c001e3691f72f5cfbb5e4.png"
         },
         {
           "name": "中島 修斗",
@@ -2729,7 +2769,8 @@
           "starts": 8,
           "bench": 1,
           "team": "福井ユナイテッドFC",
-          "rank": 8
+          "rank": 8,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/05/ff09d6db60a2c0f89c88706926f7944de2c073f1.png"
         },
         {
           "name": "前田 稜太",
@@ -2739,7 +2780,8 @@
           "starts": 8,
           "bench": 0,
           "team": "福井ユナイテッドFC",
-          "rank": 8
+          "rank": 8,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/06/6bd5945f6c4fb9a632eb008d3fa31d79f78a821b.png"
         },
         {
           "name": "北脇 健慈",
@@ -2749,7 +2791,8 @@
           "starts": 1,
           "bench": 7,
           "team": "福井ユナイテッドFC",
-          "rank": 8
+          "rank": 8,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ca018230e2c1352e52715c9d36f2890b6bc619cc.png"
         },
         {
           "name": "杉本 拓也",
@@ -2759,7 +2802,8 @@
           "starts": 14,
           "bench": 0,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f5554143ba093bc657c63bb9132d6c2d1d8d78cb.png"
         },
         {
           "name": "辻岡 招真",
@@ -2769,7 +2813,8 @@
           "starts": 8,
           "bench": 0,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/05/0db10e2bd818400f239183a8caee38fe1ed76e5f.png"
         },
         {
           "name": "中村 晃大",
@@ -2779,7 +2824,8 @@
           "starts": 7,
           "bench": 4,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/593901478a13a1ca5bd4d77be36fbca9cb1784fe.png"
         },
         {
           "name": "中山 和紀",
@@ -2789,7 +2835,8 @@
           "starts": 5,
           "bench": 8,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f93c6e38ff4bbe17fedde0d229a6d1a5a39e1256.png"
         },
         {
           "name": "井出 龍志",
@@ -2799,7 +2846,8 @@
           "starts": 4,
           "bench": 8,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/20d3a421b5852f50be599a961877726c13b375e2.png"
         },
         {
           "name": "今道 恭",
@@ -2809,7 +2857,8 @@
           "starts": 4,
           "bench": 4,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/11d946ed6914e9808968591b67a2588109704dd5.png"
         },
         {
           "name": "眞古 大輔",
@@ -2819,7 +2868,8 @@
           "starts": 3,
           "bench": 6,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/783d0baae4338920ab74786ebbf67075c5450cbd.png"
         },
         {
           "name": "杉本 大雅",
@@ -2829,7 +2879,8 @@
           "starts": 2,
           "bench": 6,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/5c8c4b4bd439013ad8d098916aade0fd5b4b38fa.png"
         },
         {
           "name": "岩島 巧",
@@ -2839,7 +2890,8 @@
           "starts": 0,
           "bench": 11,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/9a99e2c3b367e29cc074d86a157a1e0285761937.png"
         },
         {
           "name": "和泉 颯",
@@ -2849,7 +2901,8 @@
           "starts": 0,
           "bench": 8,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/03/8a5eaef3474d1af175d6cf3d7a26b7313747c645.png"
         },
         {
           "name": "萩原 正太郎",
@@ -2859,7 +2912,8 @@
           "starts": 0,
           "bench": 5,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/07/e3a6e64df9404d959e6e6b175db7d5e7e69083c6.png"
         },
         {
           "name": "竹葉 大樹",
@@ -2869,7 +2923,8 @@
           "starts": 0,
           "bench": 2,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/06/8eb5cc5474ae6449c64d7b785553bea4b7d5e00e.png"
         },
         {
           "name": "菅野 雅俊",
@@ -2879,10 +2934,11 @@
           "starts": 0,
           "bench": 2,
           "team": "福井ユナイテッドFC",
-          "rank": 0
+          "rank": 0,
+          "photo": "https://fukuiunited.co.jp/upload/team/2026/07/47c30872696bf3c4bef41ddf96f3dde33bd8c72e.png"
         }
       ]
     },
-    "updated_at": "2026-10-04T13:53:01.674521+00:00"
+    "updated_at": "2026-10-04T14:16:24.415788+00:00"
   }
 }
