@@ -1691,5 +1691,21 @@
     "source": "FNNプライムオンライン",
     "image": "https://www.bing.com/th?id=ONUT.YftAcsHroEj7mwqrXZIwZQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-05T16:00:41.418394+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17815640316285904458",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ ホーム開幕戦は2連勝 金沢との北陸ダービー制す ユナイテッドは2 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/849d512993473fa7d146f0ed4b58210cc25906fd&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0ifDaIj--ArmaQqGb3XnZG",
+    "published": "2026-10-05T10:26:54Z",
+    "detected_at": "2026-10-05T16:26:38.949249+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6116727638664166047",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ on Instagram: \"       ---------------------- りそなグループ B.LEAGUE 2026-27 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DeG1qGNmVPc/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1VbvCA2UY5Gmq4kCG_tfqi",
+    "published": "2026-10-05T09:46:18Z",
+    "detected_at": "2026-10-05T16:26:38.949293+00:00"
   }
 ]
