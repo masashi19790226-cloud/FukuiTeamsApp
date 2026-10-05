@@ -1393,5 +1393,15 @@
     "source": "産経ニュース",
     "image": "https://www.bing.com/th?id=ONUT.O10-x2yGtcyjn_chYsxRQg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-04T22:41:40.556559+00:00"
+  },
+  {
+    "id": "bing:https://www.fnn.jp/articles/-/1126631",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズがホーム開幕2連勝、通算3勝1敗に 金沢サム ...",
+    "link": "https://www.fnn.jp/articles/-/1126631",
+    "published": "2026-10-04T17:00:00+00:00",
+    "source": "FNNプライムオンライン",
+    "image": "https://www.bing.com/th?id=ONUT.jiKQZP9Jvvb1cQlKPvQtag&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-05T01:25:45.729742+00:00"
   }
 ]
