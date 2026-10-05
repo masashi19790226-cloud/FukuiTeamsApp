@@ -89,16 +89,35 @@ private suspend fun loadThumbnail(url: String): ImageBitmap? = withContext(Dispa
     }
 }
 
+/**
+ * 拡大表示で読みに行く画像の候補(よい順)。
+ * WordPress のサイト(丸岡RUCK公式など)は「〜-150x150.jpg」のような縮小版を一覧に使っているので、
+ * 「-150x150」を取った元の大きい画像を先に試し、無ければ一覧と同じ画像にする。
+ */
+private fun largeImageCandidates(url: String): List<String> {
+    val original = if (url.contains("/wp-content/uploads/")) {
+        url.replace(Regex("""-\d+x\d+(\.\w+)(\?.*)?$"""), "$1")
+    } else {
+        url
+    }
+    return listOf(original, url).distinct()
+}
+
 /** 拡大表示用。元の画像をできるだけそのままの細かさで読み込む(大きすぎる画像だけ 1000px 程度に縮小)。 */
 private suspend fun loadLargeImage(url: String): ImageBitmap? = withContext(Dispatchers.IO) {
     ThumbnailCache.largeCache.get(url)?.let { return@withContext it }
-    try {
-        val bitmap = downloadAndDecode(url, 1000)
-        if (bitmap != null) ThumbnailCache.largeCache.put(url, bitmap)
-        bitmap
-    } catch (e: Exception) {
-        null
+    for (candidate in largeImageCandidates(url)) {
+        val bitmap = try {
+            downloadAndDecode(candidate, 1000)
+        } catch (e: Exception) {
+            null
+        }
+        if (bitmap != null) {
+            ThumbnailCache.largeCache.put(url, bitmap)
+            return@withContext bitmap
+        }
     }
+    null
 }
 
 /**

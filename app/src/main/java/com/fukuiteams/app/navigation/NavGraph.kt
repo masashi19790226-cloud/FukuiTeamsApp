@@ -22,6 +22,7 @@ import com.fukuiteams.app.ui.screens.ChangelogScreen
 import com.fukuiteams.app.ui.screens.HowToUseScreen
 import com.fukuiteams.app.ui.screens.PlayersScreen
 import com.fukuiteams.app.ui.screens.RadarScreen
+import com.fukuiteams.app.ui.screens.BbsScreen
 
 object Routes {
     const val HOME = "home"
@@ -40,6 +41,8 @@ object Routes {
         "radar/ALL" + (team?.let { "?team=${it.name}" } ?: "")
     const val HOW_TO_USE = "how_to_use"
     const val PLAYERS = "players"
+    // 福井ブローウィンズ掲示板(読むだけ)
+    const val BBS = "bbs"
 }
 
 @Composable
@@ -55,7 +58,7 @@ fun AppNavHost(initialRoute: String? = null) {
         }
     }
 
-    // 下のメニューの画面(一面・試合・選手・トピック・通知)へ切り替える。戻るボタンで一面に戻る
+    // 下のメニューの画面(一面・試合・選手・トピック・掲示板・メニュー)へ切り替える。戻るボタンで一面に戻る
     fun navigateTab(route: String) {
         if (route != currentRoute) {
             navController.navigate(route) {
@@ -132,6 +135,10 @@ fun AppNavHost(initialRoute: String? = null) {
                 composable(Routes.PLAYERS) {
                     // 下のメニューの「選手」タブ。ほかのタブと同じく、左上の戻るボタンは出さない
                     PlayersScreen()
+                }
+                composable(Routes.BBS) {
+                    // 下のメニューの「掲示板」タブ。掲示板の更新は、アプリ全体の更新とは別にこの画面だけで行う
+                    BbsScreen()
                 }
             }
         }
