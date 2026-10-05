@@ -2,12 +2,13 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-04T13:53:04.381757+00:00",
+    "updated_at": "2026-10-05T14:03:51.715750+00:00",
     "players": [
       {
         "number": "1",
         "name": "藤永 佳昭",
-        "position": "PG"
+        "position": "PG",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/8736_03.png"
       },
       {
         "number": "3",
@@ -23,12 +24,14 @@
         "fg_pct": "54.5%",
         "three_pct": "50.0%",
         "ft_pct": "0.0%",
-        "eff": "1.8"
+        "eff": "1.8",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/51000439_03.png"
       },
       {
         "number": "8",
         "name": "岡本 飛竜",
-        "position": "PG"
+        "position": "PG",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/8839_03.png"
       },
       {
         "number": "10",
@@ -44,7 +47,8 @@
         "fg_pct": "44.4%",
         "three_pct": "11.1%",
         "ft_pct": "75.0%",
-        "eff": "3.3"
+        "eff": "3.3",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/51000579_03.png"
       },
       {
         "number": "11",
@@ -60,7 +64,8 @@
         "fg_pct": "0.0%",
         "three_pct": "0.0%",
         "ft_pct": "0.0%",
-        "eff": "-0.5"
+        "eff": "-0.5",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/51000471_03.png"
       },
       {
         "number": "12",
@@ -76,7 +81,8 @@
         "fg_pct": "30.8%",
         "three_pct": "33.3%",
         "ft_pct": "87.5%",
-        "eff": "6.3"
+        "eff": "6.3",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/30468_03.png"
       },
       {
         "number": "13",
@@ -92,7 +98,8 @@
         "fg_pct": "41.9%",
         "three_pct": "17.4%",
         "ft_pct": "73.7%",
-        "eff": "15.0"
+        "eff": "15.0",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/51000115_03.png"
       },
       {
         "number": "14",
@@ -108,7 +115,8 @@
         "fg_pct": "54.5%",
         "three_pct": "44.4%",
         "ft_pct": "46.2%",
-        "eff": "20.8"
+        "eff": "20.8",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/51000494_03.png"
       },
       {
         "number": "15",
@@ -124,7 +132,8 @@
         "fg_pct": "47.3%",
         "three_pct": "42.1%",
         "ft_pct": "85.2%",
-        "eff": "25.8"
+        "eff": "25.8",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/51000417_03.png"
       },
       {
         "number": "17",
@@ -140,7 +149,8 @@
         "fg_pct": "44.4%",
         "three_pct": "37.5%",
         "ft_pct": "100.0%",
-        "eff": "4.8"
+        "eff": "4.8",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/5100000040_03.png"
       },
       {
         "number": "21",
@@ -156,7 +166,8 @@
         "fg_pct": "0.0%",
         "three_pct": "0.0%",
         "ft_pct": "100.0%",
-        "eff": "-1.0"
+        "eff": "-1.0",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/10844_03.png"
       },
       {
         "number": "41",
@@ -172,7 +183,8 @@
         "fg_pct": "47.5%",
         "three_pct": "20.0%",
         "ft_pct": "45.8%",
-        "eff": "15.3"
+        "eff": "15.3",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/51000668_03.png"
       },
       {
         "number": "73",
@@ -188,7 +200,8 @@
         "fg_pct": "23.1%",
         "three_pct": "23.1%",
         "ft_pct": "66.7%",
-        "eff": "0.3"
+        "eff": "0.3",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/8571_03.png"
       },
       {
         "number": "93",
@@ -204,14 +217,15 @@
         "fg_pct": "14.3%",
         "three_pct": "0.0%",
         "ft_pct": "83.3%",
-        "eff": "1.5"
+        "eff": "1.5",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2026-27/40142_03.png"
       }
     ]
   },
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=714&tab=1",
-    "updated_at": "2026-10-04T13:53:07.028921+00:00",
+    "updated_at": "2026-10-05T14:03:54.621940+00:00",
     "players": [
       {
         "number": "1",
@@ -227,7 +241,8 @@
         "fg_pct": "42.6%",
         "three_pct": "26.9%",
         "ft_pct": "100.0%",
-        "eff": "33.5"
+        "eff": "33.5",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/43445_03.png"
       },
       {
         "number": "2",
@@ -243,7 +258,8 @@
         "fg_pct": "16.7%",
         "three_pct": "0.0%",
         "ft_pct": "0.0%",
-        "eff": "-2.0"
+        "eff": "-2.0",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/36857_03.png"
       },
       {
         "number": "3",
@@ -259,7 +275,8 @@
         "fg_pct": "33.3%",
         "three_pct": "33.3%",
         "ft_pct": "0.0%",
-        "eff": "-0.5"
+        "eff": "-0.5",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/51000664_03.png"
       },
       {
         "number": "6",
@@ -275,7 +292,8 @@
         "fg_pct": "28.6%",
         "three_pct": "0.0%",
         "ft_pct": "0.0%",
-        "eff": "0.0"
+        "eff": "0.0",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/46082_03.png"
       },
       {
         "number": "11",
@@ -291,7 +309,8 @@
         "fg_pct": "55.6%",
         "three_pct": "50.0%",
         "ft_pct": "0.0%",
-        "eff": "9.0"
+        "eff": "9.0",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/5100000063_03.png"
       },
       {
         "number": "13",
@@ -307,7 +326,8 @@
         "fg_pct": "11.1%",
         "three_pct": "14.3%",
         "ft_pct": "100.0%",
-        "eff": "10.0"
+        "eff": "10.0",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/51000274_03.png"
       },
       {
         "number": "18",
@@ -323,7 +343,8 @@
         "fg_pct": "52.6%",
         "three_pct": "80.0%",
         "ft_pct": "83.3%",
-        "eff": "13.5"
+        "eff": "13.5",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/55000957_03.png"
       },
       {
         "number": "21",
@@ -339,7 +360,8 @@
         "fg_pct": "45.8%",
         "three_pct": "14.3%",
         "ft_pct": "33.3%",
-        "eff": "10.5"
+        "eff": "10.5",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/46074_03.png"
       },
       {
         "number": "28",
@@ -355,7 +377,8 @@
         "fg_pct": "40.0%",
         "three_pct": "0.0%",
         "ft_pct": "71.4%",
-        "eff": "8.0"
+        "eff": "8.0",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/51000452_03.png"
       },
       {
         "number": "33",
@@ -371,7 +394,8 @@
         "fg_pct": "50.0%",
         "three_pct": "0.0%",
         "ft_pct": "50.0%",
-        "eff": "5.0"
+        "eff": "5.0",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/51000255_03.png"
       },
       {
         "number": "34",
@@ -387,7 +411,8 @@
         "fg_pct": "83.3%",
         "three_pct": "0.0%",
         "ft_pct": "57.1%",
-        "eff": "15.5"
+        "eff": "15.5",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/18442_03.png"
       },
       {
         "number": "35",
@@ -403,7 +428,8 @@
         "fg_pct": "33.3%",
         "three_pct": "0.0%",
         "ft_pct": "0.0%",
-        "eff": "2.0"
+        "eff": "2.0",
+        "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/51000663_03.png"
       }
     ],
     "team_name": "横浜EX",
