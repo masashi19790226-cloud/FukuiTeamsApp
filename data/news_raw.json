@@ -1479,5 +1479,53 @@
     "source": "時事ドットコム",
     "image": "https://www.bing.com/th?id=ONUT.6m11K-vNksZp4qAy1JeFRA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-05T03:51:16.182394+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17690830942831289559",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ ホーム開幕戦で金沢に勝利 - NHKニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.web.nhk/newsweb/na/nd-20240105de00880&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0coCylreU4nka_HUFY7Ind",
+    "published": "2026-10-03T16:26:27Z",
+    "detected_at": "2026-10-05T04:26:37.237844+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3150625757464768350",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、昨季B1島根スサノオマジックの岡本飛竜と新規契約 バスケBリーグワン",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://newspicks.com/news/17622235/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3UdhDr6jOmMTCRLdD0UWmz",
+    "published": "2026-10-03T15:32:21Z",
+    "detected_at": "2026-10-05T04:26:37.237873+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6159925502844270471",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、昨季B1島根スサノオマジックの岡本飛竜と新規契約 バスケBリーグワン",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://portal.uqmobile.jp/detail/1/2/5/10211_5_r_20261002_1790935527436194&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2RBjcz_9954k5IYs9HvoWE",
+    "published": "2026-10-03T14:15:52Z",
+    "detected_at": "2026-10-05T04:26:37.237893+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:18199768897883354526",
+    "team": "BLOWINDS",
+    "title": "岡本 飛竜 選手 契約基本合意（新規）のお知らせ - 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51692&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3Qo3ALW5oIvm_ZJ2mo8Y93",
+    "published": "2026-10-03T10:01:14Z",
+    "detected_at": "2026-10-05T04:26:37.237957+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9702014812460970028",
+    "team": "BLOWINDS",
+    "title": "岡本飛竜、新天地が決定…福井ブローウィンズと契約合意「皆様と挑戦できる機会をいただき ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.livedoor.com/topics/detail/32472043/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1e9RMPFf84cOIlQQSH7444",
+    "published": "2026-10-03T08:32:32Z",
+    "detected_at": "2026-10-05T04:26:37.237980+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10858932320853628639",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、昨季B1島根スサノオマジックの岡本飛竜と新規契約 バスケBリーグワン",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2712959&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw20wr62uZZigILJvEUaK_kl",
+    "published": "2026-10-03T08:07:33Z",
+    "detected_at": "2026-10-05T04:26:37.237998+00:00"
   }
 ]
