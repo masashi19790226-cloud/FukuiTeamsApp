@@ -13,6 +13,16 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月5日",
+        title = "選手の顔写真を大きく・タップで拡大",
+        items = listOf(
+            "選手タブのブローウィンズ全選手一覧で、顔写真を大きくしました(約1.6倍)",
+            "選手タブの丸岡RUCK・ユナイテッドの得点表で、名前の左の顔写真を大きくしました(約1.4倍)",
+            "大きくしても写真がぼやけにくいよう、画像を少し高い解像度で読み込むようにしました",
+            "選手の顔写真をタップすると、画面いっぱいに大きく表示するようにしました(写真か外側をタップ、または「閉じる」で戻ります)"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月3日",
         title = "二本指で拡大・縮小、更新でまとめて最新に",
         items = listOf(

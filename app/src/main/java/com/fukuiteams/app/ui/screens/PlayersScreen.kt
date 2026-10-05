@@ -579,13 +579,17 @@ private fun ScorersTable(rows: List<ScorerRow>, isUnited: Boolean, ownColor: and
             ) {
                 cells.forEachIndexed { i, c ->
                     if (i == 1) {
-                        // 選手名の欄。自チームの選手は顔写真を名前の左に小さく出す(公式サイトの選手紹介から)
+                        // 選手名の欄。自チームの選手は顔写真を名前の左に出す(公式サイトの選手紹介から)
                         Row(
                             modifier = Modifier.weight(weights[i]),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            RemoteThumbnail(r.photo, width = 28.dp, height = 35.dp, alignTop = true)
+                            RemoteThumbnail(
+                                r.photo, width = 40.dp, height = 50.dp, alignTop = true,
+                                // タップで大きく表示
+                                zoomCaption = (if (r.number.isNotBlank()) "#${r.number} " else "") + r.name
+                            )
                             Text(
                                 c,
                                 modifier = Modifier.weight(1f),
@@ -767,7 +771,12 @@ private fun RosterCard(player: PlayerStats) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             // 顔写真(Bリーグ公式の画像。読み込めないときは出さない)
-            RemoteThumbnail(player.photo, width = 44.dp, height = 55.dp, alignTop = true)
+            RemoteThumbnail(
+                player.photo, width = 72.dp, height = 90.dp, alignTop = true,
+                // タップで大きく表示(カードの開閉はせず、写真だけ大きくする)
+                zoomCaption = (if (player.number.isNotBlank()) "#${player.number} " else "") + player.name +
+                    (if (player.position.isNotBlank()) "(${player.position})" else "")
+            )
             Headline(
                 if (player.number.isNotBlank()) "#${player.number}" else "#-",
                 fontSize = 22,
