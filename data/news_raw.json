@@ -1413,5 +1413,61 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.t9xByERrMekvP-ZkrjaI2g&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-05T02:01:36.562787+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5098048403559784491",
+    "team": "RAC",
+    "title": "日本女子フットサルリーグ ARCO KOBE vs 福井丸岡RUCK 日時・配信情報 | スポカレ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://spocale.com/sports/64/game/368120&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw0aMwBAzgjRs51bK_o8mExY",
+    "published": "2026-10-04T20:05:33Z",
+    "detected_at": "2026-10-05T03:26:23.115099+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3471269443567370513",
+    "team": "RAC",
+    "title": "日本女子フットサルリーグ 福井丸岡RUCK vs バルドラール浦安ラス・ボニータス 日時・配信情報",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://spocale.com/sports/64/game/368112&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3v9wzsAJQclaRYH1enrra6",
+    "published": "2026-10-04T20:05:31Z",
+    "detected_at": "2026-10-05T03:26:23.115134+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:31377194518026194",
+    "team": "RAC",
+    "title": "日本女子フットサルリーグ 福井丸岡RUCK vs SWH レディース 西宮 日時・配信情報 | スポカレ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://spocale.com/sports/64/game/368128&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3v6SBO5xbrlqY4owNQCGk4",
+    "published": "2026-10-04T20:05:31Z",
+    "detected_at": "2026-10-05T03:26:23.115158+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2276198243910373729",
+    "team": "RAC",
+    "title": "日本女子フットサルリーグ 立川アスレティックFCレディース vs 福井丸岡RUCK 日時・配信情報",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://spocale.com/sports/64/game/368115&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2LZgIqnSCXBIy3wC11tD50",
+    "published": "2026-10-04T20:05:31Z",
+    "detected_at": "2026-10-05T03:26:23.115181+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5714009893430127028",
+    "team": "RAC",
+    "title": "日本女子フットサルリーグ 福井丸岡RUCK vs フウガドールすみだレディース 日時・配信情報",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://spocale.com/sports/64/game/368133&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3zpccdcMfz6126axvhWn2F",
+    "published": "2026-10-04T20:05:29Z",
+    "detected_at": "2026-10-05T03:26:23.115202+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12046679757149781635",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 в X: „                                   2026 女子Fレギュラー ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2105968995736367498%3Flang%3Dbg&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3xHoW7ndaGp0U_K_kcUIHX",
+    "published": "2026-10-04T00:32:50Z",
+    "detected_at": "2026-10-05T03:26:23.115262+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2598462098930103836",
+    "team": "RAC",
+    "title": "\"いつもどこかで丸岡RUCK   10月4日（日） 10:45 坂井フェニックス応援 日東シンコースタジアム ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fukuiruck/status/2106168629691916368/photo/1&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2y_9n9PTqZ6S6wpBpQZghN",
+    "published": "2026-10-03T19:09:10Z",
+    "detected_at": "2026-10-05T03:26:23.115286+00:00"
   }
 ]
