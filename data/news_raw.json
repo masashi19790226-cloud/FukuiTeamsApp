@@ -1663,5 +1663,15 @@
     "source": "ORICON NEWS",
     "image": "",
     "detected_at": "2026-10-05T11:25:25.205796+00:00"
+  },
+  {
+    "id": "bing:https://news.yahoo.co.jp/articles/590b72006e1a0b7de8d9f40562cbb59a3f0e468b",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズがホーム初戦勝利 金沢を77‐70で振り切る 4500人 ...",
+    "link": "https://news.yahoo.co.jp/articles/590b72006e1a0b7de8d9f40562cbb59a3f0e468b",
+    "published": "2026-10-03T20:00:00+00:00",
+    "source": "Yahoo!ニュース",
+    "image": "https://www.bing.com/th?id=ONUT.EQspAHmzonuY7KFIKOCXiw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-05T12:31:26.964355+00:00"
   }
 ]
