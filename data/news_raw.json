@@ -1567,5 +1567,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.chunichi.co.jp/article/1320866%3Frct%3Dfukui&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2CJ-PO7uY0-INajfqlhI38",
     "published": "2026-10-05T04:05:59Z",
     "detected_at": "2026-10-05T05:46:25.151760+00:00"
+  },
+  {
+    "id": "bing:https://mantan-web.jp/prtimes/article/20261002prt00m200000782a.html",
+    "team": "BLOWINDS",
+    "title": "【(株)アトム×福井ブローウィンズ】目指せ全選手コンプリート ...",
+    "link": "https://mantan-web.jp/prtimes/article/20261002prt00m200000782a.html",
+    "published": "2026-10-02T05:59:00+00:00",
+    "source": "MANTANWEB（まんたんウェブ）",
+    "image": "https://www.bing.com/th?id=ONUT.flyILULbHv1JGHLulsDuPw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-05T07:33:13.575874+00:00"
   }
 ]
