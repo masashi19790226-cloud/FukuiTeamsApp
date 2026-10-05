@@ -452,10 +452,7 @@
           "goals": 5,
           "pk": 0,
           "shots": 27,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-17-150x150.jpg",
-          "number": "17",
-          "position": "FP"
+          "games": 10
         },
         {
           "rank": 19,
@@ -464,10 +461,7 @@
           "goals": 5,
           "pk": 0,
           "shots": 27,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-10-150x150.jpg",
-          "number": "10",
-          "position": "FP"
+          "games": 10
         },
         {
           "rank": 19,
@@ -485,10 +479,7 @@
           "goals": 5,
           "pk": 0,
           "shots": 34,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-09-150x150.jpg",
-          "number": "9",
-          "position": "FP"
+          "games": 10
         },
         {
           "rank": 19,
@@ -596,10 +587,7 @@
           "goals": 4,
           "pk": 0,
           "shots": 26,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-06-150x150.jpg",
-          "number": "6",
-          "position": "FP"
+          "games": 10
         },
         {
           "rank": 31,
@@ -806,10 +794,7 @@
           "goals": 2,
           "pk": 0,
           "shots": 15,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-11-150x150.jpg",
-          "number": "11",
-          "position": "FP"
+          "games": 10
         },
         {
           "rank": 54,
@@ -827,10 +812,7 @@
           "goals": 2,
           "pk": 0,
           "shots": 21,
-          "games": 9,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-04-150x150.jpg",
-          "number": "4",
-          "position": "FP"
+          "games": 9
         },
         {
           "rank": 54,
@@ -965,10 +947,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 3,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-19-150x150.jpg",
-          "number": "19",
-          "position": "FP"
+          "games": 10
         },
         {
           "rank": 75,
@@ -1121,10 +1100,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 16,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-05-150x150.jpg",
-          "number": "5",
-          "position": "FP"
+          "games": 10
         },
         {
           "rank": 75,
@@ -1169,10 +1145,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 21,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-07-150x150.jpg",
-          "number": "7",
-          "position": "FP"
+          "games": 10
         },
         {
           "rank": 75,
@@ -1181,10 +1154,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 21,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-01-150x150.jpg",
-          "number": "1",
-          "position": "GK"
+          "games": 10
         },
         {
           "rank": 75,
@@ -1197,7 +1167,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-05T21:45:55.863409+00:00"
+    "updated_at": "2026-10-05T22:02:59.247343+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -2939,6 +2909,6 @@
         }
       ]
     },
-    "updated_at": "2026-10-05T21:45:55.863409+00:00"
+    "updated_at": "2026-10-05T22:02:59.247343+00:00"
   }
 }
