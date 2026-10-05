@@ -1577,5 +1577,37 @@
     "source": "MANTANWEB（まんたんウェブ）",
     "image": "https://www.bing.com/th?id=ONUT.flyILULbHv1JGHLulsDuPw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-05T07:33:13.575874+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1111891269856531",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズがホーム開幕2連勝、通算3勝1敗に 金沢サムライズに2戦とも7点差で勝利 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/43464f1d801094d2bc34212822efabdacd61b6a6/images/000&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0qCpmNo82PNFuw0FSfJDXY",
+    "published": "2026-10-05T05:50:16Z",
+    "detected_at": "2026-10-05T08:28:21.283737+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5158856474587049776",
+    "team": "UNITED",
+    "title": "福井ユナイテッド、今季最終戦は黒星 サッカー北信越リーグ1部 - au Webポータル",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://article.auone.jp/614cafd7-2e2b-4e94-ac6c-d465b933947f&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1fYGAw4Z5DYbuTGTuBKLSO",
+    "published": "2026-10-04T20:36:48Z",
+    "detected_at": "2026-10-05T08:28:21.711632+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5116101064166448772",
+    "team": "UNITED",
+    "title": "福井ユナイテッド、最終戦飾れず サッカー北信越リーグ１部",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2714178&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3PlFiA6aYuSeiPFSfmHAeq",
+    "published": "2026-10-04T20:12:27Z",
+    "detected_at": "2026-10-05T08:28:21.711668+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2284423377992329689",
+    "team": "UNITED",
+    "title": "福井ユナイテッド、今季最終戦は黒星 サッカー北信越リーグ1部 - UQライフ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://portal.uqmobile.jp/detail/1/2/5/10211_5_r_20261004_1791102896898308&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3S3nqLByZrw7T0YapLkS2t",
+    "published": "2026-10-04T08:49:39Z",
+    "detected_at": "2026-10-05T08:28:21.711699+00:00"
   }
 ]
