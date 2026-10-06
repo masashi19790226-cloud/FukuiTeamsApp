@@ -147,6 +147,16 @@ object BbsRepository {
         }
     }
 
+    /** 1件だけ公式の ?anc=番号 のページから読み直す(いいねを押したあと、いいね数を反映するため)。 */
+    suspend fun reloadPost(no: Int) {
+        try {
+            val page = withContext(Dispatchers.IO) { fetchPage(BASE_URL + "?anc=$no") }
+            if (page.posts.isNotEmpty()) merge(page.posts)
+        } catch (e: Exception) {
+            // 読み直せなくても、次の更新で反映される
+        }
+    }
+
     /**
      * 添付画像の大きい版のURL。一覧の画像は小さな縮小版なので、
      * 縮小版のURLから元の画像の場所が分かればそれを、分からなければ公式の画像ページ(fileview.php)から探す。

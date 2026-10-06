@@ -4,6 +4,14 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.webkit.CookieManager
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -92,7 +100,6 @@ import com.fukuiteams.app.data.BbsSort
 import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.isNg
 import com.fukuiteams.app.model.Team
-import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.MastheadTopBar
 import com.fukuiteams.app.ui.components.RemoteThumbnail
@@ -112,13 +119,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
 
-/** 掲示板タブの中の切り替え。 */
-private enum class BbsTab(val label: String) {
-    TIMELINE("タイムライン"),
-    SEARCH("検索"),
-    SETTINGS("設定")
-}
-
 /** 検索の期間。 */
 private enum class BbsPeriod(val label: String) {
     TODAY("今日"),
@@ -127,10 +127,15 @@ private enum class BbsPeriod(val label: String) {
     ALL("すべて")
 }
 
-/** タイムラインの上に重ねて開く画面(投稿詳細・ユーザー別一覧)。戻るボタンで1つずつ閉じる。 */
+/**
+ * タイムラインの上に重ねて開く画面。戻るボタンで1つずつ閉じる。
+ * 検索・設定も、タイムラインの上に重ねて開く(タイムラインの表示を広く取るため)。
+ */
 private sealed class BbsOverlay {
     data class Detail(val no: Int) : BbsOverlay()
     data class User(val userKey: String, val name: String) : BbsOverlay()
+    object Search : BbsOverlay()
+    object Settings : BbsOverlay()
 }
 
 /** 投稿カードから呼ぶ操作。 */
@@ -138,7 +143,8 @@ private class BbsActions(
     val openUser: (userKey: String, name: String) -> Unit,
     val openDetail: (no: Int) -> Unit,
     val openAnchor: (no: Int) -> Unit,
-    val openUrl: (url: String) -> Unit
+    val openUrl: (url: String) -> Unit,
+    val openLike: (no: Int) -> Unit
 )
 
 /** タイムラインの1行(投稿 または「前回ここまで読みました」の区切り)。 */
@@ -152,8 +158,9 @@ private val HighlightColor = Color(0xFFFDE2C4)
 private const val AUTO_REFRESH_MILLIS = 5 * 60 * 1000L
 
 /**
- * 「掲示板」タブ。福井ブローウィンズ掲示板を読みやすく表示する(読むだけ。投稿・返信・いいねは公式ページで)。
- * 中は「タイムライン/検索/設定」を切り替え、投稿詳細とユーザー別一覧はこの画面の上に重ねて開く。
+ * 「掲示板」タブ。福井ブローウィンズ掲示板を読みやすく表示する(投稿・返信は公式ページで)。
+ * ふだんはタイムラインだけを広く表示し、検索・設定・投稿詳細・ユーザー別一覧はこの画面の上に重ねて開く。
+ * 表示件数・最新の位置など、あまり変えない項目は右上の「︙」メニューにまとめた。
  */
 @Composable
 fun BbsScreen() {
@@ -161,9 +168,11 @@ fun BbsScreen() {
     val scope = rememberCoroutineScope()
     val settingsFlow = remember { BbsPrefs.flow(context) }
     val settings by settingsFlow.collectAsState<BbsSettings, BbsSettings?>(initial = null)
-    var tab by rememberSaveable { mutableStateOf(BbsTab.TIMELINE) }
     val overlays = remember { mutableStateListOf<BbsOverlay>() }
     var anchorNo by remember { mutableStateOf<Int?>(null) }
+    // いいねを押すために公式ページを開いている投稿の番号
+    var likeNo by remember { mutableStateOf<Int?>(null) }
+    var menuOpen by remember { mutableStateOf(false) }
     // このタブを開いた時点の既読位置。NEW と「前回ここまで読みました」はこれで決める
     var baseline by remember { mutableStateOf<Int?>(null) }
     val enteredAt = remember { System.currentTimeMillis() }
@@ -171,7 +180,7 @@ fun BbsScreen() {
     val timelineState = rememberLazyListState()
     val pullToRefreshState = rememberPullToRefreshState()
 
-    // 検索の入力(タブを切り替えても残す)
+    // 検索の入力(検索を閉じても残す)
     var query by rememberSaveable { mutableStateOf("") }
     var searchByLikes by rememberSaveable { mutableStateOf(false) }
     var period by rememberSaveable { mutableStateOf(BbsPeriod.ALL) }
@@ -226,8 +235,15 @@ fun BbsScreen() {
         openUser = { key, name -> overlays.add(BbsOverlay.User(key, name)) },
         openDetail = { no -> overlays.add(BbsOverlay.Detail(no)) },
         openAnchor = { no -> anchorNo = no },
-        openUrl = { url -> openBbsUrl(context, url) }
+        openUrl = { url -> openBbsUrl(context, url) },
+        openLike = { no -> likeNo = no }
     )
+
+    fun openOverlay(o: BbsOverlay) {
+        // 検索・設定は重ねて開かず、開いているものを閉じてから開く
+        overlays.clear()
+        overlays.add(o)
+    }
 
     Scaffold(
         topBar = {
@@ -245,14 +261,64 @@ fun BbsScreen() {
                     IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "掲示板を更新")
                     }
-                    IconButton(onClick = { openBbsUrl(context, BbsRepository.BASE_URL) }) {
-                        Icon(Icons.Filled.Language, contentDescription = "公式の掲示板を開く")
+                    IconButton(onClick = { openOverlay(BbsOverlay.Search) }) {
+                        Icon(Icons.Filled.Search, contentDescription = "検索")
+                    }
+                    Box {
+                        IconButton(onClick = { menuOpen = true }) {
+                            Icon(Icons.Filled.MoreVert, contentDescription = "メニュー")
+                        }
+                        val s = settings
+                        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                            if (s != null) {
+                                Text(
+                                    "表示件数",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = InkSoft,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                                )
+                                BbsPrefs.DISPLAY_COUNTS.forEach { c ->
+                                    DropdownMenuItem(
+                                        text = { Text((if (c == s.displayCount) "● " else "   ") + "${c}件") },
+                                        onClick = {
+                                            menuOpen = false
+                                            scope.launch { BbsPrefs.setDisplayCount(context, c) }
+                                        }
+                                    )
+                                }
+                                HorizontalDivider()
+                                listOf(true to "最新を上に表示", false to "最新を下に表示").forEach { (top, label) ->
+                                    DropdownMenuItem(
+                                        text = { Text((if (s.newestTop == top) "● " else "   ") + label) },
+                                        onClick = {
+                                            menuOpen = false
+                                            scope.launch { BbsPrefs.setNewestTop(context, top) }
+                                        }
+                                    )
+                                }
+                                HorizontalDivider()
+                            }
+                            DropdownMenuItem(
+                                text = { Text("設定(文字サイズ・自動更新・NG)") },
+                                onClick = {
+                                    menuOpen = false
+                                    openOverlay(BbsOverlay.Settings)
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("公式の掲示板を開く") },
+                                onClick = {
+                                    menuOpen = false
+                                    openBbsUrl(context, BbsRepository.BASE_URL)
+                                }
+                            )
+                        }
                     }
                 }
             )
         },
         floatingActionButton = {
-            if (tab == BbsTab.TIMELINE && overlays.isEmpty()) {
+            if (overlays.isEmpty()) {
                 ExtendedFloatingActionButton(
                     text = { Text("投稿", fontWeight = FontWeight.Bold) },
                     icon = { Icon(Icons.Filled.Edit, contentDescription = null) },
@@ -292,41 +358,40 @@ fun BbsScreen() {
                             }
                         }
                     )
+                    is BbsOverlay.Search -> SearchPane(
+                        settings = s,
+                        posts = posts,
+                        replyCounts = replyCounts,
+                        baseline = baseline ?: 0,
+                        actions = actions,
+                        query = query,
+                        onQuery = { query = it },
+                        byLikes = searchByLikes,
+                        onByLikes = { searchByLikes = it },
+                        period = period,
+                        onPeriod = { period = it }
+                    )
+                    is BbsOverlay.Settings -> SettingsPane(s)
                 }
             } else {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    BbsHeader(baseline ?: 0, posts)
-                    BbsTabRow(tab) { tab = it }
-                    when (tab) {
-                        BbsTab.TIMELINE -> TimelinePane(
-                            settings = s,
-                            posts = posts,
-                            replyCounts = replyCounts,
-                            baseline = baseline ?: 0,
-                            listState = timelineState,
-                            actions = actions,
-                            initialScrollDone = initialScrollDone,
-                            readyToScroll = (BbsRepository.lastUpdatedMillis ?: 0L) >= enteredAt || BbsRepository.errorMessage != null,
-                            onInitialScrollDone = { initialScrollDone = true },
-                            onSort = { scope.launch { BbsPrefs.setSort(context, it) } },
-                            onCount = { scope.launch { BbsPrefs.setDisplayCount(context, it) } },
-                            onNewestTop = { scope.launch { BbsPrefs.setNewestTop(context, it) } }
-                        )
-                        BbsTab.SEARCH -> SearchPane(
-                            settings = s,
-                            posts = posts,
-                            replyCounts = replyCounts,
-                            baseline = baseline ?: 0,
-                            actions = actions,
-                            query = query,
-                            onQuery = { query = it },
-                            byLikes = searchByLikes,
-                            onByLikes = { searchByLikes = it },
-                            period = period,
-                            onPeriod = { period = it }
-                        )
-                        BbsTab.SETTINGS -> SettingsPane(s)
-                    }
+                    BbsStatusBar(
+                        baseline = baseline ?: 0,
+                        posts = posts,
+                        sort = s.sort,
+                        onSort = { sort -> scope.launch { BbsPrefs.setSort(context, sort) } }
+                    )
+                    TimelinePane(
+                        settings = s,
+                        posts = posts,
+                        replyCounts = replyCounts,
+                        baseline = baseline ?: 0,
+                        listState = timelineState,
+                        actions = actions,
+                        initialScrollDone = initialScrollDone,
+                        readyToScroll = (BbsRepository.lastUpdatedMillis ?: 0L) >= enteredAt || BbsRepository.errorMessage != null,
+                        onInitialScrollDone = { initialScrollDone = true }
+                    )
                 }
             }
             PullToRefreshContainer(
@@ -343,7 +408,8 @@ fun BbsScreen() {
             openUser = { key, name -> anchorNo = null; actions.openUser(key, name) },
             openDetail = { n -> anchorNo = null; actions.openDetail(n) },
             openAnchor = { n -> anchorNo = n },
-            openUrl = actions.openUrl
+            openUrl = actions.openUrl,
+            openLike = { n -> anchorNo = null; likeNo = n }
         )
         AnchorSheet(
             no = no,
@@ -353,70 +419,83 @@ fun BbsScreen() {
             onDismiss = { anchorNo = null }
         )
     }
+
+    likeNo?.let { no ->
+        LikeDialog(
+            no = no,
+            onDismiss = {
+                likeNo = null
+                // 押したいいねの数を反映するため、その投稿を読み直す
+                scope.launch { BbsRepository.reloadPost(no) }
+            }
+        )
+    }
 }
 
-/** 見出し・閲覧中の人数・最終更新・新着件数・読み込み中の表示。 */
+/**
+ * タイムラインの上の1行。閲覧中の人数・更新時刻・新着件数と、並び順の切り替え。
+ * (以前の大きな見出し・タブの列はやめ、掲示板の部分を広く取る)
+ */
 @Composable
-private fun BbsHeader(baseline: Int, posts: Map<Int, BbsPost>) {
+private fun BbsStatusBar(baseline: Int, posts: Map<Int, BbsPost>, sort: BbsSort, onSort: (BbsSort) -> Unit) {
     val viewers = BbsRepository.viewers
     val updated = BbsRepository.lastUpdatedMillis
     val newCount = if (baseline > 0) posts.keys.count { it > baseline } else 0
-    Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 6.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Headline("ブローウィンズ掲示板", fontSize = 20)
+    var sortOpen by remember { mutableStateOf(false) }
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 8.dp, top = 2.dp, bottom = 2.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val parts = listOfNotNull(
+                viewers?.let { "${it}人閲覧中" },
+                updated?.let { "${timeLabel(it)}更新" },
+                if (newCount > 0) "新着${newCount}件" else null
+            )
+            Text(
+                if (parts.isEmpty()) "読み込み中…" else parts.joinToString("・"),
+                modifier = Modifier.weight(1f),
+                fontSize = 12.sp,
+                color = if (newCount > 0) NewsRed else InkSoft,
+                fontWeight = if (newCount > 0) FontWeight.Bold else FontWeight.Normal,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Box {
+                Text(
+                    "${sort.label} ▼",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Ink,
+                    modifier = Modifier
+                        .border(1.dp, Ink)
+                        .clickable { sortOpen = true }
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                )
+                DropdownMenu(expanded = sortOpen, onDismissRequest = { sortOpen = false }) {
+                    BbsSort.values().forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text((if (option == sort) "● " else "   ") + option.label) },
+                            onClick = {
+                                sortOpen = false
+                                onSort(option)
+                            }
+                        )
+                    }
+                }
+            }
         }
-        val parts = listOfNotNull(
-            viewers?.let { "${it}人閲覧中" },
-            updated?.let { "${timeLabel(it)} 更新" },
-            if (newCount > 0) "新着${newCount}件" else null
-        )
-        Text(
-            if (parts.isEmpty()) "読み込み中…" else parts.joinToString(" ・ "),
-            style = MaterialTheme.typography.bodySmall,
-            color = if (newCount > 0) NewsRed else InkSoft,
-            fontWeight = if (newCount > 0) FontWeight.Bold else FontWeight.Normal
-        )
         BbsRepository.errorMessage?.let {
-            Text(it, style = MaterialTheme.typography.bodySmall, color = NewsRed)
+            Text(it, fontSize = 12.sp, color = NewsRed, modifier = Modifier.padding(horizontal = 12.dp))
         }
         if (BbsRepository.loading) {
             LinearProgressIndicator(
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                modifier = Modifier.fillMaxWidth().height(2.dp),
                 color = TeamBlowinds,
                 trackColor = DividerGray
             )
         } else {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-        DoubleRule(modifier = Modifier.padding(top = 2.dp))
-    }
-}
-
-@Composable
-private fun BbsTabRow(selected: BbsTab, onSelect: (BbsTab) -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        BbsTab.values().forEach { t ->
-            val sel = t == selected
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .background(if (sel) Ink else Paper)
-                    .border(1.dp, if (sel) Ink else LineGray)
-                    .clickable { onSelect(t) }
-                    .padding(vertical = 9.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    t.label,
-                    color = if (sel) White else Ink,
-                    fontSize = 13.sp,
-                    fontWeight = if (sel) FontWeight.Bold else FontWeight.Normal,
-                    maxLines = 1
-                )
-            }
+            ThinRule(color = LineGray)
         }
     }
 }
@@ -433,10 +512,7 @@ private fun TimelinePane(
     actions: BbsActions,
     initialScrollDone: Boolean,
     readyToScroll: Boolean,
-    onInitialScrollDone: () -> Unit,
-    onSort: (BbsSort) -> Unit,
-    onCount: (Int) -> Unit,
-    onNewestTop: (Boolean) -> Unit
+    onInitialScrollDone: () -> Unit
 ) {
     val dateOrder = settings.sort != BbsSort.LIKES
     val newestFirst = remember(posts) { posts.values.sortedByDescending { it.no } }
@@ -467,23 +543,26 @@ private fun TimelinePane(
         }
         entries += TimelineEntry.PostEntry(p)
     }
-    // 先頭に操作欄などを置くぶん、投稿の位置がずれる
-    val headerItems = 1 + (if (hiddenCount > 0) 1 else 0)
+    // 投稿の前に置く行(NGの件数)のぶん、投稿の位置がずれる
+    val headerItems = if (hiddenCount > 0) 1 else 0
 
-    // 最新が下のときは、開いたら最初の未読(無ければ一番下)までスクロールする
+    // 開いたら、未読と既読の境目から表示する
+    //  最新が上:いちばん古い未読の投稿を一番上に(その下に区切り線。新しい投稿は上へスクロール)
+    //  最新が下:区切り線を一番上に(その下が最初の未読)
+    //  未読が無いときは、最新が上なら一番上、最新が下なら一番下
     LaunchedEffect(readyToScroll, entries.size, settings.newestTop) {
         if (initialScrollDone || !readyToScroll || entries.isEmpty()) return@LaunchedEffect
-        if (!settings.newestTop) {
-            val firstUnread = entries.indexOfFirst { it is TimelineEntry.PostEntry && baseline > 0 && it.post.no > baseline }
-            val target = if (firstUnread >= 0) {
-                // 区切り線から見えるように1つ上から
-                (firstUnread - 1).coerceAtLeast(0)
-            } else entries.lastIndex
-            listState.scrollToItem(target + headerItems)
+        val divider = entries.indexOfFirst { it is TimelineEntry.ReadDivider }
+        val target = when {
+            divider >= 0 && settings.newestTop -> (divider - 1).coerceAtLeast(0)
+            divider >= 0 -> divider
+            settings.newestTop -> 0
+            else -> entries.lastIndex
         }
+        listState.scrollToItem(target + headerItems)
         onInitialScrollDone()
     }
-    // 「最新が上/下」を切り替えたら、最新の投稿の位置へ
+    // 「最新を上/下に表示」を切り替えたら、最新の投稿の位置へ
     var lastNewestTop by remember { mutableStateOf(settings.newestTop) }
     LaunchedEffect(settings.newestTop) {
         if (lastNewestTop != settings.newestTop) {
@@ -496,12 +575,9 @@ private fun TimelinePane(
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 0.dp, bottom = 96.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        contentPadding = PaddingValues(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 96.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        item(key = "controls") {
-            TimelineControls(settings, onSort, onCount, onNewestTop)
-        }
         if (hiddenCount > 0) {
             item(key = "ng") {
                 Text("NGで${hiddenCount}件を非表示", style = MaterialTheme.typography.bodySmall, color = InkSoft)
@@ -512,7 +588,7 @@ private fun TimelinePane(
                 Text(
                     when {
                         BbsRepository.loading -> "読み込み中…"
-                        settings.sort == BbsSort.IMAGES && posts.isNotEmpty() -> "読み込み済みの投稿に、画像のあるものはありません(表示件数を増やすと見つかることがあります)"
+                        settings.sort == BbsSort.IMAGES && posts.isNotEmpty() -> "読み込み済みの投稿に、画像のあるものはありません(右上の︙で表示件数を増やすと見つかることがあります)"
                         BbsRepository.errorMessage != null -> "読み込めませんでした。右上の更新ボタンで読み直してください。"
                         else -> "投稿がありません"
                     },
@@ -535,62 +611,6 @@ private fun TimelinePane(
                     onClickCard = { actions.openDetail(entry.post.no) }
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun TimelineControls(
-    settings: BbsSettings,
-    onSort: (BbsSort) -> Unit,
-    onCount: (Int) -> Unit,
-    onNewestTop: (Boolean) -> Unit
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Segmented(
-            options = BbsSort.values().map { it to it.label },
-            selected = settings.sort,
-            onSelect = onSort
-        )
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("表示", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-            var menuOpen by remember { mutableStateOf(false) }
-            Box {
-                Box(
-                    modifier = Modifier
-                        .border(1.dp, Ink)
-                        .background(Paper)
-                        .clickable { menuOpen = true }
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
-                ) {
-                    Text("${settings.displayCount}件 ▼", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Ink)
-                }
-                DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                    BbsPrefs.DISPLAY_COUNTS.forEach { c ->
-                        DropdownMenuItem(
-                            text = { Text("${c}件") },
-                            onClick = {
-                                menuOpen = false
-                                onCount(c)
-                            }
-                        )
-                    }
-                }
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Segmented(
-                options = listOf(true to "最新が上", false to "最新が下"),
-                selected = settings.newestTop,
-                onSelect = onNewestTop,
-                modifier = Modifier.width(176.dp)
-            )
-        }
-        if (settings.sort == BbsSort.LIKES) {
-            Text(
-                "いいね順は、表示件数ぶんの最新の投稿を、いいねの多い順に並べています",
-                style = MaterialTheme.typography.bodySmall,
-                color = InkSoft
-            )
         }
     }
 }
@@ -697,8 +717,18 @@ private fun PostCard(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            Icon(Icons.Filled.FavoriteBorder, contentDescription = "いいね", tint = InkSoft, modifier = Modifier.size(15.dp))
-            Text("${post.likes}", fontSize = 12.sp, color = InkSoft)
+            // いいね:押すと公式ページのその投稿を開き、そこで「いいね」を押せる
+            Row(
+                modifier = Modifier
+                    .border(1.dp, NewsRed.copy(alpha = 0.5f))
+                    .clickable { actions.openLike(post.no) }
+                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Icon(Icons.Filled.FavoriteBorder, contentDescription = "いいね", tint = NewsRed, modifier = Modifier.size(15.dp))
+                Text("いいね ${post.likes}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = NewsRed)
+            }
             Text(
                 "返信する",
                 fontSize = 12.sp,
@@ -775,6 +805,50 @@ private fun buildBodyText(text: String, highlight: List<String>): AnnotatedStrin
             if (at < 0) break
             addStyle(SpanStyle(background = HighlightColor, fontWeight = FontWeight.Bold), at, at + word.length)
             from = at + word.length
+        }
+    }
+}
+
+// ---------------- いいね(公式ページをアプリの中で開く) ----------------
+
+/**
+ * いいねは公式ページの「いいね」ボタンで押す仕組みなので、その投稿の公式ページ(?anc=番号)を
+ * アプリの中の画面で開き、そこで押してもらう。閉じるとアプリに戻り、その投稿のいいね数を読み直す。
+ */
+@Composable
+private fun LikeDialog(no: Int, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+        Column(modifier = Modifier.fillMaxSize().background(Ivory)) {
+            Row(
+                modifier = Modifier.fillMaxWidth().background(Ink).padding(start = 12.dp, end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "No.$no の「いいね」を押して閉じてください",
+                    color = White,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                IconButton(onClick = onDismiss) { Icon(Icons.Filled.Close, contentDescription = "閉じる", tint = White) }
+            }
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { ctx ->
+                    WebView(ctx).apply {
+                        @Suppress("SetJavaScriptEnabled")
+                        settings.javaScriptEnabled = true
+                        settings.domStorageEnabled = true
+                        // ページ内の移動はこの画面の中で行う
+                        webViewClient = WebViewClient()
+                        CookieManager.getInstance().setAcceptCookie(true)
+                        loadUrl(BbsRepository.BASE_URL + "?anc=$no#anc")
+                    }
+                },
+                onRelease = { it.destroy() }
+            )
         }
     }
 }
@@ -898,9 +972,9 @@ private fun DetailPane(
                     modifier = Modifier.weight(1f)
                 ) { Text("返信する(公式)", maxLines = 1, fontSize = 13.sp) }
                 OutlinedButton(
-                    onClick = { actions.openUrl(BbsRepository.BASE_URL + "?anc=$no") },
+                    onClick = { actions.openLike(no) },
                     modifier = Modifier.weight(1f)
-                ) { Text("公式で見る・いいね", maxLines = 1, fontSize = 13.sp) }
+                ) { Text("いいねする", maxLines = 1, fontSize = 13.sp) }
             }
         }
         item(key = "replies-title") {

@@ -15,6 +15,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import com.fukuiteams.app.navigation.Routes
 import com.fukuiteams.app.ui.theme.DividerGray
@@ -46,7 +51,7 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
                 selected = selected,
                 onClick = { onNavigate(item.route) },
                 icon = { Icon(item.icon, contentDescription = item.label) },
-                label = { Text(item.label, fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal, maxLines = 1, softWrap = false) },
+                label = { NavLabel(item.label, selected) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = NewsRed,
                     selectedTextColor = Ink,
@@ -58,4 +63,23 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
         }
     }
 }
+}
+
+/**
+ * 下のメニューの文字。6つ並ぶと「トピック」「メニュー」が入りきらないことがあるので、
+ * 1行に収まるまで文字を小さくする(端が欠けないように)。
+ */
+@Composable
+private fun NavLabel(text: String, selected: Boolean) {
+    var fontSize by remember(text) { mutableStateOf(12f) }
+    Text(
+        text,
+        fontSize = fontSize.sp,
+        fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
+        maxLines = 1,
+        softWrap = false,
+        onTextLayout = { result ->
+            if (result.hasVisualOverflow && fontSize > 8f) fontSize -= 0.5f
+        }
+    )
 }

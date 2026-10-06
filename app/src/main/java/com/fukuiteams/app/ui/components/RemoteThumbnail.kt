@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -178,15 +179,26 @@ private fun RemoteImageViewerDialog(url: String, preview: ImageBitmap, caption: 
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Image(
-                bitmap = large ?: preview,
-                contentDescription = caption,
+            // 一覧の小さい写真と同じ地の色(DividerGray)の上に、写真の縦横比のまま表示する。
+            // 背景が透明な写真(選手の切り抜き写真など)も、拡大したときに背景の色が変わらない
+            val shown = large ?: preview
+            val ratio = if (shown.height > 0) shown.width.toFloat() / shown.height else 1f
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(460.dp)
                     .clickable(onClick = onDismiss),
-                contentScale = ContentScale.Fit
-            )
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    bitmap = shown,
+                    contentDescription = caption,
+                    modifier = Modifier
+                        .aspectRatio(ratio.coerceIn(0.2f, 5f))
+                        .background(DividerGray),
+                    contentScale = ContentScale.Fit
+                )
+            }
             if (caption.isNotBlank()) {
                 Text(caption, color = Ivory, fontSize = 14.sp, modifier = Modifier.align(Alignment.CenterHorizontally))
             }

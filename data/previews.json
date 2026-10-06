@@ -1,55 +1,61 @@
 {
-  "bw05": {
-    "game_id": "bw05",
+  "bw03": {
+    "game_id": "bw03",
     "team": "BLOWINDS",
     "my": {
       "label": "福井",
-      "record": "3勝1敗",
-      "form": "○●○○",
-      "rank": "中地区 1位"
+      "record": "1勝1敗",
+      "form": "○●",
+      "rank": "中地区 2位"
     },
     "opp": {
-      "label": "横浜EX",
-      "record": "1勝1敗",
-      "rank": "中地区 3位",
-      "form": "○●"
+      "label": "金沢",
+      "record": "2勝0敗",
+      "rank": "中地区 1位",
+      "form": "○○"
     },
     "last_meeting": null,
     "key_players": [
       {
-        "number": "1",
-        "name": "トレイ・ボイド",
-        "position": "SG",
-        "stat": "平均38.0点・8.0リバウンド"
+        "number": "14",
+        "name": "キーガン・レコード",
+        "position": "C",
+        "stat": "平均24.0点"
       },
       {
-        "number": "13",
-        "name": "大橋 大空",
+        "number": "33",
+        "name": "ローカス・ガスティス",
+        "position": "C",
+        "stat": "平均7.0リバウンド"
+      },
+      {
+        "number": "9",
+        "name": "請田 祐哉",
         "position": "PG",
-        "stat": "平均6.0アシスト"
+        "stat": "平均4.0アシスト"
       }
     ],
     "players_note": "今季2試合の成績から",
-    "opp_link": "https://www.bleague.jp/club_detail/?TeamID=714",
+    "opp_link": "https://www.bleague.jp/club_detail/?TeamID=750",
     "h2h_checked": true,
     "my_key_players": [
       {
         "number": "15",
         "name": "チョンディー・ブラウン ジュニア",
         "position": "SF",
-        "stat": "平均20.8点・5.0アシスト"
+        "stat": "平均26.0点・6.5アシスト"
       },
       {
         "number": "14",
         "name": "ドゥシャン・リスティッチ",
         "position": "C",
-        "stat": "平均11.8リバウンド"
+        "stat": "平均11.5リバウンド"
       }
     ],
-    "my_players_note": "今季4試合の成績から",
-    "opp_team_id": "714",
-    "summary": "福井は直近4試合で3勝1敗。横浜EXは1勝1敗。今季初対戦。横浜EXは#1 トレイ・ボイド(平均38.0点)に注意。",
-    "updated_at": "2026-10-05T15:03:32.067216+00:00"
+    "my_players_note": "今季2試合の成績から",
+    "opp_team_id": "750",
+    "summary": "福井は直近2試合で1勝1敗。金沢は2勝0敗。今季初対戦。金沢は#14 キーガン・レコード(平均24.0点)に注意。",
+    "updated_at": "2026-10-02T13:33:15.140810+00:00"
   },
   "rc16": {
     "game_id": "rc16",
@@ -58,38 +64,41 @@
       "label": "丸岡",
       "record": "4勝5敗1分",
       "form": "●○●○△",
-      "rank": "6位(勝点13)"
+      "rank": ""
     },
     "opp": {
       "label": "バルドラール浦安ラス・ボニータス",
-      "record": "9勝0敗1分",
-      "rank": "1位(勝点28)",
-      "form": "○○○○△"
+      "record": "",
+      "rank": "",
+      "form": ""
     },
     "last_meeting": "7/25 ●0-4",
-    "key_players": [
-      {
-        "number": "",
-        "name": "塚本 夏希",
-        "position": "",
-        "stat": "今季13得点(リーグ1位)・シュート64本"
-      },
-      {
-        "number": "",
-        "name": "中村 美月",
-        "position": "",
-        "stat": "今季12得点(リーグ2位)・シュート47本"
-      },
-      {
-        "number": "",
-        "name": "江口 未珂",
-        "position": "",
-        "stat": "今季12得点(リーグ2位)・シュート75本"
-      }
-    ],
-    "players_note": "女子Fリーグ公式の得点ランキングから",
+    "key_players": [],
+    "players_note": "",
     "opp_link": "https://w-fleague.jp/club/urayasu/",
-    "summary": "丸岡は直近5試合で2勝2敗1分。バルドラール浦安ラス・ボニータスは9勝0敗1分。前回対戦は7/25 ●0-4。バルドラール浦安ラス・ボニータスは塚本 夏希(今季13得点)に注意。",
-    "updated_at": "2026-10-05T15:03:32.067436+00:00"
+    "summary": "丸岡は直近5試合で2勝2敗1分。前回対戦は7/25 ●0-4。",
+    "updated_at": "2026-10-02T13:33:15.140990+00:00"
+  },
+  "un02": {
+    "game_id": "un02",
+    "team": "UNITED",
+    "my": {
+      "label": "福井",
+      "record": "",
+      "form": "",
+      "rank": "1位(勝点32)"
+    },
+    "opp": {
+      "label": "富山新庄クラブ",
+      "record": "",
+      "rank": "3位(勝点25)",
+      "form": ""
+    },
+    "last_meeting": null,
+    "key_players": [],
+    "players_note": "",
+    "opp_link": null,
+    "summary": "1位の福井と3位の富山新庄クラブの対戦。",
+    "updated_at": "2026-10-02T13:33:16.727990+00:00"
   }
 }

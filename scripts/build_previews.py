@@ -24,6 +24,7 @@ import json
 import os
 import re
 import time
+import urllib.parse
 import urllib.request
 
 import standings
@@ -330,6 +331,61 @@ def parse_roster(page):
     return roster
 
 
+BLOWINDS_CLUB_SITE = "https://www.fukuiblowinds.com"
+BLOWINDS_CLUB_PLAYERS = BLOWINDS_CLUB_SITE + "/team/players/"
+
+
+def blowinds_club_photos():
+    """ブローウィンズ公式サイトの選手紹介から、選手の写真URLを集める。
+    一覧(/team/players/)に並ぶ各選手の詳細ページ(/team/players/detail/id=○?PlayerID=○)の
+    <img src=".../files/user/common/13_Kawashima_2026-27_HP.jpg" alt="川島 聖那"> を使う。
+    返り値は ({("pid", PlayerID): URL, ("name", 名前): URL}, {PlayerID: [URL, 名前]})。PlayerID はBリーグ公式と同じ番号。
+    2つ目は players.json に残しておき、次からは読み直さない(写真の差し替えに追いつくよう、毎日4時台は全員読み直す)。"""
+    page = fetch(BLOWINDS_CLUB_PLAYERS)
+    links = []
+    for m in re.finditer(r"team/players/detail/id=(\d+)(?:\?|&amp;|&)PlayerID=(\d+)", page):
+        if (m.group(1), m.group(2)) not in links:
+            links.append((m.group(1), m.group(2)))
+    old_cache = load_json(PLAYERS_PATH, {}).get("BLOWINDS", {}).get("club_photos", {})
+    full_refresh = datetime.now(JST).hour == 4
+    out, cache = {}, {}
+    fetched = 0
+    for detail_id, pid in links:
+        hit = old_cache.get(pid)
+        if hit and not full_refresh:
+            out[("pid", pid)] = hit[0]
+            if hit[1]:
+                out[("name", standings._name_key(hit[1]))] = hit[0]
+            cache[pid] = hit
+            continue
+        url = f"{BLOWINDS_CLUB_SITE}/team/players/detail/id={detail_id}?PlayerID={pid}"
+        try:
+            html = fetch(url)
+            fetched += 1
+        except Exception as e:
+            print(f"[WARN] 写真: ブローウィンズの選手ページを読めませんでした {url} {e!r}")
+            continue
+        photo, alt = None, ""
+        for tag in re.findall(r"<img\b[^>]*>", html, flags=re.I):
+            src = re.search(r"\b(?:data-src|src)\s*=\s*[\"']([^\"']+)[\"']", tag)
+            if not src:
+                continue
+            u = urllib.parse.urljoin(url, htmllib.unescape(src.group(1)))
+            # 選手の写真は files/user/common/ の下にある(ロゴ・スポンサーのバナーは除く)
+            if "/files/user/common/" in u and "/img/logo/" not in u and u.startswith(BLOWINDS_CLUB_SITE):
+                photo = u
+                am = re.search(r"\balt\s*=\s*[\"']([^\"']*)[\"']", tag)
+                alt = htmllib.unescape(am.group(1)) if am else ""
+                break
+        if photo:
+            out[("pid", pid)] = photo
+            cache[pid] = [photo, alt.strip()]
+            if alt.strip():
+                out[("name", standings._name_key(alt))] = photo
+    print(f"[写真] ブローウィンズ: 公式サイトの選手紹介 {len(links)}人中 {len([k for k in out if k[0] == 'pid'])}人の写真(詳細ページ{fetched}件を読み込み)")
+    return out, cache
+
+
 def build_team_players(team_id, label):
     """Bリーグ公式のクラブページ「選手情報」から、1クラブ分の全選手の今季成績を作る。読めなければ None。"""
     url = f"{BLEAGUE}/club_detail/?TeamID={team_id}&tab=1"
@@ -347,23 +403,36 @@ def build_team_players(team_id, label):
         else:
             players.append(dict(r))  # 今季まだ試合に出ていない選手(成績はデータなし)
     players += list(by_pid.values())  # 一覧に無いが成績表にはいる選手
-    # 選手の顔写真(Bリーグ公式の画像。アプリの選手タブで小さく表示する)
+    # 選手の顔写真(アプリの選手タブで表示する)。ブローウィンズ以外はBリーグ公式の画像
     # 画像の場所は「files/user/roster/<TeamID>/<シーズン>/<PlayerID>_03.png」。シーズンの部分はページ内の画像から読む
     sm = re.search(rf"files/user/roster/{team_id}/([^/\"']+)/\d+_\d+\.(?:png|jpg)", page)
     photo_season = sm.group(1) if sm else (season if re.fullmatch(r"\d{4}-\d{2}", season or "") else "")
+    # ブローウィンズは、クラブ公式サイトの選手紹介の写真を使う(取れなかった選手だけBリーグ公式の画像)
+    club, club_cache = {}, {}
+    if team_id == BLOWINDS_TEAM_ID:
+        try:
+            club, club_cache = blowinds_club_photos()
+        except Exception as e:
+            print(f"[WARN] 写真: ブローウィンズ公式サイトの選手紹介の取得に失敗 {e!r}")
     for p in players:
         pid = p.pop("pid", None)
-        if pid and photo_season:
+        club_photo = club.get(("pid", pid)) or club.get(("name", standings._name_key(p.get("name", ""))))
+        if club_photo:
+            p["photo"] = club_photo
+        elif pid and photo_season:
             p["photo"] = f"https://bleague.bl.kuroco-img.app/files/user/roster/{team_id}/{photo_season}/{pid}_03.png"
     players.sort(key=lambda p: int(p["number"]) if str(p.get("number", "")).isdigit() else 999)
     if not players:
         print(f"[WARN] 選手: Bリーグ公式から{label}の選手を読み取れませんでした")
         return None
     print(f"[選手] {label} {len(players)}人(成績あり{len(stats)}人・選手一覧{len(roster)}人・{season or 'シーズン不明'})")
-    return {
+    result = {
         "season": season or "", "source_url": url,
         "updated_at": datetime.now(timezone.utc).isoformat(), "players": players,
     }
+    if club_cache:
+        result["club_photos"] = club_cache  # 次回の写真取得で使う(アプリは使わない)
+    return result
 
 
 def build_players(previews):

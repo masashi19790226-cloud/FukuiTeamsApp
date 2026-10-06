@@ -770,7 +770,7 @@ private fun RosterCard(player: PlayerStats) {
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            // 顔写真(Bリーグ公式の画像。読み込めないときは出さない)
+            // 顔写真(ブローウィンズは公式サイトの選手紹介、相手チームはBリーグ公式の画像。読み込めないときは出さない)
             RemoteThumbnail(
                 player.photo, width = 72.dp, height = 90.dp, alignTop = true,
                 // タップで大きく表示(カードの開閉はせず、写真だけ大きくする)
