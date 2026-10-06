@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-10-06T13:04:42.356565+00:00",
+  "updated_at": "2026-10-06T13:28:17.897475+00:00",
   "steps": {
-    "alerts": "failure",
-    "official": "failure",
+    "alerts": "success",
+    "official": "success",
     "schedule": "success",
     "results": "success",
     "previews": "success",
