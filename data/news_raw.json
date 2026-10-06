@@ -770,7 +770,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51695",
     "published": "2026-10-02T09:00:00+09:00",
     "detected_at": "2026-10-02T06:36:03.776170+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_mask.jpg"
   },
   {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51694",
@@ -779,7 +780,8 @@
     "link": "https://www.fukuiblowinds.com/news/detail/id=51694",
     "published": "2026-10-02T09:00:00+09:00",
     "detected_at": "2026-10-02T06:36:03.776170+00:00",
-    "source": "ブローウィンズ公式"
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_omamori.jpg"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:11317396422624358966",
