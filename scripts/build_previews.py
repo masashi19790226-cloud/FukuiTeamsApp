@@ -644,8 +644,18 @@ def attach_player_photos():
     if rac:
         try:
             standings.add_photos(rac.get("rows"), standings.RUCK_NAME, standings.ruck_members(fetch))
+            rac["photo_report"] = {standings.RUCK_NAME: "ok"}
         except Exception as e:
             print(f"[WARN] 写真: 丸岡RUCKの選手紹介の取得に失敗 {e!r}")
+            rac["photo_report"] = {standings.RUCK_NAME: f"取得失敗 {type(e).__name__}"}
+        # 相手クラブの選手の写真(各クラブの公式サイトから。1日1回だけ読み直す)
+        try:
+            old_cache = load_json(STANDINGS_PATH, {}).get("RAC", {}).get("scorers", {}).get("club_photo_cache", {})
+            cache, report = standings.add_wfl_club_photos(rac.get("rows"), fetch, old_cache)
+            rac["club_photo_cache"] = cache  # 次回の写真さがしで使う(アプリは使わない)
+            rac["photo_report"].update(report)  # どのクラブの写真が取れたか(確認用。アプリは使わない)
+        except Exception as e:
+            print(f"[WARN] 写真: 女子Fリーグの相手クラブの写真の取得に失敗 {e!r}")
     uni = STANDINGS.get("UNITED", {}).get("scorers")
     if uni:
         try:

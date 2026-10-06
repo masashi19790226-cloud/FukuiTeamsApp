@@ -362,3 +362,171 @@ def add_photos(rows, team_word, photos):
                 r["position"] = info["position"]
         else:
             r["photo"] = info
+
+
+# ---------- 女子Fリーグの相手クラブの選手写真 ----------
+# 女子Fリーグ公式サイトの選手名簿には写真が無いため、各クラブの公式サイトの選手紹介ページから取る。
+# 得点表のチーム名 → (読み方, ページ)。
+#   "page"  : 選手紹介ページのHTMLから、選手名の近くにある写真を探す(名前が文字で書かれているサイト)
+#   "studio": STUDIO(サイト作成サービス)のCMSから、選手名と写真を読む
+# 選手名が画像の中に書かれていて文字で読めないサイト(さいたまサイコロ・アニージャ湘南)と、
+# 公式サイトが無いクラブ(流経大メニーナ龍ケ崎)は入れていない(写真なしで表示)。
+# シーズンが変わってページの場所が変わったら、ここを書き換える。
+WFL_CLUB_PHOTO_SOURCES = {
+    "エスポラーダ北海道イルネーヴェ": ("page", "https://espolada.com/profile/irneve/"),
+    "バルドラール浦安ラス・ボニータス": ("page", "https://www.bardral-urayasu.com/lasbonitas/"),
+    "立川アスレティックFCレディース": ("page", "https://tachikawa-athletic.jp/ladies-players-staff2026-27/"),
+    "SWHレディース西宮": ("page", "https://www.swh2003.com/team/index.html"),
+    "アルコ神戸": ("page", "https://arco-kobe.com/players/"),
+    "ミネルバ宇部": ("page", "https://www.minerva-ube.jp/"),
+    "フウガドールすみだレディース": ("studio", {
+        "project_id": "ht0DWGt9lWUFxPnbBoak", "schema_key": "IMzOWTim", "filters": "RNwDuIn7:ref[equals]dsEOsiLQ",
+    }),
+}
+
+
+def _photo_name_key(name: str) -> str:
+    """写真さがし用に名前をそろえる(空白・中黒を取り、異体字をふつうの字にする)"""
+    s = re.sub(r"[\s　・･.]+", "", htmllib.unescape(name or ""))
+    for a, b in (("髙", "高"), ("﨑", "崎"), ("濵", "浜"), ("邉", "辺"), ("邊", "辺"), ("齋", "斎"), ("齊", "斉")):
+        s = s.replace(a, b)
+    return s
+
+
+def _pick_img_src(tag: str, base_url: str) -> str:
+    """<img> タグから写真のURLを取り出す。遅延読み込み(data-src など)にも対応し、
+    srcset があれば幅300px以上のうち一番小さい画像を選ぶ(大きすぎる画像を読み込まないため)。"""
+    def attr(n):
+        m = re.search(r"\s" + n + r"\s*=\s*[\"']([^\"']+)[\"']", tag, flags=re.I)
+        return htmllib.unescape(m.group(1)).strip() if m else ""
+    srcset = attr("data-srcset") or attr("srcset")
+    best = None
+    for part in srcset.split(","):
+        bits = part.strip().split()
+        if len(bits) >= 2 and bits[1].endswith("w") and bits[1][:-1].isdigit() and not bits[0].startswith("data:"):
+            w = int(bits[1][:-1])
+            if w >= 300 and (best is None or w < best[0]):
+                best = (w, bits[0])
+    src = best[1] if best else next(
+        (u for u in (attr("data-src"), attr("data-lazy-src"), attr("src")) if u and not u.startswith("data:")), "")
+    if not src:
+        return ""
+    from urllib.parse import urljoin
+    url = urljoin(base_url, src)
+    # スマホのアプリは http の画像を読めないので https にする
+    return "https://" + url[len("http://"):] if url.startswith("http://") else url
+
+
+def photos_from_page(page: str, base_url: str, names):
+    """選手紹介ページのHTMLから {名前のキー: 写真URL} を作る。
+    ページを「画像」と「文字」の並びにして、選手名が書かれた文字の近く(前に8つまで、無ければ後ろに8つまで)の
+    画像を、その選手の写真とする。画像の代替文字(alt)に名前があれば、それを優先する。
+    ロゴ・アイコンや、ページ内で3回以上使われている画像(「準備中」の画像など)は使わない。"""
+    html = re.sub(r"<(script|style)\b.*?</\1>", " ", page, flags=re.S | re.I)
+    html = re.sub(r"<!--.*?-->", " ", html, flags=re.S)
+    toks = []
+    for m in re.finditer(r"<img\b[^>]*>|<[^>]+>|[^<]+", html, flags=re.I):
+        s = m.group(0)
+        if s[:4].lower() == "<img":
+            alt = re.search(r"\salt\s*=\s*[\"']([^\"']*)[\"']", s, flags=re.I)
+            toks.append(("img", _pick_img_src(s, base_url), _photo_name_key(alt.group(1)) if alt else ""))
+        elif s[0] != "<":
+            t = _photo_name_key(s)
+            if t:
+                toks.append(("text", t, ""))
+    count = {}
+    for k in toks:
+        if k[0] == "img" and k[1]:
+            count[k[1]] = count.get(k[1], 0) + 1
+
+    def ok(i):
+        if i < 0 or i >= len(toks) or toks[i][0] != "img" or not toks[i][1]:
+            return False
+        u = toks[i][1]
+        return count.get(u, 0) <= 2 and not re.search(r"logo|icon|sponsor|banner|\.svg|\.gif|spacer|blank|loading", u, flags=re.I)
+
+    out = {}
+    for name in names:
+        key = _photo_name_key(name)
+        if not key or key in out:
+            continue
+        found = None
+        for i, k in enumerate(toks):
+            if k[0] == "img" and key in k[2] and ok(i):
+                found = k[1]
+                break
+            if k[0] == "text" and key in k[1]:
+                for d in list(range(1, 9)):
+                    if ok(i - d):
+                        found = toks[i - d][1]
+                        break
+                if not found:
+                    for d in range(1, 9):
+                        if ok(i + d):
+                            found = toks[i + d][1]
+                            break
+                if found:
+                    break
+        if found:
+            out[key] = found
+    return out
+
+
+def photos_from_studio(fetch, conf):
+    """STUDIO の CMS(選手の一覧)から {名前のキー: 写真URL}。title が選手名、avatar が写真。"""
+    import base64
+    import json as jsonlib
+    from urllib.parse import quote
+    q = {"project_id": conf["project_id"], "schema_key": conf["schema_key"], "filters": conf["filters"],
+         "orders": "order", "offset": 0, "limit": 100}
+    url = "https://api.cms.studiodesignapp.com/v2/search?q=" + quote(base64.b64encode(
+        jsonlib.dumps(q, separators=(",", ":")).encode("utf-8")).decode("ascii"))
+    data = jsonlib.loads(fetch(url))
+    items = data if isinstance(data, list) else data.get("data", [])
+    out = {}
+    for it in items:
+        f = (((it or {}).get("document") or {}).get("fields") or {}).get("default", {}).get("mapValue", {}).get("fields", {})
+        name = (f.get("title") or {}).get("stringValue", "")
+        avatar = (f.get("avatar") or {}).get("stringValue", "")
+        if name and avatar.startswith("http"):
+            out[_photo_name_key(name)] = avatar
+    return out
+
+
+def add_wfl_club_photos(rows, fetch, cache):
+    """女子Fリーグの得点表の、相手クラブの選手の行に、各クラブ公式サイトの写真を付ける。
+    クラブのページは1日1回だけ読み直し、それ以外は cache(standings.json に保存)を使う。
+    返り値は (新しい cache, クラブごとの結果の一言)。"""
+    today = datetime.now(timezone(timedelta(hours=9))).strftime("%Y-%m-%d")
+    new_cache, report = {}, {}
+    for team, (kind, src) in WFL_CLUB_PHOTO_SOURCES.items():
+        names = [r.get("name", "") for r in rows or [] if r.get("team") == team]
+        old = (cache or {}).get(team) or {}
+        photos = old.get("photos") or {}
+        if old.get("date") != today or not photos:
+            try:
+                if kind == "studio":
+                    photos = photos_from_studio(fetch, src)
+                else:
+                    # 得点表に載っているそのクラブの選手の名前で、ページの中の写真を探す
+                    photos = photos_from_page(fetch(src), src, names)
+                new_cache[team] = {"date": today, "photos": photos}
+                report[team] = f"{len(photos)}人"
+            except Exception as e:
+                report[team] = f"取得失敗 {type(e).__name__}"
+                if photos:
+                    new_cache[team] = old  # 前回の写真を使い続ける
+        else:
+            new_cache[team] = old
+            report[team] = f"{len(photos)}人(前回の分)"
+        hit = 0
+        for r in rows or []:
+            if r.get("team") != team or r.get("photo"):
+                continue
+            url = photos.get(_photo_name_key(r.get("name", "")))
+            if url:
+                r["photo"] = url
+                hit += 1
+        report[team] += f"・得点表に{hit}人"
+    print("[写真] 女子Fリーグの相手クラブ: " + " / ".join(f"{k} {v}" for k, v in report.items()))
+    return new_cache, report

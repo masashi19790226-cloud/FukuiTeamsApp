@@ -14,6 +14,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月7日",
+        title = "女子Fリーグの相手チームの選手にも顔写真",
+        items = listOf(
+            "選手タブの丸岡RUCKの得点ランキングで、相手チームの選手にも顔写真を出すようにしました。各クラブの公式サイトの選手紹介の写真です(エスポラーダ北海道イルネーヴェ・バルドラール浦安ラス・ボニータス・フウガドールすみだレディース・立川アスレティックFCレディース・SWHレディース西宮・アルコ神戸・ミネルバ宇部)",
+            "さいたまサイコロ・アニージャ湘南は公式サイトの選手名が画像の中に書かれていて読み取れないため、流経大メニーナ龍ケ崎は公式サイトが無いため、写真なしのままです"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月6日",
         title = "ユナイテッドの過去の試合を試合タブに",
         items = listOf(
