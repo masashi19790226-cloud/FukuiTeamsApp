@@ -15,6 +15,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月6日",
+        title = "トピックの分類ボタンの数字を直近3日の件数に",
+        items = listOf(
+            "トピックの「すべて」や各分類のボタンの横の数字を、読み込んだ全件ではなく、直近3日の件数にしました(下の「直近3日 ○件」と同じ数え方)"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月6日",
         title = "選手の試合ごとの成績・掲示板のキーワード通知",
         items = listOf(
             "選手タブの全選手一覧で選手を押して開くと、今季の試合ごとの成績(日付・対戦相手・HOME/AWAY・勝敗・先発、出場時間・得点・FG/3P/FTの成功数/試投数・リバウンド・アシストなど)を新しい順に表示するようにしました。最初は直近5試合で、「すべての試合を見る」で全試合を表示します",

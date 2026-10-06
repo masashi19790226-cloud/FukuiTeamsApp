@@ -278,6 +278,8 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     val recentBorder = java.time.Instant.now().minus(java.time.Duration.ofDays(3))
     val recentItems = shown.filter { it.alert.eventInstant()?.isAfter(recentBorder) == true }
     val olderItems = shown.filterNot { it.alert.eventInstant()?.isAfter(recentBorder) == true }
+    // 分類ボタン(すべて・各分類)の横の数字は、直近3日の件数
+    val teamRecentItems = teamItems.filter { it.alert.eventInstant()?.isAfter(recentBorder) == true }
     val knownIds = sorted.map { it.alert.id }.toSet()
     val knownLinks = sorted.map { it.alert.link }.filter { it.isNotBlank() }.toSet()
     val archiveItems = ((archiveResult as? AlertsResult.Success)?.items ?: emptyList())
@@ -342,7 +344,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                             fontSize = 22
                         )
                         Text(
-                            "ニュースと無料招待の情報をまとめて表示します。上の検索欄で過去1年分の記事をキーワードで探せます。直近3日の情報を上に、それより前(過去1年)は下の見出しを押すと表示します。2日以内のものに NEW が付きます。行をタップすると元の記事を開きます。",
+                            "ニュースと無料招待の情報をまとめて表示します。上の検索欄で過去1年分の記事をキーワードで探せます。直近3日の情報を上に、それより前(過去1年)は下の見出しを押すと表示します。分類ボタンの横の数字は直近3日の件数です。2日以内のものに NEW が付きます。行をタップすると元の記事を開きます。",
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
@@ -360,15 +362,16 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                 }
                 item {
                     // 分類で絞り込み。ボタンは2行に分けて、横にスクロールしなくても全部見えるようにする
+                    // ボタンの横の数字は直近3日の件数
                     val chips = listOf<RadarCategory?>(null) + RadarCategory.values().toList()
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         chips.chunked(4).forEach { line ->
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                 line.forEach { cat ->
                                     if (cat == null) {
-                                        CategoryChip("すべて ${teamItems.size}", selectedCategory == null) { selectedCategory = null }
+                                        CategoryChip("すべて ${teamRecentItems.size}", selectedCategory == null) { selectedCategory = null }
                                     } else {
-                                        val count = teamItems.count { it.matches(cat) }
+                                        val count = teamRecentItems.count { it.matches(cat) }
                                         CategoryChip("${cat.label} $count", selectedCategory == cat) {
                                             selectedCategory = if (selectedCategory == cat) null else cat
                                             inviteTab = 0
