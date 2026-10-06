@@ -39,7 +39,10 @@ data class BbsSettings(
     /** NGユーザー(userKey → 名前)。 */
     val ngUsers: Map<String, String> = emptyMap(),
     /** 前回までに読み込んだ一番新しい投稿の番号(既読位置)。 */
-    val lastReadNo: Int = 0
+    val lastReadNo: Int = 0,
+    /** キーワード通知:オンのとき、登録した言葉を含む新しい投稿をスマホに通知する。 */
+    val notifyEnabled: Boolean = false,
+    val notifyWords: List<String> = emptyList()
 )
 
 object BbsPrefs {
@@ -55,6 +58,13 @@ object BbsPrefs {
     // 「userKey<TAB>名前」の形で入れる
     private val KEY_NG_USERS = stringSetPreferencesKey("ng_users")
     private val KEY_LAST_READ = intPreferencesKey("last_read_no")
+    private val KEY_NOTIFY_ON = booleanPreferencesKey("notify_enabled")
+    private val KEY_NOTIFY_WORDS = stringSetPreferencesKey("notify_words")
+    // キーワード通知で、どの投稿まで確認したか(0 は「まだ確認していない」)
+    private val KEY_NOTIFIED_NO = intPreferencesKey("notified_no")
+
+    /** キーワード通知の言葉の候補(設定画面で押すと追加できる) */
+    val SUGGESTED_NOTIFY_WORDS = listOf("チケット", "譲", "招待", "余って")
 
     fun flow(context: Context): Flow<BbsSettings> = context.bbsDataStore.data.map { p ->
         BbsSettings(
@@ -68,7 +78,9 @@ object BbsPrefs {
                 val parts = entry.split('\t', limit = 2)
                 if (parts[0].isBlank()) null else parts[0] to parts.getOrElse(1) { "" }
             }.toMap(),
-            lastReadNo = p[KEY_LAST_READ] ?: 0
+            lastReadNo = p[KEY_LAST_READ] ?: 0,
+            notifyEnabled = p[KEY_NOTIFY_ON] ?: false,
+            notifyWords = (p[KEY_NOTIFY_WORDS] ?: emptySet()).filter { it.isNotBlank() }.sorted()
         )
     }
 
@@ -117,6 +129,34 @@ object BbsPrefs {
         }
     }
 
+    /**
+     * キーワード通知のオン・オフ。オンにしたときは確認位置を0に戻し、
+     * 次の確認ではそれまでの投稿をまとめて通知せず、位置だけ記録する。
+     */
+    suspend fun setNotifyEnabled(context: Context, on: Boolean) {
+        context.bbsDataStore.edit {
+            it[KEY_NOTIFY_ON] = on
+            if (on) it[KEY_NOTIFIED_NO] = 0
+        }
+    }
+
+    suspend fun addNotifyWord(context: Context, word: String) {
+        val w = word.trim()
+        if (w.isEmpty()) return
+        context.bbsDataStore.edit { it[KEY_NOTIFY_WORDS] = (it[KEY_NOTIFY_WORDS] ?: emptySet()) + w }
+    }
+
+    suspend fun removeNotifyWord(context: Context, word: String) {
+        context.bbsDataStore.edit { it[KEY_NOTIFY_WORDS] = (it[KEY_NOTIFY_WORDS] ?: emptySet()) - word }
+    }
+
+    /** キーワード通知で、どの投稿まで確認したか(0 は未確認)。 */
+    suspend fun notifiedNo(context: Context): Int = context.bbsDataStore.data.first()[KEY_NOTIFIED_NO] ?: 0
+
+    suspend fun setNotifiedNo(context: Context, no: Int) {
+        context.bbsDataStore.edit { it[KEY_NOTIFIED_NO] = no }
+    }
+
     /** 既読位置を進める(今より小さい番号では戻さない)。 */
     suspend fun markRead(context: Context, no: Int) {
         context.bbsDataStore.edit { p ->
@@ -131,4 +171,11 @@ fun BbsPost.isNg(settings: BbsSettings): Boolean {
     if (settings.ngWords.isEmpty()) return false
     val text = (name + "\n" + body).lowercase()
     return settings.ngWords.any { it.isNotBlank() && text.contains(it.lowercase()) }
+}
+
+/** キーワード通知の言葉のうち、この投稿(名前・本文)に含まれる最初のもの。無ければ null。 */
+fun BbsPost.matchedNotifyWord(words: List<String>): String? {
+    if (words.isEmpty()) return null
+    val text = (name + "\n" + body).lowercase()
+    return words.firstOrNull { it.isNotBlank() && text.contains(it.lowercase()) }
 }

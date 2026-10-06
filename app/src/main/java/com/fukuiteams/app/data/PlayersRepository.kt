@@ -37,7 +37,37 @@ data class PlayerStats(
     val threesMade: String? = null,
     val threesAttempted: String? = null,
     val freeThrowsMade: String? = null,
-    val freeThrowsAttempted: String? = null
+    val freeThrowsAttempted: String? = null,
+    /** 今季の試合ごとの成績(新しい順)。Bリーグ公式の選手ページから。無ければ空 */
+    val gameLog: List<PlayerGameLog> = emptyList()
+)
+
+/** 選手の1試合分の成績。数字が無い項目は null。 */
+data class PlayerGameLog(
+    /** 試合日(例 2026-10-04) */
+    val date: String,
+    /** 対戦相手(例「金沢」) */
+    val opponent: String,
+    /** true:ホーム / false:アウェイ / null:不明 */
+    val home: Boolean?,
+    /** true:勝ち / false:負け / null:不明 */
+    val win: Boolean?,
+    /** 先発出場か */
+    val starter: Boolean,
+    val minutes: String?,
+    val points: String?,
+    val fieldGoalsMade: String?,
+    val fieldGoalsAttempted: String?,
+    val threesMade: String?,
+    val threesAttempted: String?,
+    val freeThrowsMade: String?,
+    val freeThrowsAttempted: String?,
+    val rebounds: String?,
+    val assists: String?,
+    val steals: String?,
+    val blocks: String?,
+    val turnovers: String?,
+    val efficiency: String?
 )
 
 data class TeamPlayers(
@@ -93,7 +123,8 @@ object PlayersRepository {
                         threesMade = v("three_m"),
                         threesAttempted = v("three_a"),
                         freeThrowsMade = v("ftm"),
-                        freeThrowsAttempted = v("fta")
+                        freeThrowsAttempted = v("fta"),
+                        gameLog = parseGameLog(p.optJSONArray("game_log"))
                     )
                 }
                 map[team] = TeamPlayers(
@@ -112,4 +143,35 @@ object PlayersRepository {
             emptyMap()
         }
     }
+}
+
+/** players.json の game_log(試合ごとの成績)を読む。読めない行は飛ばす。 */
+private fun parseGameLog(array: org.json.JSONArray?): List<PlayerGameLog> {
+    if (array == null) return emptyList()
+    return (0 until array.length()).mapNotNull { i ->
+        val g = array.optJSONObject(i) ?: return@mapNotNull null
+        fun v(key: String): String? = g.optString(key).takeIf { it.isNotBlank() && it != "null" }
+        val date = v("date") ?: return@mapNotNull null
+        PlayerGameLog(
+            date = date,
+            opponent = g.optString("opp"),
+            home = when (g.optString("ha")) { "H" -> true; "A" -> false; else -> null },
+            win = when (g.optString("wl")) { "W" -> true; "L" -> false; else -> null },
+            starter = g.optBoolean("start", false),
+            minutes = v("min"),
+            points = v("pts"),
+            fieldGoalsMade = v("fgm"),
+            fieldGoalsAttempted = v("fga"),
+            threesMade = v("tpm"),
+            threesAttempted = v("tpa"),
+            freeThrowsMade = v("ftm"),
+            freeThrowsAttempted = v("fta"),
+            rebounds = v("reb"),
+            assists = v("ast"),
+            steals = v("stl"),
+            blocks = v("blk"),
+            turnovers = v("tov"),
+            efficiency = v("eff")
+        )
+    }.sortedByDescending { it.date }
 }

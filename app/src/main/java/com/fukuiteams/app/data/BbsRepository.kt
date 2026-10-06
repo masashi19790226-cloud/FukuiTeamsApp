@@ -178,6 +178,23 @@ object BbsRepository {
         }
     }
 
+    /**
+     * 最新の投稿を、画面の表示とは別に読む(キーワード通知のバックグラウンド確認用)。
+     * 1ページ目から順に読み、afterNo より古い投稿が出てきたら(または maxPages まで読んだら)やめる。
+     * 画面に出している投稿・読み込み中の表示などには影響しない。読めなければ例外。
+     */
+    suspend fun fetchNewPostsForCheck(afterNo: Int, maxPages: Int = 3): List<BbsPost> {
+        val found = mutableListOf<BbsPost>()
+        for (p in 1..maxPages) {
+            if (p > 1) delay(300)
+            val page = withContext(Dispatchers.IO) { fetchPage(pageUrl(p)) }
+            if (page.posts.isEmpty()) break
+            found += page.posts
+            if (afterNo <= 0 || page.posts.any { it.no <= afterNo }) break
+        }
+        return found.distinctBy { it.no }
+    }
+
     private fun pageUrl(page: Int) = if (page <= 1) BASE_URL else BASE_URL + "?page=$page"
 
     private fun merge(found: List<BbsPost>) {

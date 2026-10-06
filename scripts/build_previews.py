@@ -295,7 +295,7 @@ def parse_player_stats(page):
             idx = header.index("PLAYER") + offset
             number = cells[idx - 1].strip() if idx > 0 else ""
             p = {"pid": pid, "number": number, "name": link_name or rec.get("PLAYER", ""),
-                 "position": rec.get("PO", "")}
+                 "position": rec.get("PO", ""), "_type": rec.get("TYPE", "")}
             for code, key in STAT_KEYS.items():
                 if rec.get(code, "") != "":
                     v = rec[code]
@@ -308,6 +308,123 @@ def parse_player_stats(page):
         if header and players:
             return season, players
     return None, []
+
+
+# 選手ページ(roster_detail)の「合計」の表から取り出す、シュートの成功数・試投数
+SHOT_TOTAL_KEYS = {"FGM": "fgm", "FGA": "fga", "3FGM": "three_m", "3FGA": "three_a", "FTM": "ftm", "FTA": "fta"}
+
+
+def parse_shot_totals(page, season, type_, games=None):
+    """Bリーグ公式の選手ページの「シーズン成績(合計)」の表から、指定シーズン・大会の
+    フィールドゴール・3ポイント・フリースローの成功数と試投数を取り出す。無ければ None。
+    (クラブページの表は平均しか無いため、選手ページの合計の表を使う)"""
+    found = []
+    for table in re.findall(r"<table\b.*?</table>", page, flags=re.S | re.I):
+        header = None
+        for row in _rows(table):
+            cells = _cells(row)
+            if header is None:
+                # 合計の表は FGM・FGA(平均の表は FGMPG・FGAPG)
+                if "SEASON" in cells and "FGM" in cells and "FGA" in cells and "FTA" in cells:
+                    header = cells
+                continue
+            if len(cells) < len(header):
+                continue
+            rec = dict(zip(header, cells[:len(header)]))
+            if rec.get("SEASON") != season or (type_ and rec.get("TYPE") != type_):
+                continue
+            vals = {key: rec.get(code, "") for code, key in SHOT_TOTAL_KEYS.items()}
+            if all(re.fullmatch(r"\d+", v or "") for v in vals.values()):
+                found.append((rec.get("G", ""), vals))
+        if header:
+            break
+    if not found:
+        return None
+    # 同じシーズンに複数の行(シーズン途中の移籍など)があるときは、クラブページと試合数が同じ行を使う
+    for g, vals in found:
+        if games and g == games:
+            return vals
+    return found[0][1]
+
+
+# 選手ページの「試合ごとの成績」の表の列 → players.json での名前
+GAME_LOG_KEYS = {
+    "MIN": "min", "PTS": "pts", "FGM": "fgm", "FGA": "fga", "3FGM": "tpm", "3FGA": "tpa",
+    "FTM": "ftm", "FTA": "fta", "TR": "reb", "AS": "ast", "ST": "stl", "BS": "blk", "TO": "tov", "EFF": "eff",
+}
+
+
+def parse_game_log(page):
+    """Bリーグ公式の選手ページの「試合ごとの成績」の表(今季の各試合)を、新しい順のリストにする。
+    表の見出しは2段で、左の5列(DAY・VS・H/A・W/L・S)は上の段だけにあるため、2段目の前に足して列をそろえる。"""
+    m = re.search(r'<table\b[^>]*id="scores_table".*?</table>', page, flags=re.S | re.I)
+    tables = [m.group(0)] if m else re.findall(r"<table\b.*?</table>", page, flags=re.S | re.I)
+    for table in tables:
+        header = None
+        games = []
+        for row in _rows(table):
+            cells = _cells(row)
+            if header is None:
+                if "MIN" in cells and "PTS" in cells and "FGM" in cells and "SEASON" not in cells:
+                    header = ["DAY", "VS", "H/A", "W/L", "S"] + cells
+                continue
+            if len(cells) < 5:
+                continue
+            dm = re.search(r"(\d{4})\.(\d{1,2})\.(\d{1,2})", cells[0])
+            if not dm:
+                continue
+            rec = dict(zip(header, cells))
+            g = {
+                "date": f"{dm.group(1)}-{int(dm.group(2)):02d}-{int(dm.group(3)):02d}",
+                "opp": rec.get("VS", "").strip(),
+                "ha": "H" if "HOME" in rec.get("H/A", "").upper() else ("A" if "AWAY" in rec.get("H/A", "").upper() else ""),
+                "wl": "W" if "WIN" in rec.get("W/L", "").upper() else ("L" if "LOSE" in rec.get("W/L", "").upper() else ""),
+                "start": rec.get("S", "").strip() != "",
+            }
+            for code, key in GAME_LOG_KEYS.items():
+                v = rec.get(code, "").strip()
+                if v:
+                    g[key] = v
+            games.append(g)
+        if header:
+            games.sort(key=lambda x: x["date"], reverse=True)
+            return games
+    return []
+
+
+def attach_shot_totals(players, season, label, old_cache):
+    """各選手に、シュートの成功数・試投数(合計)と、試合ごとの成績(game_log)を付ける。
+    選手ページを読むのは、試合数が前回から変わった選手だけ(毎日4時台は全員読み直す)。
+    返り値は次回用の覚え書き {PlayerID: {"season", "type", "g", "v": {...}, "log": [...]}}。"""
+    full_refresh = datetime.now(JST).hour == 4
+    cache, fetched = {}, 0
+    for p in players:
+        pid, games, type_ = p.get("pid"), p.get("games"), p.get("_type", "")
+        if not pid or not games or not season:
+            continue  # 今季まだ出場していない選手
+        hit = old_cache.get(pid)
+        if (hit and not full_refresh and hit.get("season") == season and hit.get("type") == type_
+                and hit.get("g") == games and hit.get("v") and "log" in hit):
+            vals, log = hit["v"], hit["log"]
+        else:
+            try:
+                page = fetch(f"{BLEAGUE}/roster_detail/?PlayerID={pid}")
+                fetched += 1
+                vals = parse_shot_totals(page, season, type_, games)
+                log = parse_game_log(page)
+            except Exception as e:
+                print(f"[WARN] 選手: {label} {p.get('name', '')} の選手ページを読めませんでした {e!r}")
+                same = hit and hit.get("season") == season
+                vals = hit.get("v") if same else None
+                log = hit.get("log", []) if same else []
+        if vals:
+            p.update(vals)
+        if log:
+            p["game_log"] = log
+        if vals or log:
+            cache[pid] = {"season": season, "type": type_, "g": games, "v": vals or {}, "log": log or []}
+    print(f"[選手] {label} シュートの成功数・試投数 {len(cache)}人分(選手ページ{fetched}件を読み込み)")
+    return cache
 
 
 def parse_roster(page):
@@ -414,7 +531,18 @@ def build_team_players(team_id, label):
             club, club_cache = blowinds_club_photos()
         except Exception as e:
             print(f"[WARN] 写真: ブローウィンズ公式サイトの選手紹介の取得に失敗 {e!r}")
+    # シュートの成功数・試投数(合計)。前回の覚え書きは players.json のどのチームの分からでも使う
+    shot_cache = {}
+    try:
+        old_shots = {}
+        for section in load_json(PLAYERS_PATH, {}).values():
+            if isinstance(section, dict):
+                old_shots.update(section.get("shot_cache") or {})
+        shot_cache = attach_shot_totals(players, season, label, old_shots)
+    except Exception as e:
+        print(f"[WARN] 選手: {label} のシュートの成功数・試投数の取得に失敗 {e!r}")
     for p in players:
+        p.pop("_type", None)
         pid = p.pop("pid", None)
         club_photo = club.get(("pid", pid)) or club.get(("name", standings._name_key(p.get("name", ""))))
         if club_photo:
@@ -432,6 +560,8 @@ def build_team_players(team_id, label):
     }
     if club_cache:
         result["club_photos"] = club_cache  # 次回の写真取得で使う(アプリは使わない)
+    if shot_cache:
+        result["shot_cache"] = shot_cache  # 次回のシュート数の取得で使う(アプリは使わない)
     return result
 
 

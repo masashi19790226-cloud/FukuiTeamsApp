@@ -105,6 +105,7 @@ import com.fukuiteams.app.data.BbsSort
 import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.isNg
 import com.fukuiteams.app.model.Team
+import com.fukuiteams.app.notifications.scheduleBbsKeywordCheck
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.MastheadTopBar
 import com.fukuiteams.app.ui.components.RemoteThumbnail
@@ -1273,6 +1274,7 @@ private fun SettingsPane(settings: BbsSettings) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var newWord by remember { mutableStateOf("") }
+    var newNotifyWord by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -1317,6 +1319,94 @@ private fun SettingsPane(settings: BbsSettings) {
                     onCheckedChange = { on -> scope.launch { BbsPrefs.setAutoRefresh(context, on) } },
                     colors = SwitchDefaults.colors(checkedTrackColor = TeamBlowinds, checkedThumbColor = White)
                 )
+            }
+        }
+        SettingsBlock("キーワード通知") {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("キーワードを含む投稿を通知", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        "約15分おきに確認します(アプリを閉じていても通知します)",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
+                    )
+                }
+                Switch(
+                    checked = settings.notifyEnabled,
+                    onCheckedChange = { on ->
+                        scope.launch {
+                            BbsPrefs.setNotifyEnabled(context, on)
+                            scheduleBbsKeywordCheck(context, on)
+                        }
+                    },
+                    colors = SwitchDefaults.colors(checkedTrackColor = TeamBlowinds, checkedThumbColor = White)
+                )
+            }
+            Text(
+                "この言葉を含む新しい投稿(名前・本文)があると、スマホに通知します。NGワード・NGユーザーに当たる投稿は通知しません。",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+            if (settings.notifyEnabled && settings.notifyWords.isEmpty()) {
+                Text("言葉が登録されていないため、まだ通知しません", style = MaterialTheme.typography.bodySmall, color = NewsRed)
+            }
+            if (settings.notifyWords.isNotEmpty()) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    settings.notifyWords.forEach { w ->
+                        Row(
+                            modifier = Modifier.background(DividerGray).padding(start = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(w, fontSize = 13.sp)
+                            IconButton(
+                                onClick = { scope.launch { BbsPrefs.removeNotifyWord(context, w) } },
+                                modifier = Modifier.size(32.dp)
+                            ) { Icon(Icons.Filled.Close, contentDescription = "「$w」を削除", modifier = Modifier.size(14.dp)) }
+                        }
+                    }
+                }
+            }
+            val suggestions = BbsPrefs.SUGGESTED_NOTIFY_WORDS.filterNot { it in settings.notifyWords }
+            if (suggestions.isNotEmpty()) {
+                Text("候補(押すと追加)", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    suggestions.forEach { w ->
+                        Text(
+                            "+ $w",
+                            fontSize = 13.sp,
+                            color = Ink,
+                            modifier = Modifier
+                                .border(1.dp, LineGray)
+                                .clickable { scope.launch { BbsPrefs.addNotifyWord(context, w) } }
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = newNotifyWord,
+                    onValueChange = { newNotifyWord = it },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true,
+                    placeholder = { Text("言葉を入力") }
+                )
+                Button(
+                    onClick = {
+                        val w = newNotifyWord.trim()
+                        if (w.isNotEmpty()) {
+                            scope.launch { BbsPrefs.addNotifyWord(context, w) }
+                            newNotifyWord = ""
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Ink)
+                ) { Text("追加") }
             }
         }
         SettingsBlock("NGワード") {

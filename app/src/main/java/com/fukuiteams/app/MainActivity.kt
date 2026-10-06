@@ -18,6 +18,8 @@ import com.fukuiteams.app.notifications.EXTRA_OPEN_ROUTE
 import com.fukuiteams.app.notifications.ensureAlertsNotificationChannel
 import com.fukuiteams.app.notifications.rescheduleGameStartNotifications
 import com.fukuiteams.app.notifications.schedulePeriodicAlertsCheck
+import com.fukuiteams.app.notifications.scheduleBbsKeywordCheck
+import com.fukuiteams.app.data.BbsPrefs
 import com.fukuiteams.app.ui.theme.FukuiTeamsAppTheme
 import kotlinx.coroutines.launch
 
@@ -43,6 +45,12 @@ class MainActivity : ComponentActivity() {
         schedulePeriodicAlertsCheck(applicationContext)
         lifecycleScope.launch {
             rescheduleGameStartNotifications(applicationContext)
+        }
+        // 掲示板のキーワード通知(設定でオンのときだけ、定期確認を予約しておく)
+        lifecycleScope.launch {
+            runCatching {
+                scheduleBbsKeywordCheck(applicationContext, BbsPrefs.load(applicationContext).notifyEnabled)
+            }
         }
         // 通知から開いたときは、その通知の画面を開く(画面の回転などで作り直したときは開き直さない)
         val openRoute = if (savedInstanceState == null) intent?.getStringExtra(EXTRA_OPEN_ROUTE) else null

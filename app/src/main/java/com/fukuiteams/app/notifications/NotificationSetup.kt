@@ -24,7 +24,7 @@ fun ensureAlertsNotificationChannel(context: Context) {
             "無料招待・ニュース・試合開始通知",
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "無料招待の新着、ニュースの新着、試合開始前のお知らせをまとめて通知します"
+            description = "無料招待の新着、ニュースの新着、試合開始前のお知らせ、掲示板のキーワード通知をまとめて通知します"
         }
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(channel)

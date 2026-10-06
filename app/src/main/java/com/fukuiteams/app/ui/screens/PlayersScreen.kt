@@ -55,6 +55,7 @@ import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.KeyPlayer
 import com.fukuiteams.app.data.BLOWINDS_OPP_KEY
 import com.fukuiteams.app.data.PlayerStats
+import com.fukuiteams.app.data.PlayerGameLog
 import com.fukuiteams.app.data.PlayersRepository
 import com.fukuiteams.app.data.LeagueScorers
 import com.fukuiteams.app.data.LeagueStandings
@@ -843,9 +844,88 @@ private fun RosterCard(player: PlayerStats) {
                 StatRow("スティール(平均)", player.steals ?: NO_DATA)
                 StatRow("ブロック(平均)", player.blocks ?: NO_DATA)
                 StatRow("貢献度(平均)", player.efficiency ?: NO_DATA)
+                if (player.gameLog.isNotEmpty()) {
+                    GameLogSection(player.gameLog)
+                }
             }
         }
     }
+}
+
+/** 試合ごとの成績のうち、最初に表示する試合数(残りは「すべて見る」で開く)。 */
+private const val GAME_LOG_INITIAL = 5
+
+/**
+ * 選手の今季の試合ごとの成績(新しい順)。最初は直近5試合、「すべての試合を見る」で全試合。
+ * 1試合を2行で:「10/4(土) vs 金沢 HOME 勝 先発」と「26:17・5点・FG 2/8・3P 0/4・FT 1/2・R4・A6・貢献9」。
+ */
+@Composable
+private fun GameLogSection(log: List<PlayerGameLog>) {
+    var showAll by remember(log) { mutableStateOf(false) }
+    val shown = if (showAll) log else log.take(GAME_LOG_INITIAL)
+    Column(modifier = Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(
+            "試合ごとの成績(今季・新しい順)",
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            color = Ink
+        )
+        ThinRule(color = LineGray)
+        shown.forEach { g ->
+            GameLogRow(g)
+            ThinRule(color = LineGray)
+        }
+        if (log.size > GAME_LOG_INITIAL) {
+            Text(
+                if (showAll) "直近${GAME_LOG_INITIAL}試合だけにする ▲" else "すべての試合を見る(${log.size}試合) ▼",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showAll = !showAll }
+                    .padding(vertical = 8.dp),
+                style = MaterialTheme.typography.labelLarge,
+                color = Accent,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+private fun GameLogRow(g: PlayerGameLog) {
+    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+        val head = listOfNotNull(
+            gameLogDate(g.date),
+            if (g.opponent.isNotBlank()) "vs ${g.opponent}" else null,
+            when (g.home) { true -> "HOME"; false -> "AWAY"; else -> null },
+            when (g.win) { true -> "勝"; false -> "負"; else -> null },
+            if (g.starter) "先発" else null
+        ).joinToString(" ")
+        Text(head, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = Ink)
+        fun shot(label: String, made: String?, att: String?) =
+            if (made != null && att != null) "$label $made/$att" else null
+        val line = listOfNotNull(
+            g.minutes,
+            g.points?.let { "${it}点" },
+            shot("FG", g.fieldGoalsMade, g.fieldGoalsAttempted),
+            shot("3P", g.threesMade, g.threesAttempted),
+            shot("FT", g.freeThrowsMade, g.freeThrowsAttempted),
+            g.rebounds?.let { "リバ$it" },
+            g.assists?.let { "アシ$it" },
+            g.steals?.takeIf { it != "0" }?.let { "スティール$it" },
+            g.blocks?.takeIf { it != "0" }?.let { "ブロック$it" },
+            g.efficiency?.let { "貢献$it" }
+        ).joinToString("・")
+        Text(line.ifBlank { NO_DATA }, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+    }
+}
+
+/** 「2026-10-04」→「10/4(土)」。読めなければそのまま。 */
+private fun gameLogDate(date: String): String = try {
+    val d = java.time.LocalDate.parse(date)
+    val week = "月火水木金土日"[d.dayOfWeek.value - 1]
+    "${d.monthValue}/${d.dayOfMonth}($week)"
+} catch (e: Exception) {
+    date
 }
 
 /** 数字1つ分(上に項目名、下に数字)。数字が無ければ「データなし」。 */
