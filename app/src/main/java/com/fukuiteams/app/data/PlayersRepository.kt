@@ -30,7 +30,14 @@ data class PlayerStats(
     val freeThrowPct: String?,
     val efficiency: String?,
     /** 顔写真のURL(Bリーグ公式の画像)。無ければ空 */
-    val photo: String = ""
+    val photo: String = "",
+    /** 今季のシュートの成功数・試投数(合計)。Bリーグ公式の選手ページから。無ければ null */
+    val fieldGoalsMade: String? = null,
+    val fieldGoalsAttempted: String? = null,
+    val threesMade: String? = null,
+    val threesAttempted: String? = null,
+    val freeThrowsMade: String? = null,
+    val freeThrowsAttempted: String? = null
 )
 
 data class TeamPlayers(
@@ -80,7 +87,13 @@ object PlayersRepository {
                         threePct = v("three_pct"),
                         freeThrowPct = v("ft_pct"),
                         efficiency = v("eff"),
-                        photo = p.optString("photo")
+                        photo = p.optString("photo"),
+                        fieldGoalsMade = v("fgm"),
+                        fieldGoalsAttempted = v("fga"),
+                        threesMade = v("three_m"),
+                        threesAttempted = v("three_a"),
+                        freeThrowsMade = v("ftm"),
+                        freeThrowsAttempted = v("fta")
                     )
                 }
                 map[team] = TeamPlayers(

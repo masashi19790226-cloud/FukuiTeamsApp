@@ -17,9 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -137,8 +137,12 @@ fun RemoteThumbnail(
     zoomCaption: String? = null
 ) {
     if (url.isBlank()) return
-    val image by produceState<ImageBitmap?>(initialValue = ThumbnailCache.cache.get(url), url) {
-        if (value == null) value = loadThumbnail(url)
+    // URLが変わったら(並べ替えで同じ位置に別の選手が来た・データが新しくなった など)、
+    // 前の画像を引き継がず、そのURLの画像を読み直す。
+    // (以前は前の画像が残ったままになり、名前と写真が食い違うことがあった)
+    var image by remember(url) { mutableStateOf(ThumbnailCache.cache.get(url)) }
+    LaunchedEffect(url) {
+        if (image == null) image = loadThumbnail(url)
     }
     val img = image ?: return
     var zoomed by remember(url) { mutableStateOf(false) }
@@ -168,8 +172,10 @@ fun RemoteThumbnail(
  */
 @Composable
 private fun RemoteImageViewerDialog(url: String, preview: ImageBitmap, caption: String, onDismiss: () -> Unit) {
-    val large by produceState<ImageBitmap?>(initialValue = ThumbnailCache.largeCache.get(url), url) {
-        if (value == null) value = loadLargeImage(url)
+    // URLごとに読み直す(別の画像の拡大画像が残らないように)
+    var large by remember(url) { mutableStateOf(ThumbnailCache.largeCache.get(url)) }
+    LaunchedEffect(url) {
+        if (large == null) large = loadLargeImage(url)
     }
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Column(

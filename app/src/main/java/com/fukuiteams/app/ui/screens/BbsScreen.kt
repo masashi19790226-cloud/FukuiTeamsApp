@@ -76,7 +76,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -792,8 +791,10 @@ private fun PostCard(
 /** 添付画像。大きい版のURLが分かればそれを表示し、タップで拡大する。 */
 @Composable
 private fun BbsImageThumb(image: BbsImage, no: Int) {
-    val full by produceState<String?>(BbsParser.fullImageFromThumb(image.thumbUrl), image) {
-        if (value == null) value = BbsRepository.fullImageUrl(image)
+    // 画像が変わったら前のURLを引き継がずに読み直す
+    var full by remember(image) { mutableStateOf(BbsParser.fullImageFromThumb(image.thumbUrl)) }
+    LaunchedEffect(image) {
+        if (full == null) full = BbsRepository.fullImageUrl(image)
     }
     RemoteThumbnail(
         url = full ?: image.thumbUrl,

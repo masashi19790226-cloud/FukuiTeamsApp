@@ -30,6 +30,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -417,7 +418,8 @@ private fun RosterSection(roster: TeamPlayers, sortKey: PlayerSort, onSortChange
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
-        sortPlayers(roster.players, sortKey).forEach { RosterCard(it) }
+        // 並べ替えても、写真・開閉の状態がその選手についていくよう、選手ごとに key を付ける
+        sortPlayers(roster.players, sortKey).forEach { p -> key(p.number, p.name) { RosterCard(p) } }
     }
 }
 
@@ -431,6 +433,21 @@ private fun percentText(value: String?): String? {
     val n = v.toDoubleOrNull() ?: return v
     val pct = if (n <= 1.0) n * 100 else n
     return "%.1f%%".format(pct)
+}
+
+/**
+ * 成功率と「成功数/試投数」をまとめた表示。例:41.9%(18/43)。
+ * 成功数・試投数が無いときは成功率だけ、どちらも無ければ「データなし」。
+ */
+private fun shotText(pct: String?, made: String?, attempted: String?): String {
+    val p = percentText(pct)
+    val counts = if (made != null && attempted != null) "$made/$attempted" else null
+    return when {
+        p != null && counts != null -> "$p($counts)"
+        p != null -> p
+        counts != null -> counts
+        else -> NO_DATA
+    }
 }
 
 /** シーズン表記(例 2026-27) */
@@ -819,9 +836,10 @@ private fun RosterCard(player: PlayerStats) {
         }
         if (expanded) {
             Column {
-                StatRow("フィールドゴール成功率", percentText(player.fieldGoalPct) ?: NO_DATA)
-                StatRow("3ポイント成功率", percentText(player.threePct) ?: NO_DATA)
-                StatRow("フリースロー成功率", percentText(player.freeThrowPct) ?: NO_DATA)
+                // 成功率の横に「成功数/試投数」(今季の合計)を添える。例:41.9%(18/43)
+                StatRow("フィールドゴール成功率", shotText(player.fieldGoalPct, player.fieldGoalsMade, player.fieldGoalsAttempted))
+                StatRow("3ポイント成功率", shotText(player.threePct, player.threesMade, player.threesAttempted))
+                StatRow("フリースロー成功率", shotText(player.freeThrowPct, player.freeThrowsMade, player.freeThrowsAttempted))
                 StatRow("スティール(平均)", player.steals ?: NO_DATA)
                 StatRow("ブロック(平均)", player.blocks ?: NO_DATA)
                 StatRow("貢献度(平均)", player.efficiency ?: NO_DATA)
