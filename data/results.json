@@ -94,5 +94,107 @@
     "opponent_score": 1,
     "checked_at": "2026-10-06T12:30:17.870342",
     "source_url": "https://fukuiunited.co.jp/"
+  },
+  "un03": {
+    "my_score": 15,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:15:20.135569",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6329"
+  },
+  "un04": {
+    "my_score": 1,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:15:23.848602",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6371"
+  },
+  "un05": {
+    "my_score": 1,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:15:27.946002",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6372"
+  },
+  "un06": {
+    "my_score": 3,
+    "opponent_score": 2,
+    "checked_at": "2026-10-06T14:15:31.851434",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6373"
+  },
+  "un07": {
+    "my_score": 6,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:15:36.005268",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6330"
+  },
+  "un08": {
+    "my_score": 2,
+    "opponent_score": 1,
+    "checked_at": "2026-10-06T14:15:40.032126",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6331"
+  },
+  "un09": {
+    "my_score": 4,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:15:44.245934",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6374"
+  },
+  "un10": {
+    "my_score": 0,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:15:48.433622",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6375"
+  },
+  "un11": {
+    "my_score": 2,
+    "opponent_score": 2,
+    "checked_at": "2026-10-06T14:15:52.586764",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6376"
+  },
+  "un12": {
+    "my_score": 2,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:15:56.962608",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6377"
+  },
+  "un13": {
+    "my_score": 1,
+    "opponent_score": 2,
+    "checked_at": "2026-10-06T14:16:00.756204",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6769"
+  },
+  "un14": {
+    "my_score": 2,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:16:04.620808",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6378"
+  },
+  "un15": {
+    "my_score": 3,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:16:08.711319",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6379"
+  },
+  "un16": {
+    "my_score": 1,
+    "opponent_score": 2,
+    "checked_at": "2026-10-06T14:16:12.856952",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6729"
+  },
+  "un17": {
+    "my_score": 2,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:16:16.674411",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6380"
+  },
+  "un18": {
+    "my_score": 4,
+    "opponent_score": 0,
+    "checked_at": "2026-10-06T14:16:20.522886",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6381"
+  },
+  "un19": {
+    "my_score": 2,
+    "opponent_score": 1,
+    "checked_at": "2026-10-06T14:16:24.494002",
+    "source_url": "https://fukuiunited.co.jp/match/result.php?id=6382"
   }
 }
