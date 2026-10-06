@@ -1815,5 +1815,29 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.hMf6dHWIyew-oaboWC5a-g&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-06T01:44:14.210541+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:18073494039337678412",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、ホーム開幕2連勝 第2節・金沢サムライズ戦 | スポーツ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/reader/2714208%3Fdkanapp%3D1&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3sUgchJN8gxSPfPTQW1Lv3",
+    "published": "2026-10-05T18:14:27Z",
+    "detected_at": "2026-10-06T03:23:51.508027+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2622459746577470025",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ 開幕戦配布ベースボールシャツ B6682956... - 1morepizza.com",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://1morepizza.com/products/B6672620735/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3b2p3V3ATlASw1DmAzl1ff",
+    "published": "2026-10-05T16:25:34Z",
+    "detected_at": "2026-10-06T03:23:51.508060+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6681957268432022849",
+    "team": "BLOWINDS",
+    "title": "山形ワイヴァンズ vs 福井ブローウィンズリセールチケット一覧 - チケジャム",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://ticketjam.jp/tickets/fukuiblowinds/event_groups/361948%3Fimpressions%3Dtrue&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3ijzCYRCqTkFS9cBz5T4-e",
+    "published": "2026-10-05T15:39:18Z",
+    "detected_at": "2026-10-06T03:23:51.508085+00:00"
   }
 ]
