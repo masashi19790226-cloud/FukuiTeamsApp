@@ -250,8 +250,58 @@ def parse_united_page(page: str):
     return games
 
 
+UNITED_ASYNC = "https://fukuiunited.co.jp/system/async/async.php"
+
+
+def united_api_matches():
+    """ユナイテッド公式サイトの試合一覧(試合情報ページが読み込んでいるデータ)を全部取る。
+    1件ごとに kickoff(「2026/04/05 12:00」)・opponent.name・place(home_away・name)・score などが入っている。"""
+    def post(body):
+        req = urllib.request.Request(
+            UNITED_ASYNC, data=json.dumps(body).encode("utf-8"), method="POST",
+            headers={"User-Agent": "Mozilla/5.0 FukuiTeamsAppBot/1.0", "Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=20) as res:
+            return json.loads(res.read().decode("utf-8", errors="ignore"))
+
+    pt = post({"className": "PostTypes", "method": "get", "slug": ["match"], "post_type_options": True})
+    ptid = pt["data"][0]["post_type_id"]
+    res = post({"className": "MatchInfo", "method": "get", "post_type_id": [ptid], "category": "",
+                "orderby": [{"column": "kickoff", "order": "asc"}], "offset": 0, "limit": 300})
+    return res.get("data", []) or []
+
+
+def scrape_united_api():
+    """公式サイトの試合一覧から、今年(ユナイテッドのシーズンは1月〜12月)の全試合を作る。
+    すでに終わった試合(過去の試合)も含む。県選手権・天皇杯などのリーグ戦以外も入れる。"""
+    games = {}
+    for m in united_api_matches():
+        ko = m.get("kickoff") or ""
+        mk = re.match(r"(\d{4})/(\d{1,2})/(\d{1,2})\s+(\d{1,2}:\d{2})", ko)
+        if not mk or int(mk.group(1)) != NOW.year:
+            continue
+        y, mo, d, time = int(mk.group(1)), int(mk.group(2)), int(mk.group(3)), mk.group(4)
+        opp = ((m.get("opponent") or {}).get("name") or "").strip()
+        place = m.get("place") or {}
+        venue = (place.get("name") or "").strip()
+        ha = (place.get("home_away") or "").upper()
+        # HOME/AWAY が書かれていない試合(県選手権・天皇杯など)は、会場が福井県内ならホーム扱い
+        is_home = True if ha == "HOME" else False if ha == "AWAY" else is_fukui_venue(venue)
+        if not opp:
+            continue
+        g = make_game("united", y, mo, d, time, opp, venue, is_home)
+        games[g["date"]] = g
+    print(f"[INFO] UNITED: 公式サイトの試合一覧から {len(games)} 試合を読み取り")
+    return games
+
+
 def scrape_united():
     games = {}
+    # まず公式サイトの試合一覧(過去の試合も含む今年の全試合)。読めなければ日程ページだけで続ける
+    try:
+        games.update(scrape_united_api())
+    except Exception as e:
+        print(f"[WARN] UNITED: 公式サイトの試合一覧の取得に失敗 {e!r}")
     pages = []
     first = safe_fetch("UNITED", UNITED_URLS[0])
     if first:
@@ -276,7 +326,8 @@ def scrape_united():
 
     for p in pages:
         for g in parse_united_page(p):
-            games[g["date"]] = g
+            # 試合一覧(API)で読めた日は、そちらを優先する
+            games.setdefault(g["date"], g)
     print(f"[INFO] UNITED: {len(games)} 試合を読み取り")
     return list(games.values())
 

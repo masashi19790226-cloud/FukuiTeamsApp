@@ -215,6 +215,7 @@ def parse_united_latest(page: str):
 
 
 UNITED_ASYNC = "https://fukuiunited.co.jp/system/async/async.php"
+_UNITED_MATCHES = None  # 公式サイトの試合一覧(1回の実行で1度だけ読む)
 
 
 def united_score_from_result_pages(game_dt: datetime, game: dict):
@@ -234,18 +235,30 @@ def united_score_from_result_pages(game_dt: datetime, game: dict):
             with urllib.request.urlopen(req, timeout=20) as res:
                 return json.loads(res.read().decode("utf-8", errors="ignore"))
 
-        pt = post(UNITED_ASYNC, {"className": "PostTypes", "method": "get", "slug": ["match"], "post_type_options": True})
-        ptid = pt["data"][0]["post_type_id"]
-        res = post(UNITED_ASYNC, {"className": "MatchInfo", "method": "get", "post_type_id": [ptid], "category": "",
-                                  "orderby": [{"column": "kickoff", "order": "asc"}], "offset": 0, "limit": 300})
+        # 試合一覧は1回の実行で1度だけ読む(過去の試合をまとめて確認するときに何度も読まないように)
+        global _UNITED_MATCHES
+        if _UNITED_MATCHES is None:
+            pt = post(UNITED_ASYNC, {"className": "PostTypes", "method": "get", "slug": ["match"], "post_type_options": True})
+            ptid = pt["data"][0]["post_type_id"]
+            res = post(UNITED_ASYNC, {"className": "MatchInfo", "method": "get", "post_type_id": [ptid], "category": "",
+                                      "orderby": [{"column": "kickoff", "order": "asc"}], "offset": 0, "limit": 300})
+            _UNITED_MATCHES = res.get("data", []) or []
         want = game_dt.strftime("%Y/%m/%d %H:%M")
-        for g in res.get("data", []):
+        for g in _UNITED_MATCHES:
             if g.get("kickoff", "") != want:
                 continue
             url = f"https://fukuiunited.co.jp/match/result.php?id={g['id']}"
             r = standings.parse_united_result(fetch_html(url))
             if r:
                 return (r["my"], r["opp"]), url
+            # 結果ページを読み取れなかったとき(県選手権・天皇杯など)は、試合一覧に入っているスコアを使う
+            sc = g.get("score") or {}
+            status = json.dumps(g.get("category_types") or [], ensure_ascii=False)
+            if "試合終了" in status and isinstance(sc.get("proponent"), (int, str)) and isinstance(sc.get("opponent"), (int, str)):
+                try:
+                    return (int(sc["proponent"]), int(sc["opponent"])), url
+                except ValueError:
+                    pass
         return None, None
     except Exception as e:
         print(f"[WARN] UNITED: 結果ページからの取得に失敗 {e!r}")

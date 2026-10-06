@@ -402,19 +402,22 @@ private fun RosterSection(roster: TeamPlayers, sortKey: PlayerSort, onSortChange
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
-        // 並び順のボタン5つを1行に並べる。文字の長さに合わせて幅を配分し、画面幅いっぱいに収める
+        // 並び順のボタン。1段目は背番号・出場時間・得点・リバウンド・アシスト、2段目は3つの成功率と貢献度。
+        // 各段とも、文字の長さに合わせて幅を配分し、画面幅いっぱいに収める
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text("並び順(背番号以外は数字の大きい順)", style = MaterialTheme.typography.labelSmall, color = InkSoft)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                PlayerSort.entries.forEach { key ->
-                    SortChip(
-                        key.label,
-                        sortKey == key,
-                        Modifier.weight(key.label.length + 1f)
-                    ) { onSortChange(key) }
+            PlayerSort.entries.groupBy { it.row }.toSortedMap().values.forEach { line ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    line.forEach { key ->
+                        SortChip(
+                            key.label,
+                            sortKey == key,
+                            Modifier.weight(key.label.length + 1f)
+                        ) { onSortChange(key) }
+                    }
                 }
             }
         }
@@ -424,7 +427,7 @@ private fun RosterSection(roster: TeamPlayers, sortKey: PlayerSort, onSortChange
             color = InkSoft
         )
         // 並べ替えても、写真・開閉の状態がその選手についていくよう、選手ごとに key を付ける
-        sortPlayers(roster.players, sortKey).forEach { p -> key(p.number, p.name) { RosterCard(p) } }
+        sortPlayers(roster.players, sortKey).forEach { p -> key(p.number, p.name) { RosterCard(p, sortKey) } }
     }
 }
 
@@ -713,18 +716,26 @@ private fun JumpLink(label: String, modifier: Modifier = Modifier, onClick: () -
     )
 }
 
-/** 全選手一覧の並び順(ボタンはこの順に左から並ぶ)。1行に収めるため、ボタンの文字は「順」を省く。 */
-private enum class PlayerSort(val label: String) {
+/**
+ * 全選手一覧の並び順(ボタンはこの順に左から並ぶ)。row はボタンを置く段(0:1段目、1:2段目)。
+ * 1行に収めるため、ボタンの文字は「順」を省く。
+ */
+private enum class PlayerSort(val label: String, val row: Int = 0) {
     NUMBER("背番号"),
     MINUTES("出場時間"),
     POINTS("得点"),
     REBOUNDS("リバウンド"),
-    ASSISTS("アシスト")
+    ASSISTS("アシスト"),
+    FIELD_GOAL_PCT("FG成功率", 1),
+    THREE_PCT("3P成功率", 1),
+    FREE_THROW_PCT("FT成功率", 1),
+    EFFICIENCY("貢献度", 1)
 }
 
 /**
  * 選んだ並び順で選手を並べる。背番号順以外は数字の大きい順。
- * 数字が無い選手(今季の出場なしなど)は最後に回す。同じ数字どうしは背番号順のまま。
+ * 数字が無い選手(今季の出場なしなど)は最後に回す。
+ * 成功率が同じときは試投数の多い順、それも同じなら背番号順のまま。
  */
 private fun sortPlayers(players: List<PlayerStats>, key: PlayerSort): List<PlayerStats> {
     val value: (PlayerStats) -> Double? = when (key) {
@@ -733,9 +744,25 @@ private fun sortPlayers(players: List<PlayerStats>, key: PlayerSort): List<Playe
         PlayerSort.MINUTES -> { p -> minutesToSeconds(p.minutesPerGame) }
         PlayerSort.REBOUNDS -> { p -> p.rebounds?.toDoubleOrNull() }
         PlayerSort.ASSISTS -> { p -> p.assists?.toDoubleOrNull() }
+        PlayerSort.FIELD_GOAL_PCT -> { p -> percentValue(p.fieldGoalPct) }
+        PlayerSort.THREE_PCT -> { p -> percentValue(p.threePct) }
+        PlayerSort.FREE_THROW_PCT -> { p -> percentValue(p.freeThrowPct) }
+        PlayerSort.EFFICIENCY -> { p -> p.efficiency?.toDoubleOrNull() }
     }
-    return players.sortedByDescending { value(it) ?: -1.0 }
+    val attempts: (PlayerStats) -> Double = when (key) {
+        PlayerSort.FIELD_GOAL_PCT -> { p -> p.fieldGoalsAttempted?.toDoubleOrNull() ?: 0.0 }
+        PlayerSort.THREE_PCT -> { p -> p.threesAttempted?.toDoubleOrNull() ?: 0.0 }
+        PlayerSort.FREE_THROW_PCT -> { p -> p.freeThrowsAttempted?.toDoubleOrNull() ?: 0.0 }
+        else -> { _ -> 0.0 }
+    }
+    return players.sortedWith(
+        compareByDescending<PlayerStats> { value(it) ?: -1e9 }.thenByDescending { attempts(it) }
+    )
 }
+
+/** 成功率「41.9%」を 41.9 の数にする(並べ替え用)。読めなければ null。 */
+private fun percentValue(text: String?): Double? =
+    text?.trim()?.removeSuffix("%")?.trim()?.toDoubleOrNull()
 
 /** 出場時間「分:秒」(例 32:24)を秒に直す。読めなければ null。 */
 private fun minutesToSeconds(text: String?): Double? {
@@ -777,7 +804,7 @@ private fun SortChip(label: String, selected: Boolean, modifier: Modifier = Modi
  * 今季まだ成績が1つも無い選手は、数字の段の代わりに「今季の出場なし」の1行にし、押しても開かない。
  */
 @Composable
-private fun RosterCard(player: PlayerStats) {
+private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUMBER) {
     var expanded by remember(player.number, player.name) { mutableStateOf(false) }
     val hasStats = listOf(
         player.games, player.minutesPerGame, player.points, player.rebounds, player.assists,
@@ -834,6 +861,19 @@ private fun RosterCard(player: PlayerStats) {
             )
             return@Column
         }
+        // 成功率・貢献度で並べているときは、その数字をカードを開かなくても見えるように1行出す
+        sortHighlight(player, sortKey)?.let { (label, value) ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Accent.copy(alpha = 0.08f))
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(label, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.ExtraBold, color = Ink)
+            }
+        }
         Row(modifier = Modifier.fillMaxWidth()) {
             StatCell("試合", player.games, Modifier.weight(1f))
             StatCell("出場時間", player.minutesPerGame, Modifier.weight(1.2f))
@@ -856,6 +896,18 @@ private fun RosterCard(player: PlayerStats) {
             }
         }
     }
+}
+
+/** 成功率・貢献度で並べているときに、カードに目立たせて出す (項目名, 数字)。それ以外の並びでは null。 */
+private fun sortHighlight(player: PlayerStats, sortKey: PlayerSort): Pair<String, String>? = when (sortKey) {
+    PlayerSort.FIELD_GOAL_PCT ->
+        "フィールドゴール成功率" to shotText(player.fieldGoalPct, player.fieldGoalsMade, player.fieldGoalsAttempted)
+    PlayerSort.THREE_PCT ->
+        "3ポイント成功率" to shotText(player.threePct, player.threesMade, player.threesAttempted)
+    PlayerSort.FREE_THROW_PCT ->
+        "フリースロー成功率" to shotText(player.freeThrowPct, player.freeThrowsMade, player.freeThrowsAttempted)
+    PlayerSort.EFFICIENCY -> "貢献度(平均)" to (player.efficiency ?: NO_DATA)
+    else -> null
 }
 
 /** 試合ごとの成績のうち、最初に表示する試合数(残りは「すべて見る」で開く)。 */
