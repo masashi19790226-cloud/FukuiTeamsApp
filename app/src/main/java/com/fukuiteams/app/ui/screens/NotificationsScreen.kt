@@ -13,6 +13,8 @@ import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.MastheadTopBar
+import com.fukuiteams.app.ui.components.ScrollJumpButtons
+import com.fukuiteams.app.ui.components.ScrollJumpBottomPadding
 import com.fukuiteams.app.ui.components.MenuLinkRow
 import com.fukuiteams.app.ui.components.UiScale
 import androidx.compose.foundation.BorderStroke
@@ -103,17 +105,23 @@ fun NotificationsScreen(
         }
     }
 
+    // 画面のスクロール位置(右下の「一番上へ」「一番下へ」ボタンで使う)
+    val scrollState = rememberScrollState()
+
     Scaffold(
         topBar = {
             MastheadTopBar(section = "メニュー")
         },
+        floatingActionButton = { ScrollJumpButtons(scrollState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                .verticalScroll(scrollState)
+                // 下は、右下のボタンに最後の行が隠れないよう広めに空ける(スクロールする範囲の内側)
+                .padding(bottom = ScrollJumpBottomPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // 下のメニューの「メニュー」画面。上から 通知の設定 → 公式サイト → アプリの使い方 → 更新履歴

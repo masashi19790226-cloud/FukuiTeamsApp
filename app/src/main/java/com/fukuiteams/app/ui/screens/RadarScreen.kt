@@ -71,6 +71,9 @@ import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.MastheadTopBar
+import com.fukuiteams.app.ui.components.ScrollJumpButtons
+import com.fukuiteams.app.ui.components.ScrollJumpBottomPadding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.theme.Ink
@@ -295,6 +298,9 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
         words.all { w -> text.contains(w, ignoreCase = true) }
     }
 
+    // 一覧のスクロール位置(右下の「一番上へ」「一番下へ」ボタンで使う)
+    val listState = rememberLazyListState()
+
     Scaffold(
         topBar = {
             MastheadTopBar(
@@ -307,6 +313,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                 }
             )
         },
+        floatingActionButton = { ScrollJumpButtons(listState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Box(
@@ -324,6 +331,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
             )
             LazyColumn(
+                state = listState,
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 16.dp),
@@ -559,7 +567,8 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                         }
                     }
                 }
-                item { Spacer(modifier = Modifier.height(12.dp)) }
+                // 右下のボタンに最後の行が隠れないよう、下に余白を空ける
+                item { Spacer(modifier = Modifier.height(ScrollJumpBottomPadding)) }
             }
             }
             PullToRefreshContainer(

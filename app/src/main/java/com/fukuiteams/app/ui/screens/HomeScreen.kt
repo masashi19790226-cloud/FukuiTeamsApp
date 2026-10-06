@@ -36,6 +36,9 @@ import com.fukuiteams.app.ui.components.HomeAwayTag
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.components.MastheadTopBar
+import com.fukuiteams.app.ui.components.ScrollJumpButtons
+import com.fukuiteams.app.ui.components.ScrollJumpBottomPadding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -189,6 +192,9 @@ fun HomeScreen(
         ?.filterNot { it.isLikelyClosed() }
         ?: emptyList()
 
+    // 一覧のスクロール位置(右下の「一番上へ」「一番下へ」ボタンで使う)
+    val listState = rememberLazyListState()
+
     Scaffold(
         topBar = {
             // 通知設定は下のメニューの「メニュー」から開くので、ここにはボタンを置かない。右端は更新ボタン
@@ -202,6 +208,7 @@ fun HomeScreen(
                 }
             )
         },
+        floatingActionButton = { ScrollJumpButtons(listState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Box(
@@ -219,6 +226,7 @@ fun HomeScreen(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
         )
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 16.dp),
@@ -342,7 +350,8 @@ fun HomeScreen(
                 }
             }
 
-            item { Spacer(modifier = Modifier.height(8.dp)) }
+            // 右下のボタンに最後の行が隠れないよう、下に余白を空ける
+            item { Spacer(modifier = Modifier.height(ScrollJumpBottomPadding)) }
         }
         }
         PullToRefreshContainer(

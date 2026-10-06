@@ -30,6 +30,8 @@ import com.fukuiteams.app.ui.components.HomeAwayTag
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.components.MastheadTopBar
+import com.fukuiteams.app.ui.components.ScrollJumpButtons
+import com.fukuiteams.app.ui.components.ScrollJumpBottomPadding
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -245,6 +247,7 @@ fun GameDetailScreen(
                 }
             )
         },
+        floatingActionButton = { ScrollJumpButtons(listScroll) },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Box(
@@ -271,7 +274,8 @@ fun GameDetailScreen(
                 .weight(1f)
                 .onGloballyPositioned { jumpMarks.viewport = it }
                 .verticalScroll(listScroll)
-                .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 16.dp),
+                // 下は、右下の「一番上へ」「一番下へ」ボタンに最後の行が隠れないよう広めに空ける
+                .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = ScrollJumpBottomPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 

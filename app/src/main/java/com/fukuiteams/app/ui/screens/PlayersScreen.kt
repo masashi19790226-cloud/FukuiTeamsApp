@@ -69,6 +69,8 @@ import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.MastheadTopBar
+import com.fukuiteams.app.ui.components.ScrollJumpButtons
+import com.fukuiteams.app.ui.components.ScrollJumpBottomPadding
 import com.fukuiteams.app.ui.components.RemoteThumbnail
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
@@ -185,6 +187,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 }
             )
         },
+        floatingActionButton = { ScrollJumpButtons(scrollState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Box(
@@ -220,7 +223,8 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 .weight(1f)
                 .onGloballyPositioned { marks.viewport = it }
                 .verticalScroll(scrollState)
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+                // 下は、右下の「一番上へ」「一番下へ」ボタンに最後の行が隠れないよう広めに空ける
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = ScrollJumpBottomPadding),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
 
@@ -608,12 +612,13 @@ private fun ScorersTable(rows: List<ScorerRow>, isUnited: Boolean, ownColor: and
                                 // タップで大きく表示
                                 zoomCaption = (if (r.number.isNotBlank()) "#${r.number} " else "") + r.name
                             )
+                            // 選手名は途中で切らず、入りきらないときは折り返す
                             Text(
                                 c,
                                 modifier = Modifier.weight(1f),
                                 fontSize = 12.sp,
                                 color = Ink,
-                                maxLines = 1,
+                                maxLines = 3,
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
@@ -801,11 +806,12 @@ private fun RosterCard(player: PlayerStats) {
                 modifier = Modifier.width(58.dp)
             )
             Column(modifier = Modifier.weight(1f)) {
+                // 長い名前(例:チョンディー・ブラウン ジュニア)も途中で切らず、折り返して全部表示する
                 Text(
                     player.name.ifBlank { NO_DATA },
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    maxLines = 1,
+                    maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
@@ -962,11 +968,12 @@ private fun PlayerCard(player: KeyPlayer) {
                 modifier = Modifier.width(64.dp)
             )
             Column(modifier = Modifier.weight(1f)) {
+                // 長い名前(例:チョンディー・ブラウン ジュニア)も途中で切らず、折り返して全部表示する
                 Text(
                     player.name.ifBlank { NO_DATA },
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    maxLines = 1,
+                    maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
