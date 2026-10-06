@@ -4,7 +4,8 @@ import android.content.Context
 
 /**
  * アプリの更新履歴。新しいものを先頭に書き足していく。
- * 版の番号はビルドのたびに自動で増えるため、日付でまとめて記録する。
+ * 版は「先頭の数字.ビルド番号」(例:2.152)で、ビルドのたびに自動で増えるため、日付でまとめて記録する。
+ * 先頭の数字は gradle.properties の fukuispo.versionMajor で決める。
  */
 /** アプリ作成者名(更新履歴・通知設定の「このアプリについて」に表示) */
 const val APP_AUTHOR = "追い風はBOOZ"
@@ -12,6 +13,14 @@ const val APP_AUTHOR = "追い風はBOOZ"
 data class ChangelogEntry(val date: String, val title: String, val items: List<String>)
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
+    ChangelogEntry(
+        date = "2026年10月6日",
+        title = "版を2.xxに・掲示板に「一番上へ」「一番下へ」",
+        items = listOf(
+            "アプリの版を「2.ビルド番号」(例:v2.152)にしました。これまでの「0.1.ビルド番号」から先頭を2に変えたもので、ビルドのたびに自動で増えます",
+            "掲示板の右下の「投稿」ボタンの左に、「一番上へ移動」「一番下へ移動」のボタンを付けました。押すとタイムラインの一番上・一番下まで移動します(すでに一番上・一番下のときはボタンが薄くなります)"
+        )
+    ),
     ChangelogEntry(
         date = "2026年10月6日",
         title = "掲示板を広く・いいねを押せるように",
@@ -338,7 +347,7 @@ val CHANGELOG: List<ChangelogEntry> = listOf(
     )
 )
 
-/** 端末に入っているこのアプリの版(例:0.1.52)。 */
+/** 端末に入っているこのアプリの版(例:2.152)。 */
 fun appVersionName(context: Context): String = try {
     context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "不明"
 } catch (e: Exception) {

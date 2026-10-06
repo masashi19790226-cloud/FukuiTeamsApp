@@ -46,7 +46,7 @@ GitHubにpushするだけで、GitHub側のサーバーがビルドしてAPKを�
    → 「Build Debug APK」というワークフローが自動的に実行される(数分かかります)
 4. 実行が完了(緑のチェック)したら、そのワークフローの実行結果ページ下部
    「Artifacts」から `fukui-teams-app-debug` をダウンロード(zip形式)
-5. zipを展開すると `fukuispo-v0.1.(版番号).apk` が入っているので、それをAndroidスマホに転送してインストール
+5. zipを展開すると `fukuispo-v2.(ビルド番号).apk`(例:`fukuispo-v2.152.apk`。先頭の2は `gradle.properties` の `fukuispo.versionMajor` で変更) が入っているので、それをAndroidスマホに転送してインストール
    (スマホ側で「提供元不明のアプリ」のインストールを一時的に許可する必要があります)
 
 ### コードを直す→確認する、のサイクル
@@ -89,7 +89,7 @@ app/src/main/java/com/fukuiteams/app/
 
 1. GitHub のリポジトリで **Actions → Build Debug APK → Run workflow** を開く
 2. 「知人配布用にReleasesへ公開する」にチェックを入れ、必要なら更新内容を書いて実行
-3. ビルドが緑になると Releases に `fukuispo-v0.1.(版番号).apk` と、同じ中身の `fukuispo.apk`(固定リンク用)が公開される
+3. ビルドが緑になると Releases に `fukuispo-v2.(ビルド番号).apk`(例:`fukuispo-v2.152.apk`。先頭の2は `gradle.properties` の `fukuispo.versionMajor` で変更) と、同じ中身の `fukuispo.apk`(固定リンク用)が公開される
 
 配布用リンク(常に最新版が落ちてくる):
 https://github.com/masashi19790226-cloud/FukuiTeamsApp/releases/latest/download/fukuispo.apk

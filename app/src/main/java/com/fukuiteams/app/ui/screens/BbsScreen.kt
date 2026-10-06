@@ -46,6 +46,12 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.VerticalAlignBottom
+import androidx.compose.material.icons.filled.VerticalAlignTop
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -319,13 +325,36 @@ fun BbsScreen() {
         },
         floatingActionButton = {
             if (overlays.isEmpty()) {
-                ExtendedFloatingActionButton(
-                    text = { Text("投稿", fontWeight = FontWeight.Bold) },
-                    icon = { Icon(Icons.Filled.Edit, contentDescription = null) },
-                    onClick = { openBbsUrl(context, BbsRepository.WRITE_URL) },
-                    containerColor = NewsRed,
-                    contentColor = White
-                )
+                // 左から「一番上へ」「一番下へ」「投稿」。タイムラインを表示しているときだけ出す
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ScrollJumpButton(
+                        icon = Icons.Filled.VerticalAlignTop,
+                        description = "一番上へ移動",
+                        enabled = timelineState.canScrollBackward,
+                        onClick = { scope.launch { timelineState.animateScrollToItem(0) } }
+                    )
+                    ScrollJumpButton(
+                        icon = Icons.Filled.VerticalAlignBottom,
+                        description = "一番下へ移動",
+                        enabled = timelineState.canScrollForward,
+                        onClick = {
+                            scope.launch {
+                                val last = timelineState.layoutInfo.totalItemsCount - 1
+                                if (last >= 0) timelineState.animateScrollToItem(last)
+                            }
+                        }
+                    )
+                    ExtendedFloatingActionButton(
+                        text = { Text("投稿", fontWeight = FontWeight.Bold) },
+                        icon = { Icon(Icons.Filled.Edit, contentDescription = null) },
+                        onClick = { openBbsUrl(context, BbsRepository.WRITE_URL) },
+                        containerColor = NewsRed,
+                        contentColor = White
+                    )
+                }
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -429,6 +458,23 @@ fun BbsScreen() {
                 scope.launch { BbsRepository.reloadPost(no) }
             }
         )
+    }
+}
+
+/**
+ * タイムラインの「一番上へ」「一番下へ」の小さいボタン。
+ * それ以上動かせないとき(すでに一番上/一番下)は薄く表示し、押しても何もしない。
+ */
+@Composable
+private fun ScrollJumpButton(icon: ImageVector, description: String, enabled: Boolean, onClick: () -> Unit) {
+    SmallFloatingActionButton(
+        onClick = { if (enabled) onClick() },
+        modifier = Modifier.alpha(if (enabled) 1f else 0.4f),
+        containerColor = White,
+        contentColor = Ink,
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 3.dp, pressedElevation = 6.dp)
+    ) {
+        Icon(icon, contentDescription = description)
     }
 }
 

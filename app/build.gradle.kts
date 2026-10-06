@@ -11,10 +11,12 @@ android {
         applicationId = "com.fukuiteams.app"
         minSdk = 24
         targetSdk = 34
-        // GitHub Actions の実行番号をバージョン番号にする(ビルドのたびに増えるので上書きインストールできる)
+        // versionCode は GitHub Actions の実行番号(ビルドのたびに増えるので上書きインストールできる)
         val runNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1
         versionCode = runNumber
-        versionName = "0.1.$runNumber"
+        // 版は「先頭の数字.ビルド番号」(例:2.152)。先頭の数字は gradle.properties の fukuispo.versionMajor
+        val versionMajor = (project.findProperty("fukuispo.versionMajor") as String?)?.trim() ?: "2"
+        versionName = "$versionMajor.$runNumber"
     }
 
     // 毎回同じ鍵で署名するための設定。
