@@ -263,7 +263,8 @@
           "goals": 13,
           "pk": 0,
           "shots": 64,
-          "games": 10
+          "games": 10,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/TSUKAMOTO_Natsuki.jpg"
         },
         {
           "rank": 2,
@@ -272,7 +273,8 @@
           "goals": 12,
           "pk": 0,
           "shots": 47,
-          "games": 10
+          "games": 10,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/NAKAMURA_Mizuki.jpg"
         },
         {
           "rank": 2,
@@ -281,7 +283,8 @@
           "goals": 12,
           "pk": 0,
           "shots": 75,
-          "games": 10
+          "games": 10,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGUCHI_Mika.jpg"
         },
         {
           "rank": 4,
@@ -320,7 +323,8 @@
           "goals": 8,
           "pk": 0,
           "shots": 54,
-          "games": 10
+          "games": 10,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/SHIBUKAWA_Suzuna.jpg"
         },
         {
           "rank": 8,
@@ -377,7 +381,8 @@
           "goals": 6,
           "pk": 0,
           "shots": 25,
-          "games": 10
+          "games": 10,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/KURAMOCHI_Kyoko.jpg"
         },
         {
           "rank": 11,
@@ -650,7 +655,8 @@
           "goals": 3,
           "pk": 0,
           "shots": 9,
-          "games": 10
+          "games": 10,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGAWA_Rin.jpg"
         },
         {
           "rank": 40,
@@ -659,7 +665,8 @@
           "goals": 3,
           "pk": 0,
           "shots": 9,
-          "games": 10
+          "games": 10,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/YAMAMOTO_Nanami.jpg"
         },
         {
           "rank": 40,
@@ -803,7 +810,8 @@
           "goals": 2,
           "pk": 0,
           "shots": 6,
-          "games": 9
+          "games": 9,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/OKABE_Maho.jpg"
         },
         {
           "rank": 54,
@@ -951,7 +959,8 @@
           "goals": 2,
           "pk": 0,
           "shots": 30,
-          "games": 10
+          "games": 10,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/YAMAMOTO_Kokoro.jpg"
         },
         {
           "rank": 54,
@@ -1207,7 +1216,8 @@
           "goals": 1,
           "pk": 0,
           "shots": 18,
-          "games": 10
+          "games": 10,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/IKEUCHI_Aki.jpg"
         },
         {
           "rank": 75,
@@ -1257,7 +1267,7 @@
       "photo_report": {
         "福井丸岡ラック": "ok",
         "エスポラーダ北海道イルネーヴェ": "8人(前回の分)・得点表に8人",
-        "バルドラール浦安ラス・ボニータス": "0人・得点表に0人",
+        "バルドラール浦安ラス・ボニータス": "10人・得点表に10人",
         "立川アスレティックFCレディース": "10人(前回の分)・得点表に10人",
         "SWHレディース西宮": "13人(前回の分)・得点表に13人",
         "アルコ神戸": "12人(前回の分)・得点表に12人",
@@ -1280,7 +1290,18 @@
         },
         "バルドラール浦安ラス・ボニータス": {
           "date": "2026-10-08",
-          "photos": {}
+          "photos": {
+            "塚本夏希": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/TSUKAMOTO_Natsuki.jpg",
+            "中村美月": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/NAKAMURA_Mizuki.jpg",
+            "江口未珂": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGUCHI_Mika.jpg",
+            "澁川鈴菜": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/SHIBUKAWA_Suzuna.jpg",
+            "倉持杏子": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/KURAMOCHI_Kyoko.jpg",
+            "江川凜": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGAWA_Rin.jpg",
+            "山本奈波": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/YAMAMOTO_Nanami.jpg",
+            "岡部茉帆": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/OKABE_Maho.jpg",
+            "山本想": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/YAMAMOTO_Kokoro.jpg",
+            "池内天紀": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/IKEUCHI_Aki.jpg"
+          }
         },
         "立川アスレティックFCレディース": {
           "date": "2026-10-08",
@@ -1367,7 +1388,7 @@
         }
       }
     },
-    "updated_at": "2026-10-07T17:11:08.125956+00:00"
+    "updated_at": "2026-10-07T17:44:29.722469+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3109,7 +3130,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-07T17:11:08.125956+00:00"
+    "updated_at": "2026-10-07T17:44:29.722469+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-10-08",
