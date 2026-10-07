@@ -1955,5 +1955,15 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.lNxmbr-Cbm7oX7Xzb7NMzA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-07T00:35:27.178461+00:00"
+  },
+  {
+    "id": "bing:https://mantan-web.jp/prtimes/article/20261001prt00m200001398a.html",
+    "team": "BLOWINDS",
+    "title": "【(株)アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
+    "link": "https://mantan-web.jp/prtimes/article/20261001prt00m200001398a.html",
+    "published": "2026-10-01T06:00:00+00:00",
+    "source": "MANTANWEB（まんたんウェブ）",
+    "image": "",
+    "detected_at": "2026-10-07T07:29:24.881106+00:00"
   }
 ]
