@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-07T18:30:10.855680+00:00",
+    "updated_at": "2026-10-07T19:05:20.467241+00:00",
     "players": [
       {
         "number": "1",
@@ -50,8 +50,8 @@
             "ast": "0",
             "stl": "0",
             "blk": "0",
-            "tov": "2",
-            "eff": "2"
+            "tov": "1",
+            "eff": "3"
           },
           {
             "date": "2026-10-03",
@@ -601,8 +601,8 @@
             "ast": "2",
             "stl": "2",
             "blk": "0",
-            "tov": "1",
-            "eff": "20"
+            "tov": "2",
+            "eff": "19"
           },
           {
             "date": "2026-10-03",
@@ -1414,8 +1414,8 @@
             "ast": "0",
             "stl": "0",
             "blk": "0",
-            "tov": "2",
-            "eff": "2"
+            "tov": "1",
+            "eff": "3"
           },
           {
             "date": "2026-10-03",
@@ -1909,8 +1909,8 @@
             "ast": "2",
             "stl": "2",
             "blk": "0",
-            "tov": "1",
-            "eff": "20"
+            "tov": "2",
+            "eff": "19"
           },
           {
             "date": "2026-10-03",
@@ -2575,7 +2575,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=714&tab=1",
-    "updated_at": "2026-10-07T18:30:13.435797+00:00",
+    "updated_at": "2026-10-07T19:05:52.032478+00:00",
     "players": [
       {
         "number": "1",
