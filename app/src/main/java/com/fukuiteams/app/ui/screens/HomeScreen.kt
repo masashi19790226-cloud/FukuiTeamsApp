@@ -29,6 +29,10 @@ import com.fukuiteams.app.data.RemoteGameResult
 import com.fukuiteams.app.data.GameResultsRepository
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.components.resultHeadline
+import com.fukuiteams.app.ui.components.ExtraEditionButton
+import com.fukuiteams.app.ui.components.RemoteThumbnail
+import com.fukuiteams.app.data.BirthdaysRepository
+import com.fukuiteams.app.data.PlayerBirthday
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.ThinRule
 import com.fukuiteams.app.ui.components.Headline
@@ -154,6 +158,8 @@ fun HomeScreen(
     var weathers by remember { mutableStateOf<Map<String, MatchWeather>>(emptyMap()) }
     // 「次の試合」の天気予報(試合の3日前から。入場の時刻と試合開始の時刻)
     var forecasts by remember { mutableStateOf<Map<String, GameForecast>>(emptyMap()) }
+    // 3チームの選手の誕生日(一面の「誕生日」欄)
+    var birthdays by remember { mutableStateOf<List<PlayerBirthday>>(emptyList()) }
 
     // アプリのすべての情報(日程・結果・招待・ニュース・展望・選手・順位・試合情報ページなど)を読み直す。
     // 選手や順位はこの画面では使わないが、ほかのタブに切り替えたときに新しい内容を出せるよう一緒に読み直す
@@ -164,6 +170,7 @@ fun HomeScreen(
         newsResult = d.news
         previews = d.previews
         dataStatus = d.status
+        birthdays = BirthdaysRepository.fetch()
         // 今日の試合の天気
         weathers = GamesRepository.games.filter { it.isToday() }
             .mapNotNull { g -> WeatherRepository.forGame(g)?.let { g.id to it } }
@@ -251,6 +258,15 @@ fun HomeScreen(
             val special = upcomingSpecialDay()
             if (special != null && (selectedTeam == null || selectedTeam in special.teams)) {
                 item { SpecialDayBanner(special, onOpenGame = { g -> onOpenGame(g.id) }) }
+            }
+
+            // 選手の誕生日(今日が誕生日の選手と、7日以内に誕生日の選手)。選んでいるチームの選手だけ
+            val teamBirthdays = birthdays.filter { selectedTeam == null || it.team == selectedTeam }
+            val bdToday = BirthdaysRepository.today()
+            val soon = teamBirthdays.filter { it.daysUntilNext(bdToday) in 0..7 }
+                .sortedWith(compareBy<PlayerBirthday> { it.daysUntilNext(bdToday) }.thenBy { it.team?.ordinal ?: 9 })
+            if (soon.isNotEmpty()) {
+                item { BirthdayCard(soon, bdToday) }
             }
 
             item {
@@ -780,6 +796,8 @@ private fun LatestResultHero(
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
+        // この試合の「号外」画像を作って、LINE・X などへ送れる
+        ExtraEditionButton(game, result, outcome, Modifier.fillMaxWidth().padding(top = 4.dp))
         DoubleRule(modifier = Modifier.padding(top = 6.dp))
     }
 }
@@ -830,6 +848,7 @@ private fun TwoColumnFront(
                     preview = previews[game.id],
                     lp = lps[game.id],
                     forecast = forecasts[game.id],
+                    results = autoResults,
                     onOpenGame = onOpenGame
                 )
             }
@@ -857,6 +876,7 @@ private fun NextGameBlock(
     preview: GamePreview?,
     lp: GameLp?,
     forecast: GameForecast?,
+    results: Map<String, RemoteGameResult>,
     onOpenGame: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -904,6 +924,8 @@ private fun NextGameBlock(
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
+        // この相手とのこれまでの対戦成績(アプリが記録している試合結果から)
+        HeadToHeadBox(nextGame, results)
         // 天気予報(試合の3日前から。入場の時刻 → 試合開始の時刻の順)
         if (forecast != null) {
             Column(
@@ -1076,5 +1098,108 @@ private fun Team.shortLabelForFront(): String = when (this) {
     Team.UNITED -> "ユナイテッド"
 }
 
+/**
+ * 一面の「誕生日」欄。今日が誕生日の選手は顔写真付きで大きく、7日以内の選手は1行ずつ小さく出す。
+ */
+@Composable
+private fun BirthdayCard(players: List<PlayerBirthday>, today: java.time.LocalDate) {
+    val todays = players.filter { it.isBirthdayOn(today) }
+    val upcoming = players.filterNot { it.isBirthdayOn(today) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.5.dp, NewsRed)
+            .background(Paper)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        SectionLabel(if (todays.isNotEmpty()) "今日は誕生日" else "もうすぐ誕生日", red = true)
+        todays.forEach { p ->
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                RemoteThumbnail(p.photo, width = 48.dp, height = 60.dp, alignTop = true, zoomCaption = p.label)
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        p.team?.displayName ?: "",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = p.team?.color ?: InkSoft
+                    )
+                    Headline("${p.label}選手", fontSize = 19)
+                    Text(
+                        "${p.ageOn(today)}歳の誕生日です。おめでとうございます!",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Ink
+                    )
+                }
+            }
+        }
+        if (upcoming.isNotEmpty()) {
+            if (todays.isNotEmpty()) ThinRule(color = LineGray)
+            upcoming.forEach { p ->
+                val d = today.plusDays(p.daysUntilNext(today).toLong())
+                val week = "月火水木金土日"[d.dayOfWeek.value - 1]
+                Text(
+                    "${d.monthValue}/${d.dayOfMonth}($week) ${p.label}(${p.team?.let { teamShortName(it) } ?: ""}) ${p.ageOn(d)}歳に",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Ink,
+                    maxLines = 2
+                )
+            }
+        }
+    }
+}
 
+private fun teamShortName(team: Team): String = when (team) {
+    Team.BLOWINDS -> "ブローウィンズ"
+    Team.RAC -> "丸岡RUCK"
+    Team.UNITED -> "ユナイテッド"
+}
 
+/**
+ * 「次の試合」の相手との対戦成績。例「対戦成績 2勝1敗」と、直近3試合の結果(日付・スコア・HOME/AWAY)。
+ * 対戦が無いときは「今季(記録上)初対戦」とだけ出す。
+ */
+@Composable
+private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
+    val h2h = remember(game.id, results, GamesRepository.games) {
+        com.fukuiteams.app.data.headToHead(game, GamesRepository.games, results)
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, LineGray)
+            .padding(horizontal = 8.dp, vertical = 5.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        if (h2h == null) {
+            Text(
+                "${game.opponent}とは、アプリの記録では初対戦",
+                style = MaterialTheme.typography.labelMedium,
+                color = InkSoft
+            )
+            return@Column
+        }
+        Text(
+            "${game.opponent}との対戦成績 ${h2h.wins}勝${h2h.losses}敗" + (if (h2h.draws > 0) "${h2h.draws}分" else ""),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = Ink
+        )
+        h2h.meetings.take(3).forEach { (g, r) ->
+            val mark = when {
+                r.myScore > r.opponentScore -> "○"
+                r.myScore < r.opponentScore -> "●"
+                else -> "△"
+            }
+            Text(
+                "$mark ${r.myScore}-${r.opponentScore}  ${g.dateLabel}(${g.dayOfWeek}) ${if (g.isHome) "HOME" else "AWAY"}",
+                style = MaterialTheme.typography.bodySmall,
+                color = if (mark == "○") NewsRed else Ink
+            )
+        }
+        Text(
+            "※このアプリが記録している試合(今季など)から数えています",
+            style = MaterialTheme.typography.labelSmall,
+            color = InkSoft
+        )
+    }
+}

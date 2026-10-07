@@ -8,6 +8,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.fukuiteams.app.data.AlertsResult
+import com.fukuiteams.app.data.BirthdaysRepository
 import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.NewsAlertsRepository
 import com.fukuiteams.app.data.NotificationPrefsKeys
@@ -60,6 +61,9 @@ class AlertsCheckWorker(
             notify = newsEnabled
         )
 
+        // 選手の誕生日(その日の朝8時以降に1回だけ。設定でオフにできる)
+        runCatching { notifyBirthdays(::teamEnabled, prefs[NotificationPrefsKeys.kindKey("birthday")] ?: true) }
+
         // 試合開始前の通知も予約し直す(アプリを開かなくても、あとから決まった開始時刻や日程の変更に合わせる)
         runCatching { rescheduleGameStartNotifications(applicationContext) }
 
@@ -67,6 +71,28 @@ class AlertsCheckWorker(
         com.fukuiteams.app.widget.NextGameWidget.requestUpdate(applicationContext)
 
         return Result.success()
+    }
+
+    private suspend fun notifyBirthdays(teamEnabled: (String) -> Boolean, enabled: Boolean) {
+        if (!enabled) return
+        val now = java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Tokyo"))
+        if (now.hour < 8) return
+        val today = now.toLocalDate()
+        val last = applicationContext.notificationDataStore.data.first()[NotificationPrefsKeys.LAST_BIRTHDAY_DATE]
+        if (last == today.toString()) return
+        val all = BirthdaysRepository.fetch()
+        if (all.isEmpty()) return  // 読み込めなかったときは、次の回にもう一度
+        val todays = all.filter { it.isBirthdayOn(today) && (it.team == null || teamEnabled(it.team.name)) }
+        todays.take(3).forEachIndexed { index, p ->
+            showAlertNotification(
+                applicationContext,
+                4800 + index,
+                "今日は${p.team?.displayName ?: ""}の${p.label}選手の誕生日",
+                "${p.ageOn(today)}歳の誕生日です。おめでとうございます!",
+                "home"
+            )
+        }
+        applicationContext.notificationDataStore.edit { it[NotificationPrefsKeys.LAST_BIRTHDAY_DATE] = today.toString() }
     }
 
     private suspend fun checkAndNotify(

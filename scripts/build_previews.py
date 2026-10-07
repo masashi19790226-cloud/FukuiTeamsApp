@@ -799,6 +799,24 @@ def main():
         json.dump(previews, f, ensure_ascii=False, indent=2)
     print(f"[展望] {len(previews)}試合分を書き出しました")
 
+    # 3チームの選手の誕生日(1日1回だけ作り直す。アプリの一面と通知で使う)。
+    # 自動更新で保存されるファイルに入れるため、standings.json の "BIRTHDAYS" に入れる
+    try:
+        import birthdays
+        old_bd = load_json(STANDINGS_PATH, {}).get("BIRTHDAYS", {})
+        if old_bd.get("date") != datetime.now(JST).strftime("%Y-%m-%d") and STANDINGS:
+            ruck_photos = None
+            try:
+                ruck_photos = standings.ruck_members(fetch)
+            except Exception as e:
+                print(f"[WARN] 誕生日: 丸岡RUCKの写真の取得に失敗 {e!r}")
+            bd = birthdays.build(fetch, old_bd, ruck_photos)
+            if bd:
+                STANDINGS["BIRTHDAYS"] = bd
+                print(f"[誕生日] {len(bd['players'])}人分")
+    except Exception as e:
+        print(f"[WARN] 誕生日: 作成に失敗しました {e!r}")
+
     # 丸岡RUCK・ユナイテッドの順位表。読めなかったリーグは前回の内容を残す
     if STANDINGS:
         merged = load_json(STANDINGS_PATH, {})
