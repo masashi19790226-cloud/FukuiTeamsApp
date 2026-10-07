@@ -1388,7 +1388,7 @@
         }
       }
     },
-    "updated_at": "2026-10-07T13:32:40.386812+00:00"
+    "updated_at": "2026-10-07T14:03:20.164279+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3130,6 +3130,822 @@
         }
       ]
     },
-    "updated_at": "2026-10-07T13:32:40.386812+00:00"
+    "updated_at": "2026-10-07T14:03:20.164279+00:00"
+  },
+  "BIRTHDAYS": {
+    "date": "2026-10-07",
+    "updated_at": "2026-10-07T14:03:20.164279+00:00",
+    "players": [
+      {
+        "team": "UNITED",
+        "name": "杉本 大雅",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/5c8c4b4bd439013ad8d098916aade0fd5b4b38fa.png",
+        "birthday": "2003-01-02",
+        "_key": "united:137"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "田渡 修人",
+        "number": "73",
+        "photo": "https://www.fukuiblowinds.com/v=1790296882/files/user/common/73_Tawatari_2026-27_HP.jpg",
+        "birthday": "1990-01-06",
+        "_key": "blowinds:8571"
+      },
+      {
+        "team": "UNITED",
+        "name": "前田 稜太",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/6bd5945f6c4fb9a632eb008d3fa31d79f78a821b.png",
+        "birthday": "2004-01-22",
+        "_key": "united:143"
+      },
+      {
+        "team": "RAC",
+        "name": "渡邊 優和",
+        "number": "9",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-09-150x150.jpg",
+        "birthday": "2009-01-26",
+        "_key": "ruck:渡邊優和"
+      },
+      {
+        "team": "UNITED",
+        "name": "中島 修斗",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/05/ff09d6db60a2c0f89c88706926f7944de2c073f1.png",
+        "birthday": "2003-01-28",
+        "_key": "united:139"
+      },
+      {
+        "team": "UNITED",
+        "name": "岩島 巧",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/9a99e2c3b367e29cc074d86a157a1e0285761937.png",
+        "birthday": "2003-01-31",
+        "_key": "united:114"
+      },
+      {
+        "team": "UNITED",
+        "name": "若月 尋",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/04/9e3bc0b2291a5afe43acfb815e81dad1c5789c9f.png",
+        "birthday": "2002-02-15",
+        "_key": "united:138"
+      },
+      {
+        "team": "RAC",
+        "name": "加藤 はるな",
+        "number": "5",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-05-150x150.jpg",
+        "birthday": "2006-02-25",
+        "_key": "ruck:加藤はるな"
+      },
+      {
+        "team": "UNITED",
+        "name": "鬼京 大翔",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/c824fe1c331bacaaa8074aabff73520c814cea30.png",
+        "birthday": "2000-02-25",
+        "_key": "united:131"
+      },
+      {
+        "team": "UNITED",
+        "name": "辻岡 招真",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/05/0db10e2bd818400f239183a8caee38fe1ed76e5f.png",
+        "birthday": "2004-03-05",
+        "_key": "united:140"
+      },
+      {
+        "team": "RAC",
+        "name": "足立 紗菜",
+        "number": "11",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-11-150x150.jpg",
+        "birthday": "2008-03-13",
+        "_key": "ruck:足立紗菜"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "川島 聖那",
+        "number": "13",
+        "photo": "https://www.fukuiblowinds.com/v=1790296532/files/user/common/13_Kawashima_2026-27_HP.jpg",
+        "birthday": "2000-03-14",
+        "_key": "blowinds:51000115"
+      },
+      {
+        "team": "UNITED",
+        "name": "菅野 雅俊",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/07/47c30872696bf3c4bef41ddf96f3dde33bd8c72e.png",
+        "birthday": "2003-03-19",
+        "_key": "united:147"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "藤永 佳昭",
+        "number": "1",
+        "photo": "https://www.fukuiblowinds.com/v=1790295991/files/user/common/1_Fujinaga_2026-27_HP.jpg",
+        "birthday": "1992-04-10",
+        "_key": "blowinds:8736"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "満田 丈太郎",
+        "number": "21",
+        "photo": "https://www.fukuiblowinds.com/v=1790296812/files/user/common/21_Mitsuda_2026-27_HP.jpg",
+        "birthday": "1994-04-18",
+        "_key": "blowinds:10844"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "塚本 智裕",
+        "number": "3",
+        "photo": "https://www.fukuiblowinds.com/v=1790296089/files/user/common/3_Tsukamoto_2026-27_HP.jpg",
+        "birthday": "2003-04-20",
+        "_key": "blowinds:51000439"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "岡本 飛竜",
+        "number": "8",
+        "photo": "https://www.fukuiblowinds.com/v=1791251129/files/user/common/8_Okamoto_2026-27_HP.jpg",
+        "birthday": "1993-04-20",
+        "_key": "blowinds:8839"
+      },
+      {
+        "team": "UNITED",
+        "name": "山口 哲平",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/cd7169b9c78b8448f75c2e6ed7397e4bcd0f58bc.png",
+        "birthday": "2002-05-18",
+        "_key": "united:134"
+      },
+      {
+        "team": "RAC",
+        "name": "西端 円麻",
+        "number": "8",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-08-150x150.jpg",
+        "birthday": "2010-05-21",
+        "_key": "ruck:西端円麻"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "ヒシグバータル・オーギル",
+        "number": "10",
+        "photo": "https://www.fukuiblowinds.com/v=1790296126/files/user/common/10_Khishigbaar_2026-27_HP.jpg",
+        "birthday": "2003-05-27",
+        "_key": "blowinds:51000579"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "デヴィン・ウィリアムズ",
+        "number": "41",
+        "photo": "https://www.fukuiblowinds.com/v=1790296847/files/user/common/41_WilliamsTawatari_2026-27_HP.jpg",
+        "birthday": "1994-05-31",
+        "_key": "blowinds:51000668"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "高橋 育実",
+        "number": "93",
+        "photo": "https://www.fukuiblowinds.com/v=1790296914/files/user/common/93_Takahashi_2026-27_HP.jpg",
+        "birthday": "1998-06-10",
+        "_key": "blowinds:40142"
+      },
+      {
+        "team": "UNITED",
+        "name": "清水 雅仁",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/465112dd152644efbe3821dc61693778e850b2a8.png",
+        "birthday": "2001-06-12",
+        "_key": "united:115"
+      },
+      {
+        "team": "RAC",
+        "name": "長谷川 詩花",
+        "number": "13",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-13-150x150.jpg",
+        "birthday": "2006-06-13",
+        "_key": "ruck:長谷川詩花"
+      },
+      {
+        "team": "UNITED",
+        "name": "立山 大祐",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/3f40a3bdca97022cf658809194ddbffd64801cfc.png",
+        "birthday": "2003-06-14",
+        "_key": "united:126"
+      },
+      {
+        "team": "UNITED",
+        "name": "萩原 正太郎",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/07/e3a6e64df9404d959e6e6b175db7d5e7e69083c6.png",
+        "birthday": "2006-06-14",
+        "_key": "united:144"
+      },
+      {
+        "team": "RAC",
+        "name": "今村 結里",
+        "number": "2",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-02-150x150.jpg",
+        "birthday": "2010-06-15",
+        "_key": "ruck:今村結里"
+      },
+      {
+        "team": "UNITED",
+        "name": "井出 龍志",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/20d3a421b5852f50be599a961877726c13b375e2.png",
+        "birthday": "2002-06-22",
+        "_key": "united:128"
+      },
+      {
+        "team": "UNITED",
+        "name": "中村 晃大",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/593901478a13a1ca5bd4d77be36fbca9cb1784fe.png",
+        "birthday": "2002-06-27",
+        "_key": "united:122"
+      },
+      {
+        "team": "UNITED",
+        "name": "眞古 大輔",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/783d0baae4338920ab74786ebbf67075c5450cbd.png",
+        "birthday": "2002-07-11",
+        "_key": "united:123"
+      },
+      {
+        "team": "RAC",
+        "name": "加藤 ほのか",
+        "number": "7",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-07-150x150.jpg",
+        "birthday": "2004-07-21",
+        "_key": "ruck:加藤ほのか"
+      },
+      {
+        "team": "RAC",
+        "name": "横川 四葉",
+        "number": "4",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-04-150x150.jpg",
+        "birthday": "2007-07-22",
+        "_key": "ruck:横川四葉"
+      },
+      {
+        "team": "UNITED",
+        "name": "杉浦 秀謙",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/b71f584b42108d2130a748b25b6b5e46b9cab18a.png",
+        "birthday": "2002-07-22",
+        "_key": "united:120"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "西野 曜",
+        "number": "12",
+        "photo": "https://www.fukuiblowinds.com/v=1790296426/files/user/common/12_Nishino_2026-27_HP.jpg",
+        "birthday": "1998-07-27",
+        "_key": "blowinds:30468"
+      },
+      {
+        "team": "RAC",
+        "name": "山口 陽愛",
+        "number": "20",
+        "photo": "",
+        "birthday": "2008-07-28",
+        "_key": "ruck:山口陽愛"
+      },
+      {
+        "team": "UNITED",
+        "name": "廣岡 睦樹",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/1d9315d63eb12a772d1c001e3691f72f5cfbb5e4.png",
+        "birthday": "2001-08-16",
+        "_key": "united:87"
+      },
+      {
+        "team": "RAC",
+        "name": "平田 梨豊",
+        "number": "10",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-10-150x150.jpg",
+        "birthday": "2007-08-28",
+        "_key": "ruck:平田梨豊"
+      },
+      {
+        "team": "UNITED",
+        "name": "和泉 颯",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/8a5eaef3474d1af175d6cf3d7a26b7313747c645.png",
+        "birthday": "2003-08-30",
+        "_key": "united:125"
+      },
+      {
+        "team": "RAC",
+        "name": "荒井 一花",
+        "number": "17",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-17-150x150.jpg",
+        "birthday": "2001-09-02",
+        "_key": "ruck:荒井一花"
+      },
+      {
+        "team": "RAC",
+        "name": "小林 愛心",
+        "number": "19",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-19-150x150.jpg",
+        "birthday": "2007-09-09",
+        "_key": "ruck:小林愛心"
+      },
+      {
+        "team": "UNITED",
+        "name": "加納 大",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/81b5546a913c4b71c84450a768488c928192dfca.png",
+        "birthday": "2002-09-13",
+        "_key": "united:141"
+      },
+      {
+        "team": "UNITED",
+        "name": "北脇 健慈",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ca018230e2c1352e52715c9d36f2890b6bc619cc.png",
+        "birthday": "1991-09-15",
+        "_key": "united:88"
+      },
+      {
+        "team": "UNITED",
+        "name": "今道 恭",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/11d946ed6914e9808968591b67a2588109704dd5.png",
+        "birthday": "2003-09-19",
+        "_key": "united:130"
+      },
+      {
+        "team": "UNITED",
+        "name": "本村 比呂",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/bf1c39760ed769fe01f3eaa4989e55501b585a3d.png",
+        "birthday": "1998-10-04",
+        "_key": "united:127"
+      },
+      {
+        "team": "UNITED",
+        "name": "中山 和紀",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f93c6e38ff4bbe17fedde0d229a6d1a5a39e1256.png",
+        "birthday": "1999-10-08",
+        "_key": "united:64"
+      },
+      {
+        "team": "RAC",
+        "name": "山森 しおん",
+        "number": "6",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-06-150x150.jpg",
+        "birthday": "2002-10-19",
+        "_key": "ruck:山森しおん"
+      },
+      {
+        "team": "UNITED",
+        "name": "野村 魁",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ce138cd4d4ba4301c3a9708d1d47ae569312c10a.png",
+        "birthday": "2000-10-21",
+        "_key": "united:119"
+      },
+      {
+        "team": "RAC",
+        "name": "坪川 美咲",
+        "number": "24",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-24-150x150.jpg",
+        "birthday": "2009-10-25",
+        "_key": "ruck:坪川美咲"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "常田 耕平",
+        "number": "17",
+        "photo": "https://www.fukuiblowinds.com/v=1790296771/files/user/common/17_Tsuneta_2026-27_HP.jpg",
+        "birthday": "1999-11-06",
+        "_key": "blowinds:5100000040"
+      },
+      {
+        "team": "RAC",
+        "name": "中川 穂南",
+        "number": "22",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-22-150x150.jpg",
+        "birthday": "2008-11-07",
+        "_key": "ruck:中川穂南"
+      },
+      {
+        "team": "RAC",
+        "name": "藤江 真尋",
+        "number": "21",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-21-150x150.jpg",
+        "birthday": "2001-11-07",
+        "_key": "ruck:藤江真尋"
+      },
+      {
+        "team": "RAC",
+        "name": "小林 望月",
+        "number": "1",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-01-150x150.jpg",
+        "birthday": "2001-11-14",
+        "_key": "ruck:小林望月"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "ドゥシャン・リスティッチ",
+        "number": "14",
+        "photo": "https://www.fukuiblowinds.com/v=1790296621/files/user/common/14_Dusan_2026-27_HP.jpg",
+        "birthday": "1995-11-27",
+        "_key": "blowinds:51000494"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "内藤 英真",
+        "number": "11",
+        "photo": "https://www.fukuiblowinds.com/v=1790296327/files/user/common/11_Naito_2026-27_HP.jpg",
+        "birthday": "2004-12-01",
+        "_key": "blowinds:51000471"
+      },
+      {
+        "team": "RAC",
+        "name": "佐藤 希穂",
+        "number": "3",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-03-150x150.jpg",
+        "birthday": "1999-12-03",
+        "_key": "ruck:佐藤希穂"
+      },
+      {
+        "team": "BLOWINDS",
+        "name": "チョンディー・ブラウン ジュニア",
+        "number": "15",
+        "photo": "https://www.fukuiblowinds.com/v=1790296734/files/user/common/15_BrownJr_2026-27_HP.jpg",
+        "birthday": "1998-12-04",
+        "_key": "blowinds:51000417"
+      },
+      {
+        "team": "UNITED",
+        "name": "和田 俊星",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ee0faf4a7070b7f31ad4646547ab195413caf464.png",
+        "birthday": "2003-12-09",
+        "_key": "united:129"
+      },
+      {
+        "team": "UNITED",
+        "name": "竹葉 大樹",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/8eb5cc5474ae6449c64d7b785553bea4b7d5e00e.png",
+        "birthday": "2001-12-21",
+        "_key": "united:142"
+      },
+      {
+        "team": "RAC",
+        "name": "嶋﨑 心那",
+        "number": "16",
+        "photo": "",
+        "birthday": "2007-12-23",
+        "_key": "ruck:嶋﨑心那"
+      },
+      {
+        "team": "UNITED",
+        "name": "杉本 拓也",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f5554143ba093bc657c63bb9132d6c2d1d8d78cb.png",
+        "birthday": "1989-12-31",
+        "_key": "united:82"
+      }
+    ],
+    "cache": {
+      "blowinds:8736": {
+        "team": "BLOWINDS",
+        "name": "藤永 佳昭",
+        "number": "1",
+        "photo": "https://www.fukuiblowinds.com/v=1790295991/files/user/common/1_Fujinaga_2026-27_HP.jpg",
+        "birthday": "1992-04-10",
+        "checked": "2026-10-07"
+      },
+      "blowinds:51000439": {
+        "team": "BLOWINDS",
+        "name": "塚本 智裕",
+        "number": "3",
+        "photo": "https://www.fukuiblowinds.com/v=1790296089/files/user/common/3_Tsukamoto_2026-27_HP.jpg",
+        "birthday": "2003-04-20",
+        "checked": "2026-10-07"
+      },
+      "blowinds:8839": {
+        "team": "BLOWINDS",
+        "name": "岡本 飛竜",
+        "number": "8",
+        "photo": "https://www.fukuiblowinds.com/v=1791251129/files/user/common/8_Okamoto_2026-27_HP.jpg",
+        "birthday": "1993-04-20",
+        "checked": "2026-10-07"
+      },
+      "blowinds:51000579": {
+        "team": "BLOWINDS",
+        "name": "ヒシグバータル・オーギル",
+        "number": "10",
+        "photo": "https://www.fukuiblowinds.com/v=1790296126/files/user/common/10_Khishigbaar_2026-27_HP.jpg",
+        "birthday": "2003-05-27",
+        "checked": "2026-10-07"
+      },
+      "blowinds:51000471": {
+        "team": "BLOWINDS",
+        "name": "内藤 英真",
+        "number": "11",
+        "photo": "https://www.fukuiblowinds.com/v=1790296327/files/user/common/11_Naito_2026-27_HP.jpg",
+        "birthday": "2004-12-01",
+        "checked": "2026-10-07"
+      },
+      "blowinds:30468": {
+        "team": "BLOWINDS",
+        "name": "西野 曜",
+        "number": "12",
+        "photo": "https://www.fukuiblowinds.com/v=1790296426/files/user/common/12_Nishino_2026-27_HP.jpg",
+        "birthday": "1998-07-27",
+        "checked": "2026-10-07"
+      },
+      "blowinds:51000115": {
+        "team": "BLOWINDS",
+        "name": "川島 聖那",
+        "number": "13",
+        "photo": "https://www.fukuiblowinds.com/v=1790296532/files/user/common/13_Kawashima_2026-27_HP.jpg",
+        "birthday": "2000-03-14",
+        "checked": "2026-10-07"
+      },
+      "blowinds:51000494": {
+        "team": "BLOWINDS",
+        "name": "ドゥシャン・リスティッチ",
+        "number": "14",
+        "photo": "https://www.fukuiblowinds.com/v=1790296621/files/user/common/14_Dusan_2026-27_HP.jpg",
+        "birthday": "1995-11-27",
+        "checked": "2026-10-07"
+      },
+      "blowinds:51000417": {
+        "team": "BLOWINDS",
+        "name": "チョンディー・ブラウン ジュニア",
+        "number": "15",
+        "photo": "https://www.fukuiblowinds.com/v=1790296734/files/user/common/15_BrownJr_2026-27_HP.jpg",
+        "birthday": "1998-12-04",
+        "checked": "2026-10-07"
+      },
+      "blowinds:5100000040": {
+        "team": "BLOWINDS",
+        "name": "常田 耕平",
+        "number": "17",
+        "photo": "https://www.fukuiblowinds.com/v=1790296771/files/user/common/17_Tsuneta_2026-27_HP.jpg",
+        "birthday": "1999-11-06",
+        "checked": "2026-10-07"
+      },
+      "blowinds:10844": {
+        "team": "BLOWINDS",
+        "name": "満田 丈太郎",
+        "number": "21",
+        "photo": "https://www.fukuiblowinds.com/v=1790296812/files/user/common/21_Mitsuda_2026-27_HP.jpg",
+        "birthday": "1994-04-18",
+        "checked": "2026-10-07"
+      },
+      "blowinds:51000668": {
+        "team": "BLOWINDS",
+        "name": "デヴィン・ウィリアムズ",
+        "number": "41",
+        "photo": "https://www.fukuiblowinds.com/v=1790296847/files/user/common/41_WilliamsTawatari_2026-27_HP.jpg",
+        "birthday": "1994-05-31",
+        "checked": "2026-10-07"
+      },
+      "blowinds:8571": {
+        "team": "BLOWINDS",
+        "name": "田渡 修人",
+        "number": "73",
+        "photo": "https://www.fukuiblowinds.com/v=1790296882/files/user/common/73_Tawatari_2026-27_HP.jpg",
+        "birthday": "1990-01-06",
+        "checked": "2026-10-07"
+      },
+      "blowinds:40142": {
+        "team": "BLOWINDS",
+        "name": "高橋 育実",
+        "number": "93",
+        "photo": "https://www.fukuiblowinds.com/v=1790296914/files/user/common/93_Takahashi_2026-27_HP.jpg",
+        "birthday": "1998-06-10",
+        "checked": "2026-10-07"
+      },
+      "united:82": {
+        "team": "UNITED",
+        "name": "杉本 拓也",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f5554143ba093bc657c63bb9132d6c2d1d8d78cb.png",
+        "birthday": "1989-12-31",
+        "checked": "2026-10-07"
+      },
+      "united:125": {
+        "team": "UNITED",
+        "name": "和泉 颯",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/8a5eaef3474d1af175d6cf3d7a26b7313747c645.png",
+        "birthday": "2003-08-30",
+        "checked": "2026-10-07"
+      },
+      "united:114": {
+        "team": "UNITED",
+        "name": "岩島 巧",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/9a99e2c3b367e29cc074d86a157a1e0285761937.png",
+        "birthday": "2003-01-31",
+        "checked": "2026-10-07"
+      },
+      "united:115": {
+        "team": "UNITED",
+        "name": "清水 雅仁",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/465112dd152644efbe3821dc61693778e850b2a8.png",
+        "birthday": "2001-06-12",
+        "checked": "2026-10-07"
+      },
+      "united:64": {
+        "team": "UNITED",
+        "name": "中山 和紀",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f93c6e38ff4bbe17fedde0d229a6d1a5a39e1256.png",
+        "birthday": "1999-10-08",
+        "checked": "2026-10-07"
+      },
+      "united:123": {
+        "team": "UNITED",
+        "name": "眞古 大輔",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/783d0baae4338920ab74786ebbf67075c5450cbd.png",
+        "birthday": "2002-07-11",
+        "checked": "2026-10-07"
+      },
+      "united:128": {
+        "team": "UNITED",
+        "name": "井出 龍志",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/20d3a421b5852f50be599a961877726c13b375e2.png",
+        "birthday": "2002-06-22",
+        "checked": "2026-10-07"
+      },
+      "united:139": {
+        "team": "UNITED",
+        "name": "中島 修斗",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/05/ff09d6db60a2c0f89c88706926f7944de2c073f1.png",
+        "birthday": "2003-01-28",
+        "checked": "2026-10-07"
+      },
+      "united:140": {
+        "team": "UNITED",
+        "name": "辻岡 招真",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/05/0db10e2bd818400f239183a8caee38fe1ed76e5f.png",
+        "birthday": "2004-03-05",
+        "checked": "2026-10-07"
+      },
+      "united:142": {
+        "team": "UNITED",
+        "name": "竹葉 大樹",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/8eb5cc5474ae6449c64d7b785553bea4b7d5e00e.png",
+        "birthday": "2001-12-21",
+        "checked": "2026-10-07"
+      },
+      "united:143": {
+        "team": "UNITED",
+        "name": "前田 稜太",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/6bd5945f6c4fb9a632eb008d3fa31d79f78a821b.png",
+        "birthday": "2004-01-22",
+        "checked": "2026-10-07"
+      },
+      "united:147": {
+        "team": "UNITED",
+        "name": "菅野 雅俊",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/07/47c30872696bf3c4bef41ddf96f3dde33bd8c72e.png",
+        "birthday": "2003-03-19",
+        "checked": "2026-10-07"
+      },
+      "united:87": {
+        "team": "UNITED",
+        "name": "廣岡 睦樹",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/1d9315d63eb12a772d1c001e3691f72f5cfbb5e4.png",
+        "birthday": "2001-08-16",
+        "checked": "2026-10-07"
+      },
+      "united:126": {
+        "team": "UNITED",
+        "name": "立山 大祐",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/3f40a3bdca97022cf658809194ddbffd64801cfc.png",
+        "birthday": "2003-06-14",
+        "checked": "2026-10-07"
+      },
+      "united:134": {
+        "team": "UNITED",
+        "name": "山口 哲平",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/cd7169b9c78b8448f75c2e6ed7397e4bcd0f58bc.png",
+        "birthday": "2002-05-18",
+        "checked": "2026-10-07"
+      },
+      "united:122": {
+        "team": "UNITED",
+        "name": "中村 晃大",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/593901478a13a1ca5bd4d77be36fbca9cb1784fe.png",
+        "birthday": "2002-06-27",
+        "checked": "2026-10-07"
+      },
+      "united:130": {
+        "team": "UNITED",
+        "name": "今道 恭",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/11d946ed6914e9808968591b67a2588109704dd5.png",
+        "birthday": "2003-09-19",
+        "checked": "2026-10-07"
+      },
+      "united:131": {
+        "team": "UNITED",
+        "name": "鬼京 大翔",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/c824fe1c331bacaaa8074aabff73520c814cea30.png",
+        "birthday": "2000-02-25",
+        "checked": "2026-10-07"
+      },
+      "united:138": {
+        "team": "UNITED",
+        "name": "若月 尋",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/04/9e3bc0b2291a5afe43acfb815e81dad1c5789c9f.png",
+        "birthday": "2002-02-15",
+        "checked": "2026-10-07"
+      },
+      "united:144": {
+        "team": "UNITED",
+        "name": "萩原 正太郎",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/07/e3a6e64df9404d959e6e6b175db7d5e7e69083c6.png",
+        "birthday": "2006-06-14",
+        "checked": "2026-10-07"
+      },
+      "united:119": {
+        "team": "UNITED",
+        "name": "野村 魁",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ce138cd4d4ba4301c3a9708d1d47ae569312c10a.png",
+        "birthday": "2000-10-21",
+        "checked": "2026-10-07"
+      },
+      "united:127": {
+        "team": "UNITED",
+        "name": "本村 比呂",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/bf1c39760ed769fe01f3eaa4989e55501b585a3d.png",
+        "birthday": "1998-10-04",
+        "checked": "2026-10-07"
+      },
+      "united:88": {
+        "team": "UNITED",
+        "name": "北脇 健慈",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ca018230e2c1352e52715c9d36f2890b6bc619cc.png",
+        "birthday": "1991-09-15",
+        "checked": "2026-10-07"
+      },
+      "united:120": {
+        "team": "UNITED",
+        "name": "杉浦 秀謙",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/b71f584b42108d2130a748b25b6b5e46b9cab18a.png",
+        "birthday": "2002-07-22",
+        "checked": "2026-10-07"
+      },
+      "united:129": {
+        "team": "UNITED",
+        "name": "和田 俊星",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ee0faf4a7070b7f31ad4646547ab195413caf464.png",
+        "birthday": "2003-12-09",
+        "checked": "2026-10-07"
+      },
+      "united:137": {
+        "team": "UNITED",
+        "name": "杉本 大雅",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/5c8c4b4bd439013ad8d098916aade0fd5b4b38fa.png",
+        "birthday": "2003-01-02",
+        "checked": "2026-10-07"
+      },
+      "united:141": {
+        "team": "UNITED",
+        "name": "加納 大",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/81b5546a913c4b71c84450a768488c928192dfca.png",
+        "birthday": "2002-09-13",
+        "checked": "2026-10-07"
+      }
+    }
   }
 }
