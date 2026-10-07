@@ -115,10 +115,6 @@ fun GameShareCard(game: Game, result: RemoteGameResult?, outcome: GameOutcome?) 
             ShareButton("Instagram", Modifier.weight(1f)) { shareToInstagram(context, text, photos.firstOrNull()) }
             ShareButton("その他", Modifier.weight(0.8f)) { shareToOthers(context, text, photos.firstOrNull()) }
         }
-        // 試合結果(自動取得)がある試合は、スポーツ新聞風の「号外」画像も作れる
-        if (result != null && outcome != null) {
-            ExtraEditionButton(game, result, outcome, Modifier.fillMaxWidth())
-        }
     }
 }
 

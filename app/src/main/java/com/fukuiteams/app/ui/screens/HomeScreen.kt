@@ -29,7 +29,6 @@ import com.fukuiteams.app.data.RemoteGameResult
 import com.fukuiteams.app.data.GameResultsRepository
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.components.resultHeadline
-import com.fukuiteams.app.ui.components.ExtraEditionButton
 import com.fukuiteams.app.ui.components.RemoteThumbnail
 import com.fukuiteams.app.data.BirthdaysRepository
 import com.fukuiteams.app.data.PlayerBirthday
@@ -796,8 +795,6 @@ private fun LatestResultHero(
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
-        // この試合の「号外」画像を作って、LINE・X などへ送れる
-        ExtraEditionButton(game, result, outcome, Modifier.fillMaxWidth().padding(top = 4.dp))
         DoubleRule(modifier = Modifier.padding(top = 6.dp))
     }
 }
