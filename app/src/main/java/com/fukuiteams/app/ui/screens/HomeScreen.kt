@@ -15,6 +15,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.fukuiteams.app.ui.components.photoCaption
 import com.fukuiteams.app.ui.components.NewspaperPhoto
 import com.fukuiteams.app.data.recordedWatchMethod
+import com.fukuiteams.app.data.WatchMethod
 import com.fukuiteams.app.data.gameLogDataStore
 import com.fukuiteams.app.data.GamePhotos
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,11 @@ import com.fukuiteams.app.ui.components.resultHeadline
 import com.fukuiteams.app.ui.components.RemoteThumbnail
 import com.fukuiteams.app.data.BirthdaysRepository
 import com.fukuiteams.app.data.PlayerBirthday
+import com.fukuiteams.app.data.FeatureStory
+import com.fukuiteams.app.data.buildFeatureStories
+import com.fukuiteams.app.data.isFreshResult
+import com.fukuiteams.app.data.TeamPlayers
+import com.fukuiteams.app.data.LeagueStandings
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.ThinRule
 import com.fukuiteams.app.ui.components.Headline
@@ -89,6 +95,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -159,6 +166,11 @@ fun HomeScreen(
     var forecasts by remember { mutableStateOf<Map<String, GameForecast>>(emptyMap()) }
     // 3チームの選手の誕生日(一面の「誕生日」欄)
     var birthdays by remember { mutableStateOf<List<PlayerBirthday>>(emptyList()) }
+    // 一面の「特集」(試合が無い日の読み物)に使う、選手の成績と順位
+    var players by remember { mutableStateOf<Map<String, TeamPlayers>>(emptyMap()) }
+    var standings by remember { mutableStateOf<Map<String, LeagueStandings>>(emptyMap()) }
+    // 観戦の記録(特集「あなたの観戦記録」に使う)
+    val logPrefs by LocalContext.current.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
 
     // アプリのすべての情報(日程・結果・招待・ニュース・展望・選手・順位・試合情報ページなど)を読み直す。
     // 選手や順位はこの画面では使わないが、ほかのタブに切り替えたときに新しい内容を出せるよう一緒に読み直す
@@ -170,6 +182,8 @@ fun HomeScreen(
         previews = d.previews
         dataStatus = d.status
         birthdays = BirthdaysRepository.fetch()
+        players = d.players
+        standings = d.standings
         // 今日の試合の天気
         weathers = GamesRepository.games.filter { it.isToday() }
             .mapNotNull { g -> WeatherRepository.forGame(g)?.let { g.id to it } }
@@ -273,8 +287,42 @@ fun HomeScreen(
                 val latest = GamesRepository.games
                     .filter { (selectedTeam == null || it.team == selectedTeam) && autoResults.containsKey(it.id) }
                     .maxByOrNull { it.sortKey }
-                if (latest != null) {
+                if (latest != null && isFreshResult(latest)) {
+                    // 試合の当日・翌日は、その結果を「速報」として大きく出す
                     LatestResultHero(latest, autoResults.getValue(latest.id), autoResults, onClick = { onOpenGame(latest.id) })
+                } else {
+                    // 試合の無い日は、日替わりの「特集」(注目選手・数字で見る・決戦まで・順位・ニュースなど)を一面トップに出し、
+                    // 前回の結果は1行だけにする
+                    val teams = selectedTeam?.let { listOf(it) } ?: Team.values().toList()
+                    val onSiteIds = remember(logPrefs, GamesRepository.games) {
+                        GamesRepository.games.filter { recordedWatchMethod(it.id, logPrefs) == WatchMethod.ON_SITE }.map { it.id }.toSet()
+                    }
+                    val stories = remember(teams, autoResults, previews, players, standings, newsResult, invitationsResult, GamesRepository.games, birthdays, onSiteIds) {
+                        buildFeatureStories(
+                            teams = teams,
+                            games = GamesRepository.games,
+                            results = autoResults,
+                            previews = previews,
+                            players = players,
+                            standings = standings,
+                            news = (newsResult as? AlertsResult.Success)?.items.orEmpty(),
+                            invites = (invitationsResult as? AlertsResult.Success)?.items.orEmpty(),
+                            birthdays = birthdays,
+                            onSiteIds = onSiteIds
+                        )
+                    }
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        if (stories.isNotEmpty()) {
+                            FeatureHero(
+                                stories = stories,
+                                onOpenGame = onOpenGame,
+                                onOpenTopics = { onOpenRadar(selectedTeam) }
+                            )
+                        }
+                        if (latest != null) {
+                            PreviousResultLine(latest, autoResults.getValue(latest.id), onClick = { onOpenGame(latest.id) })
+                        }
+                    }
                 }
             }
 
@@ -1198,5 +1246,107 @@ private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
             style = MaterialTheme.typography.labelSmall,
             color = InkSoft
         )
+    }
+}
+
+/**
+ * 一面トップの「特集」。日替わりの記事を1本大きく出し、「ほかの記事」で次の記事に切り替えられる。
+ * 記事を押すと、その試合・ページ・トピックを開く。
+ */
+@Composable
+private fun FeatureHero(
+    stories: List<FeatureStory>,
+    onOpenGame: (String) -> Unit,
+    onOpenTopics: () -> Unit
+) {
+    val context = LocalContext.current
+    var index by rememberSaveable { mutableStateOf(0) }
+    val story = stories[index.mod(stories.size)]
+    val clickable = story.gameId != null || story.url != null || story.openInvites
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(
+                if (clickable) Modifier.clickable {
+                    when {
+                        story.gameId != null -> onOpenGame(story.gameId)
+                        story.url != null -> openUrl(context, story.url)
+                        story.openInvites -> onOpenTopics()
+                    }
+                } else Modifier
+            ),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            SectionLabel("特集・${story.kicker}", red = true)
+            story.team?.let {
+                Text(it.displayName, style = MaterialTheme.typography.labelMedium, color = it.color, maxLines = 1)
+            }
+        }
+        Headline(story.headline, fontSize = 24)
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
+            if (story.photo.isNotBlank()) {
+                RemoteThumbnail(story.photo, width = 84.dp, height = 105.dp, alignTop = true, zoomCaption = story.headline)
+            } else if (story.bigNumber != null) {
+                Column(
+                    modifier = Modifier.border(2.dp, Ink).background(Paper).padding(horizontal = 10.dp, vertical = 6.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Headline(story.bigNumber, fontSize = 34, color = NewsRed)
+                    story.bigUnit?.let { Text(it, style = MaterialTheme.typography.labelMedium, color = Ink) }
+                }
+            }
+            Text(story.body, style = MaterialTheme.typography.bodyMedium, color = Ink, modifier = Modifier.weight(1f))
+        }
+        if (stories.size > 1) {
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "${index.mod(stories.size) + 1}/${stories.size}・日替わり",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = InkSoft,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    "ほかの記事 ›",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Accent,
+                    modifier = Modifier
+                        .clickable { index += 1 }
+                        .padding(horizontal = 8.dp, vertical = 6.dp)
+                )
+            }
+        }
+        DoubleRule(modifier = Modifier.padding(top = 2.dp))
+    }
+}
+
+/** 試合の無い日に出す「前回の結果」の1行。押すとその試合を開く。 */
+@Composable
+private fun PreviousResultLine(game: Game, result: RemoteGameResult, onClick: () -> Unit) {
+    val mark = when {
+        result.myScore > result.opponentScore -> "○"
+        result.myScore < result.opponentScore -> "●"
+        else -> "△"
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, LineGray)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text("前回の結果", style = MaterialTheme.typography.labelMedium, color = InkSoft)
+        Text(
+            "${game.team.displayName} ${game.dateLabel.split("/").drop(1).joinToString("/")}(${game.dayOfWeek}) ${game.opponent}戦 $mark ${result.myScore}-${result.opponentScore}",
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Bold,
+            color = if (mark == "○") NewsRed else Ink,
+            modifier = Modifier.weight(1f),
+            maxLines = 2
+        )
+        Text("›", style = MaterialTheme.typography.titleMedium, color = InkSoft)
     }
 }
