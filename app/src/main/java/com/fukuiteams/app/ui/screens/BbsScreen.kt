@@ -159,6 +159,17 @@ private sealed class TimelineEntry(val key: String) {
     object ReadDivider : TimelineEntry("divider")
 }
 
+/**
+ * ほかの画面から掲示板タブを開くときの頼みごと(一面の特集「掲示板の話題」・メニューの「掲示板の設定」)。
+ * 掲示板タブが開いたときに一度だけ読み取り、読み取ったら消す。
+ */
+object BbsScreenRequest {
+    /** この番号の投稿の詳細を開く */
+    var openPostNo by mutableStateOf<Int?>(null)
+    /** 設定を開く */
+    var openSettings by mutableStateOf(false)
+}
+
 private val JST: ZoneId = ZoneId.of("Asia/Tokyo")
 private val HighlightColor = Color(0xFFFDE2C4)
 private const val AUTO_REFRESH_MILLIS = 5 * 60 * 1000L
@@ -251,6 +262,19 @@ fun BbsScreen() {
         overlays.add(o)
     }
 
+    // 一面の特集・メニューから「この投稿を開く」「設定を開く」と頼まれていれば開く
+    val requestedPostNo = BbsScreenRequest.openPostNo
+    val requestedSettings = BbsScreenRequest.openSettings
+    LaunchedEffect(requestedPostNo, requestedSettings) {
+        if (requestedSettings) {
+            BbsScreenRequest.openSettings = false
+            openOverlay(BbsOverlay.Settings)
+        } else if (requestedPostNo != null) {
+            BbsScreenRequest.openPostNo = null
+            openOverlay(BbsOverlay.Detail(requestedPostNo))
+        }
+    }
+
     Scaffold(
         topBar = {
             MastheadTopBar(
@@ -305,7 +329,7 @@ fun BbsScreen() {
                                 HorizontalDivider()
                             }
                             DropdownMenuItem(
-                                text = { Text("設定(文字サイズ・自動更新・NG)") },
+                                text = { Text("設定(文字サイズ・自動更新・NG・キーワード通知)") },
                                 onClick = {
                                     menuOpen = false
                                     openOverlay(BbsOverlay.Settings)

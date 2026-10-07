@@ -42,7 +42,9 @@ data class BbsSettings(
     val lastReadNo: Int = 0,
     /** キーワード通知:オンのとき、登録した言葉を含む新しい投稿をスマホに通知する。 */
     val notifyEnabled: Boolean = false,
-    val notifyWords: List<String> = emptyList()
+    val notifyWords: List<String> = emptyList(),
+    /** 一面の特集に「掲示板の話題」(書き込みの多さ・よく出た言葉・反応の多い投稿)を出す。 */
+    val featureEnabled: Boolean = true
 )
 
 object BbsPrefs {
@@ -62,6 +64,7 @@ object BbsPrefs {
     private val KEY_NOTIFY_WORDS = stringSetPreferencesKey("notify_words")
     // キーワード通知で、どの投稿まで確認したか(0 は「まだ確認していない」)
     private val KEY_NOTIFIED_NO = intPreferencesKey("notified_no")
+    private val KEY_FEATURE_ON = booleanPreferencesKey("feature_enabled")
 
     /** キーワード通知の言葉の候補(設定画面で押すと追加できる) */
     val SUGGESTED_NOTIFY_WORDS = listOf("チケット", "譲", "招待", "余って")
@@ -80,7 +83,8 @@ object BbsPrefs {
             }.toMap(),
             lastReadNo = p[KEY_LAST_READ] ?: 0,
             notifyEnabled = p[KEY_NOTIFY_ON] ?: false,
-            notifyWords = (p[KEY_NOTIFY_WORDS] ?: emptySet()).filter { it.isNotBlank() }.sorted()
+            notifyWords = (p[KEY_NOTIFY_WORDS] ?: emptySet()).filter { it.isNotBlank() }.sorted(),
+            featureEnabled = p[KEY_FEATURE_ON] ?: true
         )
     }
 
@@ -148,6 +152,11 @@ object BbsPrefs {
 
     suspend fun removeNotifyWord(context: Context, word: String) {
         context.bbsDataStore.edit { it[KEY_NOTIFY_WORDS] = (it[KEY_NOTIFY_WORDS] ?: emptySet()) - word }
+    }
+
+    /** 一面の特集に「掲示板の話題」を出すか。 */
+    suspend fun setFeatureEnabled(context: Context, on: Boolean) {
+        context.bbsDataStore.edit { it[KEY_FEATURE_ON] = on }
     }
 
     /** キーワード通知で、どの投稿まで確認したか(0 は未確認)。 */

@@ -23,6 +23,7 @@ import com.fukuiteams.app.ui.screens.HowToUseScreen
 import com.fukuiteams.app.ui.screens.PlayersScreen
 import com.fukuiteams.app.ui.screens.RadarScreen
 import com.fukuiteams.app.ui.screens.BbsScreen
+import com.fukuiteams.app.ui.screens.BbsScreenRequest
 
 object Routes {
     const val HOME = "home"
@@ -79,7 +80,11 @@ fun AppNavHost(initialRoute: String? = null) {
                     HomeScreen(
                         onOpenGame = { gameId -> navController.navigate("game_detail/$gameId") },
                         onOpenNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
-                        onOpenRadar = { team -> navController.navigate(Routes.radarAll(team)) }
+                        onOpenRadar = { team -> navController.navigate(Routes.radarAll(team)) },
+                        onOpenBbs = { no ->
+                            BbsScreenRequest.openPostNo = no
+                            navigateTab(Routes.BBS)
+                        }
                     )
                 }
                 composable(Routes.GAME_DETAIL) {
@@ -123,7 +128,11 @@ fun AppNavHost(initialRoute: String? = null) {
                 composable(Routes.NOTIFICATIONS) {
                     NotificationsScreen(
                         onOpenChangelog = { navController.navigate(Routes.CHANGELOG) },
-                        onOpenHowToUse = { navController.navigate(Routes.HOW_TO_USE) }
+                        onOpenHowToUse = { navController.navigate(Routes.HOW_TO_USE) },
+                        onOpenBbsSettings = {
+                            BbsScreenRequest.openSettings = true
+                            navigateTab(Routes.BBS)
+                        }
                     )
                 }
                 composable(Routes.CHANGELOG) {

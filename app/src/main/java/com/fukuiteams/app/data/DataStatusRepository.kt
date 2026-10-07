@@ -19,7 +19,9 @@ private const val STATUS_JSON_URL =
 data class DataStatus(
     val updatedAt: java.time.Instant?,
     /** 失敗した処理の名前(日本語) */
-    val failedSteps: List<String>
+    val failedSteps: List<String>,
+    /** すべての処理(日本語の名前 → 成功したか)。メニューの「データの更新状況」で一覧にする */
+    val steps: List<Pair<String, Boolean>> = emptyList()
 )
 
 private val STEP_LABELS = mapOf(
@@ -60,11 +62,13 @@ object DataStatusRepository {
             }
             val steps = o.optJSONObject("steps")
             val failed = mutableListOf<String>()
+            val all = mutableListOf<Pair<String, Boolean>>()
             steps?.keys()?.forEach { key ->
                 val v = steps.optString(key)
                 if (v.isNotBlank() && v != "success") failed.add(STEP_LABELS[key] ?: key)
+                if (v.isNotBlank()) all.add((STEP_LABELS[key] ?: key) to (v == "success"))
             }
-            DataStatus(updated, failed).also {
+            DataStatus(updated, failed, all).also {
                 latest = it
                 lastFetchedAtMillis = System.currentTimeMillis()
             }

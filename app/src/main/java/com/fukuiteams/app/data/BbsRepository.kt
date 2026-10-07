@@ -195,6 +195,23 @@ object BbsRepository {
         return found.distinctBy { it.no }
     }
 
+    /**
+     * 一面の特集「掲示板の話題」用に、最近の投稿を画面の表示とは別に読む。
+     * 1ページ目から順に読み、since より古い投稿が出てきたら(または maxPages まで読んだら)やめる。
+     * 画面に出している投稿・読み込み中の表示などには影響しない。読めなければ例外。
+     */
+    suspend fun fetchRecentForFeature(since: java.time.LocalDateTime, maxPages: Int = 8): List<BbsPost> {
+        val found = mutableListOf<BbsPost>()
+        for (p in 1..maxPages) {
+            if (p > 1) delay(300)
+            val page = withContext(Dispatchers.IO) { fetchPage(pageUrl(p)) }
+            if (page.posts.isEmpty()) break
+            found += page.posts
+            if (page.posts.any { it.localDateTime?.isBefore(since) == true }) break
+        }
+        return found.distinctBy { it.no }
+    }
+
     private fun pageUrl(page: Int) = if (page <= 1) BASE_URL else BASE_URL + "?page=$page"
 
     private fun merge(found: List<BbsPost>) {

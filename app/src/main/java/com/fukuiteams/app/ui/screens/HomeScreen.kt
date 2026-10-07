@@ -35,6 +35,10 @@ import com.fukuiteams.app.data.BirthdaysRepository
 import com.fukuiteams.app.data.PlayerBirthday
 import com.fukuiteams.app.data.FeatureStory
 import com.fukuiteams.app.data.buildFeatureStories
+import com.fukuiteams.app.data.BbsBuzz
+import com.fukuiteams.app.data.BbsBuzzRepository
+import com.fukuiteams.app.data.BbsPrefs
+import com.fukuiteams.app.data.BbsSettings
 import com.fukuiteams.app.data.isFreshResult
 import com.fukuiteams.app.data.TeamPlayers
 import com.fukuiteams.app.data.LeagueStandings
@@ -149,7 +153,9 @@ fun HomeScreen(
     onOpenGame: (String) -> Unit,
     onOpenNotifications: () -> Unit,
     // 「ニュースをもっと見る」:一面で選んでいるチーム(null = すべて)でトピックを開く
-    onOpenRadar: (Team?) -> Unit = {}
+    onOpenRadar: (Team?) -> Unit = {},
+    // 特集「掲示板の話題」を押したとき:掲示板タブを開く(投稿の番号があればその投稿を開く)
+    onOpenBbs: (Int?) -> Unit = {}
 ) {
     // 選んでいるチーム(null = すべて)。ほかのタブと共通なので、タブを切り替えても変わらない
     val selectedTeam = TeamSelection.current
@@ -171,6 +177,9 @@ fun HomeScreen(
     var standings by remember { mutableStateOf<Map<String, LeagueStandings>>(emptyMap()) }
     // 観戦の記録(特集「あなたの観戦記録」に使う)
     val logPrefs by LocalContext.current.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+    // 特集「掲示板の話題」(メニューでオフにできる)
+    var bbsBuzz by remember { mutableStateOf<BbsBuzz?>(null) }
+    val bbsSettings by remember { BbsPrefs.flow(appContext) }.collectAsState<BbsSettings, BbsSettings?>(initial = null)
 
     // アプリのすべての情報(日程・結果・招待・ニュース・展望・選手・順位・試合情報ページなど)を読み直す。
     // 選手や順位はこの画面では使わないが、ほかのタブに切り替えたときに新しい内容を出せるよう一緒に読み直す
@@ -198,6 +207,13 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) { refreshAll() }
+
+    // 掲示板の話題は、ほかの情報の読み込みを待たせないよう別に数える(30分以内に数えた分があればそれを使う)。
+    // 選手の名字は「よく出た言葉」に選手名を拾うため。メニューでオフにしたときは数えない
+    val bbsFeatureOn = bbsSettings?.featureEnabled
+    LaunchedEffect(players, bbsFeatureOn) {
+        if (bbsFeatureOn == true) bbsBuzz = BbsBuzzRepository.fetch(appContext, blowindsSurnames(players))
+    }
 
     if (pullToRefreshState.isRefreshing) {
         LaunchedEffect(true) {
@@ -297,7 +313,8 @@ fun HomeScreen(
                     val onSiteIds = remember(logPrefs, GamesRepository.games) {
                         GamesRepository.games.filter { recordedWatchMethod(it.id, logPrefs) == WatchMethod.ON_SITE }.map { it.id }.toSet()
                     }
-                    val stories = remember(teams, autoResults, previews, players, standings, newsResult, invitationsResult, GamesRepository.games, birthdays, onSiteIds) {
+                    val buzzForFeature = bbsBuzz.takeIf { bbsSettings?.featureEnabled != false }
+                    val stories = remember(teams, autoResults, previews, players, standings, newsResult, invitationsResult, GamesRepository.games, birthdays, onSiteIds, buzzForFeature) {
                         buildFeatureStories(
                             teams = teams,
                             games = GamesRepository.games,
@@ -308,7 +325,8 @@ fun HomeScreen(
                             news = (newsResult as? AlertsResult.Success)?.items.orEmpty(),
                             invites = (invitationsResult as? AlertsResult.Success)?.items.orEmpty(),
                             birthdays = birthdays,
-                            onSiteIds = onSiteIds
+                            onSiteIds = onSiteIds,
+                            bbsBuzz = buzzForFeature
                         )
                     }
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -316,7 +334,8 @@ fun HomeScreen(
                             FeatureHero(
                                 stories = stories,
                                 onOpenGame = onOpenGame,
-                                onOpenTopics = { onOpenRadar(selectedTeam) }
+                                onOpenTopics = { onOpenRadar(selectedTeam) },
+                                onOpenBbs = onOpenBbs
                             )
                         }
                         if (latest != null) {
@@ -1257,12 +1276,13 @@ private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
 private fun FeatureHero(
     stories: List<FeatureStory>,
     onOpenGame: (String) -> Unit,
-    onOpenTopics: () -> Unit
+    onOpenTopics: () -> Unit,
+    onOpenBbs: (Int?) -> Unit
 ) {
     val context = LocalContext.current
     var index by rememberSaveable { mutableStateOf(0) }
     val story = stories[index.mod(stories.size)]
-    val clickable = story.gameId != null || story.url != null || story.openInvites
+    val clickable = story.gameId != null || story.url != null || story.openInvites || story.openBbs
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -1272,6 +1292,7 @@ private fun FeatureHero(
                         story.gameId != null -> onOpenGame(story.gameId)
                         story.url != null -> openUrl(context, story.url)
                         story.openInvites -> onOpenTopics()
+                        story.openBbs -> onOpenBbs(story.bbsPostNo)
                     }
                 } else Modifier
             ),
@@ -1320,6 +1341,20 @@ private fun FeatureHero(
         DoubleRule(modifier = Modifier.padding(top = 2.dp))
     }
 }
+
+/**
+ * ブローウィンズの選手の名字(特集「掲示板の話題」で、よく出た言葉に選手名を拾うため)。
+ * 「藤永 佳昭」→「藤永」、「ヒシグバータル・オーギル」→「ヒシグバータル」「オーギル」
+ */
+private fun blowindsSurnames(players: Map<String, TeamPlayers>): List<String> =
+    players[Team.BLOWINDS.name]?.players.orEmpty().flatMap { p ->
+        val name = p.name.trim()
+        when {
+            name.contains(' ') || name.contains('　') -> listOf(name.split(' ', '　').first())
+            name.contains('・') -> name.split('・')
+            else -> listOf(name)
+        }
+    }.map { it.trim() }.filter { it.length >= 2 }.distinct()
 
 /** 試合の無い日に出す「前回の結果」の1行。押すとその試合を開く。 */
 @Composable

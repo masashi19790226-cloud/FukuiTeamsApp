@@ -8,6 +8,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import com.fukuiteams.app.data.appVersionName
 import com.fukuiteams.app.data.APP_AUTHOR
+import com.fukuiteams.app.data.AppRelease
+import com.fukuiteams.app.data.AppReleaseRepository
+import com.fukuiteams.app.data.BbsPrefs
+import com.fukuiteams.app.data.BbsSettings
+import com.fukuiteams.app.data.DataStatus
+import com.fukuiteams.app.data.DataStatusRepository
+import com.fukuiteams.app.data.RELEASES_PAGE_URL
+import com.fukuiteams.app.notifications.scheduleBbsKeywordCheck
 import com.fukuiteams.app.ui.theme.Ivory
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
@@ -80,7 +88,9 @@ private val kindDefs = listOf(
 @Composable
 fun NotificationsScreen(
     onOpenChangelog: () -> Unit = {},
-    onOpenHowToUse: () -> Unit = {}
+    onOpenHowToUse: () -> Unit = {},
+    // 掲示板タブを開いて、掲示板の設定(キーワード通知の言葉・NGなど)を開く
+    onOpenBbsSettings: () -> Unit = {}
 ) {
     // ON/OFFは端末に保存され、アプリを閉じても消えない(DataStore)。
     val context = LocalContext.current
@@ -106,6 +116,19 @@ fun NotificationsScreen(
         }
     }
 
+    // 掲示板の設定(キーワード通知・一面の特集)
+    val bbsSettings by remember { BbsPrefs.flow(context) }.collectAsState<BbsSettings, BbsSettings?>(initial = null)
+
+    // データの更新状況(GitHubの自動更新)と、配布ページの最新版
+    var dataStatus by remember { mutableStateOf<DataStatus?>(DataStatusRepository.latest) }
+    var statusChecked by remember { mutableStateOf(false) }
+    var latestRelease by remember { mutableStateOf<AppRelease?>(null) }
+    LaunchedEffect(Unit) {
+        dataStatus = DataStatusRepository.fetch() ?: dataStatus
+        statusChecked = true
+        latestRelease = AppReleaseRepository.fetchLatest()
+    }
+
     // 画面のスクロール位置(右下の「一番上へ」「一番下へ」ボタンで使う)
     val scrollState = rememberScrollState()
 
@@ -125,11 +148,12 @@ fun NotificationsScreen(
                 .padding(bottom = ScrollJumpBottomPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // 下のメニューの「メニュー」画面。上から 通知の設定 → 公式サイト → アプリの使い方 → 更新履歴
+            // 下のメニューの「メニュー」画面。上から 通知の設定 → 掲示板 → 公式サイト → 表示の大きさ → 使い方
+            // → データの更新状況 → このアプリについて(更新履歴・最新版の入手)
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Headline("通知の設定", fontSize = 22)
                 Text(
-                    "チームごと・内容ごとに、スマホへの通知(号外)を受け取るか選べます。",
+                    "チームごと・内容ごとに、スマホへの通知を受け取るか選べます。掲示板のキーワード通知は、下の「掲示板」で設定します。",
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
@@ -236,6 +260,49 @@ fun NotificationsScreen(
                 }
             }
 
+            // 掲示板(キーワード通知・一面の特集)。言葉の追加やNGは掲示板タブの設定で行う
+            bbsSettings?.let { bs ->
+                Column {
+                    SectionLabel("掲示板", modifier = Modifier.padding(bottom = 6.dp))
+                    Card(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp),
+                        colors = CardDefaults.cardColors(containerColor = Paper),
+                        border = BorderStroke(1.dp, Ink)
+                    ) {
+                        Column {
+                            MenuSwitchRow(
+                                title = "キーワード通知",
+                                sub = when {
+                                    bs.notifyWords.isEmpty() -> "言葉が登録されていません(下の「掲示板の設定」で追加)"
+                                    else -> "言葉:" + bs.notifyWords.joinToString("・") + "(約15分おきに確認)"
+                                },
+                                subWarn = bs.notifyEnabled && bs.notifyWords.isEmpty(),
+                                checked = bs.notifyEnabled,
+                                onChange = { on ->
+                                    scope.launch {
+                                        BbsPrefs.setNotifyEnabled(context, on)
+                                        scheduleBbsKeywordCheck(context, on)
+                                    }
+                                }
+                            )
+                            Divider(color = LineGray)
+                            MenuSwitchRow(
+                                title = "一面の特集に掲示板の話題を出す",
+                                sub = "書き込みが多い日に、件数・よく出た言葉・反応が多かった投稿を一面の特集に出します",
+                                checked = bs.featureEnabled,
+                                onChange = { on -> scope.launch { BbsPrefs.setFeatureEnabled(context, on) } }
+                            )
+                        }
+                    }
+                    MenuLinkRow(
+                        title = "掲示板の設定を開く",
+                        sub = "通知する言葉の追加・NGワード・文字サイズなど",
+                        modifier = Modifier.padding(top = 6.dp),
+                        onClick = onOpenBbsSettings
+                    )
+                }
+            }
+
             // 3チームの公式サイト(一面から移した)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SectionLabel("公式サイト")
@@ -278,9 +345,15 @@ fun NotificationsScreen(
                 )
             }
 
+            // データの更新状況(GitHubの自動更新が最後に動いた時刻と、処理ごとの成否)
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("データの更新状況")
+                DataStatusBlock(dataStatus, statusChecked)
+            }
+
             // アプリの版と更新履歴への入口
-            Column {
-                SectionLabel("このアプリについて", modifier = Modifier.padding(bottom = 6.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("このアプリについて")
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -298,6 +371,118 @@ fun NotificationsScreen(
                     }
                     Text("›", style = MaterialTheme.typography.titleLarge, color = Ink)
                 }
+                // 配布ページ(GitHub Releases)の最新版。いま入っている版より新しければ知らせる
+                val installed = appVersionName(context)
+                val release = latestRelease
+                val newer = release != null && AppReleaseRepository.compareVersions(release.version, installed) > 0
+                MenuLinkRow(
+                    title = if (newer) "新しい版があります(v${release!!.version})" else "最新版の入手(配布ページ)",
+                    sub = when {
+                        release == null -> "配布ページを開きます。人に渡すときもこのページを教えてください"
+                        newer -> "配布ページを開いて、上書きでインストールしてください(データは消えません)"
+                        else -> "配布中の最新版:v${release.version}(いまの版はこれと同じか新しい版です)"
+                    },
+                    onClick = {
+                        runCatching {
+                            context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(RELEASES_PAGE_URL)))
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
+/** メニューの枠の中の、スイッチ付きの1行(説明付き)。 */
+@Composable
+private fun MenuSwitchRow(
+    title: String,
+    sub: String,
+    checked: Boolean,
+    onChange: (Boolean) -> Unit,
+    subWarn: Boolean = false
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 14.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            Text(sub, style = MaterialTheme.typography.bodySmall, color = if (subWarn) NewsRed else InkSoft)
+        }
+        Switch(
+            checked = checked,
+            onCheckedChange = onChange,
+            colors = SwitchDefaults.colors(checkedTrackColor = Ink, checkedThumbColor = Ivory)
+        )
+    }
+}
+
+/**
+ * データの更新状況。GitHubの自動更新(約20分おき)が最後に動いた時刻と、処理ごとの成否(○・×)。
+ * 3時間より前なら、自動更新が止まっている可能性があるので赤字で知らせる。
+ */
+@Composable
+private fun DataStatusBlock(status: DataStatus?, checked: Boolean) {
+    val updated = status?.updatedAt
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Ink)
+            .background(Paper)
+            .padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        if (status == null || updated == null) {
+            Text(
+                if (checked) "更新状況を確認できませんでした(通信環境をご確認ください)" else "確認中…",
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (checked) NewsRed else InkSoft
+            )
+        } else {
+            DataStatusDetails(status, updated)
+        }
+    }
+}
+
+@Composable
+private fun DataStatusDetails(status: DataStatus, updated: java.time.Instant) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        val zoned = updated.atZone(java.time.ZoneId.of("Asia/Tokyo"))
+        val minutes = (System.currentTimeMillis() - updated.toEpochMilli()) / 60_000
+        val ago = when {
+            minutes < 60 -> "${minutes.coerceAtLeast(0)}分前"
+            minutes < 24 * 60 -> "${minutes / 60}時間前"
+            else -> "${minutes / (24 * 60)}日前"
+        }
+        val stale = minutes > 3 * 60
+        Text(
+            "最終更新:%d/%d %02d:%02d(%s)".format(zoned.monthValue, zoned.dayOfMonth, zoned.hour, zoned.minute, ago),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            color = if (stale) NewsRed else Ink
+        )
+        Text(
+            if (stale) "3時間以上更新されていません。自動更新が止まっている可能性があります。"
+            else "試合・結果・ニュース・招待・選手の数字は、GitHubで自動更新しています(およそ20分おき)。",
+            style = MaterialTheme.typography.bodySmall,
+            color = if (stale) NewsRed else InkSoft
+        )
+        if (status.steps.isNotEmpty()) {
+            Text(
+                status.steps.joinToString("  ") { (name, ok) -> (if (ok) "○" else "×") + name },
+                style = MaterialTheme.typography.bodySmall,
+                color = if (status.failedSteps.isEmpty()) Ink else NewsRed
+            )
+            if (status.failedSteps.isNotEmpty()) {
+                Text(
+                    "×は前回の自動更新で取得に失敗したものです(次の更新で直ることが多いです)。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
             }
         }
     }

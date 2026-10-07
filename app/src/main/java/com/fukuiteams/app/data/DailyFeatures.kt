@@ -26,7 +26,10 @@ data class FeatureStory(
     val gameId: String? = null,
     val url: String? = null,
     /** 押したときにトピックの招待を開く */
-    val openInvites: Boolean = false
+    val openInvites: Boolean = false,
+    /** 押したときに掲示板タブを開く(bbsPostNo があればその投稿を開く) */
+    val openBbs: Boolean = false,
+    val bbsPostNo: Int? = null
 )
 
 private val JST: ZoneId = ZoneId.of("Asia/Tokyo")
@@ -71,7 +74,9 @@ fun buildFeatureStories(
     invites: List<RemoteInvitationAlert>,
     birthdays: List<PlayerBirthday> = emptyList(),
     /** 自分が「現地観戦」と記録した試合のID */
-    onSiteIds: Set<String> = emptySet()
+    onSiteIds: Set<String> = emptySet(),
+    /** 掲示板の話題(メニューでオフ・読めなかったときは null) */
+    bbsBuzz: BbsBuzz? = null
 ): List<FeatureStory> {
     val today = LocalDate.now(JST)
     val out = mutableListOf<FeatureStory>()
@@ -96,10 +101,37 @@ fun buildFeatureStories(
     out += openInvites(teams, invites)
     out += weekAhead(teams, games)
     out += birthdayMonth(teams, birthdays, today)
-    // 日替わりで並べ替える(同じ日は何度開いても同じ順。日が変わると先頭が変わる)
+    val bbs = bbsTalk(teams, bbsBuzz)
+    // 掲示板の話題(書き込みが多いときだけ作る)と、直近のトピック(最大 TOPIC_SLOTS 本)は毎回必ず入れる
+    // (新しいトピックが出れば、日付が変わらなくても入れ替わる)。
+    // それ以外の記事は、同じ種類(小見出し)は1日1本だけ(どのチーム・どの記事にするかは日替わり)にして日替わりに並べる。
+    // 並びは「日替わりの記事 → トピック → 日替わりの記事 → トピック → …」と交互にし、合計 MAX_STORIES_PER_DAY 本まで
     val seed = today.toEpochDay().toInt()
-    return out.sortedBy { ((it.headline.hashCode() + seed * 7919).absoluteValue) % 1000 }
+    val topics = bbs + out.filter { it.kicker == TOPIC_KICKER }
+    val onePerKind = out.filter { it.kicker != TOPIC_KICKER }.groupBy { it.kicker }.values.map { group ->
+        group[(seed.absoluteValue + group.size) % group.size]
+    }.sortedBy { ((it.kicker.hashCode() + seed * 7919).absoluteValue) % 1000 }
+    val result = mutableListOf<FeatureStory>()
+    var i = 0
+    var j = 0
+    while (result.size < MAX_STORIES_PER_DAY && (i < onePerKind.size || j < topics.size)) {
+        if (i < onePerKind.size) result += onePerKind[i++]
+        if (result.size < MAX_STORIES_PER_DAY && j < topics.size) result += topics[j++]
+    }
+    return result
 }
+
+/** 直近のトピックの記事の小見出し(この記事は毎回必ず入れる) */
+private const val TOPIC_KICKER = "トピック"
+
+/** 特集に必ず入れる直近のトピックの本数 */
+private const val TOPIC_SLOTS = 2
+
+/** 掲示板の話題を特集に出す、24時間の書き込み数の下限 */
+private const val BBS_MIN_POSTS = 5
+
+/** 一面の特集として1日に出す記事の最大本数 */
+private const val MAX_STORIES_PER_DAY = 5
 
 // ---------- 次の試合までのカウントダウン ----------
 
@@ -365,22 +397,24 @@ private fun onThisDay(team: Team, games: List<Game>, results: Map<String, Remote
 
 // ---------- ニュース・招待 ----------
 
+/** 直近3日のトピック(ニュース)を新しい順に最大 TOPIC_SLOTS 本。同じ記事(見出しの頭が同じ)は1本にまとめる */
 private fun topNews(teams: List<Team>, news: List<RemoteInvitationAlert>, today: LocalDate): List<FeatureStory> {
     val border = today.minusDays(3).atStartOfDay(JST).toInstant()
-    val item = news
-        .filter { n -> teams.any { it.name == n.teamId } && (n.eventInstant()?.isAfter(border) == true) }
-        .maxByOrNull { it.eventInstant() ?: java.time.Instant.EPOCH } ?: return emptyList()
-    val team = Team.values().firstOrNull { it.name == item.teamId }
-    return listOf(
+    val items = news
+        .filter { n -> n.title.isNotBlank() && teams.any { it.name == n.teamId } && (n.eventInstant()?.isAfter(border) == true) }
+        .sortedByDescending { it.eventInstant() ?: java.time.Instant.EPOCH }
+        .distinctBy { it.title.replace(Regex("[\\s　]"), "").take(15) }
+        .take(TOPIC_SLOTS)
+    return items.map { item ->
         FeatureStory(
-            kicker = "ニュース",
-            team = team,
+            kicker = TOPIC_KICKER,
+            team = Team.values().firstOrNull { it.name == item.teamId },
             headline = item.title,
             body = listOf(item.sourceLabel(), item.timeLabel()).filter { it.isNotBlank() }.joinToString("・") + "。押すと記事を開きます。",
             photo = item.image,
             url = item.link
         )
-    )
+    }
 }
 
 private fun openInvites(teams: List<Team>, invites: List<RemoteInvitationAlert>): List<FeatureStory> {
@@ -709,6 +743,48 @@ private fun birthdayMonth(teams: List<Team>, birthdays: List<PlayerBirthday>, to
             photo = (list.firstOrNull { it.birthday.dayOfMonth >= today.dayOfMonth } ?: list.first()).photo,
             bigNumber = "${list.size}",
             bigUnit = "人"
+        )
+    )
+}
+
+// ---------- 掲示板の話題 ----------
+
+/**
+ * ブローウィンズ掲示板の24時間の書き込み数・よく出た言葉・反応の多い投稿。
+ * 書き込みが BBS_MIN_POSTS 件より少ない日や、ブローウィンズを選んでいないときは作らない。
+ * 投稿の内容は短い抜粋だけにし、匿名掲示板からの自動集計であることを書き添える。
+ */
+private fun bbsTalk(teams: List<Team>, buzz: BbsBuzz?): List<FeatureStory> {
+    if (buzz == null || Team.BLOWINDS !in teams || buzz.count24h < BBS_MIN_POSTS) return emptyList()
+    val n = buzz.count24h
+    val countText = if (buzz.atLeast) "${n}件以上" else "${n}件"
+    val usual = buzz.usualPerDay
+    val ratio = if (usual != null && usual >= 1.0) n / usual else null
+    val hot = ratio != null && ratio >= 1.5 && n >= 10
+    val lines = mutableListOf<String>()
+    if (ratio != null) {
+        lines += if (hot) "ふだん(1日およそ${usual!!.toInt().coerceAtLeast(1)}件)の%.1f倍の書き込みです。".format(ratio)
+        else "ふだんは1日およそ${usual!!.toInt().coerceAtLeast(1)}件です。"
+    }
+    if (buzz.words.isNotEmpty()) lines += "よく出た言葉:" + buzz.words.joinToString("") { "「$it」" }
+    buzz.topPost?.let { p ->
+        val reaction = listOfNotNull(
+            buzz.topReplies.takeIf { it > 0 }?.let { "返信${it}件" },
+            p.likes.takeIf { it > 0 }?.let { "いいね$it" }
+        ).joinToString("・")
+        lines += "反応が多かった投稿($reaction):「${BbsBuzzRepository.excerpt(p)}」"
+    }
+    lines += "※匿名掲示板の書き込みから自動で数えています。押すと掲示板を開きます。"
+    return listOf(
+        FeatureStory(
+            kicker = "掲示板",
+            team = Team.BLOWINDS,
+            headline = if (hot) "掲示板が盛り上がり中、24時間で${countText}の書き込み" else "掲示板、この24時間で${countText}の書き込み",
+            body = lines.joinToString("\n"),
+            bigNumber = "$n",
+            bigUnit = if (buzz.atLeast) "件以上" else "件",
+            openBbs = true,
+            bbsPostNo = buzz.topPost?.no
         )
     )
 }
