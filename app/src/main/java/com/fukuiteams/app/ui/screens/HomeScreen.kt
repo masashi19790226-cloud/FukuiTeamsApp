@@ -1322,7 +1322,7 @@ private fun FeatureHero(
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Headline(
                         "特集",
-                        fontSize = 20,
+                        fontSize = 16,
                         color = White,
                         modifier = Modifier.background(NewsRed).padding(horizontal = 10.dp, vertical = 1.dp)
                     )
@@ -1340,7 +1340,7 @@ private fun FeatureHero(
                     }
                 }
                 // 見出しを全幅で先に出し、その下で 本文(左)と縦長の写真(右)を並べる(新聞の囲み記事の形)
-                Headline(story.headline, fontSize = 27)
+                Headline(story.headline, fontSize = 21)
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
                     Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         if (story.bigNumber != null) {

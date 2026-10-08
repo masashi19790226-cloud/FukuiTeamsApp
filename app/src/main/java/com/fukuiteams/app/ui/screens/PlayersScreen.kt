@@ -782,16 +782,35 @@ private fun ProfileLines(p: PlayerBirthday, mark: ProfileMark) {
     val today = BirthdaysRepository.today()
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(2.dp)) {
         val days = p.daysUntilNext(today)
-        val countdown = when {
-            mark != ProfileMark.BIRTHDAY -> ""
-            days == 0 -> "・今日が誕生日!"
-            else -> "・誕生日まであと${days}日"
+        if (mark == ProfileMark.BIRTHDAY) {
+            // 誕生日順のときは、色の付いた枠の中で 生年月日 と「次の誕生日まであと○日」を2行に分けて出す
+            // (1行に詰めると、文字を大きくしている画面で途中が切れるため)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Accent.copy(alpha = 0.08f))
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    birthdayText(p, today),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Ink,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    if (days == 0) "今日が誕生日!" else "次の誕生日まであと${days}日",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = if (days == 0) NewsRed else Ink,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        } else {
+            ProfileLine(birthdayText(p, today), marked = mark == ProfileMark.AGE)
         }
-        ProfileLine(
-            birthdayText(p, today) + countdown,
-            marked = mark == ProfileMark.BIRTHDAY || mark == ProfileMark.AGE,
-            color = if (mark == ProfileMark.BIRTHDAY && days == 0) NewsRed else null
-        )
         p.profileLine.takeIf { it.isNotBlank() }?.let {
             ProfileLine(it, marked = mark == ProfileMark.HEIGHT)
         }
