@@ -746,6 +746,10 @@ private class JumpMarks {
 }
 
 /** 上に固定する「自チーム」「相手」へ飛ぶリンク。 */
+/** 「2000年3月14日生まれ(26歳)」 */
+private fun birthdayText(p: PlayerBirthday, today: java.time.LocalDate): String =
+    "${p.birthday.year}年${p.birthday.monthValue}月${p.birthday.dayOfMonth}日生まれ(${p.currentAge(today)}歳)"
+
 /** 丸岡RUCK・ユナイテッドの全選手の並び順 */
 private enum class RosterSort(val label: String) {
     NUMBER("背番号"),
@@ -766,7 +770,7 @@ private fun AllPlayersSection(team: Team, roster: List<PlayerBirthday>, scorerRo
     val rowsByName = remember(scorerRows) { scorerRows.associateBy { com.fukuiteams.app.data.playerNameKey(it.name) } }
     fun rowOf(p: PlayerBirthday) = rowsByName[com.fukuiteams.app.data.playerNameKey(p.name)]
     val sorted = when (sort) {
-        RosterSort.NUMBER -> roster.sortedBy { it.number.toIntOrNull() ?: 999 }
+        RosterSort.NUMBER -> roster.sortedBy { (it.number.ifBlank { rowOf(it)?.number.orEmpty() }).toIntOrNull() ?: 999 }
         RosterSort.GOALS -> roster.sortedWith(
             compareByDescending<PlayerBirthday> { rowOf(it)?.goals ?: 0 }.thenBy { it.number.toIntOrNull() ?: 999 }
         )
@@ -806,7 +810,9 @@ private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, today:
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             RemoteThumbnail(p.photo, width = 72.dp, height = 90.dp, alignTop = true, zoomCaption = p.label)
-            Headline(if (p.number.isNotBlank()) "#${p.number}" else "#-", fontSize = 22, modifier = Modifier.width(58.dp))
+            // 公式の選手一覧で背番号が読めなかった選手は、得点の表の背番号を使う
+            val number = p.number.ifBlank { row?.number.orEmpty() }
+            Headline(if (number.isNotBlank()) "#$number" else "#-", fontSize = 22, modifier = Modifier.width(58.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     p.name,
@@ -815,14 +821,10 @@ private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, today:
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    listOf(
-                        p.position.takeIf { it.isNotBlank() }?.let { "ポジション:$it" } ?: "",
-                        "${p.currentAge(today)}歳"
-                    ).filter { it.isNotBlank() }.joinToString("・"),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = InkSoft
-                )
+                (p.position.ifBlank { row?.position.orEmpty() }).takeIf { it.isNotBlank() }?.let {
+                    Text("ポジション:$it", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                }
+                Text(birthdayText(p, today), style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 p.profileLine.takeIf { it.isNotBlank() }?.let {
                     Text(it, style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 }
@@ -989,7 +991,10 @@ private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUM
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
-                // 身長・体重・出身地・出身校(公式サイトの選手ページから。分かる選手だけ)
+                // 生年月日・年齢と、身長・体重・出身地・出身校(公式サイトの選手ページから。分かる選手だけ)
+                profile?.let {
+                    Text(birthdayText(it, BirthdaysRepository.today()), style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                }
                 profile?.profileLine?.takeIf { it.isNotBlank() }?.let {
                     Text(it, style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 }

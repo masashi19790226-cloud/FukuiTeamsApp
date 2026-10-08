@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>特集の配置案 v26</title>
+<style>
+  :root { --ink:#111; --soft:#55504A; --paper:#FBF9F4; --ivory:#F3F0E8; --red:#C8102E; --bw:#0F3460; --line:#D8D3C8; --accent:#1B5FA8; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#e6e3dc; font-family: "Hiragino Sans","Yu Gothic",sans-serif; color:var(--ink); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 16px; display:flex; flex-wrap:wrap; gap:24px; justify-content:center; }
+  h1 { width:100%; font-size:18px; margin:4px 0 0; }
+  .note { width:100%; font-size:13px; color:var(--soft); margin:0; line-height:1.6; }
+  .opt { width: 360px; }
+  .opt h2 { font-size:15px; margin:0 0 6px; }
+  .opt p.desc { font-size:12px; color:var(--soft); margin:0 0 8px; line-height:1.5; }
+  .phone { background:var(--ivory); border:2px solid #333; border-radius:18px; padding:14px 16px 18px; }
+  .serif { font-family: "Hiragino Mincho ProN","Yu Mincho",serif; font-weight:900; }
+  .label { display:flex; align-items:baseline; gap:8px; margin-bottom:8px; }
+  .toku { background:var(--red); color:#fff; padding:2px 10px 3px; font-size:26px; line-height:1.15; }
+  .kicker { font-size:15px; font-weight:700; color:var(--red); }
+  .team { font-size:12px; color:var(--bw); margin-left:auto; }
+  .photo { width:150px; height:200px; flex:none; position:relative; overflow:hidden;
+           background:linear-gradient(#cfd6e2,#b9c3d3); border:1px solid var(--line); }
+  .photo svg { position:absolute; left:50%; top:10px; transform:translateX(-50%); }
+  .cap { position:absolute; left:0; right:0; bottom:0; background:rgba(17,17,17,.6); color:#fff; font-size:11px; padding:3px 6px; }
+  .big { color:var(--red); font-size:40px; line-height:1; }
+  .unit { font-size:15px; font-weight:700; margin-left:2px; }
+  .head { font-size:21px; line-height:1.25; margin:6px 0 0; }
+  .body { font-size:14px; line-height:1.6; margin:8px 0 0; }
+  .row { display:flex; gap:12px; align-items:flex-start; }
+  .dots { display:flex; align-items:center; gap:6px; margin-top:10px; font-size:11px; color:var(--soft); }
+  .dot { width:7px; height:7px; border-radius:50%; background:var(--line); }
+  .dot.on { width:10px; height:10px; background:var(--red); }
+  .more { margin-left:auto; color:var(--accent); font-weight:700; font-size:13px; }
+  .rule { border-top:3px double var(--ink); margin-top:8px; }
+  .tag { display:inline-block; font-size:11px; background:#fff3c4; border:1px solid #e0c060; padding:1px 6px; margin-bottom:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>一面の特集の配置案(v26の案・まだアプリには入れていません)</h1>
+  <p class="note">変えるのは次の3つです。①「特集」の文字を大きな赤い札にします。②見出しと本文は、前回大きくする前の大きさ(見出し27・本文16)に戻します。③写真は縦長(横150×縦200)の枠にして、顔が切れないようにします。<br>
+  写真の部分は仮の人型です。実際は選手の写真やニュースの画像が入ります。ニュースの画像(横長)は、縦長の枠に合わせて左右を切ります。</p>
+
+  <div class="opt">
+    <h2>A案:写真を左、見出しを右(おすすめ)</h2>
+    <p class="desc">写真の右に大きな数字と見出しを並べ、本文は写真の下に全幅で出します。見出しが写真の横に収まるので、全体が縦に長くなりすぎません。</p>
+    <div class="phone">
+      <div class="label"><span class="toku serif">特集</span><span class="kicker">今日の注目選手</span><span class="team">福井ブローウィンズ</span></div>
+      <div class="row">
+        <div class="photo">
+          <svg width="110" height="190" viewBox="0 0 110 190"><circle cx="55" cy="42" r="30" fill="#8792a6"/><path d="M5 190 Q8 92 55 86 Q102 92 105 190 Z" fill="#8792a6"/></svg>
+          <div class="cap">#00 選手名</div>
+        </div>
+        <div>
+          <span class="big serif">15.5</span><span class="unit">点</span>
+          <div class="head serif">エースが今季平均15.5点、チームを引っ張る</div>
+        </div>
+      </div>
+      <div class="body">今季6試合で平均15.5点・4.2リバウンド。3ポイント成功率は41.2%(14/34)です。押すと選手の数字を開きます。</div>
+      <div class="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>1/5・左右にスライド<span class="more">ほかの記事 ›</span></div>
+      <div class="rule"></div>
+    </div>
+  </div>
+
+  <div class="opt">
+    <h2>B案:見出しを上、写真を右</h2>
+    <p class="desc">見出しを全幅で先に出し、その下で本文の右に縦長の写真を置きます(新聞の囲み記事のような形)。見出しが長いときも読みやすい形です。</p>
+    <div class="phone">
+      <div class="label"><span class="toku serif">特集</span><span class="kicker">今日の注目選手</span><span class="team">福井ブローウィンズ</span></div>
+      <div class="head serif" style="margin-top:0">エースが今季平均15.5点、チームを引っ張る</div>
+      <div class="row" style="margin-top:8px">
+        <div style="flex:1">
+          <span class="big serif">15.5</span><span class="unit">点</span>
+          <div class="body" style="margin-top:6px">今季6試合で平均15.5点・4.2リバウンド。3ポイント成功率は41.2%(14/34)です。押すと選手の数字を開きます。</div>
+        </div>
+        <div class="photo">
+          <svg width="110" height="190" viewBox="0 0 110 190"><circle cx="55" cy="42" r="30" fill="#8792a6"/><path d="M5 190 Q8 92 55 86 Q102 92 105 190 Z" fill="#8792a6"/></svg>
+          <div class="cap">#00 選手名</div>
+        </div>
+      </div>
+      <div class="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>1/5・左右にスライド<span class="more">ほかの記事 ›</span></div>
+      <div class="rule"></div>
+    </div>
+  </div>
+
+  <p class="note">どちらの案も、写真が無い記事・写真を読み込めないときは、写真の枠をチームカラーの縦長の札(記事の種類と大きな数字)にします。記事の中身は例で、実際の数字ではありません。</p>
+</div>
+</body>
+</html>

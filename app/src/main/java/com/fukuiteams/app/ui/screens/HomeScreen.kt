@@ -21,6 +21,7 @@ import com.fukuiteams.app.data.GamePhotos
 import androidx.compose.ui.text.font.FontWeight
 import com.fukuiteams.app.ui.theme.Ivory
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.IntrinsicSize
 import com.fukuiteams.app.ui.components.resultMark
@@ -1284,7 +1285,15 @@ private fun FeatureHero(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val pagerState = androidx.compose.foundation.pager.rememberPagerState(pageCount = { stories.size })
+    // 最後の記事から最初の記事へ(またはその逆へ)そのままスライドできるよう、ページを多めに用意して真ん中から始める。
+    // 何本目の記事かは「ページ番号 ÷ 記事の本数 の余り」で決める
+    val loop = stories.size > 1
+    val pageCount = if (loop) stories.size * LOOP_ROUNDS else stories.size
+    val pagerState = androidx.compose.foundation.pager.rememberPagerState(
+        initialPage = if (loop) stories.size * (LOOP_ROUNDS / 2) else 0,
+        pageCount = { pageCount }
+    )
+    val currentIndex = pagerState.currentPage.mod(stories.size)
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         androidx.compose.foundation.pager.HorizontalPager(
             state = pagerState,
@@ -1292,7 +1301,7 @@ private fun FeatureHero(
             pageSpacing = 16.dp,
             verticalAlignment = Alignment.Top
         ) { page ->
-            val story = stories[page.coerceIn(0, stories.lastIndex)]
+            val story = stories[page.mod(stories.size)]
             val clickable = story.gameId != null || story.url != null || story.openInvites || story.openBbs
             Column(
                 modifier = Modifier
@@ -1309,20 +1318,49 @@ private fun FeatureHero(
                     ),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                // 「特集」の大きな赤い札と、記事の種類・チーム名
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    SectionLabel("特集・${story.kicker}", red = true)
+                    Headline(
+                        "特集",
+                        fontSize = 26,
+                        color = White,
+                        modifier = Modifier.background(NewsRed).padding(horizontal = 10.dp, vertical = 1.dp)
+                    )
+                    Text(
+                        story.kicker,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = NewsRed,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
                     story.team?.let {
-                        Text(it.displayName, style = MaterialTheme.typography.labelLarge, color = it.color, maxLines = 1)
+                        Text(it.displayName, style = MaterialTheme.typography.labelMedium, color = it.color, maxLines = 1)
                     }
                 }
-                // 写真の帯 → 見出し → 本文 の順に、新聞の一面のトップ記事のように大きく出す
-                FeatureVisual(story)
-                Headline(story.headline, fontSize = 30)
-                Text(
-                    story.body,
-                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp, lineHeight = 27.sp),
-                    color = Ink
-                )
+                // 見出しを全幅で先に出し、その下で 本文(左)と縦長の写真(右)を並べる(新聞の囲み記事の形)
+                Headline(story.headline, fontSize = 27)
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        if (story.bigNumber != null) {
+                            Row(verticalAlignment = Alignment.Bottom) {
+                                Headline(story.bigNumber, fontSize = 40, color = NewsRed)
+                                story.bigUnit?.let {
+                                    Text(
+                                        it,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Ink,
+                                        modifier = Modifier.padding(start = 3.dp, bottom = 6.dp)
+                                    )
+                                }
+                            }
+                        }
+                        Text(story.body, style = MaterialTheme.typography.bodyLarge, color = Ink)
+                    }
+                    FeaturePhoto(story)
+                }
             }
         }
         if (stories.size > 1) {
@@ -1334,7 +1372,7 @@ private fun FeatureHero(
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     stories.indices.forEach { i ->
-                        val current = i == pagerState.currentPage
+                        val current = i == currentIndex
                         Box(
                             modifier = Modifier
                                 .size(if (current) 10.dp else 7.dp)
@@ -1342,7 +1380,7 @@ private fun FeatureHero(
                         )
                     }
                     Text(
-                        "${pagerState.currentPage + 1}/${stories.size}・左右にスライド",
+                        "${currentIndex + 1}/${stories.size}・左右にスライド",
                         style = MaterialTheme.typography.labelMedium,
                         color = InkSoft,
                         modifier = Modifier.padding(start = 4.dp)
@@ -1356,7 +1394,7 @@ private fun FeatureHero(
                     modifier = Modifier
                         .clickable {
                             scope.launch {
-                                pagerState.animateScrollToPage((pagerState.currentPage + 1) % stories.size)
+                                pagerState.animateScrollToPage((pagerState.currentPage + 1).coerceAtMost(pageCount - 1))
                             }
                         }
                         .padding(horizontal = 8.dp, vertical = 6.dp)
@@ -1367,118 +1405,83 @@ private fun FeatureHero(
     }
 }
 
-/** 一面の特集の写真の帯の高さ(写真が無い記事は低くする) */
+/** 特集を左右にループさせるため、記事の本数の何倍のページを用意するか(端に着くことは実際には無い) */
+private const val LOOP_ROUNDS = 1000
+
+/** 一面の特集の写真の枠(縦長。顔が切れないように) */
+private val FEATURE_PHOTO_WIDTH = 150.dp
 private val FEATURE_PHOTO_HEIGHT = 200.dp
-private val FEATURE_NO_PHOTO_HEIGHT = 140.dp
 
 /**
- * 一面の特集の写真の帯。どの記事にも画像を出し、帯の中に余白を作らない。
- * ・写真は帯の幅いっぱいに出す(選手の写真は顔が切れないよう上を残す。切り抜き写真の周りの透明な余白は切り取り、
- *   それでも見える透明な部分の後ろはチームカラーにする)
- * ・大きな数字(「3日」「52.4%」など)は写真の左下に重ねる。代わりに付けた選手の写真には、右下に選手名を重ねる
- * ・写真が無い記事・写真を読み込めないときは、チームカラーの帯に記事の種類と大きな数字を出す(帯は低めにする)
+ * 一面の特集の縦長の写真。どの記事にも画像を出し、枠の中に余白を作らない。
+ * ・選手の写真は顔が切れないよう上を残す。切り抜き写真の周りの透明な余白は切り取り、
+ *   それでも見える透明な部分の後ろはチームカラーにする。ニュースの横長の画像は左右を切って枠に合わせる
+ * ・代わりに付けた選手の写真には、下に選手名を重ねる
+ * ・写真が無い記事・写真を読み込めないときは、チームカラーの札(記事の種類・チームの頭文字・チーム名)にする
  * ・写真を押しても拡大はせず、記事全体と同じく、その試合・記事・掲示板などを開く
  */
 @Composable
-private fun FeatureVisual(story: FeatureStory) {
+private fun FeaturePhoto(story: FeatureStory) {
     val accent = story.team?.color ?: Ink
-    val hasPhoto = story.photo.isNotBlank()
-    val newsImage = hasPhoto && story.photoCaption == null && story.url != null && story.bigNumber == null
-    val height = if (hasPhoto) FEATURE_PHOTO_HEIGHT else FEATURE_NO_PHOTO_HEIGHT
+    val newsImage = story.photo.isNotBlank() && story.photoCaption == null && story.url != null && story.bigNumber == null
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(height)
+            .size(FEATURE_PHOTO_WIDTH, FEATURE_PHOTO_HEIGHT)
             .background(accent)
     ) {
-        // 写真を読み込むまで(読み込めないとき)は、色の帯に記事の種類と数字を出しておく
+        // 写真を読み込むまで(読み込めないとき)は、色の札を出しておく
         FeatureGraphic(story, modifier = Modifier.fillMaxSize())
-        if (hasPhoto) {
+        if (story.photo.isNotBlank()) {
             RemoteThumbnail(
                 story.photo,
-                height = height,
-                fillWidth = true,
+                width = FEATURE_PHOTO_WIDTH,
+                height = FEATURE_PHOTO_HEIGHT,
                 alignTop = !newsImage,
                 trimTransparent = true,
                 backgroundColor = accent,
                 framed = false
             )
-            // 写真の左下に大きな数字
-            if (story.bigNumber != null) {
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .background(accent.copy(alpha = 0.88f))
-                        .padding(horizontal = 12.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Headline(story.bigNumber, fontSize = 40, color = White)
-                    story.bigUnit?.let {
-                        Text(
-                            it,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = White,
-                            modifier = Modifier.padding(start = 3.dp, bottom = 6.dp)
-                        )
-                    }
-                }
-            }
-            // 代わりに付けた選手の写真は、右下に選手名
             story.photoCaption?.let { caption ->
                 Text(
                     caption,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelSmall,
                     color = White,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
-                        .align(Alignment.BottomEnd)
+                        .align(Alignment.BottomStart)
+                        .fillMaxWidth()
                         .background(Ink.copy(alpha = 0.6f))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .padding(horizontal = 6.dp, vertical = 3.dp)
                 )
             }
         }
     }
 }
 
-/** 特集の帯の色の部分:記事の種類・大きな数字(無ければチームの頭文字)・チーム名 */
+/** 写真が無いときの色の札:記事の種類・チームの頭文字・チーム名 */
 @Composable
 private fun FeatureGraphic(story: FeatureStory, modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier = modifier.padding(10.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             story.kicker,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Bold,
             color = White,
+            maxLines = 2,
+            textAlign = TextAlign.Center
+        )
+        Headline(story.team?.initial ?: "特集", fontSize = if (story.team != null) 64 else 34, color = White)
+        Text(
+            story.team?.displayName ?: "3チーム",
+            style = MaterialTheme.typography.labelSmall,
+            color = White.copy(alpha = 0.85f),
             maxLines = 1
         )
-        Row(verticalAlignment = Alignment.Bottom) {
-            Headline(
-                story.bigNumber ?: (story.team?.initial ?: "特集"),
-                fontSize = if (story.bigNumber != null && story.bigNumber.length > 4) 40 else 54,
-                color = White
-            )
-            story.bigUnit?.takeIf { story.bigNumber != null }?.let {
-                Text(
-                    it,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = White,
-                    modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                story.team?.displayName ?: "3チーム",
-                style = MaterialTheme.typography.labelMedium,
-                color = White.copy(alpha = 0.85f),
-                maxLines = 1,
-                modifier = Modifier.padding(bottom = 6.dp)
-            )
-        }
     }
 }
 
