@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.DataStatus
+import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.data.BirthdaysRepository
 import com.fukuiteams.app.data.PlayerBirthday
 import com.fukuiteams.app.data.profileKey
@@ -441,7 +442,10 @@ private fun RosterSection(
         // 各段とも、文字の長さに合わせて幅を配分し、画面幅いっぱいに収める
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text("並び順(背番号以外は数字の大きい順)", style = MaterialTheme.typography.labelSmall, color = InkSoft)
-            PlayerSort.entries.groupBy { it.row }.toSortedMap().values.forEach { line ->
+            // 「誕生日」は、生年月日が分かる選手がいるとき(自チーム)だけ出す
+            val hasProfiles = roster.players.any { profileOf(it.name) != null }
+            PlayerSort.entries.filter { it != PlayerSort.BIRTHDAY || hasProfiles }
+                .groupBy { it.row }.toSortedMap().values.forEach { line ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -462,7 +466,7 @@ private fun RosterSection(
             color = InkSoft
         )
         // 並べ替えても、写真・開閉の状態がその選手についていくよう、選手ごとに key を付ける
-        sortPlayers(roster.players, sortKey).forEach { p -> key(p.number, p.name) { RosterCard(p, sortKey, profileOf(p.name)) } }
+        sortPlayers(roster.players, sortKey, profileOf).forEach { p -> key(p.number, p.name) { RosterCard(p, sortKey, profileOf(p.name)) } }
     }
 }
 
@@ -746,6 +750,33 @@ private class JumpMarks {
 }
 
 /** 上に固定する「自チーム」「相手」へ飛ぶリンク。 */
+/**
+ * 選手カードの写真の下に出す、生年月日・年齢の行と、身長・体重・出身地などの行(カードの幅いっぱい・1行ずつ)。
+ * showCountdown:誕生日順で並べているときは、次の誕生日まで何日かも出す
+ */
+@Composable
+private fun ProfileLines(p: PlayerBirthday, showCountdown: Boolean) {
+    val today = BirthdaysRepository.today()
+    Column(modifier = Modifier.fillMaxWidth()) {
+        val days = p.daysUntilNext(today)
+        val countdown = when {
+            !showCountdown -> ""
+            days == 0 -> "・今日が誕生日!"
+            else -> "・誕生日まであと${days}日"
+        }
+        Text(
+            birthdayText(p, today) + countdown,
+            style = MaterialTheme.typography.bodySmall,
+            color = if (showCountdown && days == 0) NewsRed else InkSoft,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        p.profileLine.takeIf { it.isNotBlank() }?.let {
+            Text(it, style = MaterialTheme.typography.bodySmall, color = InkSoft, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+    }
+}
+
 /** 「2000年3月14日生まれ(26歳)」 */
 private fun birthdayText(p: PlayerBirthday, today: java.time.LocalDate): String =
     "${p.birthday.year}年${p.birthday.monthValue}月${p.birthday.dayOfMonth}日生まれ(${p.currentAge(today)}歳)"
@@ -755,7 +786,8 @@ private enum class RosterSort(val label: String) {
     NUMBER("背番号"),
     GOALS("得点"),
     HEIGHT("身長"),
-    AGE("年齢")
+    AGE("年齢"),
+    BIRTHDAY("誕生日")
 }
 
 /**
@@ -778,6 +810,8 @@ private fun AllPlayersSection(team: Team, roster: List<PlayerBirthday>, scorerRo
             compareBy<PlayerBirthday> { it.heightCm == null }.thenByDescending { it.heightCm ?: 0.0 }
         )
         RosterSort.AGE -> roster.sortedBy { it.birthday }
+        // 次の誕生日が近い順
+        RosterSort.BIRTHDAY -> roster.sortedBy { it.daysUntilNext(today) }
     }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(
@@ -793,13 +827,13 @@ private fun AllPlayersSection(team: Team, roster: List<PlayerBirthday>, scorerRo
             }
         }
         sorted.forEach { p ->
-            key(p.team, p.name) { AllPlayerCard(team, p, rowOf(p), today) }
+            key(p.team, p.name) { AllPlayerCard(team, p, rowOf(p), showCountdown = sort == RosterSort.BIRTHDAY) }
         }
     }
 }
 
 @Composable
-private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, today: java.time.LocalDate) {
+private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, showCountdown: Boolean) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -824,12 +858,10 @@ private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, today:
                 (p.position.ifBlank { row?.position.orEmpty() }).takeIf { it.isNotBlank() }?.let {
                     Text("ポジション:$it", style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 }
-                Text(birthdayText(p, today), style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                p.profileLine.takeIf { it.isNotBlank() }?.let {
-                    Text(it, style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                }
             }
         }
+        // 生年月日・身長など。折り返さないよう、写真の下にカードの幅いっぱいで出す
+        ProfileLines(p, showCountdown)
         Row(modifier = Modifier.fillMaxWidth()) {
             StatCell("得点", "${row?.goals ?: 0}", Modifier.weight(1f))
             if (team == Team.RAC) {
@@ -874,7 +906,9 @@ private enum class PlayerSort(val label: String, val row: Int = 0) {
     FIELD_GOAL_PCT("FG成功率", 1),
     THREE_PCT("3P成功率", 1),
     FREE_THROW_PCT("FT成功率", 1),
-    EFFICIENCY("貢献度", 1)
+    EFFICIENCY("貢献度", 1),
+    // 次の誕生日が近い順(身長などのデータがある自チームだけボタンを出す)
+    BIRTHDAY("誕生日", 1)
 }
 
 /**
@@ -882,9 +916,18 @@ private enum class PlayerSort(val label: String, val row: Int = 0) {
  * 数字が無い選手(今季の出場なしなど)は最後に回す。
  * 成功率が同じときは試投数の多い順、それも同じなら背番号順のまま。
  */
-private fun sortPlayers(players: List<PlayerStats>, key: PlayerSort): List<PlayerStats> {
+private fun sortPlayers(
+    players: List<PlayerStats>,
+    key: PlayerSort,
+    profileOf: (String) -> PlayerBirthday? = { null }
+): List<PlayerStats> {
     val value: (PlayerStats) -> Double? = when (key) {
         PlayerSort.NUMBER -> return players
+        // 次の誕生日が近い順(誕生日が分からない選手は最後)
+        PlayerSort.BIRTHDAY -> {
+            val today = BirthdaysRepository.today()
+            return players.sortedBy { profileOf(it.name)?.daysUntilNext(today) ?: 9999 }
+        }
         PlayerSort.POINTS -> { p -> p.points?.toDoubleOrNull() }
         PlayerSort.MINUTES -> { p -> minutesToSeconds(p.minutesPerGame) }
         PlayerSort.REBOUNDS -> { p -> p.rebounds?.toDoubleOrNull() }
@@ -991,18 +1034,15 @@ private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUM
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
-                // 生年月日・年齢と、身長・体重・出身地・出身校(公式サイトの選手ページから。分かる選手だけ)
-                profile?.let {
-                    Text(birthdayText(it, BirthdaysRepository.today()), style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                }
-                profile?.profileLine?.takeIf { it.isNotBlank() }?.let {
-                    Text(it, style = MaterialTheme.typography.bodySmall, color = InkSoft)
-                }
+
             }
             if (hasStats) {
                 Text(if (expanded) "▲" else "▼", style = MaterialTheme.typography.labelMedium, color = InkSoft)
             }
         }
+        // 生年月日・年齢と、身長・体重・出身地・出身校(公式サイトの選手ページから。分かる選手だけ)。
+        // 折り返さないよう、写真の下にカードの幅いっぱいで出す
+        profile?.let { ProfileLines(it, showCountdown = sortKey == PlayerSort.BIRTHDAY) }
         if (!hasStats) {
             Text(
                 "今季の出場なし",
@@ -1030,7 +1070,7 @@ private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUM
             StatCell("試合", player.games, Modifier.weight(1f))
             StatCell("出場時間", player.minutesPerGame, Modifier.weight(1.2f))
             StatCell("得点", player.points, Modifier.weight(1f))
-            StatCell("リバウンド", player.rebounds, Modifier.weight(1f))
+            StatCell("リバウンド", player.rebounds, Modifier.weight(1.3f))
             StatCell("アシスト", player.assists, Modifier.weight(1f))
         }
         if (expanded) {

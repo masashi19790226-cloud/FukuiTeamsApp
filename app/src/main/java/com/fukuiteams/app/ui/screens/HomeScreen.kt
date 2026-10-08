@@ -1322,7 +1322,7 @@ private fun FeatureHero(
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Headline(
                         "特集",
-                        fontSize = 26,
+                        fontSize = 20,
                         color = White,
                         modifier = Modifier.background(NewsRed).padding(horizontal = 10.dp, vertical = 1.dp)
                     )
