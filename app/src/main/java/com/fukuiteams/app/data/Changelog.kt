@@ -14,6 +14,16 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月8日",
+        title = "一面の特集を大きく・必ず画像つきに",
+        items = listOf(
+            "一面の特集を大きくしました。高さのある画像の帯の下に、大きめの見出しと本文を出します",
+            "特集のどの記事にも画像を出すようにしました。ニュースは記事の画像を幅いっぱいに、それ以外はチームカラーの帯(記事の種類と大きな数字)と選手の写真を並べます",
+            "記事に合う写真が無いときは、そのチームの選手の写真を日替わりで選んで載せ、写真の下に選手名を添えます(同じ日の記事どうしで同じ写真が重ならないようにしています)",
+            "特集の写真を押したときは拡大せず、記事と同じく、その試合・記事・掲示板などを開くようにしました"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月7日",
         title = "特集に「掲示板の話題」・メニューの見直し",
         items = listOf(

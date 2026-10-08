@@ -125,6 +125,7 @@ private suspend fun loadLargeImage(url: String): ImageBitmap? = withContext(Disp
  * size:正方形の一辺。width・height を渡すと縦長などにできる。
  * alignTop:切り抜くときに上側を残す(選手の顔写真は顔が上にあるため)
  * zoomCaption:null 以外を渡すと、タップで画像を大きく表示する(渡した文字は拡大画面の下に出す)
+ * fillWidth:true なら幅いっぱい(高さは height)にする(一面の特集のニュース画像など)
  */
 @Composable
 fun RemoteThumbnail(
@@ -134,7 +135,8 @@ fun RemoteThumbnail(
     width: Dp = size,
     height: Dp = size,
     alignTop: Boolean = false,
-    zoomCaption: String? = null
+    zoomCaption: String? = null,
+    fillWidth: Boolean = false
 ) {
     if (url.isBlank()) return
     // URLが変わったら(並べ替えで同じ位置に別の選手が来た・データが新しくなった など)、
@@ -146,9 +148,10 @@ fun RemoteThumbnail(
     }
     val img = image ?: return
     var zoomed by remember(url) { mutableStateOf(false) }
+    val sizeModifier = if (fillWidth) Modifier.fillMaxWidth().height(height) else Modifier.size(width, height)
     Box(
         modifier = modifier
-            .size(width, height)
+            .then(sizeModifier)
             .border(1.dp, LineGray)
             .background(DividerGray)
             .then(if (zoomCaption != null) Modifier.clickable { zoomed = true } else Modifier)
@@ -156,7 +159,7 @@ fun RemoteThumbnail(
         Image(
             bitmap = img,
             contentDescription = null,
-            modifier = Modifier.size(width, height),
+            modifier = sizeModifier,
             contentScale = ContentScale.Crop,
             alignment = if (alignTop) Alignment.TopCenter else Alignment.Center
         )

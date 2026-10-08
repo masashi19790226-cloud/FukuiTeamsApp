@@ -1304,21 +1304,10 @@ private fun FeatureHero(
                 Text(it.displayName, style = MaterialTheme.typography.labelMedium, color = it.color, maxLines = 1)
             }
         }
-        Headline(story.headline, fontSize = 24)
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
-            if (story.photo.isNotBlank()) {
-                RemoteThumbnail(story.photo, width = 84.dp, height = 105.dp, alignTop = true, zoomCaption = story.headline)
-            } else if (story.bigNumber != null) {
-                Column(
-                    modifier = Modifier.border(2.dp, Ink).background(Paper).padding(horizontal = 10.dp, vertical = 6.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Headline(story.bigNumber, fontSize = 34, color = NewsRed)
-                    story.bigUnit?.let { Text(it, style = MaterialTheme.typography.labelMedium, color = Ink) }
-                }
-            }
-            Text(story.body, style = MaterialTheme.typography.bodyMedium, color = Ink, modifier = Modifier.weight(1f))
-        }
+        // 大きな写真(と数字)の帯 → 見出し → 本文 の順に、新聞の一面のトップ記事のように大きく出す
+        FeatureVisual(story)
+        Headline(story.headline, fontSize = 27)
+        Text(story.body, style = MaterialTheme.typography.bodyLarge, color = Ink)
         if (stories.size > 1) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -1339,6 +1328,105 @@ private fun FeatureHero(
             }
         }
         DoubleRule(modifier = Modifier.padding(top = 2.dp))
+    }
+}
+
+/** 一面の特集の写真の帯の高さ */
+private val FEATURE_VISUAL_HEIGHT = 220.dp
+
+/**
+ * 一面の特集の大きな写真の帯。どの記事にも必ず画像を出す。
+ * ・ニュースの画像(横長が多い)は幅いっぱいに出す
+ * ・それ以外は、左にチームカラーの帯(記事の種類と大きな数字)、右に選手の写真(顔が切れないよう上を残す)
+ * ・記事に合う写真が無い記事は、そのチームの選手の写真を代わりに出し、写真の下に選手名を添える
+ * ・写真を読み込めないとき・読み込むまでは、チームカラーの帯が幅いっぱいに広がる(何も無い空白にはしない)
+ * ・写真を押しても拡大はせず、記事全体と同じく、その試合・記事・掲示板などを開く
+ */
+@Composable
+private fun FeatureVisual(story: FeatureStory) {
+    val accent = story.team?.color ?: Ink
+    val newsImage = story.photo.isNotBlank() && story.photoCaption == null && story.url != null && story.bigNumber == null
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(FEATURE_VISUAL_HEIGHT)
+            .background(accent)
+    ) {
+        if (newsImage) {
+            // 読み込むまでは色の帯に記事の種類を出しておき、読み込めたら画像で覆う
+            FeatureGraphic(story, modifier = Modifier.fillMaxSize())
+            RemoteThumbnail(
+                story.photo,
+                height = FEATURE_VISUAL_HEIGHT,
+                fillWidth = true
+            )
+        } else {
+            Row(modifier = Modifier.fillMaxSize()) {
+                FeatureGraphic(story, modifier = Modifier.weight(1f).fillMaxHeight())
+                if (story.photo.isNotBlank()) {
+                    Box {
+                        RemoteThumbnail(
+                            story.photo,
+                            width = 165.dp,
+                            height = FEATURE_VISUAL_HEIGHT,
+                            alignTop = true
+                        )
+                        story.photoCaption?.let { caption ->
+                            Text(
+                                caption,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = White,
+                                maxLines = 1,
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
+                                    .fillMaxWidth()
+                                    .background(Ink.copy(alpha = 0.6f))
+                                    .padding(horizontal = 6.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** 特集の帯の色の部分:記事の種類・大きな数字(無ければチームの頭文字)・チーム名 */
+@Composable
+private fun FeatureGraphic(story: FeatureStory, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.padding(14.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            story.kicker,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            color = White,
+            maxLines = 2
+        )
+        Row(verticalAlignment = Alignment.Bottom) {
+            Headline(
+                story.bigNumber ?: (story.team?.initial ?: "特集"),
+                fontSize = if (story.bigNumber != null && story.bigNumber.length > 4) 44 else 64,
+                color = White
+            )
+            story.bigUnit?.takeIf { story.bigNumber != null }?.let {
+                Text(
+                    it,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = White,
+                    modifier = Modifier.padding(start = 4.dp, bottom = 10.dp)
+                )
+            }
+        }
+        Text(
+            story.team?.displayName ?: "3チーム",
+            style = MaterialTheme.typography.labelMedium,
+            color = White.copy(alpha = 0.85f),
+            maxLines = 1
+        )
     }
 }
 
