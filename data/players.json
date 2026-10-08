@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-08T13:35:51.239344+00:00",
+    "updated_at": "2026-10-08T23:45:20.447272+00:00",
     "players": [
       {
         "number": "1",
@@ -1324,6 +1324,65 @@
         "photo": "https://www.fukuiblowinds.com/v=1790296914/files/user/common/93_Takahashi_2026-27_HP.jpg"
       }
     ],
+    "team_stats": [
+      {
+        "key": "PPG",
+        "label": "平均得点数",
+        "rank": 14,
+        "value": "81.5",
+        "unit": "点"
+      },
+      {
+        "key": "FG%",
+        "label": "フィールドゴール成功率",
+        "rank": 19,
+        "value": "42.2",
+        "unit": "%"
+      },
+      {
+        "key": "3FG%",
+        "label": "3ポイント成功率",
+        "rank": 23,
+        "value": "25.9",
+        "unit": "%"
+      },
+      {
+        "key": "FT%",
+        "label": "フリースロー成功率",
+        "rank": 10,
+        "value": "68.5",
+        "unit": "%"
+      },
+      {
+        "key": "RPG",
+        "label": "平均リバウンド数",
+        "rank": 4,
+        "value": "44.8",
+        "unit": "本"
+      },
+      {
+        "key": "APG",
+        "label": "平均アシスト数",
+        "rank": 12,
+        "value": "20.3",
+        "unit": "本"
+      },
+      {
+        "key": "BPG",
+        "label": "平均ブロック数",
+        "rank": 22,
+        "value": "1.5",
+        "unit": "本"
+      },
+      {
+        "key": "SPG",
+        "label": "平均スティール数",
+        "rank": 18,
+        "value": "6.25",
+        "unit": "本"
+      }
+    ],
+    "team_stats_updated": "2026年10月04日19:07",
     "club_photos": {
       "8736": [
         "https://www.fukuiblowinds.com/v=1790295991/files/user/common/1_Fujinaga_2026-27_HP.jpg",
@@ -2575,7 +2634,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=714&tab=1",
-    "updated_at": "2026-10-08T13:35:53.787534+00:00",
+    "updated_at": "2026-10-08T23:45:23.102491+00:00",
     "players": [
       {
         "number": "1",
@@ -3382,6 +3441,65 @@
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/51000663_03.png"
       }
     ],
+    "team_stats": [
+      {
+        "key": "PPG",
+        "label": "平均得点数",
+        "rank": 3,
+        "value": "95.5",
+        "unit": "点"
+      },
+      {
+        "key": "FG%",
+        "label": "フィールドゴール成功率",
+        "rank": 17,
+        "value": "42.6",
+        "unit": "%"
+      },
+      {
+        "key": "3FG%",
+        "label": "3ポイント成功率",
+        "rank": 15,
+        "value": "28.6",
+        "unit": "%"
+      },
+      {
+        "key": "FT%",
+        "label": "フリースロー成功率",
+        "rank": 1,
+        "value": "79.5",
+        "unit": "%"
+      },
+      {
+        "key": "RPG",
+        "label": "平均リバウンド数",
+        "rank": 3,
+        "value": "45.0",
+        "unit": "本"
+      },
+      {
+        "key": "APG",
+        "label": "平均アシスト数",
+        "rank": 9,
+        "value": "20.5",
+        "unit": "本"
+      },
+      {
+        "key": "BPG",
+        "label": "平均ブロック数",
+        "rank": 2,
+        "value": "5",
+        "unit": "本"
+      },
+      {
+        "key": "SPG",
+        "label": "平均スティール数",
+        "rank": 4,
+        "value": "10",
+        "unit": "本"
+      }
+    ],
+    "team_stats_updated": "2026年10月04日19:07",
     "shot_cache": {
       "43445": {
         "season": "2026-27",
