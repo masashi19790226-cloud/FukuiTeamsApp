@@ -5,6 +5,11 @@
 - 丸岡RUCK    : 女子Fリーグ公式サイトのクラブページの選手名簿(背番号・氏名・生年月日が1つの表にある)
 - ユナイテッド : 公式サイトのチームページ → 各選手の詳細ページ(detail.php?id=)の「生年月日」
 
+あわせて、選手の詳細ページ・選手紹介にある身長・体重・出身地・出身校も入れる(アプリの選手タブと特集で使う)。
+- ブローウィンズ: 身長/体重・出身地・出身校
+- 丸岡RUCK    : 身長・出身地(公式サイトの選手紹介。体重は載っていない)
+- ユナイテッド : 身長/体重・出身地
+
 選手の詳細ページは一度読んだら30日間は読み直さない(誕生日は変わらないため)。
 覚え書きは "cache" に入れる(アプリは使わない)。
 """
@@ -24,6 +29,9 @@ WFL_RUCK_CLUB = WFL_SITE + "/club/maruoka/"
 
 CACHE_DAYS = 30
 
+# データの形の版。身長などを足したときに上げると、その日のうちに作り直す
+VERSION = 3
+
 
 def _text(fragment: str) -> str:
     t = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", fragment, flags=re.S | re.I)
@@ -40,6 +48,31 @@ def _birthday_in(text: str):
     if not m:
         return None
     return f"{int(m.group(1)):04d}-{int(m.group(2)):02d}-{int(m.group(3)):02d}"
+
+
+def _profile(text: str) -> dict:
+    """選手ページの文字から 身長・体重・出身地・出身校。
+    例「身長 / 体重 175cm / 75kg」「身長／体重: 179cm／75kg」「出身地 兵庫県」「出身校 東海大学」。
+    読み取れないもの・ありえない数字は空にする"""
+    out = {"height": "", "weight": "", "hometown": "", "school": "", "position": ""}
+    m = re.search(r"ポジション\s*[:：]?\s*\n?\s*(GK|FP|DF|MF|FW|PG|SG|SF|PF|C|G|F)(?:\s*/\s*(?:PG|SG|SF|PF|C|G|F))?\b", text)
+    if m:
+        # 「C/PF」のような2つのポジションもそのまま(空白は取る)
+        out["position"] = re.sub(r"\s+", "", text[m.start(1):m.end()])
+    m = re.search(r"身長[^\d\n]{0,20}\n?[^\d\n]{0,10}(\d{3}(?:\.\d)?)\s*cm", text)
+    if m and 140 <= float(m.group(1)) <= 235:
+        out["height"] = m.group(1)
+    m = re.search(r"体重[^\d]{0,30}?(?:\d{3}(?:\.\d)?\s*cm\s*[/／]\s*)?(\d{2,3}(?:\.\d)?)\s*kg", text)
+    if m and 35 <= float(m.group(1)) <= 160:
+        out["weight"] = m.group(1)
+    for key, label in (("hometown", "出身地"), ("school", "出身校")):
+        m = re.search(label + r"\s*[:：]?\s*\n?\s*([^\n]{1,30})", text)
+        if m:
+            v = m.group(1).strip()
+            # 次の項目名や数字を拾ってしまったときは使わない
+            if v and not re.search(r"\d|生年月日|身長|体重|血液型|出身|国籍|未記入", v):
+                out[key] = v
+    return out
 
 
 def _fresh(entry, today):
@@ -61,7 +94,8 @@ def blowinds(fetch, cache, today):
     for detail_id, pid in links:
         key = f"blowinds:{pid}"
         hit = cache.get(key)
-        if not (hit and _fresh(hit, today)):
+        # 身長・ポジションなどを入れる前に覚えた分("position" が無い)は読み直す
+        if not (hit and _fresh(hit, today) and "position" in hit):
             url = f"{BLOWINDS_SITE}/team/players/detail/id={detail_id}?PlayerID={pid}"
             try:
                 html = fetch(url)
@@ -82,8 +116,9 @@ def blowinds(fetch, cache, today):
                     num = re.search(r"/(\d+)_[^/]*$", src.group(1))
                     number = num.group(1) if num else ""
                     break
+            body = _text(html)
             hit = {"team": "BLOWINDS", "name": name, "number": number, "photo": photo,
-                   "birthday": _birthday_in(_text(html)), "checked": today.isoformat()}
+                   "birthday": _birthday_in(body), **_profile(body), "checked": today.isoformat()}
         out.append((key, hit))
     print(f"[誕生日] ブローウィンズ: {len(out)}人(詳細ページ{fetched}件を読み込み)")
     return out
@@ -108,7 +143,7 @@ def united(fetch, cache, today):
     for pid, number in links:
         key = f"united:{pid}"
         hit = cache.get(key)
-        if not (hit and _fresh(hit, today)):
+        if not (hit and _fresh(hit, today) and "position" in hit):
             url = f"{UNITED_SITE}/team/detail.php?id={pid}"
             try:
                 html = fetch(url)
@@ -120,9 +155,13 @@ def united(fetch, cache, today):
                 continue
             title = re.search(r"<title>(.*?)</title>", html, flags=re.S | re.I)
             name = htmllib.unescape(title.group(1)).split(" - ")[0].strip() if title else ""
+            body = _text(html)
+            profile = _profile(body)
+            # ユナイテッドの選手ページには出身校の欄が無い(「出身校」の文字が別の場所にあっても使わない)
+            profile["school"] = ""
             hit = {"team": "UNITED", "name": name, "number": number,
                    "photo": photos.get(re.sub(r"[\s　]+", "", name), ""),
-                   "birthday": _birthday_in(_text(html)), "checked": today.isoformat()}
+                   "birthday": _birthday_in(body), **profile, "checked": today.isoformat()}
         out.append((key, hit))
     print(f"[誕生日] ユナイテッド: {len(out)}人(詳細ページ{fetched}件を読み込み)")
     return out
@@ -133,6 +172,11 @@ def _ruck_photo(info):
     if isinstance(info, dict):
         return info.get("photo", "")
     return info or ""
+
+
+def _ruck_info(info, key):
+    """丸岡RUCK公式の選手紹介の1人分から、身長・出身地などの1項目"""
+    return info.get(key, "") if isinstance(info, dict) else ""
 
 
 def ruck(fetch, ruck_photos):
@@ -154,9 +198,14 @@ def ruck(fetch, ruck_photos):
         if not bd or not name:
             continue
         key = re.sub(r"\s+", "", name)
+        info = (ruck_photos or {}).get(key)
         out.append((f"ruck:{key}", {
             "team": "RAC", "name": name, "number": tds[1].strip(),
-            "photo": _ruck_photo((ruck_photos or {}).get(key)),
+            "position": tds[0].strip() or _ruck_info(info, "position"),
+            "photo": _ruck_photo(info),
+            # 身長・出身地は丸岡RUCK公式の選手紹介から(体重・出身校は載っていない)
+            "height": _ruck_info(info, "height"), "weight": "",
+            "hometown": _ruck_info(info, "hometown"), "school": "",
             "birthday": f"{int(bd.group(1)):04d}-{int(bd.group(2)):02d}-{int(bd.group(3)):02d}",
         }))
     print(f"[誕生日] 丸岡RUCK: {len(out)}人")
@@ -167,7 +216,7 @@ def build(fetch, old, ruck_photos=None):
     """誕生日のデータを作る。old は前回の分(無ければ {})。
     今日すでに作っていれば None(書き直さない)。チームごとに失敗しても、前回の分を残す。"""
     today = datetime.now(JST).date()
-    if old.get("date") == today.isoformat():
+    if old.get("date") == today.isoformat() and old.get("v") == VERSION:
         return None
     cache = old.get("cache") or {}
     prev = {p.get("_key"): p for p in old.get("players") or [] if p.get("_key")}
@@ -192,5 +241,5 @@ def build(fetch, old, ruck_photos=None):
         p["_key"] = k
         players.append(p)
     players.sort(key=lambda p: (p["birthday"][5:], p["team"], p["name"]))
-    return {"date": today.isoformat(), "updated_at": datetime.now(timezone.utc).isoformat(),
+    return {"date": today.isoformat(), "v": VERSION, "updated_at": datetime.now(timezone.utc).isoformat(),
             "players": players, "cache": new_cache}

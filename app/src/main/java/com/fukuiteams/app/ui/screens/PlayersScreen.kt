@@ -48,6 +48,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.DataStatus
+import com.fukuiteams.app.data.BirthdaysRepository
+import com.fukuiteams.app.data.PlayerBirthday
+import com.fukuiteams.app.data.profileKey
+import com.fukuiteams.app.data.profileMap
 import com.fukuiteams.app.data.DataStatusRepository
 import com.fukuiteams.app.data.GamePreview
 import com.fukuiteams.app.data.GamePreviewRepository
@@ -137,7 +141,11 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
     // 丸岡RUCK・ユナイテッドの順位表
     var leagueStandings by remember { mutableStateOf<Map<String, LeagueStandings>>(emptyMap()) }
 
+    // 3チームの選手の身長・体重・出身地など(公式サイトの選手ページから。チーム+名前で引く)
+    var profiles by remember { mutableStateOf<Map<String, PlayerBirthday>>(emptyMap()) }
+
     suspend fun load() {
+        profiles = BirthdaysRepository.fetch().profileMap()
         teamPlayers = PlayersRepository.fetch()
         leagueStandings = StandingsRepository.fetch()
         previews = GamePreviewRepository.fetch()
@@ -156,6 +164,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             leagueStandings = d.standings
             previews = d.previews
             dataStatus = d.status
+            profiles = BirthdaysRepository.fetch().profileMap()
             pullToRefreshState.endRefresh()
         }
     }
@@ -216,7 +225,11 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             JumpLink("▼ ${selectedTeam.shortLabel()}", Modifier.weight(1f)) { jumpTo(marks.own) }
-            JumpLink("▼ 相手:${nextGame?.opponent ?: "次の対戦相手"}", Modifier.weight(1f)) { jumpTo(marks.opp) }
+            // 丸岡RUCK・ユナイテッドは、全選手の一覧へ飛ぶボタンも出す
+            if (selectedTeam != Team.BLOWINDS) {
+                JumpLink("▼ 全選手", Modifier.weight(0.8f)) { jumpTo(marks.all) }
+            }
+            JumpLink("▼ 相手:${nextGame?.opponent ?: "次の対戦相手"}", Modifier.weight(if (selectedTeam != Team.BLOWINDS) 1.2f else 1f)) { jumpTo(marks.opp) }
         }
         Column(
             modifier = Modifier
@@ -248,7 +261,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             val myPlayers = preview?.myKeyPlayers ?: emptyList()
             if (roster != null && roster.players.isNotEmpty()) {
                 SectionLabel("${selectedTeam.displayName}の選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
-                RosterSection(roster, sortKey) { sortKey = it }
+                RosterSection(roster, sortKey, profileOf = { name -> profiles[profileKey(selectedTeam, name)] }) { sortKey = it }
             } else if (myPlayers.isNotEmpty()) {
                 SectionLabel("${selectedTeam.displayName}の主な選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
                 AsOfLine(previewUpdatedAt(dataStatus), null)
@@ -274,7 +287,8 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                             rows = scorers.rows.filter { it.team.contains(teamWord(selectedTeam)) },
                             team = selectedTeam,
                             updatedAt = st.updatedAt,
-                            emptyMessage = "まだ得点した選手はいません。"
+                            emptyMessage = "まだ得点した選手はいません。",
+                            profileOf = { name -> profiles[profileKey(selectedTeam, name)] }
                         )
                     }
                     SectionLabel(
@@ -293,6 +307,21 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                             Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(1時間おき)が動くと、Bリーグ公式の選手情報から全選手の成績が表示されます。"
                             Team.RAC, Team.UNITED -> "このチームの順位表はまだ届いていません。GitHubの自動更新(1時間おき)が動くと表示されます。"
                         }
+                    )
+                }
+            }
+            // 丸岡RUCK・ユナイテッドの全選手(公式サイトの選手紹介の全員。得点などの数字を重ねる)
+            if (selectedTeam != Team.BLOWINDS) {
+                val teamRoster = profiles.values.filter { it.team == selectedTeam }
+                SectionLabel("${selectedTeam.displayName}の全選手", modifier = Modifier.onGloballyPositioned { marks.all = it })
+                if (teamRoster.isEmpty()) {
+                    NoDataBox("全選手のデータはまだ届いていません。GitHubの自動更新が動くと、公式サイトの選手紹介から表示されます。")
+                } else {
+                    AllPlayersSection(
+                        team = selectedTeam,
+                        roster = teamRoster,
+                        scorerRows = leagueStandings[selectedTeam.name]?.scorers?.rows.orEmpty()
+                            .filter { it.team.contains(teamWord(selectedTeam)) }
                     )
                 }
             }
@@ -388,7 +417,13 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
  * ブローウィンズと、その次の対戦相手で共通に使う。
  */
 @Composable
-private fun RosterSection(roster: TeamPlayers, sortKey: PlayerSort, onSortChange: (PlayerSort) -> Unit) {
+private fun RosterSection(
+    roster: TeamPlayers,
+    sortKey: PlayerSort,
+    // 選手名 → 身長・出身地など(自チームのときだけ。相手チームは null を返す)
+    profileOf: (String) -> PlayerBirthday? = { null },
+    onSortChange: (PlayerSort) -> Unit
+) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         // 何日時点の数字か(Bリーグ公式から取り直した日時と、その時点の今季の試合数)
         val maxGames = roster.players.mapNotNull { it.games?.toIntOrNull() }.maxOrNull()
@@ -427,7 +462,7 @@ private fun RosterSection(roster: TeamPlayers, sortKey: PlayerSort, onSortChange
             color = InkSoft
         )
         // 並べ替えても、写真・開閉の状態がその選手についていくよう、選手ごとに key を付ける
-        sortPlayers(roster.players, sortKey).forEach { p -> key(p.number, p.name) { RosterCard(p, sortKey) } }
+        sortPlayers(roster.players, sortKey).forEach { p -> key(p.number, p.name) { RosterCard(p, sortKey, profileOf(p.name)) } }
     }
 }
 
@@ -533,7 +568,9 @@ private fun ScorersSection(
     rows: List<ScorerRow>,
     team: Team,
     updatedAt: java.time.Instant?,
-    emptyMessage: String
+    emptyMessage: String,
+    // 選手名 → 身長・出身地など(自チームのときだけ)
+    profileOf: (String) -> PlayerBirthday? = { null }
 ) {
     val isUnited = team == Team.UNITED
     // ユナイテッドは得点のない選手も含むので、最初は得点した選手だけを出し、ボタンで全員を出す
@@ -549,7 +586,7 @@ private fun ScorersSection(
         if (shown.isEmpty()) {
             NoDataBox(emptyMessage)
         } else {
-            ScorersTable(shown, isUnited, team.color)
+            ScorersTable(shown, isUnited, team.color, profileOf)
         }
         if (isUnited && rows.any { it.goals == 0 }) {
             Text(
@@ -576,7 +613,12 @@ private fun ScorersSection(
 }
 
 @Composable
-private fun ScorersTable(rows: List<ScorerRow>, isUnited: Boolean, ownColor: androidx.compose.ui.graphics.Color) {
+private fun ScorersTable(
+    rows: List<ScorerRow>,
+    isUnited: Boolean,
+    ownColor: androidx.compose.ui.graphics.Color,
+    profileOf: (String) -> PlayerBirthday? = { null }
+) {
     val headers = if (isUnited) listOf("番号", "選手", "得点", "先発", "ベンチ") else listOf("順位", "選手", "得点", "シュート", "出場")
     val weights = listOf(1f, 3.4f, 1f, 1.2f, 1f)
     Column(modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper)) {
@@ -615,15 +657,19 @@ private fun ScorersTable(rows: List<ScorerRow>, isUnited: Boolean, ownColor: and
                                 // タップで大きく表示
                                 zoomCaption = (if (r.number.isNotBlank()) "#${r.number} " else "") + r.name
                             )
-                            // 選手名は途中で切らず、入りきらないときは折り返す
-                            Text(
-                                c,
-                                modifier = Modifier.weight(1f),
-                                fontSize = 12.sp,
-                                color = Ink,
-                                maxLines = 3,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                            // 選手名は途中で切らず、入りきらないときは折り返す。下に身長・出身地など(分かる選手だけ)
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    c,
+                                    fontSize = 12.sp,
+                                    color = Ink,
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                profileOf(r.name)?.profileLine?.takeIf { it.isNotBlank() }?.let {
+                                    Text(it, fontSize = 10.sp, color = InkSoft, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                                }
+                            }
                         }
                     } else {
                         Text(
@@ -695,9 +741,106 @@ private class JumpMarks {
     var viewport: LayoutCoordinates? = null
     var own: LayoutCoordinates? = null
     var opp: LayoutCoordinates? = null
+    // 丸岡RUCK・ユナイテッドの「全選手」
+    var all: LayoutCoordinates? = null
 }
 
 /** 上に固定する「自チーム」「相手」へ飛ぶリンク。 */
+/** 丸岡RUCK・ユナイテッドの全選手の並び順 */
+private enum class RosterSort(val label: String) {
+    NUMBER("背番号"),
+    GOALS("得点"),
+    HEIGHT("身長"),
+    AGE("年齢")
+}
+
+/**
+ * 丸岡RUCK・ユナイテッドの全選手。公式サイトの選手紹介(写真・背番号・ポジション・身長など)の全員に、
+ * 得点の表の数字(丸岡RUCK:得点・シュート・出場、ユナイテッド:得点・先発・ベンチ)を重ねて出す。
+ * 得点の表に載っていない選手は、得点0として出す(シュート数などは分からないので「-」)。
+ */
+@Composable
+private fun AllPlayersSection(team: Team, roster: List<PlayerBirthday>, scorerRows: List<ScorerRow>) {
+    var sort by remember(team) { mutableStateOf(RosterSort.NUMBER) }
+    val today = BirthdaysRepository.today()
+    val rowsByName = remember(scorerRows) { scorerRows.associateBy { com.fukuiteams.app.data.playerNameKey(it.name) } }
+    fun rowOf(p: PlayerBirthday) = rowsByName[com.fukuiteams.app.data.playerNameKey(p.name)]
+    val sorted = when (sort) {
+        RosterSort.NUMBER -> roster.sortedBy { it.number.toIntOrNull() ?: 999 }
+        RosterSort.GOALS -> roster.sortedWith(
+            compareByDescending<PlayerBirthday> { rowOf(it)?.goals ?: 0 }.thenBy { it.number.toIntOrNull() ?: 999 }
+        )
+        RosterSort.HEIGHT -> roster.sortedWith(
+            compareBy<PlayerBirthday> { it.heightCm == null }.thenByDescending { it.heightCm ?: 0.0 }
+        )
+        RosterSort.AGE -> roster.sortedBy { it.birthday }
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+            "公式サイトの選手紹介の${roster.size}人です。" +
+                (if (team == Team.RAC) "得点・シュート・出場は女子Fリーグ公式の得点ランキングから(得点していない選手は得点0、ほかは「-」)。"
+                else "得点・先発・ベンチは公式サイトの試合結果から数えた数字です(試合のメンバーに入っていない選手は0)。"),
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            RosterSort.entries.forEach { key ->
+                SortChip(key.label, sort == key, Modifier.weight(1f)) { sort = key }
+            }
+        }
+        sorted.forEach { p ->
+            key(p.team, p.name) { AllPlayerCard(team, p, rowOf(p), today) }
+        }
+    }
+}
+
+@Composable
+private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, today: java.time.LocalDate) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Ink)
+            .background(Paper)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            RemoteThumbnail(p.photo, width = 72.dp, height = 90.dp, alignTop = true, zoomCaption = p.label)
+            Headline(if (p.number.isNotBlank()) "#${p.number}" else "#-", fontSize = 22, modifier = Modifier.width(58.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    p.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    listOf(
+                        p.position.takeIf { it.isNotBlank() }?.let { "ポジション:$it" } ?: "",
+                        "${p.currentAge(today)}歳"
+                    ).filter { it.isNotBlank() }.joinToString("・"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                p.profileLine.takeIf { it.isNotBlank() }?.let {
+                    Text(it, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                }
+            }
+        }
+        Row(modifier = Modifier.fillMaxWidth()) {
+            StatCell("得点", "${row?.goals ?: 0}", Modifier.weight(1f))
+            if (team == Team.RAC) {
+                StatCell("シュート", row?.shots?.toString() ?: "-", Modifier.weight(1f))
+                StatCell("出場", row?.games?.let { "${it}試合" } ?: "-", Modifier.weight(1f))
+            } else {
+                StatCell("先発", "${row?.starts ?: 0}", Modifier.weight(1f))
+                StatCell("ベンチ", "${row?.bench ?: 0}", Modifier.weight(1f))
+            }
+        }
+    }
+}
+
 @Composable
 private fun JumpLink(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Text(
@@ -804,7 +947,7 @@ private fun SortChip(label: String, selected: Boolean, modifier: Modifier = Modi
  * 今季まだ成績が1つも無い選手は、数字の段の代わりに「今季の出場なし」の1行にし、押しても開かない。
  */
 @Composable
-private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUMBER) {
+private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUMBER, profile: PlayerBirthday? = null) {
     var expanded by remember(player.number, player.name) { mutableStateOf(false) }
     val hasStats = listOf(
         player.games, player.minutesPerGame, player.points, player.rebounds, player.assists,
@@ -846,6 +989,10 @@ private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUM
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
+                // 身長・体重・出身地・出身校(公式サイトの選手ページから。分かる選手だけ)
+                profile?.profileLine?.takeIf { it.isNotBlank() }?.let {
+                    Text(it, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                }
             }
             if (hasStats) {
                 Text(if (expanded) "▲" else "▼", style = MaterialTheme.typography.labelMedium, color = InkSoft)

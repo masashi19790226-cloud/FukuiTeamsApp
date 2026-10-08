@@ -24,7 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
@@ -56,6 +58,10 @@ private object ThumbnailCache {
     val largeCache = object : LruCache<String, ImageBitmap>(16 * 1024 * 1024) {
         override fun sizeOf(key: String, value: ImageBitmap): Int = value.width * value.height * 4
     }
+    // 透明な余白を切り取った画像(一面の特集で使う。およそ 8MB まで)
+    val trimmed = object : LruCache<String, ImageBitmap>(8 * 1024 * 1024) {
+        override fun sizeOf(key: String, value: ImageBitmap): Int = value.width * value.height * 4
+    }
     // 読み込みに失敗したURL(同じものを何度も読みに行かない)
     val failed: MutableSet<String> = java.util.Collections.synchronizedSet(HashSet())
 }
@@ -74,6 +80,43 @@ private fun downloadAndDecode(url: String, minSide: Int): ImageBitmap? {
     while (bounds.outWidth / (sample * 2) >= minSide && bounds.outHeight / (sample * 2) >= minSide) sample *= 2
     return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, BitmapFactory.Options().apply { inSampleSize = sample })
         ?.asImageBitmap()
+}
+
+/**
+ * 透明な部分(切り抜き写真の周りなど)を外側から切り取る。透明な部分が無い画像はそのまま返す。
+ * 一面の特集で、写真の周りに余白が出ないようにするため。
+ */
+private fun trimTransparentEdges(img: ImageBitmap): ImageBitmap {
+    val bmp = img.asAndroidBitmap()
+    if (!bmp.hasAlpha()) return img
+    val w = bmp.width
+    val h = bmp.height
+    if (w <= 0 || h <= 0) return img
+    val px = IntArray(w * h)
+    try {
+        bmp.getPixels(px, 0, w, 0, 0, w, h)
+    } catch (e: Exception) {
+        return img
+    }
+    var top = h
+    var bottom = -1
+    var left = w
+    var right = -1
+    for (y in 0 until h) {
+        val row = y * w
+        for (x in 0 until w) {
+            // ほぼ透明(不透明度 16/255 以下)な点は余白とみなす
+            if ((px[row + x] ushr 24) > 16) {
+                if (y < top) top = y
+                if (y > bottom) bottom = y
+                if (x < left) left = x
+                if (x > right) right = x
+            }
+        }
+    }
+    if (bottom < 0) return img
+    if (left == 0 && top == 0 && right == w - 1 && bottom == h - 1) return img
+    return android.graphics.Bitmap.createBitmap(bmp, left, top, right - left + 1, bottom - top + 1).asImageBitmap()
 }
 
 private suspend fun loadThumbnail(url: String): ImageBitmap? = withContext(Dispatchers.IO) {
@@ -126,6 +169,8 @@ private suspend fun loadLargeImage(url: String): ImageBitmap? = withContext(Disp
  * alignTop:切り抜くときに上側を残す(選手の顔写真は顔が上にあるため)
  * zoomCaption:null 以外を渡すと、タップで画像を大きく表示する(渡した文字は拡大画面の下に出す)
  * fillWidth:true なら幅いっぱい(高さは height)にする(一面の特集のニュース画像など)
+ * trimTransparent:true なら、透明な余白(切り抜き写真の周りなど)を切り取ってから表示する
+ * backgroundColor:写真の透明な部分の後ろに見える色。framed:false なら枠線を付けない
  */
 @Composable
 fun RemoteThumbnail(
@@ -136,7 +181,10 @@ fun RemoteThumbnail(
     height: Dp = size,
     alignTop: Boolean = false,
     zoomCaption: String? = null,
-    fillWidth: Boolean = false
+    fillWidth: Boolean = false,
+    trimTransparent: Boolean = false,
+    backgroundColor: Color = DividerGray,
+    framed: Boolean = true
 ) {
     if (url.isBlank()) return
     // URLが変わったら(並べ替えで同じ位置に別の選手が来た・データが新しくなった など)、
@@ -146,14 +194,27 @@ fun RemoteThumbnail(
     LaunchedEffect(url) {
         if (image == null) image = loadThumbnail(url)
     }
-    val img = image ?: return
+    val loaded = image ?: return
+    // 透明な余白を切り取る指定なら、切り取った画像を使う(切り取るまでは元の画像)
+    var trimmed by remember(url, trimTransparent) {
+        mutableStateOf(if (trimTransparent) ThumbnailCache.trimmed.get(url) else null)
+    }
+    if (trimTransparent) {
+        LaunchedEffect(url, loaded) {
+            if (trimmed == null) {
+                trimmed = withContext(Dispatchers.Default) { trimTransparentEdges(loaded) }
+                    .also { ThumbnailCache.trimmed.put(url, it) }
+            }
+        }
+    }
+    val img = trimmed ?: loaded
     var zoomed by remember(url) { mutableStateOf(false) }
     val sizeModifier = if (fillWidth) Modifier.fillMaxWidth().height(height) else Modifier.size(width, height)
     Box(
         modifier = modifier
             .then(sizeModifier)
-            .border(1.dp, LineGray)
-            .background(DividerGray)
+            .then(if (framed) Modifier.border(1.dp, LineGray) else Modifier)
+            .background(backgroundColor)
             .then(if (zoomCaption != null) Modifier.clickable { zoomed = true } else Modifier)
     ) {
         Image(

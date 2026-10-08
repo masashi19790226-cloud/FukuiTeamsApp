@@ -311,7 +311,7 @@ def _name_key(name: str) -> str:
 
 
 def ruck_members(fetch):
-    """丸岡RUCK公式の選手紹介から {名前: {photo, number, position}}。
+    """丸岡RUCK公式の選手紹介から {名前: {photo, number, position, height, hometown}}。
     <div class="member-item"><p><img src="...profile2026-17-300x300.jpg"></p><h4 class="team-name">荒井 一花(17 FP)</h4>"""
     page = fetch(RUCK_MEMBERS)
     out = {}
@@ -326,7 +326,13 @@ def ruck_members(fetch):
         photo = img.group(1) if img else ""
         # 一覧用の小さい画像(150x150)があればそれを使う
         photo = re.sub(r"-\d+x\d+(\.\w+)$", r"-150x150\1", photo)
-        out[_name_key(name)] = {"photo": photo, "number": m.group(2) if m else "", "position": (m.group(3) or "") if m else ""}
+        # 選手紹介には「2001年11月14日 福井県生まれ 173cm A型」のように項目名なしで並んでいる。身長と出身地を読む
+        body = _text(block)
+        h = re.search(r"(\d{3}(?:\.\d)?)\s*cm", body)
+        height = h.group(1) if h and 140 <= float(h.group(1)) <= 235 else ""
+        b = re.search(r"([^\s\d()（）]{2,12}?)生まれ", body)
+        out[_name_key(name)] = {"photo": photo, "number": m.group(2) if m else "", "position": (m.group(3) or "") if m else "",
+                                "height": height, "hometown": b.group(1) if b else ""}
     print(f"[写真] 丸岡RUCK: 選手紹介から{len(out)}人")
     return out
 

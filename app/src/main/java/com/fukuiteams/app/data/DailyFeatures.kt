@@ -100,6 +100,8 @@ fun buildFeatureStories(
         out += scorerRace(team, standings)
         out += biggestComeback(team, games, results, today)
         out += onSiteRecord(team, games, results, onSiteIds)
+        out += tallest(team, birthdays)
+        out += localPlayers(team, birthdays)
     }
     out += topNews(teams, news, today)
     out += newsDigest(teams, news, today)
@@ -829,6 +831,50 @@ private fun bbsTalk(teams: List<Team>, buzz: BbsBuzz?): List<FeatureStory> {
             bigUnit = if (buzz.atLeast) "件以上" else "件",
             openBbs = true,
             bbsPostNo = buzz.topPost?.no
+        )
+    )
+}
+
+// ---------- 身長・出身地(公式サイトの選手ページから) ----------
+
+/** チームでいちばん背が高い選手と、チームの平均身長・いちばん小柄な選手(身長が分かる選手が3人以上のとき) */
+private fun tallest(team: Team, birthdays: List<PlayerBirthday>): List<FeatureStory> {
+    val list = birthdays.filter { it.team == team && it.heightCm != null }
+    if (list.size < 3) return emptyList()
+    val top = list.maxByOrNull { it.heightCm!! }!!
+    val low = list.minByOrNull { it.heightCm!! }!!
+    val avg = list.mapNotNull { it.heightCm }.average()
+    val top3 = list.sortedByDescending { it.heightCm }.take(3)
+    return listOf(
+        FeatureStory(
+            kicker = "高さ比べ",
+            team = team,
+            headline = "${teamShort(team)}でいちばん背が高いのは${top.name}選手、${top.height}cm",
+            body = "身長が分かる${list.size}人の平均は%.1fcm。".format(avg) +
+                "上位は" + top3.joinToString("、") { "${it.name}(${it.height}cm)" } + "。" +
+                "いちばん小柄なのは${low.name}選手(${low.height}cm)です。\n※公式サイトの選手紹介より",
+            photo = top.photo,
+            bigNumber = top.height,
+            bigUnit = "cm"
+        )
+    )
+}
+
+/** 福井県出身の選手 */
+private fun localPlayers(team: Team, birthdays: List<PlayerBirthday>): List<FeatureStory> {
+    val withHome = birthdays.filter { it.team == team && it.hometown.isNotBlank() }
+    val local = withHome.filter { it.hometown.contains("福井") }
+    if (local.isEmpty() || withHome.size < 3) return emptyList()
+    return listOf(
+        FeatureStory(
+            kicker = "地元出身",
+            team = team,
+            headline = "${teamShort(team)}の福井県出身の選手は${local.size}人",
+            body = local.joinToString("、") { it.label } + "。" +
+                "出身地が分かる${withHome.size}人のうち${local.size}人が地元・福井の選手です。\n※公式サイトの選手紹介より",
+            photo = local[Math.floorMod(LocalDate.now(JST).toEpochDay().toInt(), local.size)].photo,
+            bigNumber = "${local.size}",
+            bigUnit = "人"
         )
     )
 }

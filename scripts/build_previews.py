@@ -804,7 +804,9 @@ def main():
     try:
         import birthdays
         old_bd = load_json(STANDINGS_PATH, {}).get("BIRTHDAYS", {})
-        if old_bd.get("date") != datetime.now(JST).strftime("%Y-%m-%d") and STANDINGS:
+        # 1日1回(データの形を変えたとき=版が上がったときは、その日のうちにもう一度)
+        if (old_bd.get("date") != datetime.now(JST).strftime("%Y-%m-%d")
+                or old_bd.get("v") != birthdays.VERSION) and STANDINGS:
             ruck_photos = None
             try:
                 ruck_photos = standings.ruck_members(fetch)
