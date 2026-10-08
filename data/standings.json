@@ -1388,7 +1388,7 @@
         }
       }
     },
-    "updated_at": "2026-10-08T12:33:34.827462+00:00"
+    "updated_at": "2026-10-08T13:08:05.180071+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3130,11 +3130,12 @@
         }
       ]
     },
-    "updated_at": "2026-10-08T12:33:34.827462+00:00"
+    "updated_at": "2026-10-08T13:08:05.180071+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-10-08",
-    "updated_at": "2026-10-07T15:37:45.030097+00:00",
+    "v": 3,
+    "updated_at": "2026-10-08T13:08:05.180071+00:00",
     "players": [
       {
         "team": "UNITED",
@@ -3142,6 +3143,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/5c8c4b4bd439013ad8d098916aade0fd5b4b38fa.png",
         "birthday": "2003-01-02",
+        "height": "173",
+        "weight": "66",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
         "_key": "united:137"
       },
       {
@@ -3150,6 +3156,11 @@
         "number": "73",
         "photo": "https://www.fukuiblowinds.com/v=1790296882/files/user/common/73_Tawatari_2026-27_HP.jpg",
         "birthday": "1990-01-06",
+        "height": "185",
+        "weight": "79",
+        "hometown": "東京都",
+        "school": "筑波大学",
+        "position": "",
         "_key": "blowinds:8571"
       },
       {
@@ -3158,13 +3169,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/06/6bd5945f6c4fb9a632eb008d3fa31d79f78a821b.png",
         "birthday": "2004-01-22",
+        "height": "180",
+        "weight": "75",
+        "hometown": "佐賀県",
+        "school": "",
+        "position": "",
         "_key": "united:143"
       },
       {
         "team": "RAC",
         "name": "渡邊 優和",
         "number": "9",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-09-150x150.jpg",
+        "height": "158",
+        "weight": "",
+        "hometown": "広島県",
+        "school": "",
         "birthday": "2009-01-26",
         "_key": "ruck:渡邊優和"
       },
@@ -3174,6 +3195,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/05/ff09d6db60a2c0f89c88706926f7944de2c073f1.png",
         "birthday": "2003-01-28",
+        "height": "176",
+        "weight": "72",
+        "hometown": "東京都",
+        "school": "",
+        "position": "",
         "_key": "united:139"
       },
       {
@@ -3182,6 +3208,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/9a99e2c3b367e29cc074d86a157a1e0285761937.png",
         "birthday": "2003-01-31",
+        "height": "184",
+        "weight": "76",
+        "hometown": "愛知県",
+        "school": "",
+        "position": "",
         "_key": "united:114"
       },
       {
@@ -3190,13 +3221,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/04/9e3bc0b2291a5afe43acfb815e81dad1c5789c9f.png",
         "birthday": "2002-02-15",
+        "height": "175",
+        "weight": "73",
+        "hometown": "神奈川県",
+        "school": "",
+        "position": "",
         "_key": "united:138"
       },
       {
         "team": "RAC",
         "name": "加藤 はるな",
         "number": "5",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-05-150x150.jpg",
+        "height": "157",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2006-02-25",
         "_key": "ruck:加藤はるな"
       },
@@ -3206,6 +3247,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/c824fe1c331bacaaa8074aabff73520c814cea30.png",
         "birthday": "2000-02-25",
+        "height": "167",
+        "weight": "63",
+        "hometown": "愛知県",
+        "school": "",
+        "position": "",
         "_key": "united:131"
       },
       {
@@ -3214,13 +3260,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/05/0db10e2bd818400f239183a8caee38fe1ed76e5f.png",
         "birthday": "2004-03-05",
+        "height": "176",
+        "weight": "70",
+        "hometown": "香川県",
+        "school": "",
+        "position": "",
         "_key": "united:140"
       },
       {
         "team": "RAC",
         "name": "足立 紗菜",
         "number": "11",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-11-150x150.jpg",
+        "height": "",
+        "weight": "",
+        "hometown": "愛知県",
+        "school": "",
         "birthday": "2008-03-13",
         "_key": "ruck:足立紗菜"
       },
@@ -3230,6 +3286,11 @@
         "number": "13",
         "photo": "https://www.fukuiblowinds.com/v=1790296532/files/user/common/13_Kawashima_2026-27_HP.jpg",
         "birthday": "2000-03-14",
+        "height": "187",
+        "weight": "85",
+        "hometown": "福岡県",
+        "school": "法政大学",
+        "position": "",
         "_key": "blowinds:51000115"
       },
       {
@@ -3238,6 +3299,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/07/47c30872696bf3c4bef41ddf96f3dde33bd8c72e.png",
         "birthday": "2003-03-19",
+        "height": "188",
+        "weight": "82",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
         "_key": "united:147"
       },
       {
@@ -3246,6 +3312,11 @@
         "number": "1",
         "photo": "https://www.fukuiblowinds.com/v=1790295991/files/user/common/1_Fujinaga_2026-27_HP.jpg",
         "birthday": "1992-04-10",
+        "height": "175",
+        "weight": "75",
+        "hometown": "兵庫県",
+        "school": "東海大学",
+        "position": "",
         "_key": "blowinds:8736"
       },
       {
@@ -3254,6 +3325,11 @@
         "number": "21",
         "photo": "https://www.fukuiblowinds.com/v=1790296812/files/user/common/21_Mitsuda_2026-27_HP.jpg",
         "birthday": "1994-04-18",
+        "height": "188",
+        "weight": "78",
+        "hometown": "神奈川県",
+        "school": "筑波大学",
+        "position": "",
         "_key": "blowinds:10844"
       },
       {
@@ -3262,6 +3338,11 @@
         "number": "3",
         "photo": "https://www.fukuiblowinds.com/v=1790296089/files/user/common/3_Tsukamoto_2026-27_HP.jpg",
         "birthday": "2003-04-20",
+        "height": "179",
+        "weight": "78",
+        "hometown": "千葉県",
+        "school": "大東文化大学",
+        "position": "",
         "_key": "blowinds:51000439"
       },
       {
@@ -3270,6 +3351,11 @@
         "number": "8",
         "photo": "https://www.fukuiblowinds.com/v=1791251129/files/user/common/8_Okamoto_2026-27_HP.jpg",
         "birthday": "1993-04-20",
+        "height": "170",
+        "weight": "78",
+        "hometown": "",
+        "school": "",
+        "position": "",
         "_key": "blowinds:8839"
       },
       {
@@ -3278,13 +3364,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/cd7169b9c78b8448f75c2e6ed7397e4bcd0f58bc.png",
         "birthday": "2002-05-18",
+        "height": "171",
+        "weight": "65",
+        "hometown": "宮崎県",
+        "school": "",
+        "position": "",
         "_key": "united:134"
       },
       {
         "team": "RAC",
         "name": "西端 円麻",
         "number": "8",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-08-150x150.jpg",
+        "height": "162",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2010-05-21",
         "_key": "ruck:西端円麻"
       },
@@ -3294,6 +3390,11 @@
         "number": "10",
         "photo": "https://www.fukuiblowinds.com/v=1790296126/files/user/common/10_Khishigbaar_2026-27_HP.jpg",
         "birthday": "2003-05-27",
+        "height": "203",
+        "weight": "110",
+        "hometown": "モンゴル",
+        "school": "京都産業大学",
+        "position": "",
         "_key": "blowinds:51000579"
       },
       {
@@ -3302,6 +3403,11 @@
         "number": "41",
         "photo": "https://www.fukuiblowinds.com/v=1790296847/files/user/common/41_WilliamsTawatari_2026-27_HP.jpg",
         "birthday": "1994-05-31",
+        "height": "206",
+        "weight": "116",
+        "hometown": "アメリカ合衆国",
+        "school": "ウェストバージニア大学",
+        "position": "",
         "_key": "blowinds:51000668"
       },
       {
@@ -3310,6 +3416,11 @@
         "number": "93",
         "photo": "https://www.fukuiblowinds.com/v=1790296914/files/user/common/93_Takahashi_2026-27_HP.jpg",
         "birthday": "1998-06-10",
+        "height": "186",
+        "weight": "84",
+        "hometown": "大阪府",
+        "school": "天理大学",
+        "position": "",
         "_key": "blowinds:40142"
       },
       {
@@ -3318,13 +3429,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/465112dd152644efbe3821dc61693778e850b2a8.png",
         "birthday": "2001-06-12",
+        "height": "175",
+        "weight": "73",
+        "hometown": "東京都",
+        "school": "",
+        "position": "",
         "_key": "united:115"
       },
       {
         "team": "RAC",
         "name": "長谷川 詩花",
         "number": "13",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-13-150x150.jpg",
+        "height": "153",
+        "weight": "",
+        "hometown": "東京都",
+        "school": "",
         "birthday": "2006-06-13",
         "_key": "ruck:長谷川詩花"
       },
@@ -3334,6 +3455,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/3f40a3bdca97022cf658809194ddbffd64801cfc.png",
         "birthday": "2003-06-14",
+        "height": "175",
+        "weight": "66",
+        "hometown": "埼玉県",
+        "school": "",
+        "position": "",
         "_key": "united:126"
       },
       {
@@ -3342,13 +3468,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/07/e3a6e64df9404d959e6e6b175db7d5e7e69083c6.png",
         "birthday": "2006-06-14",
+        "height": "174",
+        "weight": "70",
+        "hometown": "長野県",
+        "school": "",
+        "position": "",
         "_key": "united:144"
       },
       {
         "team": "RAC",
         "name": "今村 結里",
         "number": "2",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-02-150x150.jpg",
+        "height": "165",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2010-06-15",
         "_key": "ruck:今村結里"
       },
@@ -3358,6 +3494,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/20d3a421b5852f50be599a961877726c13b375e2.png",
         "birthday": "2002-06-22",
+        "height": "173",
+        "weight": "68",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
         "_key": "united:128"
       },
       {
@@ -3366,6 +3507,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/593901478a13a1ca5bd4d77be36fbca9cb1784fe.png",
         "birthday": "2002-06-27",
+        "height": "168",
+        "weight": "63",
+        "hometown": "福井県",
+        "school": "",
+        "position": "",
         "_key": "united:122"
       },
       {
@@ -3374,13 +3520,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/783d0baae4338920ab74786ebbf67075c5450cbd.png",
         "birthday": "2002-07-11",
+        "height": "183",
+        "weight": "85",
+        "hometown": "兵庫県",
+        "school": "",
+        "position": "",
         "_key": "united:123"
       },
       {
         "team": "RAC",
         "name": "加藤 ほのか",
         "number": "7",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-07-150x150.jpg",
+        "height": "150",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2004-07-21",
         "_key": "ruck:加藤ほのか"
       },
@@ -3388,7 +3544,12 @@
         "team": "RAC",
         "name": "横川 四葉",
         "number": "4",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-04-150x150.jpg",
+        "height": "150",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2007-07-22",
         "_key": "ruck:横川四葉"
       },
@@ -3398,6 +3559,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/b71f584b42108d2130a748b25b6b5e46b9cab18a.png",
         "birthday": "2002-07-22",
+        "height": "181",
+        "weight": "72",
+        "hometown": "茨城県",
+        "school": "",
+        "position": "",
         "_key": "united:120"
       },
       {
@@ -3406,13 +3572,23 @@
         "number": "12",
         "photo": "https://www.fukuiblowinds.com/v=1790296426/files/user/common/12_Nishino_2026-27_HP.jpg",
         "birthday": "1998-07-27",
+        "height": "199",
+        "weight": "94",
+        "hometown": "大阪府",
+        "school": "専修大学",
+        "position": "",
         "_key": "blowinds:30468"
       },
       {
         "team": "RAC",
         "name": "山口 陽愛",
         "number": "20",
+        "position": "FP",
         "photo": "",
+        "height": "",
+        "weight": "",
+        "hometown": "",
+        "school": "",
         "birthday": "2008-07-28",
         "_key": "ruck:山口陽愛"
       },
@@ -3422,13 +3598,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/1d9315d63eb12a772d1c001e3691f72f5cfbb5e4.png",
         "birthday": "2001-08-16",
+        "height": "174",
+        "weight": "75",
+        "hometown": "京都府",
+        "school": "",
+        "position": "",
         "_key": "united:87"
       },
       {
         "team": "RAC",
         "name": "平田 梨豊",
         "number": "10",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-10-150x150.jpg",
+        "height": "165",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2007-08-28",
         "_key": "ruck:平田梨豊"
       },
@@ -3438,13 +3624,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/8a5eaef3474d1af175d6cf3d7a26b7313747c645.png",
         "birthday": "2003-08-30",
+        "height": "181",
+        "weight": "74",
+        "hometown": "石川県",
+        "school": "",
+        "position": "",
         "_key": "united:125"
       },
       {
         "team": "RAC",
         "name": "荒井 一花",
         "number": "17",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-17-150x150.jpg",
+        "height": "167",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2001-09-02",
         "_key": "ruck:荒井一花"
       },
@@ -3452,7 +3648,12 @@
         "team": "RAC",
         "name": "小林 愛心",
         "number": "19",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-19-150x150.jpg",
+        "height": "160",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2007-09-09",
         "_key": "ruck:小林愛心"
       },
@@ -3462,6 +3663,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/06/81b5546a913c4b71c84450a768488c928192dfca.png",
         "birthday": "2002-09-13",
+        "height": "173",
+        "weight": "71",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
         "_key": "united:141"
       },
       {
@@ -3470,6 +3676,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ca018230e2c1352e52715c9d36f2890b6bc619cc.png",
         "birthday": "1991-09-15",
+        "height": "174",
+        "weight": "72",
+        "hometown": "東京都",
+        "school": "",
+        "position": "",
         "_key": "united:88"
       },
       {
@@ -3478,6 +3689,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/11d946ed6914e9808968591b67a2588109704dd5.png",
         "birthday": "2003-09-19",
+        "height": "167",
+        "weight": "63",
+        "hometown": "神奈川県",
+        "school": "",
+        "position": "",
         "_key": "united:130"
       },
       {
@@ -3486,6 +3702,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/bf1c39760ed769fe01f3eaa4989e55501b585a3d.png",
         "birthday": "1998-10-04",
+        "height": "178",
+        "weight": "76",
+        "hometown": "富山県",
+        "school": "",
+        "position": "",
         "_key": "united:127"
       },
       {
@@ -3494,13 +3715,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f93c6e38ff4bbe17fedde0d229a6d1a5a39e1256.png",
         "birthday": "1999-10-08",
+        "height": "185",
+        "weight": "80",
+        "hometown": "愛知県",
+        "school": "",
+        "position": "",
         "_key": "united:64"
       },
       {
         "team": "RAC",
         "name": "山森 しおん",
         "number": "6",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-06-150x150.jpg",
+        "height": "164",
+        "weight": "",
+        "hometown": "石川県",
+        "school": "",
         "birthday": "2002-10-19",
         "_key": "ruck:山森しおん"
       },
@@ -3510,13 +3741,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ce138cd4d4ba4301c3a9708d1d47ae569312c10a.png",
         "birthday": "2000-10-21",
+        "height": "173",
+        "weight": "71",
+        "hometown": "長野県",
+        "school": "",
+        "position": "",
         "_key": "united:119"
       },
       {
         "team": "RAC",
         "name": "坪川 美咲",
         "number": "24",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-24-150x150.jpg",
+        "height": "149",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2009-10-25",
         "_key": "ruck:坪川美咲"
       },
@@ -3526,13 +3767,23 @@
         "number": "17",
         "photo": "https://www.fukuiblowinds.com/v=1790296771/files/user/common/17_Tsuneta_2026-27_HP.jpg",
         "birthday": "1999-11-06",
+        "height": "186",
+        "weight": "85",
+        "hometown": "愛知県",
+        "school": "明治大学",
+        "position": "",
         "_key": "blowinds:5100000040"
       },
       {
         "team": "RAC",
         "name": "中川 穂南",
         "number": "22",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-22-150x150.jpg",
+        "height": "162",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2008-11-07",
         "_key": "ruck:中川穂南"
       },
@@ -3540,7 +3791,12 @@
         "team": "RAC",
         "name": "藤江 真尋",
         "number": "21",
+        "position": "GK",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-21-150x150.jpg",
+        "height": "153",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2001-11-07",
         "_key": "ruck:藤江真尋"
       },
@@ -3548,7 +3804,12 @@
         "team": "RAC",
         "name": "小林 望月",
         "number": "1",
+        "position": "GK",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-01-150x150.jpg",
+        "height": "173",
+        "weight": "",
+        "hometown": "福井県",
+        "school": "",
         "birthday": "2001-11-14",
         "_key": "ruck:小林望月"
       },
@@ -3558,6 +3819,11 @@
         "number": "14",
         "photo": "https://www.fukuiblowinds.com/v=1790296621/files/user/common/14_Dusan_2026-27_HP.jpg",
         "birthday": "1995-11-27",
+        "height": "212",
+        "weight": "114",
+        "hometown": "セルビア",
+        "school": "アリゾナ大学",
+        "position": "",
         "_key": "blowinds:51000494"
       },
       {
@@ -3566,13 +3832,23 @@
         "number": "11",
         "photo": "https://www.fukuiblowinds.com/v=1790296327/files/user/common/11_Naito_2026-27_HP.jpg",
         "birthday": "2004-12-01",
+        "height": "182",
+        "weight": "84",
+        "hometown": "福岡県",
+        "school": "IMGアカデミー",
+        "position": "",
         "_key": "blowinds:51000471"
       },
       {
         "team": "RAC",
         "name": "佐藤 希穂",
         "number": "3",
+        "position": "FP",
         "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-03-150x150.jpg",
+        "height": "164",
+        "weight": "",
+        "hometown": "宮城県",
+        "school": "",
         "birthday": "1999-12-03",
         "_key": "ruck:佐藤希穂"
       },
@@ -3582,6 +3858,11 @@
         "number": "15",
         "photo": "https://www.fukuiblowinds.com/v=1790296734/files/user/common/15_BrownJr_2026-27_HP.jpg",
         "birthday": "1998-12-04",
+        "height": "195",
+        "weight": "98",
+        "hometown": "アメリカ合衆国",
+        "school": "ミシガン大学",
+        "position": "",
         "_key": "blowinds:51000417"
       },
       {
@@ -3590,6 +3871,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ee0faf4a7070b7f31ad4646547ab195413caf464.png",
         "birthday": "2003-12-09",
+        "height": "173",
+        "weight": "75",
+        "hometown": "宮崎県",
+        "school": "",
+        "position": "",
         "_key": "united:129"
       },
       {
@@ -3598,13 +3884,23 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/06/8eb5cc5474ae6449c64d7b785553bea4b7d5e00e.png",
         "birthday": "2001-12-21",
+        "height": "177",
+        "weight": "75",
+        "hometown": "兵庫県",
+        "school": "",
+        "position": "",
         "_key": "united:142"
       },
       {
         "team": "RAC",
         "name": "嶋﨑 心那",
         "number": "16",
+        "position": "GK",
         "photo": "",
+        "height": "",
+        "weight": "",
+        "hometown": "",
+        "school": "",
         "birthday": "2007-12-23",
         "_key": "ruck:嶋﨑心那"
       },
@@ -3614,6 +3910,11 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f5554143ba093bc657c63bb9132d6c2d1d8d78cb.png",
         "birthday": "1989-12-31",
+        "height": "179",
+        "weight": "75",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
         "_key": "united:82"
       }
     ],
@@ -3624,7 +3925,12 @@
         "number": "1",
         "photo": "https://www.fukuiblowinds.com/v=1790295991/files/user/common/1_Fujinaga_2026-27_HP.jpg",
         "birthday": "1992-04-10",
-        "checked": "2026-10-07"
+        "height": "175",
+        "weight": "75",
+        "hometown": "兵庫県",
+        "school": "東海大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:51000439": {
         "team": "BLOWINDS",
@@ -3632,7 +3938,12 @@
         "number": "3",
         "photo": "https://www.fukuiblowinds.com/v=1790296089/files/user/common/3_Tsukamoto_2026-27_HP.jpg",
         "birthday": "2003-04-20",
-        "checked": "2026-10-07"
+        "height": "179",
+        "weight": "78",
+        "hometown": "千葉県",
+        "school": "大東文化大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:8839": {
         "team": "BLOWINDS",
@@ -3640,7 +3951,12 @@
         "number": "8",
         "photo": "https://www.fukuiblowinds.com/v=1791251129/files/user/common/8_Okamoto_2026-27_HP.jpg",
         "birthday": "1993-04-20",
-        "checked": "2026-10-07"
+        "height": "170",
+        "weight": "78",
+        "hometown": "",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:51000579": {
         "team": "BLOWINDS",
@@ -3648,7 +3964,12 @@
         "number": "10",
         "photo": "https://www.fukuiblowinds.com/v=1790296126/files/user/common/10_Khishigbaar_2026-27_HP.jpg",
         "birthday": "2003-05-27",
-        "checked": "2026-10-07"
+        "height": "203",
+        "weight": "110",
+        "hometown": "モンゴル",
+        "school": "京都産業大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:51000471": {
         "team": "BLOWINDS",
@@ -3656,7 +3977,12 @@
         "number": "11",
         "photo": "https://www.fukuiblowinds.com/v=1790296327/files/user/common/11_Naito_2026-27_HP.jpg",
         "birthday": "2004-12-01",
-        "checked": "2026-10-07"
+        "height": "182",
+        "weight": "84",
+        "hometown": "福岡県",
+        "school": "IMGアカデミー",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:30468": {
         "team": "BLOWINDS",
@@ -3664,7 +3990,12 @@
         "number": "12",
         "photo": "https://www.fukuiblowinds.com/v=1790296426/files/user/common/12_Nishino_2026-27_HP.jpg",
         "birthday": "1998-07-27",
-        "checked": "2026-10-07"
+        "height": "199",
+        "weight": "94",
+        "hometown": "大阪府",
+        "school": "専修大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:51000115": {
         "team": "BLOWINDS",
@@ -3672,7 +4003,12 @@
         "number": "13",
         "photo": "https://www.fukuiblowinds.com/v=1790296532/files/user/common/13_Kawashima_2026-27_HP.jpg",
         "birthday": "2000-03-14",
-        "checked": "2026-10-07"
+        "height": "187",
+        "weight": "85",
+        "hometown": "福岡県",
+        "school": "法政大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:51000494": {
         "team": "BLOWINDS",
@@ -3680,7 +4016,12 @@
         "number": "14",
         "photo": "https://www.fukuiblowinds.com/v=1790296621/files/user/common/14_Dusan_2026-27_HP.jpg",
         "birthday": "1995-11-27",
-        "checked": "2026-10-07"
+        "height": "212",
+        "weight": "114",
+        "hometown": "セルビア",
+        "school": "アリゾナ大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:51000417": {
         "team": "BLOWINDS",
@@ -3688,7 +4029,12 @@
         "number": "15",
         "photo": "https://www.fukuiblowinds.com/v=1790296734/files/user/common/15_BrownJr_2026-27_HP.jpg",
         "birthday": "1998-12-04",
-        "checked": "2026-10-07"
+        "height": "195",
+        "weight": "98",
+        "hometown": "アメリカ合衆国",
+        "school": "ミシガン大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:5100000040": {
         "team": "BLOWINDS",
@@ -3696,7 +4042,12 @@
         "number": "17",
         "photo": "https://www.fukuiblowinds.com/v=1790296771/files/user/common/17_Tsuneta_2026-27_HP.jpg",
         "birthday": "1999-11-06",
-        "checked": "2026-10-07"
+        "height": "186",
+        "weight": "85",
+        "hometown": "愛知県",
+        "school": "明治大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:10844": {
         "team": "BLOWINDS",
@@ -3704,7 +4055,12 @@
         "number": "21",
         "photo": "https://www.fukuiblowinds.com/v=1790296812/files/user/common/21_Mitsuda_2026-27_HP.jpg",
         "birthday": "1994-04-18",
-        "checked": "2026-10-07"
+        "height": "188",
+        "weight": "78",
+        "hometown": "神奈川県",
+        "school": "筑波大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:51000668": {
         "team": "BLOWINDS",
@@ -3712,7 +4068,12 @@
         "number": "41",
         "photo": "https://www.fukuiblowinds.com/v=1790296847/files/user/common/41_WilliamsTawatari_2026-27_HP.jpg",
         "birthday": "1994-05-31",
-        "checked": "2026-10-07"
+        "height": "206",
+        "weight": "116",
+        "hometown": "アメリカ合衆国",
+        "school": "ウェストバージニア大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:8571": {
         "team": "BLOWINDS",
@@ -3720,7 +4081,12 @@
         "number": "73",
         "photo": "https://www.fukuiblowinds.com/v=1790296882/files/user/common/73_Tawatari_2026-27_HP.jpg",
         "birthday": "1990-01-06",
-        "checked": "2026-10-07"
+        "height": "185",
+        "weight": "79",
+        "hometown": "東京都",
+        "school": "筑波大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "blowinds:40142": {
         "team": "BLOWINDS",
@@ -3728,7 +4094,12 @@
         "number": "93",
         "photo": "https://www.fukuiblowinds.com/v=1790296914/files/user/common/93_Takahashi_2026-27_HP.jpg",
         "birthday": "1998-06-10",
-        "checked": "2026-10-07"
+        "height": "186",
+        "weight": "84",
+        "hometown": "大阪府",
+        "school": "天理大学",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:82": {
         "team": "UNITED",
@@ -3736,7 +4107,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f5554143ba093bc657c63bb9132d6c2d1d8d78cb.png",
         "birthday": "1989-12-31",
-        "checked": "2026-10-07"
+        "height": "179",
+        "weight": "75",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:125": {
         "team": "UNITED",
@@ -3744,7 +4120,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/8a5eaef3474d1af175d6cf3d7a26b7313747c645.png",
         "birthday": "2003-08-30",
-        "checked": "2026-10-07"
+        "height": "181",
+        "weight": "74",
+        "hometown": "石川県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:114": {
         "team": "UNITED",
@@ -3752,7 +4133,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/9a99e2c3b367e29cc074d86a157a1e0285761937.png",
         "birthday": "2003-01-31",
-        "checked": "2026-10-07"
+        "height": "184",
+        "weight": "76",
+        "hometown": "愛知県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:115": {
         "team": "UNITED",
@@ -3760,7 +4146,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/465112dd152644efbe3821dc61693778e850b2a8.png",
         "birthday": "2001-06-12",
-        "checked": "2026-10-07"
+        "height": "175",
+        "weight": "73",
+        "hometown": "東京都",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:64": {
         "team": "UNITED",
@@ -3768,7 +4159,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f93c6e38ff4bbe17fedde0d229a6d1a5a39e1256.png",
         "birthday": "1999-10-08",
-        "checked": "2026-10-07"
+        "height": "185",
+        "weight": "80",
+        "hometown": "愛知県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:123": {
         "team": "UNITED",
@@ -3776,7 +4172,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/783d0baae4338920ab74786ebbf67075c5450cbd.png",
         "birthday": "2002-07-11",
-        "checked": "2026-10-07"
+        "height": "183",
+        "weight": "85",
+        "hometown": "兵庫県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:128": {
         "team": "UNITED",
@@ -3784,7 +4185,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/20d3a421b5852f50be599a961877726c13b375e2.png",
         "birthday": "2002-06-22",
-        "checked": "2026-10-07"
+        "height": "173",
+        "weight": "68",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:139": {
         "team": "UNITED",
@@ -3792,7 +4198,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/05/ff09d6db60a2c0f89c88706926f7944de2c073f1.png",
         "birthday": "2003-01-28",
-        "checked": "2026-10-07"
+        "height": "176",
+        "weight": "72",
+        "hometown": "東京都",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:140": {
         "team": "UNITED",
@@ -3800,7 +4211,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/05/0db10e2bd818400f239183a8caee38fe1ed76e5f.png",
         "birthday": "2004-03-05",
-        "checked": "2026-10-07"
+        "height": "176",
+        "weight": "70",
+        "hometown": "香川県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:142": {
         "team": "UNITED",
@@ -3808,7 +4224,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/06/8eb5cc5474ae6449c64d7b785553bea4b7d5e00e.png",
         "birthday": "2001-12-21",
-        "checked": "2026-10-07"
+        "height": "177",
+        "weight": "75",
+        "hometown": "兵庫県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:143": {
         "team": "UNITED",
@@ -3816,7 +4237,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/06/6bd5945f6c4fb9a632eb008d3fa31d79f78a821b.png",
         "birthday": "2004-01-22",
-        "checked": "2026-10-07"
+        "height": "180",
+        "weight": "75",
+        "hometown": "佐賀県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:147": {
         "team": "UNITED",
@@ -3824,7 +4250,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/07/47c30872696bf3c4bef41ddf96f3dde33bd8c72e.png",
         "birthday": "2003-03-19",
-        "checked": "2026-10-07"
+        "height": "188",
+        "weight": "82",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:87": {
         "team": "UNITED",
@@ -3832,7 +4263,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/1d9315d63eb12a772d1c001e3691f72f5cfbb5e4.png",
         "birthday": "2001-08-16",
-        "checked": "2026-10-07"
+        "height": "174",
+        "weight": "75",
+        "hometown": "京都府",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:126": {
         "team": "UNITED",
@@ -3840,7 +4276,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/3f40a3bdca97022cf658809194ddbffd64801cfc.png",
         "birthday": "2003-06-14",
-        "checked": "2026-10-07"
+        "height": "175",
+        "weight": "66",
+        "hometown": "埼玉県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:134": {
         "team": "UNITED",
@@ -3848,7 +4289,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/cd7169b9c78b8448f75c2e6ed7397e4bcd0f58bc.png",
         "birthday": "2002-05-18",
-        "checked": "2026-10-07"
+        "height": "171",
+        "weight": "65",
+        "hometown": "宮崎県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:122": {
         "team": "UNITED",
@@ -3856,7 +4302,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/593901478a13a1ca5bd4d77be36fbca9cb1784fe.png",
         "birthday": "2002-06-27",
-        "checked": "2026-10-07"
+        "height": "168",
+        "weight": "63",
+        "hometown": "福井県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:130": {
         "team": "UNITED",
@@ -3864,7 +4315,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/11d946ed6914e9808968591b67a2588109704dd5.png",
         "birthday": "2003-09-19",
-        "checked": "2026-10-07"
+        "height": "167",
+        "weight": "63",
+        "hometown": "神奈川県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:131": {
         "team": "UNITED",
@@ -3872,7 +4328,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/c824fe1c331bacaaa8074aabff73520c814cea30.png",
         "birthday": "2000-02-25",
-        "checked": "2026-10-07"
+        "height": "167",
+        "weight": "63",
+        "hometown": "愛知県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:138": {
         "team": "UNITED",
@@ -3880,7 +4341,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/04/9e3bc0b2291a5afe43acfb815e81dad1c5789c9f.png",
         "birthday": "2002-02-15",
-        "checked": "2026-10-07"
+        "height": "175",
+        "weight": "73",
+        "hometown": "神奈川県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:144": {
         "team": "UNITED",
@@ -3888,7 +4354,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/07/e3a6e64df9404d959e6e6b175db7d5e7e69083c6.png",
         "birthday": "2006-06-14",
-        "checked": "2026-10-07"
+        "height": "174",
+        "weight": "70",
+        "hometown": "長野県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:119": {
         "team": "UNITED",
@@ -3896,7 +4367,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ce138cd4d4ba4301c3a9708d1d47ae569312c10a.png",
         "birthday": "2000-10-21",
-        "checked": "2026-10-07"
+        "height": "173",
+        "weight": "71",
+        "hometown": "長野県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:127": {
         "team": "UNITED",
@@ -3904,7 +4380,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/bf1c39760ed769fe01f3eaa4989e55501b585a3d.png",
         "birthday": "1998-10-04",
-        "checked": "2026-10-07"
+        "height": "178",
+        "weight": "76",
+        "hometown": "富山県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:88": {
         "team": "UNITED",
@@ -3912,7 +4393,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ca018230e2c1352e52715c9d36f2890b6bc619cc.png",
         "birthday": "1991-09-15",
-        "checked": "2026-10-07"
+        "height": "174",
+        "weight": "72",
+        "hometown": "東京都",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:120": {
         "team": "UNITED",
@@ -3920,7 +4406,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/b71f584b42108d2130a748b25b6b5e46b9cab18a.png",
         "birthday": "2002-07-22",
-        "checked": "2026-10-07"
+        "height": "181",
+        "weight": "72",
+        "hometown": "茨城県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:129": {
         "team": "UNITED",
@@ -3928,7 +4419,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ee0faf4a7070b7f31ad4646547ab195413caf464.png",
         "birthday": "2003-12-09",
-        "checked": "2026-10-07"
+        "height": "173",
+        "weight": "75",
+        "hometown": "宮崎県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:137": {
         "team": "UNITED",
@@ -3936,7 +4432,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/03/5c8c4b4bd439013ad8d098916aade0fd5b4b38fa.png",
         "birthday": "2003-01-02",
-        "checked": "2026-10-07"
+        "height": "173",
+        "weight": "66",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       },
       "united:141": {
         "team": "UNITED",
@@ -3944,7 +4445,12 @@
         "number": "",
         "photo": "https://fukuiunited.co.jp/upload/team/2026/06/81b5546a913c4b71c84450a768488c928192dfca.png",
         "birthday": "2002-09-13",
-        "checked": "2026-10-07"
+        "height": "173",
+        "weight": "71",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
+        "checked": "2026-10-08"
       }
     }
   }
