@@ -891,23 +891,32 @@ private fun TeamStatsSection(mine: TeamPlayers, mineName: String, opp: TeamPlaye
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1.6f)) {
-                        Text(st.label, fontSize = 13.sp, color = Ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        // 項目名は短い呼び方にし、それでも入らないときは折り返す(途中で切らない)
+                        Text(teamStatLabel(st), fontSize = 13.sp, color = Ink)
                         Text(st.key, fontSize = 10.sp, color = InkSoft)
                     }
-                    TeamStatCell(st, mineBetter, Modifier.weight(1.2f))
+                    TeamStatCell(st, mineBetter, mine.leagueTeams, Modifier.weight(1.2f))
                     if (opp != null) {
-                        if (o != null) TeamStatCell(o, oppBetter, Modifier.weight(1.2f))
+                        if (o != null) TeamStatCell(o, oppBetter, opp.leagueTeams, Modifier.weight(1.2f))
                         else Text("-", modifier = Modifier.weight(1.2f), textAlign = TextAlign.Center, color = InkSoft)
                     }
                 }
                 ThinRule(color = LineGray)
             }
         }
+        // 何チーム中の順位か(例「B.ONE(全25チーム)の中の順位」)。相手が別のリーグならそれも書く
+        val leagueNote = listOfNotNull(mine, opp).map { t ->
+            when {
+                t.league.isNotBlank() && t.leagueTeams > 0 -> "${t.league}(全${t.leagueTeams}チーム)"
+                t.league.isNotBlank() -> t.league
+                else -> ""
+            }
+        }.filter { it.isNotBlank() }.distinct()
         Text(
             listOf(
                 "出典:Bリーグ公式(クラブ成績)",
                 mine.teamStatsUpdated.takeIf { it.isNotBlank() }?.let { "${it}更新" } ?: "",
-                "「○位」はリーグ内の順位です"
+                if (leagueNote.isNotEmpty()) "「○位」は${leagueNote.joinToString("・")}の中の順位です" else "「○位」はリーグ内の順位です"
             ).filter { it.isNotBlank() }.joinToString("・"),
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
@@ -915,8 +924,21 @@ private fun TeamStatsSection(mine: TeamPlayers, mineName: String, opp: TeamPlaye
     }
 }
 
+/** クラブ成績の項目の短い呼び方(表の幅に収まるように) */
+private fun teamStatLabel(st: TeamStat): String = when (st.key) {
+    "PPG" -> "平均得点"
+    "FG%" -> "FG成功率"
+    "3FG%" -> "3P成功率"
+    "FT%" -> "FT成功率"
+    "RPG" -> "平均リバウンド"
+    "APG" -> "平均アシスト"
+    "BPG" -> "平均ブロック"
+    "SPG" -> "平均スティール"
+    else -> st.label
+}
+
 @Composable
-private fun TeamStatCell(st: TeamStat, better: Boolean, modifier: Modifier) {
+private fun TeamStatCell(st: TeamStat, better: Boolean, teams: Int, modifier: Modifier) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             st.value + st.unit,
@@ -925,7 +947,8 @@ private fun TeamStatCell(st: TeamStat, better: Boolean, modifier: Modifier) {
             color = if (better) NewsRed else Ink,
             maxLines = 1
         )
-        st.rank?.let { Text("${it}位", fontSize = 10.sp, color = InkSoft) }
+        // 何チーム中の何位か(チーム数が分からなければ順位だけ)
+        st.rank?.let { Text(if (teams > 0) "${it}位/${teams}" else "${it}位", fontSize = 10.sp, color = InkSoft) }
     }
 }
 

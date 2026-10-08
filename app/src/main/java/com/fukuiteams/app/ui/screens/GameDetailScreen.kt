@@ -1,5 +1,10 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.data.PublicViewingsRepository
+import com.fukuiteams.app.data.publicViewings
+import com.fukuiteams.app.ui.components.PublicViewingBadge
+import com.fukuiteams.app.ui.components.PublicViewingList
+import com.fukuiteams.app.ui.components.PublicViewingXSearch
 import com.fukuiteams.app.data.specialDay
 import com.fukuiteams.app.ui.components.SpecialDayBanner
 import com.fukuiteams.app.ui.components.SpecialDayBadge
@@ -206,6 +211,8 @@ fun GameDetailScreen(
     suspend fun refreshResults() {
         GamesRepository.refresh(context)
         autoResults = GameResultsRepository.fetch()
+        // パブリックビューイング(手で登録した分)をまだ読んでいなければ読む
+        if (!PublicViewingsRepository.loaded) PublicViewingsRepository.refresh()
     }
 
     LaunchedEffect(Unit) { refreshResults() }
@@ -715,6 +722,8 @@ private fun ScheduleRow(
             }
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 if (game.specialDay() != null) SpecialDayBadge()
+                // パブリックビューイング(PV)がある試合は「PV」の札
+                if (game.publicViewings().isNotEmpty()) PublicViewingBadge()
                 Text(
                     if (showResult) resultHeadline(game, score?.myScore, score?.opponentScore, outcome) else "vs ${game.opponent}",
                     style = MaterialTheme.typography.titleMedium
@@ -837,6 +846,24 @@ private fun UpcomingGameInline(
         )
         // コラボ企画など特別な日の試合なら、特集枠を出す
         game.specialDay()?.let { day -> SpecialDayBanner(day, showCountdown = true) }
+
+        // パブリックビューイング(PV)。見つかっていればその一覧、アウェイ戦ならXで探すボタンも出す
+        val pvs = game.publicViewings()
+        // (Xで探すボタンと、PVが無くても欄を出すのはブローウィンズのアウェイ戦だけ)
+        val showPvSearch = game.team == Team.BLOWINDS && !game.isHome
+        if (pvs.isNotEmpty() || showPvSearch) {
+            ToggleBlock(
+                title = "パブリックビューイング",
+                summary = if (pvs.isNotEmpty()) "${pvs.size}件" else "まだ見つかっていません",
+                startOpen = pvs.isNotEmpty()
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    // 「Xで探す」ボタンを先に出し、その下に見つかったPVの一覧
+                    if (game.team == Team.BLOWINDS) PublicViewingXSearch(listOf(game.team))
+                    if (pvs.isNotEmpty()) PublicViewingList(pvs)
+                }
+            }
+        }
 
         // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベント
         if (lp != null) {

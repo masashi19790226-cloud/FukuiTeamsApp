@@ -33,9 +33,10 @@ NEWS_FEEDS = {
 # Bingニュースの検索結果(RSS)。Googleアラートより新しい記事が早く出ることが多いので、ニュースに加える。
 # (GoogleニュースのRSSは robots.txt で自動取得が禁止されているため使わない。Bingニュースの検索は禁止されていない)
 BING_NEWS_QUERIES = {
-    "BLOWINDS": ["福井ブローウィンズ"],
-    "RAC": ["丸岡RUCK", "丸岡ラック"],
-    "UNITED": ["福井ユナイテッド"],
+    # パブリックビューイング(PV・観戦会)の告知も拾えるよう、チーム名とPVの言葉の組み合わせでも探す
+    "BLOWINDS": ["福井ブローウィンズ", "ブローウィンズ パブリックビューイング", "ブローウィンズ 観戦会"],
+    "RAC": ["丸岡RUCK", "丸岡ラック", "丸岡RUCK パブリックビューイング"],
+    "UNITED": ["福井ユナイテッド", "福井ユナイテッド パブリックビューイング"],
 }
 BING_NEWS_URL = "https://www.bing.com/news/search?q={q}&format=rss&setlang=ja&cc=JP"
 

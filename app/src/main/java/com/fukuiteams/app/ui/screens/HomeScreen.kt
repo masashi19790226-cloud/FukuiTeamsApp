@@ -1,5 +1,7 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.data.publicViewings
+import com.fukuiteams.app.ui.components.PublicViewingBadge
 import com.fukuiteams.app.data.commentHeadline
 import com.fukuiteams.app.data.upcomingSpecialDay
 import com.fukuiteams.app.data.specialDay
@@ -636,6 +638,8 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
             TeamBadge(game.team, size = 34.dp, fontSize = 14.sp)
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 if (game.specialDay() != null) SpecialDayBadge()
+                // パブリックビューイング(PV)がある試合は「PV」の札
+                if (game.publicViewings().isNotEmpty()) PublicViewingBadge()
                 Text(
                     game.team.displayName,
                     color = game.team.color,
@@ -1051,6 +1055,25 @@ private fun NextGameBlock(
         }
         if (hasOpenInvite) {
             Text("無料招待あり ›", style = MaterialTheme.typography.labelMedium, color = NewsRed, modifier = Modifier.padding(top = 4.dp))
+        }
+        // パブリックビューイング(PV)があれば1件目の要点を出す(押すと試合の詳細で一覧が見られる)
+        nextGame.publicViewings().firstOrNull()?.let { pv ->
+            val count = nextGame.publicViewings().size
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                modifier = Modifier.padding(top = 4.dp)
+            ) {
+                PublicViewingBadge()
+                Text(
+                    "パブリックビューイングあり" + (if (count > 1) "(${count}件)" else "") +
+                        pv.summary.takeIf { it.isNotBlank() && !pv.auto }?.let { ":$it" }.orEmpty() + " ›",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = NewsRed,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }

@@ -81,7 +81,10 @@ data class TeamPlayers(
     /** チーム全体の今季の数字(Bリーグ公式のクラブページの「クラブ成績」。リーグ内の順位つき) */
     val teamStats: List<TeamStat> = emptyList(),
     /** クラブ成績の公式の更新日時(例「2026年10月04日19:07」) */
-    val teamStatsUpdated: String = ""
+    val teamStatsUpdated: String = "",
+    /** 所属リーグ(例「B.ONE」)と、そのリーグのクラブ数(分からなければ 0) */
+    val league: String = "",
+    val leagueTeams: Int = 0
 )
 
 /** チーム全体の数字1項目(例 key=PPG・label=平均得点数・value=81.5・unit=点・rank=14) */
@@ -156,7 +159,9 @@ object PlayersRepository {
                             )
                         }
                     } ?: emptyList(),
-                    teamStatsUpdated = o.optString("team_stats_updated")
+                    teamStatsUpdated = o.optString("team_stats_updated"),
+                    league = o.optString("league"),
+                    leagueTeams = o.optInt("league_teams", 0)
                 )
             }
             map

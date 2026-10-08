@@ -26,6 +26,8 @@ object DataRefresher {
         val appContext = context.applicationContext
         val games = async { GamesRepository.refresh(appContext) }
         val special = async { SpecialDaysRepository.refresh() }
+        // パブリックビューイング(手で登録した分)
+        val pv = async { PublicViewingsRepository.refresh() }
         val lp = async { GameLpRepository.fetch() }
         val results = async { GameResultsRepository.fetch() }
         val invitations = async { InvitationAlertsRepository.fetch() }
@@ -37,12 +39,16 @@ object DataRefresher {
         games.await()
         special.await()
         lp.await()
+        pv.await()
+        // ニュースの中のパブリックビューイングの記事も、試合と結び付けられるようにする
+        val newsResult = news.await()
+        (newsResult as? AlertsResult.Success)?.let { PublicViewingsRepository.updateFromNews(it.items) }
         // ホーム画面のウィジェットも最新にする
         NextGameWidget.requestUpdate(appContext)
         AllData(
             results = results.await(),
             invitations = invitations.await(),
-            news = news.await(),
+            news = newsResult,
             previews = previews.await(),
             status = status.await(),
             players = players.await(),

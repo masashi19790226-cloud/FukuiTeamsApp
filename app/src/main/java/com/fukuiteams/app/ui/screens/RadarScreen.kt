@@ -1,5 +1,8 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.data.PublicViewingsRepository
+import com.fukuiteams.app.ui.components.PublicViewingList
+import com.fukuiteams.app.ui.components.PublicViewingXSearch
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -206,6 +209,9 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
 
     suspend fun refresh() {
         newsResult = NewsAlertsRepository.fetch()
+        // ニュースの中のパブリックビューイングの記事と、手で登録した分も読み直す
+        (newsResult as? AlertsResult.Success)?.let { PublicViewingsRepository.updateFromNews(it.items) }
+        PublicViewingsRepository.refresh()
         inviteResult = InvitationAlertsRepository.fetch()
         dataStatus = DataStatusRepository.fetch()
     }
@@ -343,16 +349,18 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                         Headline(
                             when {
                                 loading -> "情報を集めています"
-                                isInviteView && openInvites.isEmpty() -> "受付中の招待は\nいまのところなし"
-                                isInviteView -> "無料招待 ${openInvites.size}件\n受付中"
-                                teamItems.isEmpty() -> "いまのところ\n情報はありません"
-                                newCount > 0 -> "新着 ${newCount}件\n全${teamItems.size}件"
+                                // 見出しは1行にまとめる
+                                isInviteView && openInvites.isEmpty() -> "受付中の招待はいまのところなし"
+                                isInviteView -> "無料招待 ${openInvites.size}件 受付中"
+                                teamItems.isEmpty() -> "いまのところ情報はありません"
+                                newCount > 0 -> "新着 ${newCount}件・全${teamItems.size}件"
                                 else -> "情報 ${teamItems.size}件"
                             },
                             fontSize = 22
                         )
                         Text(
-                            "ニュースと無料招待の情報をまとめて表示します。上の検索欄で過去1年分の記事をキーワードで探せます。直近3日の情報を上に、それより前(過去1年)は下の見出しを押すと表示します。分類ボタンの横の数字は直近3日の件数です。2日以内のものに NEW が付きます。行をタップすると元の記事を開きます。",
+                            // 説明は短く(詳しくはメニューの「アプリの使い方」)
+                            "ボタンの数字は直近3日の件数です。行を押すと元の記事を開きます。",
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
@@ -453,6 +461,36 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                 }
                 if (selectedCategory == RadarCategory.TICKET) {
                     item { TicketSearchCard(selectedTeam) { url -> openRadarUrl(context, url) } }
+                }
+                // 「イベント」では、これからのパブリックビューイング(手で登録した分・自動で見つけた記事)と、Xで探すボタンを先に出す
+                if (selectedCategory == RadarCategory.EVENT) {
+                    item {
+                        val pvs = PublicViewingsRepository.upcoming(selectedTeam)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .border(1.dp, Ink)
+                                .background(Paper)
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                "パブリックビューイング" + if (pvs.isNotEmpty()) "(これから${pvs.size}件)" else "",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Ink
+                            )
+                            // 「Xで探す」ボタンは、一覧より先(見出しのすぐ下)に出す。ブローウィンズの分だけ
+                            if (selectedTeam == null || selectedTeam == Team.BLOWINDS) {
+                                PublicViewingXSearch(listOf(Team.BLOWINDS))
+                            }
+                            if (pvs.isNotEmpty()) {
+                                PublicViewingList(pvs, showTeam = selectedTeam == null)
+                            } else {
+                                Text("これからのパブリックビューイングは、まだ見つかっていません。", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                            }
+                        }
+                    }
                 }
                 if (newsResult is AlertsResult.Failure || inviteResult is AlertsResult.Failure) {
                     item {

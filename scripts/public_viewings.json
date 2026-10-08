@@ -1,0 +1,71 @@
+{
+  "_説明": "パブリックビューイング(PV・観戦会)を手で登録するファイルです。Xなどで見つけたPVを items に1件ずつ書き足して push すると、アプリの一面の「次の試合」・試合タブ(一覧の「PV」の札と試合の詳細)・トピックの「イベント」に出ます(アプリの作り直しは不要)。team は BLOWINDS / RAC / UNITED、date は試合の日(2026-10-17 の形)。time・place・address・note・url・source・opponent は分かる分だけ書きます(空でもかまいません)。",
+  "_書き方の例": {
+    "team": "BLOWINDS",
+    "date": "2026-10-17",
+    "time": "18:30〜",
+    "place": "〇〇(お店や施設の名前)",
+    "address": "福井市〇〇町1-2-3",
+    "note": "入場無料・申込み不要",
+    "url": "https://x.com/xxxx/status/1234567890",
+    "source": "X(@xxxx)",
+    "opponent": "金沢"
+  },
+  "items": [
+    {
+      "team": "BLOWINDS",
+      "date": "2026-10-03",
+      "time": "",
+      "place": "大阪(福井市のFUKUIスポーツユースアンバサダーの企画)",
+      "address": "",
+      "note": "福井ブローウィンズを軸に、福井と都市の関係を作るパブリックビューイング。会場・申込みは福井市のホームページ(スポーツ課)で確認してください",
+      "url": "https://x.com/nanka_no_nakami/status/2099794531893875090",
+      "source": "X(@nanka_no_nakami)・福井市",
+      "opponent": "金沢"
+    },
+    {
+      "team": "BLOWINDS",
+      "place": "SPORTS BAL Moles(スポーツバル モールズ)",
+      "address": "福井県敦賀市本町2丁目8-22 エッグプラントビル2F",
+      "note": "クラブパートナーのSPORTS BAL Moles主催。料金・予約の要否はお店のサイト(sports-bal-moles.com)で確認してください",
+      "url": "https://x.com/FUKUI_BLOWINDS/status/2107365238089605202",
+      "source": "X(@FUKUI_BLOWINDS ブローウィンズ公式)",
+      "opponent": "横浜EX",
+      "date": "2026-10-10",
+      "time": "17:35〜(試合開始)"
+    },
+    {
+      "team": "BLOWINDS",
+      "place": "SPORTS BAL Moles(スポーツバル モールズ)",
+      "address": "福井県敦賀市本町2丁目8-22 エッグプラントビル2F",
+      "note": "クラブパートナーのSPORTS BAL Moles主催。料金・予約の要否はお店のサイト(sports-bal-moles.com)で確認してください",
+      "url": "https://x.com/FUKUI_BLOWINDS/status/2107365238089605202",
+      "source": "X(@FUKUI_BLOWINDS ブローウィンズ公式)",
+      "opponent": "横浜EX",
+      "date": "2026-10-11",
+      "time": "15:05〜(試合開始)"
+    },
+    {
+      "team": "BLOWINDS",
+      "date": "2026-10-24",
+      "time": "",
+      "place": "東京(福井市のFUKUIスポーツユースアンバサダーの企画)",
+      "address": "",
+      "note": "福井ブローウィンズを軸に、福井と都市の関係を作るパブリックビューイング。会場・申込みは福井市のホームページ(スポーツ課)で確認してください",
+      "url": "https://x.com/nanka_no_nakami/status/2099794531893875090",
+      "source": "X(@nanka_no_nakami)・福井市",
+      "opponent": "埼玉"
+    },
+    {
+      "team": "BLOWINDS",
+      "date": "2026-10-31",
+      "time": "14:00〜(イベントは12:00〜16:30)",
+      "place": "福井市長橋小学校「NAGAHASHI Rising Day」",
+      "address": "福井市長橋小学校",
+      "note": "入場観覧無料・一般の方も来場可。ハーフタイムにシュートチャレンジとさくらいとのミニライブ。子どもたちが考えたグルメの無料振る舞いあり(キッチンカーなどの飲食は有料)",
+      "url": "https://x.com/sakulight_fukui/status/2108108014603600195",
+      "source": "X(@sakulight_fukui)",
+      "opponent": "岐阜"
+    }
+  ]
+}

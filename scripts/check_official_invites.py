@@ -193,6 +193,33 @@ class Collector:
         self.news_ids.add(news_id)
         self.news_added += 1
 
+    def mark_public_viewing(self, team, title, url, date, source, body):
+        """本文にパブリックビューイング(PV)の言葉がある記事を、PVとしてニュースに載せる。
+        すでにニュースに入っている記事は見出しに「(パブリックビューイングあり)」を付け、PVの前後の文を抜粋として入れる
+        (アプリは見出しのPVの言葉と、見出し・抜粋に書かれた月日で試合と結び付ける)。"""
+        m = PUBLIC_VIEWING_RE.search(body or "")
+        if not m and not PUBLIC_VIEWING_RE.search(title or ""):
+            return
+        snippet = ""
+        if m:
+            snippet = re.sub(r"\s+", " ", body[max(0, m.start() - 80): m.end() + 120]).strip()
+        pv_title = title if PUBLIC_VIEWING_RE.search(title or "") else f"{title}(パブリックビューイングあり)"
+        news_id = f"official-news:{url}"
+        for n in self.news:
+            if n.get("id") == news_id:
+                if not PUBLIC_VIEWING_RE.search(n.get("title", "")):
+                    n["title"] = pv_title
+                if snippet and not n.get("snippet"):
+                    n["snippet"] = snippet
+                print(f"  + PV: [{team}] {pv_title}")
+                return
+        before = len(self.news)
+        self.add_news(team, pv_title, url, date, source)
+        if len(self.news) > before:
+            if snippet:
+                self.news[-1]["snippet"] = snippet
+            print(f"  + PV: [{team}] {pv_title}")
+
     def is_seen(self, url):
         return url in self.seen or url in self.known_links or f"official:{url}" in self.known_links
 
@@ -254,6 +281,8 @@ class Collector:
                 print(f"[WARN] {source}: 本文の取得に失敗 {url} {e}")
                 continue
             self.mark_seen(url)
+            # 本文にパブリックビューイングが書かれていれば、PVとしてニュースに載せる(見出しに書かれていない記事も拾う)
+            self.mark_public_viewing(team, title or "(タイトル不明)", url, date or page_date(body), source, body)
             snippet = find_snippet(body)
             if snippet:
                 self.add(team, title or "(タイトル不明)", url, date or page_date(body), snippet, source)
@@ -298,6 +327,8 @@ class Collector:
                 or next((t for t, rx in TEAM_WORDS if rx.search(body)), None)
             if team is None:
                 continue  # チームと関係ないページ
+            # パブリックビューイング(PV・観戦会)のページは、ニュースに入れる(アプリのトピック・試合のPVに出る)
+            self.mark_public_viewing(team, title, url, page_date(body), source, body)
             snippet = None if is_real_invite(title) else find_snippet(body)
             if is_real_invite(title) or snippet:
                 self.add(team, title, url, page_date(body), snippet, source)
@@ -339,6 +370,52 @@ class Collector:
                     self.add("UNITED", title, url, None, "公式ストアで無料チケットとして受付中", "公式ストア")
                     self.mark_seen(url)
             time.sleep(1)
+
+    def check_manabi_feed(self):
+        """福井県の生涯学習サイト「ふくい生涯学習ネット」の講座・行事(新着10件のRSS)。
+        チーム名かパブリックビューイングの言葉が見出しにある行事は本文を読み、PV・招待ならニュース・招待に入れる
+        (鯖江青年の家の「福井ブローウィンズパブリックビューイング in さばえ」のような公共施設のPV)。"""
+        source = "ふくい生涯学習ネット"
+        try:
+            root = ET.fromstring(fetch(MANABI_FEED).encode("utf-8"))
+        except Exception as e:
+            print(f"[WARN] {source}: RSSの取得に失敗 {e}")
+            return
+        count, read = 0, 0
+        for item in root.iter("item"):
+            count += 1
+            link = (item.findtext("link") or "").strip()
+            title = text_of(item.findtext("title") or "").strip()
+            if not link or self.is_seen(link):
+                continue
+            title_team = next((t for t, rx in TEAM_WORDS if rx.search(title)), None)
+            if not title_team and not PUBLIC_VIEWING_RE.search(title):
+                self.mark_seen(link)  # チームにもPVにも関係ない行事
+                continue
+            if read >= MAX_DETAILS_PER_SOURCE:
+                break  # 残りは次回
+            read += 1
+            try:
+                body = body_text(fetch(link))
+            except Exception as e:
+                print(f"[WARN] {source}: 本文の取得に失敗 {link} {e}")
+                continue
+            self.mark_seen(link)
+            team = title_team or next((t for t, rx in TEAM_WORDS if rx.search(body)), None)
+            if team is None:
+                continue
+            date = None
+            try:
+                from email.utils import parsedate_to_datetime
+                date = parsedate_to_datetime(item.findtext("pubDate") or "")
+            except Exception:
+                date = page_date(body)
+            self.mark_public_viewing(team, title, link, date, source, body)
+            snippet = None if is_real_invite(title) else find_snippet(body)
+            if is_real_invite(title) or snippet:
+                self.add(team, title, link, date, snippet, source)
+            time.sleep(1)
+        print(f"[{source}] 新着 {count} 件(本文を確認 {read} 件)")
 
     def check_ruck_feed(self):
         url = "https://ruck-fukui.com/feed/"
@@ -418,6 +495,13 @@ class Collector:
         print(f"[公式サイト] ニュースに追加: {self.news_added}件")
 
 
+# 福井県の生涯学習サイト「ふくい生涯学習ネット」の講座・行事の新着(RSS)
+MANABI_FEED = "https://www.manabi.pref.fukui.jp/manabi/feed/?post_type=koza_gyoji"
+
+# パブリックビューイング(PV・観戦会)の言葉。アプリ(PublicViewings.kt)と同じ
+PUBLIC_VIEWING_RE = re.compile(r"パブリックビューイング|パブリック・ビューイング|パブリックビューング|観戦会|応援会|ＰＶ|(?<![A-Za-z])PV(?![A-Za-z])")
+
+
 def main():
     c = Collector()
     c.check_news_list("BLOWINDS", "https://www.fukuiblowinds.com/news/", r"/news/detail/(id=)?\d+", "ブローウィンズ公式")
@@ -426,6 +510,7 @@ def main():
     c.check_united_store()
     c.check_ruck_feed()
     c.check_city(FUKUI_CITY_LISTS, r"/p\d{5,}\.html", "福井市")
+    c.check_manabi_feed()
     c.fill_news_images()
     c.save()
 

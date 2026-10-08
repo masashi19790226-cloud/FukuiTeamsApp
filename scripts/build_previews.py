@@ -510,6 +510,17 @@ TEAM_STAT_RE = re.compile(
     r'[\s\S]*?grades-text"><span class="font-blg">([^<]*)</span>([^<]*)<')
 
 
+# リーグごとのクラブ数(クラブ成績の「○位」が何チーム中かを出すため)。
+# Bリーグ公式の順位表で数えた 2026-27 シーズンの数。クラブ数が変わったシーズンはここを直す
+LEAGUE_TEAM_COUNTS = {"B.PREMIER": 26, "B.ONE": 25}
+
+
+def parse_league(page):
+    """クラブページの「B.ONE｜中地区 1位」から リーグ名(例「B.ONE」)。無ければ空"""
+    m = re.search(r"(B\.[A-Z0-9]+)\s*[｜|]\s*\S*地区", text_of(page))
+    return m.group(1) if m else ""
+
+
 def parse_team_stats(page):
     """クラブページの「クラブ成績」の8項目(PPG・FG%・3FG%・FT%・RPG・APG・BPG・SPG)。
     [{"key", "label", "rank", "value", "unit"}] と、公式の更新日時の文字(例「2026年10月04日19:07更新」)。読めなければ空"""
@@ -588,6 +599,11 @@ def build_team_players(team_id, label):
         if team_stats:
             result["team_stats"] = team_stats
             result["team_stats_updated"] = team_stats_updated
+            league = parse_league(page)
+            if league:
+                result["league"] = league
+                if league in LEAGUE_TEAM_COUNTS:
+                    result["league_teams"] = LEAGUE_TEAM_COUNTS[league]
         print(f"[選手] {label} クラブ成績 {len(team_stats)}項目")
     except Exception as e:
         print(f"[WARN] 選手: {label} のクラブ成績の読み取りに失敗 {e!r}")
