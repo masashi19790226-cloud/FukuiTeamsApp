@@ -65,6 +65,7 @@ import com.fukuiteams.app.data.PlayersRepository
 import com.fukuiteams.app.data.LeagueScorers
 import com.fukuiteams.app.data.LeagueStandings
 import com.fukuiteams.app.data.ScorerRow
+import com.fukuiteams.app.data.TeamStat
 import com.fukuiteams.app.data.StandingRow
 import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.TeamPlayers
@@ -261,7 +262,23 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             val roster = teamPlayers[selectedTeam.name]
             val myPlayers = preview?.myKeyPlayers ?: emptyList()
             if (roster != null && roster.players.isNotEmpty()) {
-                SectionLabel("${selectedTeam.displayName}の選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
+                // チーム全体の今季の数字(Bリーグ公式のクラブ成績)。次の対戦相手の分も取れていれば並べて比べる
+                if (roster.teamStats.isNotEmpty()) {
+                    val opp = teamPlayers[BLOWINDS_OPP_KEY]?.takeIf { r ->
+                        r.teamStats.isNotEmpty() && (r.gameId.isBlank() || r.gameId == preview?.gameId)
+                    }
+                    SectionLabel("チームの数字(今季)", modifier = Modifier.onGloballyPositioned { marks.own = it })
+                    TeamStatsSection(
+                        mine = roster,
+                        mineName = selectedTeam.shortLabel(),
+                        opp = opp,
+                        oppName = opp?.teamName?.ifBlank { null } ?: nextGame?.opponent ?: "相手"
+                    )
+                }
+                SectionLabel(
+                    "${selectedTeam.displayName}の選手",
+                    modifier = if (roster.teamStats.isEmpty()) Modifier.onGloballyPositioned { marks.own = it } else Modifier
+                )
                 RosterSection(roster, sortKey, profileOf = { name -> profiles[profileKey(selectedTeam, name)] }) { sortKey = it }
             } else if (myPlayers.isNotEmpty()) {
                 SectionLabel("${selectedTeam.displayName}の主な選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
@@ -814,8 +831,9 @@ private fun ProfileLines(p: PlayerBirthday, mark: ProfileMark) {
         p.profileLine.takeIf { it.isNotBlank() }?.let {
             ProfileLine(it, marked = mark == ProfileMark.HEIGHT)
         }
+        // 出身校は長い名前(例「京北高等学校(現・東洋大学京北高等学校)→筑波大学」)もあるので、切らずに折り返す
         p.schoolLine.takeIf { it.isNotBlank() }?.let {
-            ProfileLine(it, marked = false)
+            Text(it, style = MaterialTheme.typography.bodySmall, color = InkSoft, modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -842,6 +860,74 @@ private fun ProfileLine(text: String, marked: Boolean, color: androidx.compose.u
 /** 「2000年3月14日生まれ(26歳)」 */
 private fun birthdayText(p: PlayerBirthday, today: java.time.LocalDate): String =
     "${p.birthday.year}年${p.birthday.monthValue}月${p.birthday.dayOfMonth}日生まれ(${p.currentAge(today)}歳)"
+
+/**
+ * チーム全体の今季の数字(Bリーグ公式の「クラブ成績」)。項目ごとに 自チーム・相手チーム の数字とリーグ内の順位を並べ、
+ * 順位が上のほうを太字・チームカラーにする。相手のデータが無いときは自チームだけ。
+ */
+@Composable
+private fun TeamStatsSection(mine: TeamPlayers, mineName: String, opp: TeamPlayers?, oppName: String) {
+    val oppByKey = opp?.teamStats?.associateBy { it.key }.orEmpty()
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Column(modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper)) {
+            Row(modifier = Modifier.fillMaxWidth().background(Ink).padding(vertical = 6.dp, horizontal = 8.dp)) {
+                Text("項目", modifier = Modifier.weight(1.6f), color = Paper, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text(mineName, modifier = Modifier.weight(1.2f), color = Paper, fontSize = 12.sp, fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                if (opp != null) {
+                    Text(oppName, modifier = Modifier.weight(1.2f), color = Paper, fontSize = 12.sp, fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
+            }
+            mine.teamStats.forEach { st ->
+                val o = oppByKey[st.key]
+                // 順位が上(数字が小さい)ほうを目立たせる
+                val oRank = o?.rank
+                val sRank = st.rank
+                val mineBetter = oRank != null && sRank != null && sRank < oRank
+                val oppBetter = oRank != null && sRank != null && oRank < sRank
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp, horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1.6f)) {
+                        Text(st.label, fontSize = 13.sp, color = Ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(st.key, fontSize = 10.sp, color = InkSoft)
+                    }
+                    TeamStatCell(st, mineBetter, Modifier.weight(1.2f))
+                    if (opp != null) {
+                        if (o != null) TeamStatCell(o, oppBetter, Modifier.weight(1.2f))
+                        else Text("-", modifier = Modifier.weight(1.2f), textAlign = TextAlign.Center, color = InkSoft)
+                    }
+                }
+                ThinRule(color = LineGray)
+            }
+        }
+        Text(
+            listOf(
+                "出典:Bリーグ公式(クラブ成績)",
+                mine.teamStatsUpdated.takeIf { it.isNotBlank() }?.let { "${it}更新" } ?: "",
+                "「○位」はリーグ内の順位です"
+            ).filter { it.isNotBlank() }.joinToString("・"),
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+    }
+}
+
+@Composable
+private fun TeamStatCell(st: TeamStat, better: Boolean, modifier: Modifier) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            st.value + st.unit,
+            fontSize = 15.sp,
+            fontWeight = if (better) FontWeight.ExtraBold else FontWeight.Bold,
+            color = if (better) NewsRed else Ink,
+            maxLines = 1
+        )
+        st.rank?.let { Text("${it}位", fontSize = 10.sp, color = InkSoft) }
+    }
+}
 
 /** 丸岡RUCK・ユナイテッドの全選手の並び順 */
 private enum class RosterSort(val label: String) {

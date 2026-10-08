@@ -14,7 +14,10 @@
 覚え書きは "cache" に入れる(アプリは使わない)。
 """
 
+import hashlib
 import html as htmllib
+import json
+import os
 import re
 from datetime import datetime, timedelta, timezone
 
@@ -30,6 +33,23 @@ WFL_RUCK_CLUB = WFL_SITE + "/club/maruoka/"
 CACHE_DAYS = 30
 
 BLEAGUE_ROSTER = "https://www.bleague.jp/roster_detail/?PlayerID="
+
+# 手で直すプロフィール(公式サイトに載っていない出身高校など)
+MANUAL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "manual_profiles.json")
+MANUAL_KEYS = ("height", "weight", "hometown", "high_school", "school", "position")
+
+
+def _load_manual():
+    """manual_profiles.json の中身と、その覚え書き(中身が変わったら、その日のうちに作り直すため)"""
+    try:
+        with open(MANUAL_PATH, encoding="utf-8") as f:
+            text = f.read()
+        return json.loads(text), hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
+    except FileNotFoundError:
+        return {}, ""
+    except Exception as e:
+        print(f"[WARN] 誕生日: manual_profiles.json を読めませんでした {e!r}")
+        return {}, ""
 
 # データの形の版。身長などを足したときに上げると、その日のうちに作り直す
 VERSION = 4
@@ -83,7 +103,8 @@ def _high_school_bleague(text: str) -> str:
     if not m:
         return ""
     v = m.group(1).strip()
-    return "" if re.search(r"出身校|\d|未記入", v) else v
+    # 「-」(分からない)や、次の項目名を拾ったときは使わない
+    return "" if re.search(r"出身校|\d|未記入", v) or re.fullmatch(r"[-−ー―－\s]+", v) else v
 
 
 def _high_school_career(text: str) -> str:
@@ -248,7 +269,8 @@ def build(fetch, old, ruck_photos=None):
     """誕生日のデータを作る。old は前回の分(無ければ {})。
     今日すでに作っていれば None(書き直さない)。チームごとに失敗しても、前回の分を残す。"""
     today = datetime.now(JST).date()
-    if old.get("date") == today.isoformat() and old.get("v") == VERSION:
+    manual, manual_sig = _load_manual()
+    if old.get("date") == today.isoformat() and old.get("v") == VERSION and old.get("manual", "") == manual_sig:
         return None
     cache = old.get("cache") or {}
     prev = {p.get("_key"): p for p in old.get("players") or [] if p.get("_key")}
@@ -271,7 +293,13 @@ def build(fetch, old, ruck_photos=None):
             continue
         p = {kk: vv for kk, vv in v.items() if kk != "checked"}
         p["_key"] = k
+        # 手で直した項目で上書きする
+        fix = (manual.get(p.get("team", "")) or {}).get(re.sub(r"[\s　]+", "", p["name"]))
+        if isinstance(fix, dict):
+            for kk in MANUAL_KEYS:
+                if fix.get(kk):
+                    p[kk] = str(fix[kk])
         players.append(p)
     players.sort(key=lambda p: (p["birthday"][5:], p["team"], p["name"]))
-    return {"date": today.isoformat(), "v": VERSION, "updated_at": datetime.now(timezone.utc).isoformat(),
+    return {"date": today.isoformat(), "v": VERSION, "manual": manual_sig, "updated_at": datetime.now(timezone.utc).isoformat(),
             "players": players, "cache": new_cache}

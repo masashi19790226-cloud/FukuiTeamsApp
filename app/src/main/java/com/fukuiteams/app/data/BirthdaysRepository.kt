@@ -77,7 +77,9 @@ data class PlayerBirthday(
 
     /** 出身校の1行(例「出身校:北陸高等学校→東海大学」)。分からなければ空 */
     val schoolLine: String get() {
-        val list = listOf(highSchool, school).filter { it.isNotBlank() }.distinct()
+        // 公式に「-」と書かれている(分からない)ものは出さない
+        val list = listOf(highSchool, school).map { it.trim() }
+            .filter { it.isNotBlank() && !Regex("^[-−ー―－]+$").matches(it) }.distinct()
         return if (list.isEmpty()) "" else "出身校:" + list.joinToString("→")
     }
 }

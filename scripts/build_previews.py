@@ -503,6 +503,30 @@ def blowinds_club_photos():
     return out, cache
 
 
+# クラブページの「クラブ成績」(今季のチームの平均得点・成功率など、リーグ内の順位つき)
+TEAM_STAT_RE = re.compile(
+    r'grades-heading-title1[^>]*>([^<]+)</span>\s*<span class="grades-heading-title2">([^<]+)</span>'
+    r'[\s\S]*?grades-text-ranking-2"><span class="num font-blg">([^<]*)</span>位'
+    r'[\s\S]*?grades-text"><span class="font-blg">([^<]*)</span>([^<]*)<')
+
+
+def parse_team_stats(page):
+    """クラブページの「クラブ成績」の8項目(PPG・FG%・3FG%・FT%・RPG・APG・BPG・SPG)。
+    [{"key", "label", "rank", "value", "unit"}] と、公式の更新日時の文字(例「2026年10月04日19:07更新」)。読めなければ空"""
+    items = []
+    for key, label, rank, value, unit in TEAM_STAT_RE.findall(page):
+        value = value.strip()
+        if not re.fullmatch(r"\d+(?:\.\d+)?", value):
+            continue
+        items.append({"key": key.strip(), "label": htmllib.unescape(label).strip(),
+                      "rank": int(rank) if rank.strip().isdigit() else None,
+                      "value": value, "unit": unit.strip()})
+        if len(items) >= 12:
+            break
+    um = re.search(r"クラブ成績</h2>[\s\S]{0,300}?(\d{4}年\d{1,2}月\d{1,2}日\s*[\d:]+)\s*更新", page)
+    return items, (um.group(1) if um else "")
+
+
 def build_team_players(team_id, label):
     """Bリーグ公式のクラブページ「選手情報」から、1クラブ分の全選手の今季成績を作る。読めなければ None。"""
     url = f"{BLEAGUE}/club_detail/?TeamID={team_id}&tab=1"
@@ -558,6 +582,15 @@ def build_team_players(team_id, label):
         "season": season or "", "source_url": url,
         "updated_at": datetime.now(timezone.utc).isoformat(), "players": players,
     }
+    # チーム全体の今季の数字(クラブ成績)。読めなくても選手のデータはそのまま出す
+    try:
+        team_stats, team_stats_updated = parse_team_stats(page)
+        if team_stats:
+            result["team_stats"] = team_stats
+            result["team_stats_updated"] = team_stats_updated
+        print(f"[選手] {label} クラブ成績 {len(team_stats)}項目")
+    except Exception as e:
+        print(f"[WARN] 選手: {label} のクラブ成績の読み取りに失敗 {e!r}")
     if club_cache:
         result["club_photos"] = club_cache  # 次回の写真取得で使う(アプリは使わない)
     if shot_cache:
@@ -804,9 +837,10 @@ def main():
     try:
         import birthdays
         old_bd = load_json(STANDINGS_PATH, {}).get("BIRTHDAYS", {})
-        # 1日1回(データの形を変えたとき=版が上がったときは、その日のうちにもう一度)
+        # 1日1回(データの形を変えたとき=版が上がったとき、manual_profiles.json を直したときは、その日のうちにもう一度)
         if (old_bd.get("date") != datetime.now(JST).strftime("%Y-%m-%d")
-                or old_bd.get("v") != birthdays.VERSION) and STANDINGS:
+                or old_bd.get("v") != birthdays.VERSION
+                or old_bd.get("manual", "") != birthdays._load_manual()[1]) and STANDINGS:
             ruck_photos = None
             try:
                 ruck_photos = standings.ruck_members(fetch)

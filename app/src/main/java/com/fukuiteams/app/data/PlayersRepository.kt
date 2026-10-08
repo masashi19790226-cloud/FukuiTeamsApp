@@ -77,8 +77,15 @@ data class TeamPlayers(
     val players: List<PlayerStats>,
     /** 対戦相手のデータのときだけ入る:相手のチーム名(例「金沢」)と、どの試合の相手か(試合ID) */
     val teamName: String = "",
-    val gameId: String = ""
+    val gameId: String = "",
+    /** チーム全体の今季の数字(Bリーグ公式のクラブページの「クラブ成績」。リーグ内の順位つき) */
+    val teamStats: List<TeamStat> = emptyList(),
+    /** クラブ成績の公式の更新日時(例「2026年10月04日19:07」) */
+    val teamStatsUpdated: String = ""
 )
+
+/** チーム全体の数字1項目(例 key=PPG・label=平均得点数・value=81.5・unit=点・rank=14) */
+data class TeamStat(val key: String, val label: String, val value: String, val unit: String, val rank: Int?)
 
 /** ブローウィンズの次の対戦相手の選手データのキー(players.json) */
 const val BLOWINDS_OPP_KEY = "BLOWINDS_OPP"
@@ -135,7 +142,21 @@ object PlayersRepository {
                     },
                     players = players,
                     teamName = o.optString("team_name"),
-                    gameId = o.optString("game_id")
+                    gameId = o.optString("game_id"),
+                    teamStats = o.optJSONArray("team_stats")?.let { arr ->
+                        (0 until arr.length()).mapNotNull { i ->
+                            val t = arr.optJSONObject(i) ?: return@mapNotNull null
+                            val value = t.optString("value").takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                            TeamStat(
+                                key = t.optString("key"),
+                                label = t.optString("label"),
+                                value = value,
+                                unit = t.optString("unit"),
+                                rank = if (t.isNull("rank")) null else t.optInt("rank").takeIf { it > 0 }
+                            )
+                        }
+                    } ?: emptyList(),
+                    teamStatsUpdated = o.optString("team_stats_updated")
                 )
             }
             map
