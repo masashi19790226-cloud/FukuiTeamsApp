@@ -34,7 +34,9 @@ data class PlayerBirthday(
     val hometown: String = "",
     val school: String = "",
     /** ポジション(例「GK」「FP」「C/PF」)。分からなければ空 */
-    val position: String = ""
+    val position: String = "",
+    /** 出身高校(ブローウィンズはBリーグ公式、ユナイテッドは経歴の最初の高校・ユース)。分からなければ空 */
+    val highSchool: String = ""
 ) {
     /** その日に迎える年齢(例:2026年10月8日に1999年10月8日生まれ → 27) */
     fun ageOn(date: LocalDate): Int = date.year - birthday.year
@@ -69,8 +71,14 @@ data class PlayerBirthday(
             height.isNotBlank() -> "${height}cm"
             else -> ""
         }
-        return listOf(body, hometown.takeIf { it.isNotBlank() }?.let { "${it}出身" } ?: "", school)
+        return listOf(body, hometown.takeIf { it.isNotBlank() }?.let { "${it}出身" } ?: "")
             .filter { it.isNotBlank() }.joinToString("・")
+    }
+
+    /** 出身校の1行(例「出身校:北陸高等学校→東海大学」)。分からなければ空 */
+    val schoolLine: String get() {
+        val list = listOf(highSchool, school).filter { it.isNotBlank() }.distinct()
+        return if (list.isEmpty()) "" else "出身校:" + list.joinToString("→")
     }
 }
 
@@ -111,7 +119,8 @@ object BirthdaysRepository {
                     weight = o.optString("weight"),
                     hometown = o.optString("hometown"),
                     school = o.optString("school"),
-                    position = o.optString("position")
+                    position = o.optString("position"),
+                    highSchool = o.optString("high_school")
                 )
             }
         } catch (e: Exception) {

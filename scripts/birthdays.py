@@ -6,9 +6,9 @@
 - ユナイテッド : 公式サイトのチームページ → 各選手の詳細ページ(detail.php?id=)の「生年月日」
 
 あわせて、選手の詳細ページ・選手紹介にある身長・体重・出身地・出身校も入れる(アプリの選手タブと特集で使う)。
-- ブローウィンズ: 身長/体重・出身地・出身校
+- ブローウィンズ: 身長/体重・出身地・出身校(大学など)。出身高校はBリーグ公式の選手ページ(roster_detail)から
 - 丸岡RUCK    : 身長・出身地(公式サイトの選手紹介。体重は載っていない)
-- ユナイテッド : 身長/体重・出身地
+- ユナイテッド : 身長/体重・出身地。出身高校は「所属/経歴」の最初の高校・ユース
 
 選手の詳細ページは一度読んだら30日間は読み直さない(誕生日は変わらないため)。
 覚え書きは "cache" に入れる(アプリは使わない)。
@@ -29,8 +29,10 @@ WFL_RUCK_CLUB = WFL_SITE + "/club/maruoka/"
 
 CACHE_DAYS = 30
 
+BLEAGUE_ROSTER = "https://www.bleague.jp/roster_detail/?PlayerID="
+
 # データの形の版。身長などを足したときに上げると、その日のうちに作り直す
-VERSION = 3
+VERSION = 4
 
 
 def _text(fragment: str) -> str:
@@ -75,6 +77,27 @@ def _profile(text: str) -> dict:
     return out
 
 
+def _high_school_bleague(text: str) -> str:
+    """Bリーグ公式の選手ページの「出身校（高）北陸高等学校」から高校名。無ければ空"""
+    m = re.search(r"出身校\s*[（(]\s*高\s*[）)]\s*[:：]?\s*\n?\s*([^\n]{2,30})", text)
+    if not m:
+        return ""
+    v = m.group(1).strip()
+    return "" if re.search(r"出身校|\d|未記入", v) else v
+
+
+def _high_school_career(text: str) -> str:
+    """ユナイテッドの「所属／経歴: 藤枝明誠高校→日本大学→…」から、最初の高校・ユース。無ければ空"""
+    m = re.search(r"経歴\s*[:：]?\s*\n?\s*([^\n]{2,200})", text)
+    if not m:
+        return ""
+    for part in re.split(r"[→⇒>＞/／、,]", m.group(1)):
+        part = part.strip()
+        if re.search(r"高校|高等学校|ユース|U-?18|U１８", part) and len(part) <= 30:
+            return part
+    return ""
+
+
 def _fresh(entry, today):
     """覚え書きが30日以内のものか"""
     try:
@@ -95,7 +118,7 @@ def blowinds(fetch, cache, today):
         key = f"blowinds:{pid}"
         hit = cache.get(key)
         # 身長・ポジションなどを入れる前に覚えた分("position" が無い)は読み直す
-        if not (hit and _fresh(hit, today) and "position" in hit):
+        if not (hit and _fresh(hit, today) and "high_school" in hit):
             url = f"{BLOWINDS_SITE}/team/players/detail/id={detail_id}?PlayerID={pid}"
             try:
                 html = fetch(url)
@@ -117,8 +140,16 @@ def blowinds(fetch, cache, today):
                     number = num.group(1) if num else ""
                     break
             body = _text(html)
+            # 出身高校はBリーグ公式の選手ページから(公式サイトのPlayerIDとBリーグのPlayerIDは同じ)
+            high_school = ""
+            try:
+                high_school = _high_school_bleague(_text(fetch(BLEAGUE_ROSTER + pid)))
+                fetched += 1
+            except Exception as e:
+                print(f"[WARN] 誕生日: Bリーグ公式の選手ページを読めませんでした PlayerID={pid} {e!r}")
             hit = {"team": "BLOWINDS", "name": name, "number": number, "photo": photo,
-                   "birthday": _birthday_in(body), **_profile(body), "checked": today.isoformat()}
+                   "birthday": _birthday_in(body), **_profile(body), "high_school": high_school,
+                   "checked": today.isoformat()}
         out.append((key, hit))
     print(f"[誕生日] ブローウィンズ: {len(out)}人(詳細ページ{fetched}件を読み込み)")
     return out
@@ -143,7 +174,7 @@ def united(fetch, cache, today):
     for pid, number in links:
         key = f"united:{pid}"
         hit = cache.get(key)
-        if not (hit and _fresh(hit, today) and "position" in hit):
+        if not (hit and _fresh(hit, today) and "high_school" in hit):
             url = f"{UNITED_SITE}/team/detail.php?id={pid}"
             try:
                 html = fetch(url)
@@ -161,7 +192,8 @@ def united(fetch, cache, today):
             profile["school"] = ""
             hit = {"team": "UNITED", "name": name, "number": number,
                    "photo": photos.get(re.sub(r"[\s　]+", "", name), ""),
-                   "birthday": _birthday_in(body), **profile, "checked": today.isoformat()}
+                   "birthday": _birthday_in(body), **profile, "high_school": _high_school_career(body),
+                   "checked": today.isoformat()}
         out.append((key, hit))
     print(f"[誕生日] ユナイテッド: {len(out)}人(詳細ページ{fetched}件を読み込み)")
     return out
@@ -205,7 +237,7 @@ def ruck(fetch, ruck_photos):
             "photo": _ruck_photo(info),
             # 身長・出身地は丸岡RUCK公式の選手紹介から(体重・出身校は載っていない)
             "height": _ruck_info(info, "height"), "weight": "",
-            "hometown": _ruck_info(info, "hometown"), "school": "",
+            "hometown": _ruck_info(info, "hometown"), "school": "", "high_school": "",
             "birthday": f"{int(bd.group(1)):04d}-{int(bd.group(2)):02d}-{int(bd.group(3)):02d}",
         }))
     print(f"[誕生日] 丸岡RUCK: {len(out)}人")
