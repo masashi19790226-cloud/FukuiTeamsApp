@@ -687,12 +687,35 @@ def load_standings():
                     STANDINGS["UNITED"][k] = old_u[k]
 
 
+# 丸岡RUCK公式の選手紹介(写真・身長・出身地)。1回の実行で読めた分を、得点の表と誕生日のデータの両方で使う
+RUCK_MEMBERS = None
+
+
+def ruck_members_once():
+    """丸岡RUCK公式の選手紹介を読む(この実行でまだ読んでいなければ)。失敗したら少し待ってもう一度。読めなければ例外"""
+    global RUCK_MEMBERS
+    if RUCK_MEMBERS:
+        return RUCK_MEMBERS
+    last = None
+    for attempt in range(2):
+        try:
+            got = standings.ruck_members(fetch)
+            if got:
+                RUCK_MEMBERS = got
+                return got
+            last = ValueError("選手が見つかりません")
+        except Exception as e:
+            last = e
+        time.sleep(3)
+    raise last
+
+
 def attach_player_photos():
     """丸岡RUCK・ユナイテッドの得点の表に、公式サイトの選手紹介の顔写真を付ける(読めなければ付けない)"""
     rac = STANDINGS.get("RAC", {}).get("scorers")
     if rac:
         try:
-            standings.add_photos(rac.get("rows"), standings.RUCK_NAME, standings.ruck_members(fetch))
+            standings.add_photos(rac.get("rows"), standings.RUCK_NAME, ruck_members_once())
             rac["photo_report"] = {standings.RUCK_NAME: "ok"}
         except Exception as e:
             print(f"[WARN] 写真: 丸岡RUCKの選手紹介の取得に失敗 {e!r}")
@@ -854,12 +877,15 @@ def main():
         import birthdays
         old_bd = load_json(STANDINGS_PATH, {}).get("BIRTHDAYS", {})
         # 1日1回(データの形を変えたとき=版が上がったとき、manual_profiles.json を直したときは、その日のうちにもう一度)
+        # 丸岡RUCKの選手に写真が1人も無いとき(前回、選手紹介を読めなかったとき)も、その日のうちに作り直す
+        ruck_missing = not any(p.get("photo") for p in old_bd.get("players") or [] if p.get("team") == "RAC")
         if (old_bd.get("date") != datetime.now(JST).strftime("%Y-%m-%d")
                 or old_bd.get("v") != birthdays.VERSION
-                or old_bd.get("manual", "") != birthdays._load_manual()[1]) and STANDINGS:
+                or old_bd.get("manual", "") != birthdays._load_manual()[1]
+                or ruck_missing) and STANDINGS:
             ruck_photos = None
             try:
-                ruck_photos = standings.ruck_members(fetch)
+                ruck_photos = ruck_members_once()
             except Exception as e:
                 print(f"[WARN] 誕生日: 丸岡RUCKの写真の取得に失敗 {e!r}")
             bd = birthdays.build(fetch, old_bd, ruck_photos)

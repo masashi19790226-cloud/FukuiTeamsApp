@@ -1032,7 +1032,8 @@ private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, sort: 
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            RemoteThumbnail(p.photo, width = 72.dp, height = 90.dp, alignTop = true, zoomCaption = p.label)
+            // 写真は選手紹介のもの。無ければ得点の表に付いている写真を使う
+            RemoteThumbnail(p.photo.ifBlank { row?.photo.orEmpty() }, width = 72.dp, height = 90.dp, alignTop = true, zoomCaption = p.label)
             // 公式の選手一覧で背番号が読めなかった選手は、得点の表の背番号を使う
             val number = p.number.ifBlank { row?.number.orEmpty() }
             Headline(if (number.isNotBlank()) "#$number" else "#-", fontSize = 22, modifier = Modifier.width(58.dp))

@@ -286,6 +286,14 @@ def build(fetch, old, ruck_photos=None):
         except Exception as e:
             print(f"[WARN] 誕生日: {label}の取得に失敗。前回の分を使います {e!r}")
             entries += [(k, p) for k, p in prev.items() if p.get("team") == team]
+    # 丸岡RUCKの選手紹介(写真・身長・出身地)を読めなかったときは、前回の分の写真などを引き継ぐ
+    if not ruck_photos:
+        for k, v in entries:
+            old = prev.get(k)
+            if k.startswith("ruck:") and old:
+                for kk in ("photo", "height", "hometown"):
+                    if not v.get(kk) and old.get(kk):
+                        v[kk] = old[kk]
     new_cache = {k: v for k, v in entries if not k.startswith("ruck:")}
     players = []
     for k, v in entries:
