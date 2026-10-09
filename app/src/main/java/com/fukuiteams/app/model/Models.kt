@@ -11,6 +11,14 @@ enum class Team(val displayName: String, val initial: String, val color: Color, 
     UNITED("福井ユナイテッド", "U", TeamUnited, "https://fukuiunited.co.jp/")
 }
 
+/** チームの短い呼び方(例「ブローウィンズ」「丸岡RUCK」「ユナイテッド」)。画面・記事のどこでもこれを使う */
+val Team.shortName: String
+    get() = when (this) {
+        Team.BLOWINDS -> "ブローウィンズ"
+        Team.RAC -> "丸岡RUCK"
+        Team.UNITED -> "ユナイテッド"
+    }
+
 data class Game(
     val id: String,
     val team: Team,

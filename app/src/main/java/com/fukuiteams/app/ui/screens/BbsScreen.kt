@@ -1,5 +1,6 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.ui.components.openExternalUrl
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -1552,10 +1553,5 @@ private fun timeLabel(millis: Long): String {
     return String.format(java.util.Locale.US, "%d:%02d", t.hour, t.minute)
 }
 
-private fun openBbsUrl(context: Context, url: String) {
-    try {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-    } catch (e: ActivityNotFoundException) {
-        // ブラウザが無いときは何もしない
-    }
-}
+/** URLをブラウザなどで開く(共通の openExternalUrl を使う) */
+private fun openBbsUrl(context: Context, url: String) = openExternalUrl(context, url)

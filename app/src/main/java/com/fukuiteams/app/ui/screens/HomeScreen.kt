@@ -1,5 +1,10 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.model.shortName
+import com.fukuiteams.app.ui.components.HomeAwayLabel
+import com.fukuiteams.app.ui.components.openExternalUrl
+import com.fukuiteams.app.data.isGoing
+import com.fukuiteams.app.ui.components.GoingBadge
 import com.fukuiteams.app.data.publicViewings
 import com.fukuiteams.app.ui.components.PublicViewingBadge
 import com.fukuiteams.app.data.commentHeadline
@@ -575,38 +580,6 @@ private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?, onOpenRa
 }
 
 @Composable
-private fun OfficialSiteLinks(selectedTeam: Team?) {
-    val context = LocalContext.current
-    val teams = if (selectedTeam != null) listOf(selectedTeam) else Team.values().toList()
-
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        teams.forEach { team ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(3.dp))
-                    .background(White)
-                    .border(BorderStroke(1.dp, Ink), RoundedCornerShape(3.dp))
-                    .clickable(enabled = team.officialSiteUrl != null) {
-                        team.officialSiteUrl?.let { openUrl(context, it) }
-                    }
-                    .padding(horizontal = 14.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                TeamBadge(team, size = 28.dp, fontSize = 12.sp)
-                Text(team.displayName, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-                if (team.officialSiteUrl != null) {
-                    Text("公式サイトを開く ›", style = MaterialTheme.typography.labelMedium, color = Accent)
-                } else {
-                    Text("準備中", style = MaterialTheme.typography.labelMedium, color = InkSoft)
-                }
-            }
-        }
-    }
-}
-
-@Composable
 private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
     Card(
         modifier = Modifier
@@ -640,6 +613,9 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
                 if (game.specialDay() != null) SpecialDayBadge()
                 // パブリックビューイング(PV)がある試合は「PV」の札
                 if (game.publicViewings().isNotEmpty()) PublicViewingBadge()
+                // チェックインした試合は「行く予定」の札
+                val cardLogPrefs by LocalContext.current.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+                if (isGoing(game.id, cardLogPrefs)) GoingBadge()
                 Text(
                     game.team.displayName,
                     color = game.team.color,
@@ -679,49 +655,6 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
     }
 }
 
-/** 紙面風の HOME / AWAY 表示。HOME は黒地に白抜き、AWAY は黒枠。 */
-@Composable
-private fun HomeAwayLabel(isHome: Boolean) {
-    HomeAwayTag(isHome = isHome, modifier = Modifier.padding(top = 2.dp))
-}
-
-@Composable
-private fun HomeAwayBadge(isHome: Boolean) {
-    val style = if (isHome) {
-        HomeAwayStyle(
-            background = androidx.compose.ui.graphics.Color(0xFF2F6846).copy(alpha = 0.14f),
-            foreground = androidx.compose.ui.graphics.Color(0xFF2F6846),
-            icon = Icons.Filled.Home,
-            label = "ホーム"
-        )
-    } else {
-        HomeAwayStyle(
-            background = androidx.compose.ui.graphics.Color(0xFF2541B2).copy(alpha = 0.12f),
-            foreground = androidx.compose.ui.graphics.Color(0xFF2541B2),
-            icon = Icons.Filled.Flight,
-            label = "アウェイ"
-        )
-    }
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(style.background)
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(3.dp)
-    ) {
-        Icon(style.icon, contentDescription = null, tint = style.foreground, modifier = Modifier.size(11.dp))
-        Text(style.label, style = MaterialTheme.typography.labelSmall, color = style.foreground)
-    }
-}
-
-private data class HomeAwayStyle(
-    val background: androidx.compose.ui.graphics.Color,
-    val foreground: androidx.compose.ui.graphics.Color,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector,
-    val label: String
-)
-
 @Composable
 private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
     val team = Team.values().find { it.name == news.teamId }
@@ -760,12 +693,8 @@ private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
     }
 }
 
-private fun openUrl(context: Context, url: String) {
-    if (url.isBlank()) return
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    context.startActivity(intent)
-}
-
+/** URLをブラウザなどで開く(共通の openExternalUrl を使う) */
+private fun openUrl(context: Context, url: String) = openExternalUrl(context, url)
 /** 一面トップの「速報」。最新の試合結果を大見出しとスコアボックスで見せる。 */
 @Composable
 private fun LatestResultHero(
@@ -964,6 +893,9 @@ private fun NextGameBlock(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             HomeAwayTag(isHome = nextGame.isHome, fontSize = 14.sp)
+            // チェックインした試合は「行く予定」の札
+            val nextLogPrefs by LocalContext.current.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+            if (isGoing(nextGame.id, nextLogPrefs)) GoingBadge()
             Text(
                 nextGame.team.displayName,
                 style = MaterialTheme.typography.labelMedium,
@@ -1228,7 +1160,7 @@ private fun BirthdayCard(players: List<PlayerBirthday>, today: java.time.LocalDa
                 val d = today.plusDays(p.daysUntilNext(today).toLong())
                 val week = "月火水木金土日"[d.dayOfWeek.value - 1]
                 Text(
-                    "${d.monthValue}/${d.dayOfMonth}($week) ${p.label}(${p.team?.let { teamShortName(it) } ?: ""}) ${p.ageOn(d)}歳に",
+                    "${d.monthValue}/${d.dayOfMonth}($week) ${p.label}(${p.team?.let { it.shortName } ?: ""}) ${p.ageOn(d)}歳に",
                     style = MaterialTheme.typography.bodySmall,
                     color = Ink,
                     maxLines = 2
@@ -1236,12 +1168,6 @@ private fun BirthdayCard(players: List<PlayerBirthday>, today: java.time.LocalDa
             }
         }
     }
-}
-
-private fun teamShortName(team: Team): String = when (team) {
-    Team.BLOWINDS -> "ブローウィンズ"
-    Team.RAC -> "丸岡RUCK"
-    Team.UNITED -> "ユナイテッド"
 }
 
 /**

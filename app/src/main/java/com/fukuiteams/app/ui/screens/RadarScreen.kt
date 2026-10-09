@@ -1,5 +1,7 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.ui.components.NewsChip
+import com.fukuiteams.app.ui.components.openExternalUrl
 import com.fukuiteams.app.data.PublicViewingsRepository
 import com.fukuiteams.app.ui.components.PublicViewingList
 import com.fukuiteams.app.ui.components.PublicViewingXSearch
@@ -618,39 +620,11 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
 }
 
 @Composable
-private fun InviteTab(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Text(
-        label,
-        modifier = modifier
-            .border(1.dp, Ink)
-            .background(if (selected) Ink else Paper)
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
-        color = if (selected) Ivory else Ink,
-        fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
-        fontSize = 13.sp,
-        textAlign = TextAlign.Center,
-        maxLines = 1
-    )
-}
-
+private fun InviteTab(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) =
+    NewsChip(label, selected, modifier, fontSize = 13.sp, horizontalPadding = 0.dp, verticalPadding = 8.dp, onClick = onClick)
 @Composable
-private fun StatusChip(label: String, selected: Boolean, onClick: () -> Unit) {
-    Text(
-        (if (selected) "✓ " else "") + label,
-        modifier = Modifier
-            .border(1.dp, Ink)
-            .background(if (selected) Ink else Paper)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 6.dp),
-        color = if (selected) Ivory else Ink,
-        fontSize = 12.sp,
-        fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
-        maxLines = 1,
-        softWrap = false
-    )
-}
-
+private fun StatusChip(label: String, selected: Boolean, onClick: () -> Unit) =
+    NewsChip((if (selected) "✓ " else "") + label, selected, verticalPadding = 6.dp, onClick = onClick)
 /**
  * 「チケット」で絞り込んだときに出す案内。公式X(旧Twitter)の投稿はアプリで自動取得できないため、
  * Xでチーム名とチケットを検索するボタンを出す。
@@ -689,22 +663,8 @@ private fun TicketSearchCard(selectedTeam: Team?, onOpen: (String) -> Unit) {
 }
 
 @Composable
-private fun CategoryChip(label: String, selected: Boolean, onClick: () -> Unit) {
-    Text(
-        label,
-        modifier = Modifier
-            .border(1.dp, Ink)
-            .background(if (selected) Ink else Paper)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 7.dp),
-        color = if (selected) Ivory else Ink,
-        fontSize = 12.sp,
-        fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
-        maxLines = 1,
-        softWrap = false
-    )
-}
-
+private fun CategoryChip(label: String, selected: Boolean, onClick: () -> Unit) =
+    NewsChip(label, selected, onClick = onClick)
 @Composable
 private fun RadarRow(
     item: RadarItem,
@@ -824,11 +784,5 @@ private fun updatedLabel(status: DataStatus?): Pair<String, Boolean> {
     }
 }
 
-private fun openRadarUrl(context: Context, url: String) {
-    if (url.isBlank()) return
-    try {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-    } catch (e: Exception) {
-        // ブラウザが見つからないなどで開けないときは何もしない(アプリは落とさない)
-    }
-}
+/** URLをブラウザなどで開く(共通の openExternalUrl を使う) */
+private fun openRadarUrl(context: Context, url: String) = openExternalUrl(context, url)

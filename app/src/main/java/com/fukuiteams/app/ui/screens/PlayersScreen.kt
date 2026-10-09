@@ -1,5 +1,7 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.ui.components.NewsChip
+import com.fukuiteams.app.ui.components.openExternalUrl
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -322,8 +324,8 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                     SectionLabel("${selectedTeam.displayName}の選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
                     NoDataBox(
                         when (selectedTeam) {
-                            Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(1時間おき)が動くと、Bリーグ公式の選手情報から全選手の成績が表示されます。"
-                            Team.RAC, Team.UNITED -> "このチームの順位表はまだ届いていません。GitHubの自動更新(1時間おき)が動くと表示されます。"
+                            Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(約20分おき)が動くと、Bリーグ公式の選手情報から全選手の成績が表示されます。"
+                            Team.RAC, Team.UNITED -> "このチームの順位表はまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。"
                         }
                     )
                 }
@@ -410,7 +412,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 LinkText("相手チームの情報を見る ›") { openPlayersUrl(context, link) }
             }
             Text(
-                "選手の数字はGitHubの自動更新(1時間おき)で" +
+                "選手の数字はGitHubの自動更新(約20分おき)で" +
                     when (selectedTeam) {
                         Team.BLOWINDS -> "Bリーグ公式"
                         Team.RAC -> "女子Fリーグ公式"
@@ -1193,24 +1195,8 @@ private fun minutesToSeconds(text: String?): Double? {
 
 /** 並び順の切り替えボタン。幅は呼び出し側(modifier)で決め、文字は中央に1行で表示する。 */
 @Composable
-private fun SortChip(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Text(
-        label,
-        modifier = modifier
-            .border(1.dp, Ink)
-            .background(if (selected) Ink else Paper)
-            .clickable(onClick = onClick)
-            .padding(vertical = 7.dp),
-        color = if (selected) Paper else Ink,
-        fontSize = 12.sp,
-        letterSpacing = 0.sp,
-        textAlign = TextAlign.Center,
-        maxLines = 1,
-        softWrap = false,
-        fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal
-    )
-}
-
+private fun SortChip(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) =
+    NewsChip(label, selected, modifier, horizontalPadding = 0.dp, onClick = onClick)
 /**
  * 全選手一覧の1人分。背番号・名前・ポジションと、試合数・平均出場時間・平均得点・リバウンド・アシスト。
  * 押すと、シュート成功率・スティール・ブロック・貢献度が開く。
@@ -1521,11 +1507,5 @@ private fun LinkText(text: String, onClick: () -> Unit) {
     )
 }
 
-private fun openPlayersUrl(context: Context, url: String) {
-    if (url.isBlank()) return
-    try {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-    } catch (e: Exception) {
-        // 開けないときは何もしない(アプリは落とさない)
-    }
-}
+/** URLをブラウザなどで開く(共通の openExternalUrl を使う) */
+private fun openPlayersUrl(context: Context, url: String) = openExternalUrl(context, url)

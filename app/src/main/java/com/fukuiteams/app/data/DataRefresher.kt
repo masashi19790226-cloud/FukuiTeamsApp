@@ -37,6 +37,8 @@ object DataRefresher {
         val players = async { PlayersRepository.fetch() }
         val standings = async { StandingsRepository.fetch() }
         games.await()
+        // 「行く予定」にしていて始まった試合は、観戦方法を「現地観戦」として記録する
+        runCatching { recordGoingAsOnSite(appContext, GamesRepository.games) }
         special.await()
         lp.await()
         pv.await()

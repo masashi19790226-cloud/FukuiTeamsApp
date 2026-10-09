@@ -125,11 +125,4 @@ fun PublicViewingXSearch(teams: List<Team>) {
     }
 }
 
-private fun openPvUrl(context: android.content.Context, url: String) {
-    runCatching {
-        context.startActivity(
-            android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
-                .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-        )
-    }
-}
+private fun openPvUrl(context: android.content.Context, url: String) = openExternalUrl(context, url)

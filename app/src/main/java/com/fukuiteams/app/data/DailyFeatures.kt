@@ -1,5 +1,6 @@
 package com.fukuiteams.app.data
 
+import com.fukuiteams.app.model.shortName
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.model.Team
 import java.time.LocalDate
@@ -44,12 +45,6 @@ private fun Game.localDate(): LocalDate? = runCatching {
 }.getOrNull()
 
 private fun Game.shortLabel(): String = "${dateLabel.split("/").drop(1).joinToString("/")}(${dayOfWeek})"
-
-private fun teamShort(team: Team): String = when (team) {
-    Team.BLOWINDS -> "ブローウィンズ"
-    Team.RAC -> "丸岡RUCK"
-    Team.UNITED -> "ユナイテッド"
-}
 
 /** 今季の始まり(この日以降の試合を今季として数える) */
 private fun seasonStart(team: Team, today: LocalDate): LocalDate = when (team) {
@@ -230,7 +225,7 @@ private fun numbers(team: Team, games: List<Game>, results: Map<String, RemoteGa
     val draw = rs.count { it.second.outcome() == GameOutcome.DRAW }
     val record = "${win}勝${lose}敗" + if (draw > 0) "${draw}分" else ""
     val stories = mutableListOf<FeatureStory>()
-    val name = teamShort(team)
+    val name = team.shortName
 
     // 得点・失点の平均
     val avgFor = rs.map { it.second.myScore }.average()
@@ -393,7 +388,7 @@ private fun standing(team: Team, standings: Map<String, LeagueStandings>, games:
     val top = part.rows.minByOrNull { it.rank } ?: return emptyList()
     val next = games.filter { it.team == team && it.isUpcoming() }.minByOrNull { it.sortKey }
     val gap = top.points - me.points
-    val headline = if (me.rank == 1) "${teamShort(team)}、首位を走る" else "${teamShort(team)}、現在${me.rank}位"
+    val headline = if (me.rank == 1) "${team.shortName}、首位を走る" else "${team.shortName}、現在${me.rank}位"
     val body = (if (me.rank == 1) {
         val second = part.rows.filter { it.rank > 1 }.minByOrNull { it.rank }
         "${part.label}で勝点${me.points}の首位。" + (second?.let { "2位の${it.team}とは勝点差${me.points - it.points}。" } ?: "")
@@ -659,7 +654,7 @@ private fun remaining(team: Team, games: List<Game>, today: LocalDate): List<Fea
         FeatureStory(
             kicker = "シーズンの行方",
             team = team,
-            headline = "${teamShort(team)}、今季の残りは${left.size}試合",
+            headline = "${team.shortName}、今季の残りは${left.size}試合",
             body = "日程に載っている今季${season.size}試合のうち、残りは${left.size}試合(ホーム${home}・アウェイ${left.size - home})。" +
                 "最後の試合は${left.maxByOrNull { it.sortKey }?.let { "${it.shortLabel()}の${it.opponent}戦" } ?: "未定"}。",
             bigNumber = "${left.size}",
@@ -729,7 +724,7 @@ private fun onSiteRecord(team: Team, games: List<Game>, results: Map<String, Rem
             kicker = "あなたの観戦記録",
             team = team,
             headline = "現地観戦は${w}勝${l}敗" + (if (d > 0) "${d}分" else "") + (rate?.let { "、勝率${it}%" } ?: ""),
-            body = "あなたが現地で見た${teamShort(team)}の試合は${seen.size}試合。" +
+            body = "あなたが現地で見た${team.shortName}の試合は${seen.size}試合。" +
                 (if (rate != null && rate >= 60) "あなたが行くと勝つ「勝利の使者」かも。" else if (rate != null && rate < 40) "次の現地観戦で流れを変えよう。" else "次も会場から声援を。") +
                 "最後に見たのは${seen.maxByOrNull { it.first.sortKey }!!.let { "${it.first.shortLabel()}の${it.first.opponent}戦" }}。",
             bigNumber = rate?.let { "$it" } ?: "${seen.size}",
@@ -766,7 +761,7 @@ private fun weekAhead(teams: List<Team>, games: List<Game>): List<FeatureStory> 
             kicker = "今週の試合",
             team = if (teams.size == 1) teams.first() else null,
             headline = "この1週間で${week.size}試合",
-            body = week.joinToString("\n") { "・${it.shortLabel()} ${teamShort(it.team)} vs ${it.opponent}(${if (it.isHome) "H" else "A"})" },
+            body = week.joinToString("\n") { "・${it.shortLabel()} ${it.team.shortName} vs ${it.opponent}(${if (it.isHome) "H" else "A"})" },
             bigNumber = "${week.size}",
             bigUnit = "試合",
             gameId = week.first().id
@@ -784,7 +779,7 @@ private fun birthdayMonth(teams: List<Team>, birthdays: List<PlayerBirthday>, to
             kicker = "${today.monthValue}月生まれ",
             team = if (teams.size == 1) teams.first() else null,
             headline = "${today.monthValue}月が誕生日の選手は${list.size}人",
-            body = list.joinToString("、") { "${it.birthday.dayOfMonth}日 ${it.name}(${it.team?.let { t -> teamShort(t) } ?: ""})" } + "。",
+            body = list.joinToString("、") { "${it.birthday.dayOfMonth}日 ${it.name}(${it.team?.let { t -> t.shortName } ?: ""})" } + "。",
             // これから誕生日を迎える選手(今月)の写真。もう全員過ぎていれば最初の選手
             photo = (list.firstOrNull { it.birthday.dayOfMonth >= today.dayOfMonth } ?: list.first()).photo,
             bigNumber = "${list.size}",
@@ -849,7 +844,7 @@ private fun tallest(team: Team, birthdays: List<PlayerBirthday>): List<FeatureSt
         FeatureStory(
             kicker = "高さ比べ",
             team = team,
-            headline = "${teamShort(team)}でいちばん背が高いのは${top.name}選手、${top.height}cm",
+            headline = "${team.shortName}でいちばん背が高いのは${top.name}選手、${top.height}cm",
             body = "身長が分かる${list.size}人の平均は%.1fcm。".format(avg) +
                 "上位は" + top3.joinToString("、") { "${it.name}(${it.height}cm)" } + "。" +
                 "いちばん小柄なのは${low.name}選手(${low.height}cm)です。\n※公式サイトの選手紹介より",
@@ -869,7 +864,7 @@ private fun localPlayers(team: Team, birthdays: List<PlayerBirthday>): List<Feat
         FeatureStory(
             kicker = "地元出身",
             team = team,
-            headline = "${teamShort(team)}の福井県出身の選手は${local.size}人",
+            headline = "${team.shortName}の福井県出身の選手は${local.size}人",
             body = local.joinToString("、") { it.label } + "。" +
                 "出身地が分かる${withHome.size}人のうち${local.size}人が地元・福井の選手です。\n※公式サイトの選手紹介より",
             photo = local[Math.floorMod(LocalDate.now(JST).toEpochDay().toInt(), local.size)].photo,

@@ -1,5 +1,12 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.ui.components.NewsChip
+import com.fukuiteams.app.ui.components.HomeAwayLabel
+import com.fukuiteams.app.ui.components.openExternalUrl
+import com.fukuiteams.app.data.isGoing
+import com.fukuiteams.app.ui.components.GoingBadge
+import com.fukuiteams.app.data.recordGoingAsOnSite
+import com.fukuiteams.app.data.setGoing
 import com.fukuiteams.app.data.PublicViewingsRepository
 import com.fukuiteams.app.data.publicViewings
 import com.fukuiteams.app.ui.components.PublicViewingBadge
@@ -183,6 +190,10 @@ fun GameDetailScreen(
     var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
     // 観戦方法・勝敗の記録は、変更されるたびに観戦成績カードへ即反映させる
     val gameLogPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+    // 「行く予定」にした今後の試合(3チームまとめて、日付順)
+    val goingGames = remember(allGames, gameLogPrefs) {
+        allGames.filter { it.isUpcoming() && isGoing(it.id, gameLogPrefs) }.sortedBy { it.sortKey }
+    }
     val watchRecords = remember(allTeamGames, gameLogPrefs, autoResults) {
         computeWatchRecords(allTeamGames, gameLogPrefs, autoResults)
     }
@@ -211,6 +222,8 @@ fun GameDetailScreen(
     suspend fun refreshResults() {
         GamesRepository.refresh(context)
         autoResults = GameResultsRepository.fetch()
+        // 「行く予定」にしていて終わった試合は、観戦方法を「現地観戦」として記録する(まだ記録していない試合だけ)
+        recordGoingAsOnSite(context, GamesRepository.games)
         // パブリックビューイング(手で登録した分)をまだ読んでいなければ読む
         if (!PublicViewingsRepository.loaded) PublicViewingsRepository.refresh()
     }
@@ -304,12 +317,27 @@ fun GameDetailScreen(
                             selected = scheduleTabIndex == 1,
                             onClick = { scheduleTabIndex = 1 }
                         )
+                        // 「行く予定」にした今後の試合だけ(3チームまとめて)
+                        ScheduleTabChip(
+                            label = "行く予定 ${goingGames.size}",
+                            selected = scheduleTabIndex == 2,
+                            onClick = { scheduleTabIndex = 2 }
+                        )
                     }
                     val isPastTab = scheduleTabIndex == 1
-                    val listToShow = if (isPastTab) pastTeamGames else upcomingTeamGames
+                    val isGoingTab = scheduleTabIndex == 2
+                    val listToShow = when {
+                        isPastTab -> pastTeamGames
+                        isGoingTab -> goingGames
+                        else -> upcomingTeamGames
+                    }
                     if (listToShow.isEmpty()) {
                         Text(
-                            if (!isPastTab) "今後の試合予定はありません" else "過去の試合の記録はまだありません",
+                            when {
+                                isGoingTab -> "行く予定の試合はまだありません。今後の試合を押して「この試合に行く」を押すと、ここに並びます。"
+                                !isPastTab -> "今後の試合予定はありません"
+                                else -> "過去の試合の記録はまだありません"
+                            },
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
@@ -350,7 +378,10 @@ fun GameDetailScreen(
                                             score = if (isPastTab) autoResults[g.id] else null,
                                             outcome = if (isPastTab) resolveOutcome(g.id, gameLogPrefs, autoResults) else null,
                                             showResult = isPastTab,
-                                            photoCount = photoCount
+                                            photoCount = photoCount,
+                                            going = !isPastTab && isGoing(g.id, gameLogPrefs),
+                                            // 「行く予定」は3チームまとめて並べるので、チーム名も出す
+                                            showTeam = isGoingTab
                                         )
                                     }
                                     // 押した試合は、その行のすぐ下に詳細を開く
@@ -662,23 +693,9 @@ private fun TicketSearchSection(
 }
 
 @Composable
-private fun ScheduleTabChip(label: String, selected: Boolean, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(3.dp))
-            .background(if (selected) Ink else Paper)
-            .border(BorderStroke(1.dp, if (selected) Ink else LineGray), RoundedCornerShape(3.dp))
-            .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 8.dp),
-    ) {
-        Text(
-            label,
-            color = if (selected) White else InkSoft,
-            style = MaterialTheme.typography.labelMedium
-        )
-    }
-}
-
+private fun ScheduleTabChip(label: String, selected: Boolean, onClick: () -> Unit) =
+    // ほかの画面の切り替えボタンと同じ、紙面風の四角いボタンにそろえる
+    NewsChip(label, selected, fontSize = 13.sp, horizontalPadding = 12.dp, verticalPadding = 8.dp, onClick = onClick)
 @Composable
 private fun ScheduleRow(
     game: Game,
@@ -687,7 +704,11 @@ private fun ScheduleRow(
     score: RemoteGameResult? = null,
     outcome: GameOutcome? = null,
     showResult: Boolean = false,
-    photoCount: Int = 0
+    photoCount: Int = 0,
+    /** 「行く予定」の印が付いている */
+    going: Boolean = false,
+    /** チーム名も出す(3チームまとめて並べるとき) */
+    showTeam: Boolean = false
 ) {
     Card(
         modifier = Modifier
@@ -724,6 +745,14 @@ private fun ScheduleRow(
                 if (game.specialDay() != null) SpecialDayBadge()
                 // パブリックビューイング(PV)がある試合は「PV」の札
                 if (game.publicViewings().isNotEmpty()) PublicViewingBadge()
+                if (showTeam || going) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        if (going) GoingBadge()
+                        if (showTeam) {
+                            Text(game.team.displayName, style = MaterialTheme.typography.labelSmall, color = game.team.color, maxLines = 1)
+                        }
+                    }
+                }
                 Text(
                     if (showResult) resultHeadline(game, score?.myScore, score?.opponentScore, outcome) else "vs ${game.opponent}",
                     style = MaterialTheme.typography.titleMedium
@@ -836,6 +865,23 @@ private fun UpcomingGameInline(
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        // 行く予定(チェックイン)。押すたびに付ける・外す。印を付けた試合は「行く予定」に並ぶ
+        val logPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+        val going = isGoing(game.id, logPrefs)
+        val checkScope = rememberCoroutineScope()
+        if (going) {
+            Button(
+                onClick = { checkScope.launch { setGoing(context, game.id, false) } },
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Accent),
+                modifier = Modifier.fillMaxWidth()
+            ) { Text("✓ 行く予定(チェックイン済み)・押すと取り消し", fontSize = 13.sp, maxLines = 1) }
+        } else {
+            OutlinedButton(
+                onClick = { checkScope.launch { setGoing(context, game.id, true) } },
+                border = BorderStroke(1.5.dp, Accent),
+                modifier = Modifier.fillMaxWidth()
+            ) { Text("この試合に行く(チェックイン)", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Accent, maxLines = 1) }
+        }
         Text(
             "会場:${game.venue} ›地図 ・ チケット:${game.ticketStatus}",
             style = MaterialTheme.typography.bodySmall,
@@ -1212,231 +1258,12 @@ private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
 }
 
 @Composable
-private fun WatchMethodPicker(game: Game) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    // 一覧側の記録欄で変更しても、ここにすぐ反映されるように保存データを直接見る
-    val prefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
-    val selected = recordedWatchMethod(game.id, prefs)
-
-    Card(
-        shape = RoundedCornerShape(3.dp),
-        colors = CardDefaults.cardColors(containerColor = Paper),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, Ink)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            SectionTitle("どうやって観戦しましたか?")
-            Text(
-                "この記録はあなたの端末だけに保存され、どこにも送信されません。",
-                style = MaterialTheme.typography.bodySmall,
-                color = InkSoft
-            )
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                WatchMethod.values().forEach { method ->
-                    val isSelected = selected == method
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(3.dp))
-                            .background(if (isSelected) Accent.copy(alpha = 0.10f) else Paper)
-                            .border(
-                                BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) Accent else LineGray),
-                                RoundedCornerShape(3.dp)
-                            )
-                            .clickable {
-                                scope.launch { saveWatchMethod(context, game.id, method) }
-                            }
-                            .padding(horizontal = 14.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(18.dp)
-                                .clip(CircleShape)
-                                .border(BorderStroke(2.dp, if (isSelected) Accent else LineGray), CircleShape)
-                                .background(if (isSelected) Accent else Paper),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            if (isSelected) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(8.dp)
-                                        .clip(CircleShape)
-                                        .background(White)
-                                )
-                            }
-                        }
-                        Text(method.label, style = MaterialTheme.typography.bodyLarge)
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
-private fun MatchHeaderCard(game: Game, isPast: Boolean = false) {
-    val context = LocalContext.current
-    Card(
-        shape = RoundedCornerShape(3.dp),
-        colors = CardDefaults.cardColors(containerColor = Paper),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        border = BorderStroke(1.dp, Ink)
-    ) {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(game.team.displayName, color = InkSoft, style = MaterialTheme.typography.bodySmall)
-                    HomeAwayLabel(isHome = game.isHome)
-                }
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(DividerGray)
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                ) {
-                    Text(if (isPast) "試合終了" else "試合前", style = MaterialTheme.typography.labelSmall)
-                }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    TeamBadge(game.team, size = 64.dp, fontSize = 24.sp)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        game.team.displayName,
-                        style = MaterialTheme.typography.labelMedium,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("VS", style = MaterialTheme.typography.titleSmall, color = InkSoft)
-                Spacer(modifier = Modifier.width(8.dp))
-                Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape)
-                            .background(DividerGray),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("?", color = InkSoft, style = MaterialTheme.typography.titleMedium)
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        game.opponent,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = InkSoft,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Filled.Schedule, contentDescription = null, tint = InkSoft, modifier = Modifier.size(15.dp))
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    "${game.dateLabel}(${game.dayOfWeek})${game.timeLabel} 開始",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = InkSoft
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(3.dp))
-                    .clickable { openUrl(context, "https://www.google.com/maps/search/?api=1&query=" + URLEncoder.encode(game.venue, "UTF-8")) }
-                    .padding(vertical = 4.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Filled.LocationOn, contentDescription = null, tint = Accent, modifier = Modifier.size(15.dp))
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(game.venue, style = MaterialTheme.typography.bodyMedium, color = Accent)
-                Spacer(modifier = Modifier.width(4.dp))
-                Icon(Icons.Filled.Map, contentDescription = "地図を開く", tint = Accent, modifier = Modifier.size(15.dp))
-            }
-        }
-    }
-}
-
-/** 紙面風の HOME / AWAY 表示。HOME は黒地に白抜き、AWAY は黒枠。 */
-@Composable
-private fun HomeAwayLabel(isHome: Boolean) {
-    HomeAwayTag(isHome = isHome, modifier = Modifier.padding(top = 2.dp))
-}
-
-@Composable
-private fun HomeAwayBadge(isHome: Boolean) {
-    val bg: androidx.compose.ui.graphics.Color
-    val fg: androidx.compose.ui.graphics.Color
-    val icon: androidx.compose.ui.graphics.vector.ImageVector
-    val label: String
-    if (isHome) {
-        fg = androidx.compose.ui.graphics.Color(0xFF2F6846)
-        bg = fg.copy(alpha = 0.14f)
-        icon = Icons.Filled.Home
-        label = "ホーム"
-    } else {
-        fg = androidx.compose.ui.graphics.Color(0xFF2541B2)
-        bg = fg.copy(alpha = 0.12f)
-        icon = Icons.Filled.Flight
-        label = "アウェイ"
-    }
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(bg)
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(3.dp)
-    ) {
-        Icon(icon, contentDescription = null, tint = fg, modifier = Modifier.size(11.dp))
-        Text(label, style = MaterialTheme.typography.labelSmall, color = fg)
-    }
-}
-
-@Composable
 private fun SectionTitle(text: String) {
     Text(text, style = MaterialTheme.typography.titleSmall)
 }
 
-private fun openUrl(context: Context, url: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    context.startActivity(intent)
-}
-
+/** URLをブラウザなどで開く(共通の openExternalUrl を使う) */
+private fun openUrl(context: Context, url: String) = openExternalUrl(context, url)
 /**
  * 「Googleカレンダーに追加」ボタン用。実装が簡単で権限も不要なため、
  * Android標準のカレンダー登録画面(ACTION_INSERT)を開く方式にしている。

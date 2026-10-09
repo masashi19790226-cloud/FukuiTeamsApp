@@ -3,6 +3,7 @@ package com.fukuiteams.app.data
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -153,3 +154,33 @@ suspend fun saveGameComment(context: Context, gameId: String, comment: String) {
 
 /** 記録したコメント。無ければ空文字。 */
 fun recordedComment(gameId: String, prefs: Preferences?): String = prefs?.get(commentKey(gameId)).orEmpty()
+
+// ---------- 行く予定(チェックイン) ----------
+
+private fun goingKey(gameId: String) = booleanPreferencesKey("going_$gameId")
+
+/** 「行く予定」の印を付ける・外す(この端末だけに保存) */
+suspend fun setGoing(context: Context, gameId: String, going: Boolean) {
+    context.gameLogDataStore.edit { p ->
+        if (going) p[goingKey(gameId)] = true else p.remove(goingKey(gameId))
+    }
+}
+
+/** 「行く予定」の印が付いているか(画面の表示用) */
+fun isGoing(gameId: String, prefs: Preferences?): Boolean = prefs?.get(goingKey(gameId)) == true
+
+/**
+ * 「行く予定」にしていた試合が始まったら(今後の試合でなくなったら)、観戦方法を「現地観戦」として記録する。
+ * すでに観戦方法を記録している試合は変えない(あとから「見ていない」などに直せる)。記録した試合の数を返す。
+ */
+suspend fun recordGoingAsOnSite(context: Context, games: List<Game>): Int {
+    val prefs = context.gameLogDataStore.data.first()
+    val targets = games.filter { g ->
+        !g.isUpcoming() && isGoing(g.id, prefs) && prefs[watchMethodKey(g.id)] == null
+    }
+    if (targets.isEmpty()) return 0
+    context.gameLogDataStore.edit { p ->
+        targets.forEach { g -> p[watchMethodKey(g.id)] = WatchMethod.ON_SITE.name }
+    }
+    return targets.size
+}

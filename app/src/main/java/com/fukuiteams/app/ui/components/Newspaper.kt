@@ -1,5 +1,6 @@
 package com.fukuiteams.app.ui.components
 
+import com.fukuiteams.app.model.shortName
 import androidx.compose.foundation.background
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
@@ -51,12 +52,6 @@ import com.fukuiteams.app.ui.theme.White
 import java.time.LocalDate
 
 private val WEEKDAYS = listOf("月", "火", "水", "木", "金", "土", "日")
-
-/** 今日の日付を「2026年9月28日(月)」の形式で。 */
-fun todayLabel(): String {
-    val d = LocalDate.now()
-    return "${d.year}年${d.monthValue}月${d.dayOfMonth}日(${WEEKDAYS[d.dayOfWeek.value - 1]})"
-}
 
 /**
  * 各画面の一番上に置く細い帯。現在の日時と、データの最終更新日時(GitHubの自動更新が最後に動いた時刻)を出す。
@@ -216,11 +211,7 @@ fun TeamSelectorRow(
 }
 
 /** ボタン用の短い表示名。 */
-fun Team.shortLabel(): String = when (this) {
-    Team.BLOWINDS -> "ブローウィンズ"
-    Team.RAC -> "丸岡RUCK"
-    Team.UNITED -> "ユナイテッド"
-}
+fun Team.shortLabel(): String = shortName
 
 // 名前の長さに合わせたボタン幅の配分
 private fun Team.chipWeight(): Float = when (this) {
