@@ -462,8 +462,8 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                 if (selectedCategory == RadarCategory.TICKET) {
                     item { TicketSearchCard(selectedTeam) { url -> openRadarUrl(context, url) } }
                 }
-                // 「イベント」では、これからのパブリックビューイング(手で登録した分・自動で見つけた記事)と、Xで探すボタンを先に出す
-                if (selectedCategory == RadarCategory.EVENT) {
+                // 「すべて」と「イベント」では、これからのパブリックビューイング(手で登録した分・自動で見つけた記事)と、Xで探すボタンを先に出す
+                if (selectedCategory == null || selectedCategory == RadarCategory.EVENT) {
                     item {
                         val pvs = PublicViewingsRepository.upcoming(selectedTeam)
                         Column(

@@ -71,7 +71,14 @@ private fun downloadAndDecode(url: String, minSide: Int): ImageBitmap? {
     val c = URL(url).openConnection() as HttpURLConnection
     c.connectTimeout = 8_000
     c.readTimeout = 8_000
-    c.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android) FukuiSpo")
+    // ふつうのスマホのブラウザと同じ名乗り方にする(独自の名乗りだと画像を返さないサイトがあるため)。
+    // 画像のサイト自身から開いたことにする(Referer)。直リンクを断るサイト対策
+    c.setRequestProperty(
+        "User-Agent",
+        "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36"
+    )
+    runCatching { URL(url).let { u -> c.setRequestProperty("Referer", "${u.protocol}://${u.host}/") } }
+    c.instanceFollowRedirects = true
     val bytes = c.inputStream.use { it.readBytes() }
     c.disconnect()
     val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
@@ -122,15 +129,34 @@ private fun trimTransparentEdges(img: ImageBitmap): ImageBitmap {
 private suspend fun loadThumbnail(url: String): ImageBitmap? = withContext(Dispatchers.IO) {
     ThumbnailCache.cache.get(url)?.let { return@withContext it }
     if (url in ThumbnailCache.failed) return@withContext null
-    try {
-        // 大きな画像は縮小して読み込む(選手の顔写真を大きめに出してもぼやけないよう、320px 程度は残す)
-        val bitmap = downloadAndDecode(url, 320)
-        if (bitmap != null) ThumbnailCache.cache.put(url, bitmap) else ThumbnailCache.failed.add(url)
-        bitmap
-    } catch (e: Exception) {
-        ThumbnailCache.failed.add(url)
-        null
+    // 読めなければ、縮小版ではない元の画像(WordPress の「-150x150」を取ったもの)も試す
+    for (candidate in thumbnailCandidates(url)) {
+        val bitmap = try {
+            // 大きな画像は縮小して読み込む(選手の顔写真を大きめに出してもぼやけないよう、320px 程度は残す)
+            downloadAndDecode(candidate, 320)
+        } catch (e: Exception) {
+            null
+        }
+        if (bitmap != null) {
+            ThumbnailCache.cache.put(url, bitmap)
+            return@withContext bitmap
+        }
     }
+    ThumbnailCache.failed.add(url)
+    null
+}
+
+/** 一覧の小さい画像の候補(よい順):そのままのURL → 縮小版でない元の画像 → 300x300 の縮小版 */
+private fun thumbnailCandidates(url: String): List<String> {
+    val list = mutableListOf(url)
+    if (url.contains("/wp-content/uploads/")) {
+        val m = Regex("""-\d+x\d+(\.\w+)(\?.*)?$""").find(url)
+        if (m != null) {
+            list += url.replace(m.value, m.groupValues[1])
+            list += url.replace(m.value, "-300x300" + m.groupValues[1])
+        }
+    }
+    return list.distinct()
 }
 
 /**
