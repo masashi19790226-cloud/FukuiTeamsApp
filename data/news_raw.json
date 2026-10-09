@@ -2045,5 +2045,43 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://fukuiunited.co.jp/news/detail.php%3Fid%3D7022&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw10udH-MskqCGI835Qa2pca",
     "published": "2026-10-08T12:42:54Z",
     "detected_at": "2026-10-08T23:02:26.819804+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:18256192349632810029",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ vs 新潟アルビレックスBB - チケット流通センター",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.ticket.co.jp/sys/d/20084.htm%3Fki%3D248023&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw18ecct77lHo0mWh-dRJigc",
+    "published": "2026-10-08T19:15:24Z",
+    "detected_at": "2026-10-09T02:02:17.912789+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51705",
+    "team": "BLOWINDS",
+    "title": "【第4節】会場アクセス・駐車場情報について",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51705",
+    "published": "2026-10-09T09:00:00+09:00",
+    "detected_at": "2026-10-09T08:27:48.130280+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7026",
+    "team": "UNITED",
+    "title": "「2026福井ユナイテッドFCの梨」予約販売開始のお知らせ",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7026",
+    "published": "2026-10-09T09:00:00+09:00",
+    "detected_at": "2026-10-09T09:01:28.424385+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7023",
+    "team": "UNITED",
+    "title": "10/12（祝･月）「ファン交流会2026」イベント概要 決定のお知らせ",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7023",
+    "published": "2026-10-08T09:00:00+09:00",
+    "detected_at": "2026-10-09T09:01:28.424385+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
   }
 ]

@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-08T23:45:20.447272+00:00",
+    "updated_at": "2026-10-09T11:25:58.743663+00:00",
     "players": [
       {
         "number": "1",
@@ -1383,6 +1383,8 @@
       }
     ],
     "team_stats_updated": "2026年10月04日19:07",
+    "league": "B.ONE",
+    "league_teams": 25,
     "club_photos": {
       "8736": [
         "https://www.fukuiblowinds.com/v=1790295991/files/user/common/1_Fujinaga_2026-27_HP.jpg",
@@ -2634,7 +2636,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=714&tab=1",
-    "updated_at": "2026-10-08T23:45:23.102491+00:00",
+    "updated_at": "2026-10-09T11:26:00.027641+00:00",
     "players": [
       {
         "number": "1",
@@ -3500,6 +3502,8 @@
       }
     ],
     "team_stats_updated": "2026年10月04日19:07",
+    "league": "B.ONE",
+    "league_teams": 25,
     "shot_cache": {
       "43445": {
         "season": "2026-27",
