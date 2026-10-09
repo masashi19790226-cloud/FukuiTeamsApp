@@ -2063,5 +2063,25 @@
     "detected_at": "2026-10-09T08:27:48.130280+00:00",
     "source": "ブローウィンズ公式",
     "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7026",
+    "team": "UNITED",
+    "title": "「2026福井ユナイテッドFCの梨」予約販売開始のお知らせ",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7026",
+    "published": "2026-10-09T09:00:00+09:00",
+    "detected_at": "2026-10-09T09:01:28.424385+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7023",
+    "team": "UNITED",
+    "title": "10/12（祝･月）「ファン交流会2026」イベント概要 決定のお知らせ",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7023",
+    "published": "2026-10-08T09:00:00+09:00",
+    "detected_at": "2026-10-09T09:01:28.424385+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
   }
 ]
