@@ -1387,6 +1387,7 @@ private fun FeaturePhoto(story: FeatureStory) {
                 height = FEATURE_PHOTO_HEIGHT,
                 alignTop = !newsImage,
                 trimTransparent = true,
+                highResolution = true,
                 backgroundColor = accent,
                 framed = false
             )

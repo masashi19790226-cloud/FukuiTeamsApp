@@ -126,24 +126,24 @@ private fun trimTransparentEdges(img: ImageBitmap): ImageBitmap {
     return android.graphics.Bitmap.createBitmap(bmp, left, top, right - left + 1, bottom - top + 1).asImageBitmap()
 }
 
-private suspend fun loadThumbnail(url: String): ImageBitmap? = withContext(Dispatchers.IO) {
-    ThumbnailCache.cache.get(url)?.let { return@withContext it }
-    if (url in ThumbnailCache.failed) return@withContext null
+private suspend fun loadThumbnail(url: String, minSide: Int): ImageBitmap? = withContext(Dispatchers.IO) {
+    val cacheKey = "$url#$minSide"
+    ThumbnailCache.cache.get(cacheKey)?.let { return@withContext it }
+    if (cacheKey in ThumbnailCache.failed) return@withContext null
     // 読めなければ、縮小版ではない元の画像(WordPress の「-150x150」を取ったもの)も試す
     for (candidate in thumbnailCandidates(url)) {
         val bitmap = try {
-            // 特集画像は大きく表示するため、元画像を優先し十分な解像度を残す。
-            // 小さい選手写真も必要以上に拡大デコードしないよう、元画像の実サイズを上限とする。
-            downloadAndDecode(candidate, 900)
+            // 表示用途ごとの解像度を保つ。特集は大きく表示するため高めに設定する。
+            downloadAndDecode(candidate, minSide)
         } catch (e: Exception) {
             null
         }
         if (bitmap != null) {
-            ThumbnailCache.cache.put(url, bitmap)
+            ThumbnailCache.cache.put(cacheKey, bitmap)
             return@withContext bitmap
         }
     }
-    ThumbnailCache.failed.add(url)
+    ThumbnailCache.failed.add(cacheKey)
     null
 }
 
@@ -215,6 +215,7 @@ fun RemoteThumbnail(
     zoomCaption: String? = null,
     fillWidth: Boolean = false,
     trimTransparent: Boolean = false,
+    highResolution: Boolean = false,
     backgroundColor: Color = DividerGray,
     framed: Boolean = true
 ) {
@@ -222,20 +223,22 @@ fun RemoteThumbnail(
     // URLが変わったら(並べ替えで同じ位置に別の選手が来た・データが新しくなった など)、
     // 前の画像を引き継がず、そのURLの画像を読み直す。
     // (以前は前の画像が残ったままになり、名前と写真が食い違うことがあった)
-    var image by remember(url) { mutableStateOf(ThumbnailCache.cache.get(url)) }
-    LaunchedEffect(url) {
-        if (image == null) image = loadThumbnail(url)
+    val minSide = if (highResolution) 1600 else 900
+    val cacheKey = "$url#$minSide"
+    var image by remember(cacheKey) { mutableStateOf(ThumbnailCache.cache.get(cacheKey)) }
+    LaunchedEffect(cacheKey) {
+        if (image == null) image = loadThumbnail(url, minSide)
     }
     val loaded = image ?: return
     // 透明な余白を切り取る指定なら、切り取った画像を使う(切り取るまでは元の画像)
-    var trimmed by remember(url, trimTransparent) {
-        mutableStateOf(if (trimTransparent) ThumbnailCache.trimmed.get(url) else null)
+    var trimmed by remember(cacheKey, trimTransparent) {
+        mutableStateOf(if (trimTransparent) ThumbnailCache.trimmed.get(cacheKey) else null)
     }
     if (trimTransparent) {
-        LaunchedEffect(url, loaded) {
+        LaunchedEffect(cacheKey, loaded) {
             if (trimmed == null) {
                 trimmed = withContext(Dispatchers.Default) { trimTransparentEdges(loaded) }
-                    .also { ThumbnailCache.trimmed.put(url, it) }
+                    .also { ThumbnailCache.trimmed.put(cacheKey, it) }
             }
         }
     }
