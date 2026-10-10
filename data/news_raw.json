@@ -2157,5 +2157,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://jmty.jp/fukui/sale-tic/article-1sett7&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0fapIdjKqzNhfsASjV1e6I",
     "published": "2026-10-10T07:29:55Z",
     "detected_at": "2026-10-10T11:22:27.293810+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2719423",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、元チームメートに流れ止められ…横浜 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2719423",
+    "published": "2026-10-10T04:30:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.LCJMgqOMkPJ10ShQlp1CIA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-10T11:42:08.513087+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2719418",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、3連勝ならず 横浜エクセレンスに敗れる ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2719418",
+    "published": "2026-10-10T04:05:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.LCJMgqOMkPJ10ShQlp1CIA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-10T11:42:08.513105+00:00"
   }
 ]
