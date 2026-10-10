@@ -132,8 +132,9 @@ private suspend fun loadThumbnail(url: String): ImageBitmap? = withContext(Dispa
     // 読めなければ、縮小版ではない元の画像(WordPress の「-150x150」を取ったもの)も試す
     for (candidate in thumbnailCandidates(url)) {
         val bitmap = try {
-            // 大きな画像は縮小して読み込む(選手の顔写真を大きめに出してもぼやけないよう、320px 程度は残す)
-            downloadAndDecode(candidate, 320)
+            // 特集画像は大きく表示するため、元画像を優先し十分な解像度を残す。
+            // 小さい選手写真も必要以上に拡大デコードしないよう、元画像の実サイズを上限とする。
+            downloadAndDecode(candidate, 900)
         } catch (e: Exception) {
             null
         }
@@ -146,15 +147,20 @@ private suspend fun loadThumbnail(url: String): ImageBitmap? = withContext(Dispa
     null
 }
 
-/** 一覧の小さい画像の候補(よい順):そのままのURL → 縮小版でない元の画像 → 300x300 の縮小版 */
+/** 画像の候補(よい順):縮小版でない元画像 → 指定URL → 300x300版。
+ * 特集では元画像より「-150x150」などの小さい画像URLが渡ることがある。
+ * 小さいURLを先に読むと、読み込み成功扱いになって元画像を試さないため、元画像を優先する。
+ */
 private fun thumbnailCandidates(url: String): List<String> {
-    val list = mutableListOf(url)
+    val list = mutableListOf<String>()
     if (url.contains("/wp-content/uploads/")) {
-        val m = Regex("""-\d+x\d+(\.\w+)(\?.*)?$""").find(url)
-        if (m != null) {
-            list += url.replace(m.value, m.groupValues[1])
-            list += url.replace(m.value, "-300x300" + m.groupValues[1])
-        }
+        val original = url.replace(Regex("""-\d+x\d+(?=\.[^./?]+(?:\?.*)?$)"""), "")
+        if (original != url) list += original
+    }
+    list += url
+    if (url.contains("/wp-content/uploads/")) {
+        val medium = url.replace(Regex("""-\d+x\d+(?=\.[^./?]+(?:\?.*)?$)"""), "-300x300")
+        if (medium != url) list += medium
     }
     return list.distinct()
 }
