@@ -749,48 +749,37 @@ private fun LatestResultHero(
         } else {
             Headline("${game.team.displayName}\n$resultLine", fontSize = 26)
         }
+        DoubleRule()
         // 試合結果がすぐ分かるよう、取得元へ開くスコアを見出し直下に置く。
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(BorderStroke(2.dp, Ink))
+                .border(BorderStroke(1.5.dp, Ink))
                 // スコアボックスをタップすると取得元のページ(B.LEAGUE公式など)を開く
                 .clickable { openUrl(context, game.resultSourceUrl(result)) }
                 .background(Paper)
-                .padding(vertical = 10.dp, horizontal = 12.dp),
+                .padding(vertical = 10.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(game.team.displayName, style = MaterialTheme.typography.labelMedium)
-                Text(
-                    when (outcome) {
-                        GameOutcome.WIN -> "WIN"
-                        GameOutcome.LOSE -> "LOSE"
-                        GameOutcome.DRAW -> "DRAW"
-                    },
-                    style = MaterialTheme.typography.labelSmall,
-                    color = if (outcome == GameOutcome.WIN) NewsRed else InkSoft
-                )
+            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(game.team.displayName, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
+                Headline("${result.myScore}", fontSize = 34, color = if (outcome == GameOutcome.WIN) NewsRed else Ink)
             }
-            Headline("${result.myScore}", fontSize = 34, color = if (outcome == GameOutcome.WIN) NewsRed else Ink)
-            Text("-", style = MaterialTheme.typography.titleLarge)
-            Headline("${result.opponentScore}", fontSize = 34)
-            Text(game.opponent, style = MaterialTheme.typography.labelMedium, modifier = Modifier.width(72.dp))
+            Text("—", style = MaterialTheme.typography.titleLarge, color = InkSoft)
+            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(game.opponent, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
+                Headline("${result.opponentScore}", fontSize = 34)
+            }
         }
         Text(
-            "スコアをタップで詳報(取得元のページ)",
+            "${game.team.displayName} ${result.myScore} — ${result.opponentScore} ${game.opponent}　｜　スコアをタップで取得元の詳報へ",
             style = MaterialTheme.typography.bodySmall,
-            color = InkSoft
+            color = InkSoft,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
-        // 記事の続きはスコアの後に表示する。記録済みの観戦写真だけを使用。
-        resultLead(game, result, outcome, comment, ctx, weather)
-            .split(Regex("(?<=。)"))
-            .map { it.trim() }
-            .filter { it.isNotBlank() }
-            .forEach { paragraph ->
-                Text(paragraph, style = MaterialTheme.typography.bodyMedium, color = Ink)
-            }
+        // 実際に登録された試合写真を掲載。写真の後に記事本文を続ける。
         val photos = remember(game.id, GamePhotos.version) { GamePhotos.list(context, game.id) }
         if (photos.isNotEmpty()) {
             val prefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
@@ -800,6 +789,14 @@ private fun LatestResultHero(
                 height = 200.dp
             )
         }
+        SectionLabel("試合の要点", modifier = Modifier.padding(top = 2.dp))
+        resultLead(game, result, outcome, comment, ctx, weather)
+            .split(Regex("(?<=。)"))
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .forEach { paragraph ->
+                Text(paragraph, style = MaterialTheme.typography.bodyMedium, color = Ink, lineHeight = 23.sp)
+            }
         DoubleRule(modifier = Modifier.padding(top = 6.dp))
     }
 }
@@ -1257,6 +1254,9 @@ private fun FeatureHero(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .border(1.dp, Ink)
+                    .background(Paper)
+                    .padding(10.dp)
                     .then(
                         if (clickable) Modifier.clickable {
                             when {
@@ -1269,14 +1269,9 @@ private fun FeatureHero(
                     ),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 「特集」の大きな赤い札と、記事の種類・チーム名
+                // 新聞の欄外見出し:記事種別とチーム
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Headline(
-                        "特集",
-                        fontSize = 16,
-                        color = White,
-                        modifier = Modifier.background(NewsRed).padding(horizontal = 10.dp, vertical = 1.dp)
-                    )
+                    SectionLabel("特集", red = true)
                     Text(
                         story.kicker,
                         style = MaterialTheme.typography.titleMedium,
@@ -1290,15 +1285,22 @@ private fun FeatureHero(
                         Text(it.displayName, style = MaterialTheme.typography.labelMedium, color = it.color, maxLines = 1)
                     }
                 }
-                Headline(story.headline, fontSize = 21)
-                if (story.photo.isNotBlank()) FeaturePhoto(story)
-                story.sourceLabel.takeIf { it.isNotBlank() }?.let { SourceTag(it) }
+                Headline(story.headline, fontSize = 25)
+                DoubleRule()
+                // 画像の全体を出したあとに本文を置く、新聞の写真記事の並び。
+                FeaturePhoto(story)
                 listOfNotNull(
                     story.publishedAtLabel.takeIf { it.isNotBlank() }?.let { "公開 $it" },
                     story.detectedAtLabel.takeIf { it.isNotBlank() }?.let { "取得 $it" }
                 ).takeIf { it.isNotEmpty() }?.let {
-                    Text(it.joinToString("　"), style = MaterialTheme.typography.labelSmall, color = InkSoft)
-                }
+                    Column(
+                        modifier = Modifier.fillMaxWidth().background(DividerGray).padding(horizontal = 8.dp, vertical = 5.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        story.sourceLabel.takeIf { label -> label.isNotBlank() }?.let { label -> SourceTag(label) }
+                        Text(it.joinToString("　"), style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                    }
+                } ?: story.sourceLabel.takeIf { it.isNotBlank() }?.let { label -> SourceTag(label) }
                 if (story.bigNumber != null) {
                     Row(verticalAlignment = Alignment.Bottom) {
                         Headline(story.bigNumber, fontSize = 40, color = NewsRed)
@@ -1308,9 +1310,11 @@ private fun FeatureHero(
                         }
                     }
                 }
+                SectionLabel("記事", modifier = Modifier.padding(top = 2.dp))
                 story.body.split(Regex("\\n\\s*\\n")).filter { it.isNotBlank() }.forEach { paragraph ->
-                    Text(paragraph, style = MaterialTheme.typography.bodyLarge, color = Ink)
+                    Text(paragraph, style = MaterialTheme.typography.bodyLarge, color = Ink, lineHeight = 25.sp)
                 }
+                ThinRule(modifier = Modifier.padding(top = 3.dp), color = LineGray)
             }
         }
         if (stories.size > 1) {
