@@ -108,8 +108,8 @@ fun RemoteInvitationAlert.eventInstant(): java.time.Instant? {
 }
 
 /** 公開日時と検知日時を分けて表示する。 */
-fun RemoteInvitationAlert.publishedTimeLabel(): String = timeLabelFor(published, relative = false)
-fun RemoteInvitationAlert.detectedTimeLabel(): String = timeLabelFor(detectedAt, relative = true)
+fun RemoteInvitationAlert.publishedTimeLabel(): String = timeLabelFor(published, includeRelative = false)
+fun RemoteInvitationAlert.detectedTimeLabel(): String = timeLabelFor(detectedAt, includeRelative = true)
 
 /** 従来の一覧用表示。公開日時が無いときだけ検知日時を使う。 */
 fun RemoteInvitationAlert.timeLabel(): String = publishedTimeLabel().ifBlank { detectedTimeLabel() }
