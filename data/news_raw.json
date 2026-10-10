@@ -2187,5 +2187,13 @@
     "source": "福井新聞ONLINE",
     "image": "",
     "detected_at": "2026-10-10T11:58:11.391472+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7042206861492634652",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、元チームメートに流れ止められ…横浜エクセレンスに敗れ3連勝ならず ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://article.auone.jp/efd9bbb7-5f3f-414d-97c5-e2a13ea1feb9&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3sMuxGQZ2n_ocZI6-xOjxw",
+    "published": "2026-10-10T11:40:05Z",
+    "detected_at": "2026-10-10T12:27:44.403850+00:00"
   }
 ]

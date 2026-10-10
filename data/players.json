@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-10T11:59:11.770322+00:00",
+    "updated_at": "2026-10-10T12:28:53.970208+00:00",
     "players": [
       {
         "number": "1",
@@ -1328,61 +1328,61 @@
       {
         "key": "PPG",
         "label": "平均得点数",
-        "rank": 13,
-        "value": "81.5",
+        "rank": 12,
+        "value": "82.6",
         "unit": "点"
       },
       {
         "key": "FG%",
         "label": "フィールドゴール成功率",
-        "rank": 20,
-        "value": "42.2",
+        "rank": 18,
+        "value": "42.9",
         "unit": "%"
       },
       {
         "key": "3FG%",
         "label": "3ポイント成功率",
-        "rank": 23,
-        "value": "25.9",
+        "rank": 21,
+        "value": "26.7",
         "unit": "%"
       },
       {
         "key": "FT%",
         "label": "フリースロー成功率",
         "rank": 10,
-        "value": "68.5",
+        "value": "68.9",
         "unit": "%"
       },
       {
         "key": "RPG",
         "label": "平均リバウンド数",
-        "rank": 4,
-        "value": "44.8",
+        "rank": 3,
+        "value": "44.2",
         "unit": "本"
       },
       {
         "key": "APG",
         "label": "平均アシスト数",
         "rank": 13,
-        "value": "20.3",
+        "value": "20.2",
         "unit": "本"
       },
       {
         "key": "BPG",
         "label": "平均ブロック数",
-        "rank": 22,
-        "value": "1.5",
+        "rank": 24,
+        "value": "1.4",
         "unit": "本"
       },
       {
         "key": "SPG",
         "label": "平均スティール数",
-        "rank": 19,
-        "value": "6.25",
+        "rank": 24,
+        "value": "5.4",
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年10月09日22:28",
+    "team_stats_updated": "2026年10月10日21:02",
     "league": "B.ONE",
     "league_teams": 25,
     "club_photos": {
@@ -2636,7 +2636,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=714&tab=1",
-    "updated_at": "2026-10-10T11:59:13.189931+00:00",
+    "updated_at": "2026-10-10T12:28:55.188398+00:00",
     "players": [
       {
         "number": "1",
@@ -3447,61 +3447,61 @@
       {
         "key": "PPG",
         "label": "平均得点数",
-        "rank": 3,
-        "value": "95.5",
+        "rank": 1,
+        "value": "99.0",
         "unit": "点"
       },
       {
         "key": "FG%",
         "label": "フィールドゴール成功率",
-        "rank": 18,
-        "value": "42.6",
+        "rank": 11,
+        "value": "44.7",
         "unit": "%"
       },
       {
         "key": "3FG%",
         "label": "3ポイント成功率",
-        "rank": 17,
-        "value": "28.6",
+        "rank": 11,
+        "value": "31.6",
         "unit": "%"
       },
       {
         "key": "FT%",
         "label": "フリースロー成功率",
-        "rank": 1,
-        "value": "79.5",
+        "rank": 6,
+        "value": "73.4",
         "unit": "%"
       },
       {
         "key": "RPG",
         "label": "平均リバウンド数",
-        "rank": 3,
-        "value": "45.0",
+        "rank": 4,
+        "value": "43.7",
         "unit": "本"
       },
       {
         "key": "APG",
         "label": "平均アシスト数",
-        "rank": 10,
-        "value": "20.5",
+        "rank": 7,
+        "value": "22.3",
         "unit": "本"
       },
       {
         "key": "BPG",
         "label": "平均ブロック数",
-        "rank": 2,
-        "value": "5",
+        "rank": 4,
+        "value": "3.67",
         "unit": "本"
       },
       {
         "key": "SPG",
         "label": "平均スティール数",
-        "rank": 4,
-        "value": "10",
+        "rank": 8,
+        "value": "8.67",
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年10月09日22:28",
+    "team_stats_updated": "2026年10月10日21:02",
     "league": "B.ONE",
     "league_teams": 25,
     "shot_cache": {
