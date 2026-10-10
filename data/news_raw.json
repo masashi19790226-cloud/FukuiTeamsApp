@@ -2115,5 +2115,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://fukuiunited.co.jp/news/detail.php%3Fid%3D7026&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3Rk73-oAPWWEVk0S08ycsc",
     "published": "2026-10-09T12:14:40Z",
     "detected_at": "2026-10-09T19:01:09.560095+00:00"
+  },
+  {
+    "id": "bing:https://www.47news.jp/13187029.html",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFCの髙貝樹幹、4年連続の得点王 チームは2位で ...",
+    "link": "https://www.47news.jp/13187029.html",
+    "published": "2026-09-21T23:10:00+00:00",
+    "source": "47NEWS",
+    "image": "",
+    "detected_at": "2026-10-10T06:28:58.590482+00:00"
   }
 ]
