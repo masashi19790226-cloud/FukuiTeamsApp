@@ -135,7 +135,7 @@ fun NewspaperPhoto(
                     bitmap = image,
                     contentDescription = caption,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Fit
                 )
             }
         }
@@ -277,7 +277,7 @@ fun PhotoStrip(game: Game, caption: String) {
                         )
                 ) {
                     if (thumb != null) {
-                        Image(bitmap = thumb, contentDescription = null, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                        Image(bitmap = thumb, contentDescription = null, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
                     }
                 }
             }

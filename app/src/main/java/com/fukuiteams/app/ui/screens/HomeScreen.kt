@@ -749,22 +749,7 @@ private fun LatestResultHero(
         } else {
             Headline("${game.team.displayName}\n$resultLine", fontSize = 26)
         }
-        // 記事の書き出し(リード文)。試合結果と、試合画面で書いたコメントから組み立てる
-        Text(
-            resultLead(game, result, outcome, comment, ctx, weather),
-            style = MaterialTheme.typography.bodyMedium,
-            color = Ink
-        )
-        // その試合に写真が登録されていれば、1枚目を写真説明付きで載せる
-        val photos = remember(game.id, GamePhotos.version) { GamePhotos.list(context, game.id) }
-        if (photos.isNotEmpty()) {
-            val prefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
-            NewspaperPhoto(
-                file = photos.first(),
-                caption = photoCaption(game, result, outcome, recordedWatchMethod(game.id, prefs)),
-                height = 200.dp
-            )
-        }
+        // 試合結果がすぐ分かるよう、取得元へ開くスコアを見出し直下に置く。
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -777,7 +762,7 @@ private fun LatestResultHero(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("福井", style = MaterialTheme.typography.labelMedium)
+                Text(game.team.displayName, style = MaterialTheme.typography.labelMedium)
                 Text(
                     when (outcome) {
                         GameOutcome.WIN -> "WIN"
@@ -798,6 +783,23 @@ private fun LatestResultHero(
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
+        // 記事の続きはスコアの後に表示する。記録済みの観戦写真だけを使用。
+        resultLead(game, result, outcome, comment, ctx, weather)
+            .split(Regex("(?<=。)"))
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .forEach { paragraph ->
+                Text(paragraph, style = MaterialTheme.typography.bodyMedium, color = Ink)
+            }
+        val photos = remember(game.id, GamePhotos.version) { GamePhotos.list(context, game.id) }
+        if (photos.isNotEmpty()) {
+            val prefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+            NewspaperPhoto(
+                file = photos.first(),
+                caption = photoCaption(game, result, outcome, recordedWatchMethod(game.id, prefs)),
+                height = 200.dp
+            )
+        }
         DoubleRule(modifier = Modifier.padding(top = 6.dp))
     }
 }
@@ -1288,27 +1290,26 @@ private fun FeatureHero(
                         Text(it.displayName, style = MaterialTheme.typography.labelMedium, color = it.color, maxLines = 1)
                     }
                 }
-                // 見出しを全幅で先に出し、その下で 本文(左)と縦長の写真(右)を並べる(新聞の囲み記事の形)
                 Headline(story.headline, fontSize = 21)
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
-                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        if (story.bigNumber != null) {
-                            Row(verticalAlignment = Alignment.Bottom) {
-                                Headline(story.bigNumber, fontSize = 40, color = NewsRed)
-                                story.bigUnit?.let {
-                                    Text(
-                                        it,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Ink,
-                                        modifier = Modifier.padding(start = 3.dp, bottom = 6.dp)
-                                    )
-                                }
-                            }
+                if (story.photo.isNotBlank()) FeaturePhoto(story)
+                story.sourceLabel.takeIf { it.isNotBlank() }?.let { SourceTag(it) }
+                listOfNotNull(
+                    story.publishedAtLabel.takeIf { it.isNotBlank() }?.let { "公開 $it" },
+                    story.detectedAtLabel.takeIf { it.isNotBlank() }?.let { "取得 $it" }
+                ).takeIf { it.isNotEmpty() }?.let {
+                    Text(it.joinToString("　"), style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                }
+                if (story.bigNumber != null) {
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        Headline(story.bigNumber, fontSize = 40, color = NewsRed)
+                        story.bigUnit?.let {
+                            Text(it, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold,
+                                color = Ink, modifier = Modifier.padding(start = 3.dp, bottom = 6.dp))
                         }
-                        Text(story.body, style = MaterialTheme.typography.bodyLarge, color = Ink)
                     }
-                    FeaturePhoto(story)
+                }
+                story.body.split(Regex("\\n\\s*\\n")).filter { it.isNotBlank() }.forEach { paragraph ->
+                    Text(paragraph, style = MaterialTheme.typography.bodyLarge, color = Ink)
                 }
             }
         }
@@ -1358,7 +1359,6 @@ private fun FeatureHero(
 private const val LOOP_ROUNDS = 1000
 
 /** 一面の特集の写真の枠(縦長。顔が切れないように) */
-private val FEATURE_PHOTO_WIDTH = 150.dp
 private val FEATURE_PHOTO_HEIGHT = 200.dp
 
 /**
@@ -1372,10 +1372,10 @@ private val FEATURE_PHOTO_HEIGHT = 200.dp
 @Composable
 private fun FeaturePhoto(story: FeatureStory) {
     val accent = story.team?.color ?: Ink
-    val newsImage = story.photo.isNotBlank() && story.photoCaption == null && story.url != null && story.bigNumber == null
     Box(
         modifier = Modifier
-            .size(FEATURE_PHOTO_WIDTH, FEATURE_PHOTO_HEIGHT)
+            .fillMaxWidth()
+            .height(FEATURE_PHOTO_HEIGHT)
             .background(accent)
     ) {
         // 写真を読み込むまで(読み込めないとき)は、色の札を出しておく
@@ -1383,10 +1383,9 @@ private fun FeaturePhoto(story: FeatureStory) {
         if (story.photo.isNotBlank()) {
             RemoteThumbnail(
                 story.photo,
-                width = FEATURE_PHOTO_WIDTH,
+                fillWidth = true,
                 height = FEATURE_PHOTO_HEIGHT,
-                alignTop = !newsImage,
-                trimTransparent = true,
+                trimTransparent = false,
                 highResolution = true,
                 backgroundColor = accent,
                 framed = false

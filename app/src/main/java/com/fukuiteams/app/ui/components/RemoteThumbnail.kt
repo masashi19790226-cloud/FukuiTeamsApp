@@ -131,7 +131,7 @@ private suspend fun loadThumbnail(url: String, minSide: Int): ImageBitmap? = wit
     ThumbnailCache.cache.get(cacheKey)?.let { return@withContext it }
     if (cacheKey in ThumbnailCache.failed) return@withContext null
     // 読めなければ、縮小版ではない元の画像(WordPress の「-150x150」を取ったもの)も試す
-    for (candidate in thumbnailCandidates(url)) {
+    for (candidate in thumbnailCandidates(url, minSide >= 1600)) {
         val bitmap = try {
             // 表示用途ごとの解像度を保つ。特集は大きく表示するため高めに設定する。
             downloadAndDecode(candidate, minSide)
@@ -148,14 +148,17 @@ private suspend fun loadThumbnail(url: String, minSide: Int): ImageBitmap? = wit
 }
 
 /** 画像の候補(よい順):縮小版でない元画像 → 指定URL → 300x300版。
- * 特集では元画像より「-150x150」などの小さい画像URLが渡ることがある。
- * 小さいURLを先に読むと、読み込み成功扱いになって元画像を試さないため、元画像を優先する。
+ * 高解像度表示では、Bingニュースが一覧用に付けた160pxの切り抜き指定も外したURLを先に試す。
  */
-private fun thumbnailCandidates(url: String): List<String> {
+private fun thumbnailCandidates(url: String, highResolution: Boolean): List<String> {
     val list = mutableListOf<String>()
     if (url.contains("/wp-content/uploads/")) {
         val original = url.replace(Regex("""-\d+x\d+(?=\.[^./?]+(?:\?.*)?$)"""), "")
         if (original != url) list += original
+    }
+    if (highResolution) {
+        val fullSize = withoutBingThumbnailSizing(url)
+        if (fullSize != url) list += fullSize
     }
     list += url
     if (url.contains("/wp-content/uploads/")) {
@@ -163,6 +166,21 @@ private fun thumbnailCandidates(url: String): List<String> {
         if (medium != url) list += medium
     }
     return list.distinct()
+}
+
+/** Bing用の一覧画像URLに付けた寸法・中央切り抜きを外し、元の画像候補を作る。 */
+private fun withoutBingThumbnailSizing(url: String): String {
+    val queryStart = url.indexOf('?')
+    if (queryStart < 0) return url
+    val base = url.substring(0, queryStart)
+    val queryAndFragment = url.substring(queryStart + 1)
+    val query = queryAndFragment.substringBefore('#')
+    val fragment = queryAndFragment.substringAfter('#', "").let { if (it.isEmpty()) "" else "#$it" }
+    val parts = query.split('&')
+    val hasKnownSizing = parts.contains("w=160") && parts.contains("h=160") && parts.contains("c=7")
+    if (!hasKnownSizing) return url
+    val retained = parts.filterNot { it == "w=160" || it == "h=160" || it == "c=7" }
+    return base + (if (retained.isEmpty()) "" else "?${retained.joinToString("&")}") + fragment
 }
 
 /**
@@ -198,7 +216,7 @@ private suspend fun loadLargeImage(url: String): ImageBitmap? = withContext(Disp
 
 /**
  * size:正方形の一辺。width・height を渡すと縦長などにできる。
- * alignTop:切り抜くときに上側を残す(選手の顔写真は顔が上にあるため)
+ * alignTop:縦長の枠に収めるときに上側に寄せる(選手の顔写真は顔が上にあるため)
  * zoomCaption:null 以外を渡すと、タップで画像を大きく表示する(渡した文字は拡大画面の下に出す)
  * fillWidth:true なら幅いっぱい(高さは height)にする(一面の特集のニュース画像など)
  * trimTransparent:true なら、透明な余白(切り抜き写真の周りなど)を切り取ってから表示する
@@ -256,7 +274,7 @@ fun RemoteThumbnail(
             bitmap = img,
             contentDescription = null,
             modifier = sizeModifier,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             alignment = if (alignTop) Alignment.TopCenter else Alignment.Center
         )
     }

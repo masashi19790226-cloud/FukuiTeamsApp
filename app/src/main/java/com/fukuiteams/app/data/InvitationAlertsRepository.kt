@@ -107,14 +107,21 @@ fun RemoteInvitationAlert.eventInstant(): java.time.Instant? {
     return null
 }
 
-/** 「9/26(土) 17:45・3時間前」のような日本時間の表示。日時が分からなければ空文字。 */
-fun RemoteInvitationAlert.timeLabel(): String {
-    val instant = eventInstant() ?: return ""
+/** 公開日時と検知日時を分けて表示する。 */
+fun RemoteInvitationAlert.publishedTimeLabel(): String = timeLabelFor(published, relative = false)
+fun RemoteInvitationAlert.detectedTimeLabel(): String = timeLabelFor(detectedAt, relative = true)
+
+/** 従来の一覧用表示。公開日時が無いときだけ検知日時を使う。 */
+fun RemoteInvitationAlert.timeLabel(): String = publishedTimeLabel().ifBlank { detectedTimeLabel() }
+
+private fun timeLabelFor(raw: String, includeRelative: Boolean): String {
+    val instant = parseInstant(raw) ?: return ""
     val zoned = instant.atZone(java.time.ZoneId.of("Asia/Tokyo"))
     val weekdays = listOf("月", "火", "水", "木", "金", "土", "日")
     val base = "%d/%d(%s) %02d:%02d".format(
         zoned.monthValue, zoned.dayOfMonth, weekdays[zoned.dayOfWeek.value - 1], zoned.hour, zoned.minute
     )
+    if (!includeRelative) return base
     val minutes = (System.currentTimeMillis() - instant.toEpochMilli()) / 60_000
     val relative = when {
         minutes < 0 -> ""
