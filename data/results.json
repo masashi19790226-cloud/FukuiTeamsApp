@@ -196,5 +196,11 @@
     "opponent_score": 1,
     "checked_at": "2026-10-06T14:16:24.494002",
     "source_url": "https://fukuiunited.co.jp/match/result.php?id=6382"
+  },
+  "bw05": {
+    "my_score": 87,
+    "opponent_score": 106,
+    "checked_at": "2026-10-10T11:58:34.668710",
+    "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507217"
   }
 }
