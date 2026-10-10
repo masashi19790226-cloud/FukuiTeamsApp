@@ -310,12 +310,12 @@ fun resultHeadline(
             streak == 2 -> game.pick(listOf("${opp}下し連勝", "${opp}破り2連勝"))
             !basketball && opponentScore == 0 -> game.pick(listOf("${opp}に完封勝ち", "${opp}を零封", "無失点で${opp}下す"))
             prev == GameOutcome.LOSE -> game.pick(listOf("${opp}に雪辱", "${opp}にリベンジ", "${opp}に借り返す"))
-            basketball && myScore >= 100 -> game.pick(listOf("${myScore}点の猛攻で${opp}下す", "大台${myScore}点 ${opp}に勝利"))
+            basketball && myScore >= 100 -> game.pick(listOf("${myScore}点を記録し${opp}に勝利", "${myScore}得点で${opp}に勝利"))
             !basketball && myScore >= 4 -> game.pick(listOf("${myScore}得点で${opp}に大勝", "ゴールラッシュ ${opp}下す"))
-            basketball && opponentScore <= 65 -> game.pick(listOf("堅守で${opp}に勝利", "${opp}を${opponentScore}点に封じる"))
+            basketball && opponentScore <= 65 -> "${opp}に${myScore}-${opponentScore}で勝利"
             close -> game.pick(listOf("${opp}に競り勝つ", "${opp}との接戦制す", "${opp}との激闘制す", "${at}${opp}に辛勝", "${diff}点差守り${opp}に勝利"))
-            huge -> game.pick(listOf("${opp}に圧勝", "${opp}を圧倒", "${at}${opp}に大勝"))
-            big -> game.pick(listOf("${opp}に完勝", "${opp}に快勝", "${at}${opp}に快勝", "${opp}寄せ付けず"))
+            huge -> "${diff}点差で${opp}に勝利"
+            big -> "${diff}点差で${opp}に勝利"
             else -> game.pick(listOf("${opp}を下す", "${opp}から白星", "${opp}に勝利", "${at}${opp}下す", "${opp}破る"))
         }
         GameOutcome.LOSE -> when {
@@ -329,10 +329,10 @@ fun resultHeadline(
             streak == 2 -> game.pick(listOf("${opp}に敗れ連敗", "2連敗 ${opp}に屈す"))
             !basketball && myScore == 0 -> game.pick(listOf("${opp}に零封負け", "${opp}の前に無得点", "ゴール遠く${opp}に敗戦"))
             prev == GameOutcome.WIN -> game.pick(listOf("${opp}に雪辱許す", "${opp}に借り返される"))
-            basketball && myScore < 65 -> game.pick(listOf("${myScore}点と攻撃振るわず", "${opp}の守りに苦戦"))
+            basketball && myScore < 65 -> "${myScore}得点で${opp}に敗れる"
             close -> game.pick(listOf("${opp}に惜敗", "${opp}に競り負け", "${opp}に一歩及ばず", "${diff}点差に泣く", "${at}${opp}に惜敗"))
-            huge -> game.pick(listOf("${opp}に大敗", "${opp}に完敗", "${at}${opp}に大差負け"))
-            big -> game.pick(listOf("${opp}に完敗", "${opp}に力負け", "${at}${opp}に完敗"))
+            huge -> "${diff}点差で${opp}に敗れる"
+            big -> "${diff}点差で${opp}に敗れる"
             else -> game.pick(listOf("${opp}に敗れる", "${opp}に屈す", "${opp}から白星奪えず", "${at}${opp}に黒星", "${opp}に及ばず"))
         }
         GameOutcome.DRAW -> when {

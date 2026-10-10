@@ -121,9 +121,9 @@ fun resultLead(
             outcome == GameOutcome.LOSE && diff <= (if (basketball) 3 else 1) ->
                 flow.append(game.pick(listOf("あと${diff}${unit}が届かなかった。", "わずか${diff}${unit}差の惜しい敗戦。"), salt = 3))
             outcome == GameOutcome.WIN && diff >= (if (basketball) 20 else 4) ->
-                flow.append("${diff}${unit}差をつける快勝だった。")
+                flow.append("${diff}${unit}差で勝利した。")
             outcome == GameOutcome.LOSE && diff >= (if (basketball) 20 else 4) ->
-                flow.append("${diff}${unit}差をつけられる完敗だった。")
+                flow.append("${diff}${unit}差で敗れた。")
             !basketball && outcome == GameOutcome.WIN && result.opponentScore == 0 ->
                 flow.append("守っては相手を無得点に抑えた。")
         }
