@@ -69,6 +69,7 @@ import com.fukuiteams.app.data.RemoteInvitationAlert
 import com.fukuiteams.app.data.eventInstant
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isTooOld
+import com.fukuiteams.app.data.articleDuplicateKey
 import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.data.DataRefresher
@@ -132,15 +133,9 @@ private val NOT_INVITE_RE = Regex(
         "ファンクラブ.{0,20}招待券|招待券.{0,15}(利用方法|引換|ご利用)|ご招待券は不要"
 )
 
-/**
- * 同じ記事かどうかを見分けるための見出しの頭。サイト名(「 - au Webポータル」「 | 福井新聞」など)や
- * 空白・記号を除いた最初の20文字が同じなら、同じ記事とみなす。
- */
+/** URLが一致する記事、またはタイトル全文が一致する記事だけをまとめる。 */
 private fun sameArticleKey(alert: RemoteInvitationAlert): String {
-    val title = alert.title
-        .split(" - ", " | ", "｜", " – ").first()
-        .replace(Regex("[\\s\u3000、。・「」『』【】()（）!！?？…\\.,]"), "")
-    return alert.teamId + ":" + title.take(20)
+    return articleDuplicateKey(alert.teamId, alert.title, alert.link, alert.id)
 }
 
 /** 無料招待(観戦チケットが無料でもらえる情報)か。 */
@@ -352,8 +347,8 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                             when {
                                 loading -> "情報を集めています"
                                 // 見出しは1行にまとめる
-                                isInviteView && openInvites.isEmpty() -> "受付中の招待はいまのところなし"
-                                isInviteView -> "無料招待 ${openInvites.size}件 受付中"
+                                isInviteView && openInvites.isEmpty() -> "期限が経過した可能性のある招待のみです"
+                                isInviteView -> "無料招待 ${openInvites.size}件・期限は元記事で確認"
                                 teamItems.isEmpty() -> "いまのところ情報はありません"
                                 newCount > 0 -> "新着 ${newCount}件・全${teamItems.size}件"
                                 else -> "情報 ${teamItems.size}件"
@@ -449,12 +444,12 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                InviteTab("受付中 ${openInvites.size}", inviteTab == 0, Modifier.weight(1f)) { inviteTab = 0 }
-                                InviteTab("過去の招待 ${pastInvites.size}", inviteTab == 1, Modifier.weight(1f)) { inviteTab = 1 }
+                                InviteTab("期限経過の記載なし ${openInvites.size}", inviteTab == 0, Modifier.weight(1f)) { inviteTab = 0 }
+                                InviteTab("経過・古い可能性 ${pastInvites.size}", inviteTab == 1, Modifier.weight(1f)) { inviteTab = 1 }
                             }
                             Text(
-                                if (inviteTab == 0) "応募条件・締切は各記事でご確認ください。"
-                                else "書かれている試合日・締切日が過ぎたもの、日付がないものは見つけてから14日たったものです。半年より前の情報は表示しません。",
+                                if (inviteTab == 0) "受付状況・応募条件・締切は元記事でご確認ください。期限が確認できない情報も含みます。"
+                                else "本文の日付が過ぎたもの、または掲載から時間が経った情報です。受付終了を確認したものではありません。",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = InkSoft
                             )
@@ -641,11 +636,20 @@ private fun TicketSearchCard(selectedTeam: Team?, onOpen: (String) -> Unit) {
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Text(
-            "公式Xのチケット情報は、Xの仕組み上アプリで自動取得できません。下のボタンで、Xの最新の投稿を検索できます。",
+            "販売状況は自動確認できません。公式ページまたは公式Xで、対象試合と在庫をご確認ください。",
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
         teams.forEach { team ->
+            Text(
+                "${team.displayName} 公式サイトで確認 ›",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color = team.color,
+                modifier = Modifier.clickable {
+                    onOpen(team.officialSiteUrl ?: "https://www.google.com/search?q=" + java.net.URLEncoder.encode("${team.displayName} チケット", "UTF-8"))
+                }.padding(vertical = 4.dp)
+            )
             Text(
                 "Xで「${team.displayName} チケット」を見る ›",
                 style = MaterialTheme.typography.labelLarge,

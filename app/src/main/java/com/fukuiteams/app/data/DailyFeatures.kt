@@ -547,7 +547,7 @@ private fun lastGameHeroes(team: Team, players: Map<String, TeamPlayers>, games:
                 team = team,
                 headline = "途中出場の${p.name}が${g.points}点",
                 body = "$dateText の${opp}戦、ベンチから出た${p.head()}が${g.minutes ?: "-"}の出場で${g.points}点" +
-                    (g.fieldGoalsMade?.let { m -> g.fieldGoalsAttempted?.let { a -> "(FG $m/$a)" } } ?: "") + "。流れを変える働きを見せた。",
+                    (g.fieldGoalsMade?.let { m -> g.fieldGoalsAttempted?.let { a -> "(FG $m/$a)" } } ?: "") + "。",
                 photo = p.photo,
                 bigNumber = g.points,
                 bigUnit = "点",
@@ -692,7 +692,7 @@ private fun onSiteRecord(team: Team, games: List<Game>, results: Map<String, Rem
             team = team,
             headline = "現地観戦は${w}勝${l}敗" + (if (d > 0) "${d}分" else "") + (rate?.let { "、勝率${it}%" } ?: ""),
             body = "あなたが現地で見た${team.shortName}の試合は${seen.size}試合。" +
-                (if (rate != null && rate >= 60) "あなたが行くと勝つ「勝利の使者」かも。" else if (rate != null && rate < 40) "次の現地観戦で流れを変えよう。" else "次も会場から声援を。") +
+                "勝敗は登録された観戦記録の集計です。" +
                 "最後に見たのは${seen.maxByOrNull { it.first.sortKey }!!.let { "${it.first.shortLabel()}の${it.first.opponent}戦" }}。",
             bigNumber = rate?.let { "$it" } ?: "${seen.size}",
             bigUnit = if (rate != null) "%" else "試合"

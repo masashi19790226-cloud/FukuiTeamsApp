@@ -492,7 +492,7 @@ private fun MatchDayCard(game: Game, weather: MatchWeather?, lp: GameLp?, onOpen
                 color = Ink
             )
         }
-        Text("チケット:${game.ticketStatus}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        Text("チケット登録情報:${game.ticketStatus}・最新状況は公式サイトで確認", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントも出す
         if (lp != null) {
             ThinRule(modifier = Modifier.padding(vertical = 4.dp))
@@ -923,7 +923,7 @@ private fun NextGameBlock(
             fontSize = 19
         )
         Text(
-            "${nextGame.venue}・チケット:${nextGame.ticketStatus}",
+            "${nextGame.venue}・チケット登録情報:${nextGame.ticketStatus}（最新状況は公式サイトで確認）",
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )

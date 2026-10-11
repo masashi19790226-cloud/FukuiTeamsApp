@@ -15,6 +15,15 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月11日",
+        title = "記事情報とチケット案内を改善",
+        items = listOf(
+            "記事の重複判定を厳密にし、タイトルの一部が似ているだけの記事を誤ってまとめないようにしました",
+            "無料招待の受付状況は元記事で確認する案内に変更し、期限経過の推定を受付終了の断定として表示しないようにしました",
+            "試合記事の本文を確認できるスコアや記録中心にし、チケットはチーム公式ページで最新状況を確認できるようにしました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月11日",
         title = "記事写真を元の比率に合わせて表示",
         items = listOf(
             "特集写真と速報に掲載した試合写真の枠の高さを、画像の縦横比に合わせて調整します",

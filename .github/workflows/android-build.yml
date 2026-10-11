@@ -48,6 +48,9 @@ jobs:
             echo "::warning::Secret DEBUG_KEYSTORE_BASE64 が未登録のため、毎回異なる鍵で署名されます(上書きインストール不可)"
           fi
 
+      - name: Run unit tests
+        run: gradle testDebugUnitTest --stacktrace
+
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
 

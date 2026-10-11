@@ -90,7 +90,7 @@ fun resultLead(
         else -> ""
     }
 
-    // 試合の中身(天気・点差・得点の多さ。取得した情報から分かることだけ)
+    // 天候など取得できた客観情報だけを記載する。スコアから試合展開は推測しない。
     val flow = StringBuilder()
     weather?.takeIf { it.summary != "−" }?.let { w ->
         val hour = game.timeLabel.substringBefore(":").toIntOrNull()
@@ -105,30 +105,6 @@ fun resultLead(
             )
         )
     }
-    if (result != null && outcome != null) {
-        val diff = kotlin.math.abs(result.myScore - result.opponentScore)
-        val sum = result.myScore + result.opponentScore
-        val basketball = game.team == com.fukuiteams.app.model.Team.BLOWINDS
-        val unit = if (basketball) "点" else "点"
-        when {
-            basketball && sum >= 180 -> flow.append("両チーム合わせて${sum}点の打ち合いとなった。")
-            basketball && sum <= 130 -> flow.append("両チームとも${maxOf(result.myScore, result.opponentScore)}点以下のロースコアの展開。")
-            !basketball && sum >= 6 -> flow.append("両チーム合わせて${sum}ゴールが生まれた。")
-        }
-        when {
-            outcome == GameOutcome.WIN && diff <= (if (basketball) 3 else 1) ->
-                flow.append(game.pick(listOf("${diff}${unit}差の接戦を制した。", "僅差の勝負を制した。"), salt = 3))
-            outcome == GameOutcome.LOSE && diff <= (if (basketball) 3 else 1) ->
-                flow.append(game.pick(listOf("あと${diff}${unit}が届かなかった。", "わずか${diff}${unit}差の惜しい敗戦。"), salt = 3))
-            outcome == GameOutcome.WIN && diff >= (if (basketball) 20 else 4) ->
-                flow.append("${diff}${unit}差で勝利した。")
-            outcome == GameOutcome.LOSE && diff >= (if (basketball) 20 else 4) ->
-                flow.append("${diff}${unit}差で敗れた。")
-            !basketball && outcome == GameOutcome.WIN && result.opponentScore == 0 ->
-                flow.append("守っては相手を無得点に抑えた。")
-        }
-    }
-
     // 前後関係(取得した結果から数えたものだけ)
     val extra = StringBuilder()
     if (ctx != null && outcome != null) {

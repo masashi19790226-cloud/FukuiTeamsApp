@@ -929,7 +929,8 @@ private fun UpcomingGameInline(
         // チケット:公式の販売状況・無料招待・譲渡チケット探しをまとめる
         ToggleBlock(title = "チケット", summary = "公式・無料招待・譲渡を探す", startOpen = false) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("販売状況:${game.ticketStatus}・一般販売開始 ${game.ticketSaleStart}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                Text("登録情報: ${game.ticketStatus}・一般販売開始: ${game.ticketSaleStart}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                Text("販売状況・在庫は変わるため、チーム公式ページで最新情報をご確認ください。", style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 Text(
                     "無料招待の情報を見る(トピックの「招待」) ›",
                     style = MaterialTheme.typography.labelLarge,
@@ -962,7 +963,7 @@ private fun UpcomingGameInline(
                 },
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Ink),
                 modifier = Modifier.weight(1f)
-            ) { Text("チケットを買う", maxLines = 1, softWrap = false, fontSize = 13.sp) }
+            ) { Text("公式サイトで確認", maxLines = 1, softWrap = false, fontSize = 13.sp) }
         }
     }
 }
