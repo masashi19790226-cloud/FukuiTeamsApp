@@ -2235,5 +2235,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://newspicks.com/news/17673657/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw17WfgOCjeX3rnQfmGwEYjt",
     "published": "2026-10-11T00:34:06Z",
     "detected_at": "2026-10-11T03:48:48.055966+00:00"
+  },
+  {
+    "id": "bing:https://newspicks.com/news/17673657/",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、元チームメートに流れ止められ…横浜 ...",
+    "link": "https://newspicks.com/news/17673657/",
+    "published": "2026-10-10T04:30:00+00:00",
+    "source": "NewsPicks",
+    "image": "https://www.bing.com/th?id=ONUT.Ms4QmVWEK-cooe4tUCjUrg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-11T07:26:02.975406+00:00"
   }
 ]
