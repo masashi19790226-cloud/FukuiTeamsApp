@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-11T18:52:35.130258+00:00",
+    "updated_at": "2026-10-11T19:24:57.693471+00:00",
     "players": [
       {
         "number": "1",
@@ -3140,7 +3140,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=710&tab=1",
-    "updated_at": "2026-10-11T18:52:37.811336+00:00",
+    "updated_at": "2026-10-11T19:25:26.301999+00:00",
     "players": [
       {
         "number": "0",
@@ -4087,6 +4087,26 @@
         "fta": "0",
         "game_log": [
           {
+            "date": "2026-10-11",
+            "opp": "青森",
+            "ha": "H",
+            "wl": "L",
+            "start": false,
+            "pts": "0",
+            "fgm": "0",
+            "fga": "0",
+            "tpm": "0",
+            "tpa": "0",
+            "ftm": "0",
+            "fta": "0",
+            "reb": "0",
+            "ast": "0",
+            "stl": "0",
+            "blk": "0",
+            "tov": "0",
+            "eff": "0"
+          },
+          {
             "date": "2026-10-10",
             "opp": "青森",
             "ha": "H",
@@ -4169,27 +4189,6 @@
             "blk": "0",
             "tov": "0",
             "eff": "1"
-          },
-          {
-            "date": "2026-09-26",
-            "opp": "岩手",
-            "ha": "A",
-            "wl": "L",
-            "start": false,
-            "min": "23:08",
-            "pts": "0",
-            "fgm": "0",
-            "fga": "3",
-            "tpm": "0",
-            "tpa": "1",
-            "ftm": "0",
-            "fta": "0",
-            "reb": "1",
-            "ast": "0",
-            "stl": "0",
-            "blk": "0",
-            "tov": "0",
-            "eff": "-3"
           }
         ],
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/710/2026-27/49519_03.png"
@@ -5377,6 +5376,26 @@
         },
         "log": [
           {
+            "date": "2026-10-11",
+            "opp": "青森",
+            "ha": "H",
+            "wl": "L",
+            "start": false,
+            "pts": "0",
+            "fgm": "0",
+            "fga": "0",
+            "tpm": "0",
+            "tpa": "0",
+            "ftm": "0",
+            "fta": "0",
+            "reb": "0",
+            "ast": "0",
+            "stl": "0",
+            "blk": "0",
+            "tov": "0",
+            "eff": "0"
+          },
+          {
             "date": "2026-10-10",
             "opp": "青森",
             "ha": "H",
@@ -5459,27 +5478,6 @@
             "blk": "0",
             "tov": "0",
             "eff": "1"
-          },
-          {
-            "date": "2026-09-26",
-            "opp": "岩手",
-            "ha": "A",
-            "wl": "L",
-            "start": false,
-            "min": "23:08",
-            "pts": "0",
-            "fgm": "0",
-            "fga": "3",
-            "tpm": "0",
-            "tpa": "1",
-            "ftm": "0",
-            "fta": "0",
-            "reb": "1",
-            "ast": "0",
-            "stl": "0",
-            "blk": "0",
-            "tov": "0",
-            "eff": "-3"
           }
         ]
       },
