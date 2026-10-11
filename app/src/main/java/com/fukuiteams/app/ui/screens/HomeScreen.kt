@@ -790,13 +790,12 @@ private fun LatestResultHero(
             )
         }
         SectionLabel("試合の要点", modifier = Modifier.padding(top = 2.dp))
-        resultLead(game, result, outcome, comment, ctx, weather)
-            .split(Regex("(?<=。)"))
-            .map { it.trim() }
-            .filter { it.isNotBlank() }
-            .forEach { paragraph ->
-                Text(paragraph, style = MaterialTheme.typography.bodyMedium, color = Ink, lineHeight = 23.sp)
-            }
+        Text(
+            resultLead(game, result, outcome, comment, ctx, weather),
+            style = MaterialTheme.typography.bodyMedium,
+            color = Ink,
+            lineHeight = 23.sp
+        )
         DoubleRule(modifier = Modifier.padding(top = 6.dp))
     }
 }
@@ -1250,6 +1249,8 @@ private fun FeatureHero(
             verticalAlignment = Alignment.Top
         ) { page ->
             val story = stories[page.mod(stories.size)]
+            var photoAspectRatio by remember(story.photo) { mutableStateOf<Float?>(null) }
+            val imageBesideArticle = !story.photo.isBlank() && (photoAspectRatio ?: 0f) >= 1.35f
             val clickable = story.gameId != null || story.url != null || story.openInvites || story.openBbs
             Column(
                 modifier = Modifier
@@ -1287,32 +1288,24 @@ private fun FeatureHero(
                 }
                 Headline(story.headline, fontSize = 25)
                 DoubleRule()
-                // 画像の全体を出したあとに本文を置く、新聞の写真記事の並び。
-                FeaturePhoto(story)
-                listOfNotNull(
-                    story.publishedAtLabel.takeIf { it.isNotBlank() }?.let { "公開 $it" },
-                    story.detectedAtLabel.takeIf { it.isNotBlank() }?.let { "取得 $it" }
-                ).takeIf { it.isNotEmpty() }?.let {
-                    Column(
-                        modifier = Modifier.fillMaxWidth().background(DividerGray).padding(horizontal = 8.dp, vertical = 5.dp),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                if (imageBesideArticle) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.Top
                     ) {
-                        story.sourceLabel.takeIf { label -> label.isNotBlank() }?.let { label -> SourceTag(label) }
-                        Text(it.joinToString("　"), style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                        FeaturePhoto(
+                            story,
+                            modifier = Modifier.weight(0.9f),
+                            height = 142.dp,
+                            onImageAspectRatio = { photoAspectRatio = it }
+                        )
+                        FeatureArticleDetails(story, modifier = Modifier.weight(1.1f))
                     }
-                } ?: story.sourceLabel.takeIf { it.isNotBlank() }?.let { label -> SourceTag(label) }
-                if (story.bigNumber != null) {
-                    Row(verticalAlignment = Alignment.Bottom) {
-                        Headline(story.bigNumber, fontSize = 40, color = NewsRed)
-                        story.bigUnit?.let {
-                            Text(it, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold,
-                                color = Ink, modifier = Modifier.padding(start = 3.dp, bottom = 6.dp))
-                        }
-                    }
-                }
-                SectionLabel("記事", modifier = Modifier.padding(top = 2.dp))
-                story.body.split(Regex("\\n\\s*\\n")).filter { it.isNotBlank() }.forEach { paragraph ->
-                    Text(paragraph, style = MaterialTheme.typography.bodyLarge, color = Ink, lineHeight = 25.sp)
+                } else {
+                    // 縦長・正方形は写真を先に見せ、本文はその下に置く新聞写真記事の構成。
+                    FeaturePhoto(story, onImageAspectRatio = { photoAspectRatio = it })
+                    FeatureArticleDetails(story)
                 }
                 ThinRule(modifier = Modifier.padding(top = 3.dp), color = LineGray)
             }
@@ -1359,6 +1352,36 @@ private fun FeatureHero(
     }
 }
 
+@Composable
+private fun FeatureArticleDetails(story: FeatureStory, modifier: Modifier = Modifier) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        listOfNotNull(
+            story.publishedAtLabel.takeIf { it.isNotBlank() }?.let { "公開 $it" },
+            story.detectedAtLabel.takeIf { it.isNotBlank() }?.let { "取得 $it" }
+        ).takeIf { it.isNotEmpty() }?.let { dates ->
+            Column(
+                modifier = Modifier.fillMaxWidth().background(DividerGray).padding(horizontal = 8.dp, vertical = 5.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                story.sourceLabel.takeIf { it.isNotBlank() }?.let { SourceTag(it) }
+                Text(dates.joinToString("　"), style = MaterialTheme.typography.labelSmall, color = InkSoft)
+            }
+        } ?: story.sourceLabel.takeIf { it.isNotBlank() }?.let { SourceTag(it) }
+        if (story.bigNumber != null) {
+            Row(verticalAlignment = Alignment.Bottom) {
+                Headline(story.bigNumber, fontSize = 40, color = NewsRed)
+                story.bigUnit?.let {
+                    Text(it, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold,
+                        color = Ink, modifier = Modifier.padding(start = 3.dp, bottom = 6.dp))
+                }
+            }
+        }
+        SectionLabel("記事", modifier = Modifier.padding(top = 2.dp))
+        // 元記事の改行を保ったまま1つの文字列として表示し、段落を再構成しない。
+        Text(story.body, style = MaterialTheme.typography.bodyLarge, color = Ink, lineHeight = 25.sp)
+    }
+}
+
 /** 特集を左右にループさせるため、記事の本数の何倍のページを用意するか(端に着くことは実際には無い) */
 private const val LOOP_ROUNDS = 1000
 
@@ -1374,12 +1397,18 @@ private val FEATURE_PHOTO_HEIGHT = 200.dp
  * ・写真を押しても拡大はせず、記事全体と同じく、その試合・記事・掲示板などを開く
  */
 @Composable
-private fun FeaturePhoto(story: FeatureStory) {
+private fun FeaturePhoto(
+    story: FeatureStory,
+    modifier: Modifier = Modifier,
+    height: androidx.compose.ui.unit.Dp = FEATURE_PHOTO_HEIGHT,
+    onImageAspectRatio: ((Float) -> Unit)? = null
+) {
     val accent = story.team?.color ?: Ink
     Box(
         modifier = Modifier
+            .then(modifier)
             .fillMaxWidth()
-            .height(FEATURE_PHOTO_HEIGHT)
+            .height(height)
             .background(accent)
     ) {
         // 写真を読み込むまで(読み込めないとき)は、色の札を出しておく
@@ -1388,11 +1417,12 @@ private fun FeaturePhoto(story: FeatureStory) {
             RemoteThumbnail(
                 story.photo,
                 fillWidth = true,
-                height = FEATURE_PHOTO_HEIGHT,
+                height = height,
                 trimTransparent = false,
                 highResolution = true,
                 backgroundColor = accent,
-                framed = false
+                framed = false,
+                onImageAspectRatio = onImageAspectRatio
             )
             story.photoCaption?.let { caption ->
                 Text(

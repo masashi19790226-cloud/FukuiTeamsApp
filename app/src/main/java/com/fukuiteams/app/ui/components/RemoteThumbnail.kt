@@ -235,7 +235,8 @@ fun RemoteThumbnail(
     trimTransparent: Boolean = false,
     highResolution: Boolean = false,
     backgroundColor: Color = DividerGray,
-    framed: Boolean = true
+    framed: Boolean = true,
+    onImageAspectRatio: ((Float) -> Unit)? = null
 ) {
     if (url.isBlank()) return
     // URLが変わったら(並べ替えで同じ位置に別の選手が来た・データが新しくなった など)、
@@ -248,6 +249,9 @@ fun RemoteThumbnail(
         if (image == null) image = loadThumbnail(url, minSide)
     }
     val loaded = image ?: return
+    LaunchedEffect(cacheKey, loaded.width, loaded.height) {
+        if (loaded.height > 0) onImageAspectRatio?.invoke(loaded.width.toFloat() / loaded.height)
+    }
     // 透明な余白を切り取る指定なら、切り取った画像を使う(切り取るまでは元の画像)
     var trimmed by remember(cacheKey, trimTransparent) {
         mutableStateOf(if (trimTransparent) ThumbnailCache.trimmed.get(cacheKey) else null)
