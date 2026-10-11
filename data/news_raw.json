@@ -2271,5 +2271,15 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.gHqCh9v3rTVJnhJYvSFb0Q&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-11T10:23:29.696781+00:00"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7025",
+    "team": "UNITED",
+    "title": "「Uniteファンディング2026」全国地域SCL出場に向けた応援支援金募集のお知らせ",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7025",
+    "published": "2026-10-11T09:00:00+09:00",
+    "detected_at": "2026-10-11T10:43:52.700393+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
   }
 ]
