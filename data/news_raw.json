@@ -2245,5 +2245,21 @@
     "source": "NewsPicks",
     "image": "https://www.bing.com/th?id=ONUT.Ms4QmVWEK-cooe4tUCjUrg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-11T07:26:02.975406+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10215131328118068784",
+    "team": "BLOWINDS",
+    "title": ". Game photo   昨日行われた#福井ブローウィンズ 戦の試合写真をアップしました ... - Facebook",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.facebook.com/yokohamaexcellence/posts/game-photo%25E6%2598%25A8%25E6%2597%25A5%25E8%25A1%258C%25E3%2582%258F%25E3%2582%258C%25E3%2581%259F%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA-%25E6%2588%25A6%25E3%2581%25AE%25E8%25A9%25A6%25E5%2590%2588%25E5%2586%2599%25E7%259C%259F%25E3%2582%2592%25E3%2582%25A2%25E3%2583%2583%25E3%2583%2597%25E3%2581%2597%25E3%2581%25BE%25E3%2581%2597%25E3%2581%259F%25EF%25B8%258F%25E6%2598%25A8%25E6%2597%25A5%25E3%2582%2582%25E7%2586%25B1%25E3%2581%2584%25E5%25BF%259C%25E6%258F%25B4%25E3%2581%2582%25E3%2582%258A%25E3%2581%258C%25E3%2581%25A8%25E3%2581%2586%25E3%2581%2594%25E3%2581%2596%25E3%2581%2584%25E3%2581%25BE%25E3%2581%2597%25E3%2581%259F%25E5%25AF%25BE%25E8%25B1%25A1%25E8%25A9%25A6%25E5%2590%2588%25EF%25B8%258F%25EF%25B8%258F1010%25E5%259C%259F1735%25EF%25B8%258F%25E6%25A8%25AA%25E6%25B5%259C%25E6%25AD%25A6%25E9%2581%2593%25E9%25A4%25A8/1629146678578498/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1TexvKcjy9uAqWHR9wijL1",
+    "published": "2026-10-11T03:10:12Z",
+    "detected_at": "2026-10-11T08:25:06.333632+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7040764129984520358",
+    "team": "BLOWINDS",
+    "title": "横浜エクセレンス on Instagram: \". Game photo   昨日行われた#福井ブローウィンズ 戦の試合 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DeVjuOcE8HW/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1_-o3T13jJ5jxn64gJqb-o",
+    "published": "2026-10-11T02:13:30Z",
+    "detected_at": "2026-10-11T08:25:06.333678+00:00"
   }
 ]
