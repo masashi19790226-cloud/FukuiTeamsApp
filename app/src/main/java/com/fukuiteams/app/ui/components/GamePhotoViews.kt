@@ -10,6 +10,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -118,14 +119,21 @@ fun NewspaperPhoto(
     caption: String?,
     height: Dp,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    matchImageAspectRatio: Boolean = false
 ) {
     val image = rememberPhoto(file)
+    val imageRatio = image?.let { bitmap ->
+        if (bitmap.height > 0) bitmap.width.toFloat() / bitmap.height else null
+    }
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(3.dp)) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(height)
+                .then(
+                    if (matchImageAspectRatio && imageRatio != null) Modifier.aspectRatio(imageRatio)
+                    else Modifier.height(height)
+                )
                 .border(1.dp, Ink)
                 .background(DividerGray)
                 .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)

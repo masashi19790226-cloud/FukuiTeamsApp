@@ -68,6 +68,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -786,7 +787,8 @@ private fun LatestResultHero(
             NewspaperPhoto(
                 file = photos.first(),
                 caption = photoCaption(game, result, outcome, recordedWatchMethod(game.id, prefs)),
-                height = 200.dp
+                height = 200.dp,
+                matchImageAspectRatio = true
             )
         }
         SectionLabel("試合の要点", modifier = Modifier.padding(top = 2.dp))
@@ -1298,13 +1300,18 @@ private fun FeatureHero(
                             story,
                             modifier = Modifier.weight(0.9f),
                             height = 142.dp,
+                            imageAspectRatio = photoAspectRatio,
                             onImageAspectRatio = { photoAspectRatio = it }
                         )
                         FeatureArticleDetails(story, modifier = Modifier.weight(1.1f))
                     }
                 } else {
                     // 縦長・正方形は写真を先に見せ、本文はその下に置く新聞写真記事の構成。
-                    FeaturePhoto(story, onImageAspectRatio = { photoAspectRatio = it })
+                    FeaturePhoto(
+                        story,
+                        imageAspectRatio = photoAspectRatio,
+                        onImageAspectRatio = { photoAspectRatio = it }
+                    )
                     FeatureArticleDetails(story)
                 }
                 ThinRule(modifier = Modifier.padding(top = 3.dp), color = LineGray)
@@ -1385,13 +1392,13 @@ private fun FeatureArticleDetails(story: FeatureStory, modifier: Modifier = Modi
 /** 特集を左右にループさせるため、記事の本数の何倍のページを用意するか(端に着くことは実際には無い) */
 private const val LOOP_ROUNDS = 1000
 
-/** 一面の特集の写真の枠(縦長。顔が切れないように) */
+/** 実際の縦横比を取得するまでの一時的な写真枠の高さ */
 private val FEATURE_PHOTO_HEIGHT = 200.dp
 
 /**
- * 一面の特集の縦長の写真。どの記事にも画像を出し、枠の中に余白を作らない。
+ * 一面の特集写真。読み込んだ画像の比率に枠を合わせ、画像全体を表示する。
  * ・選手の写真は顔が切れないよう上を残す。切り抜き写真の周りの透明な余白は切り取り、
- *   それでも見える透明な部分の後ろはチームカラーにする。ニュースの横長の画像は左右を切って枠に合わせる
+ *   それでも見える透明な部分の後ろはチームカラーにする。
  * ・代わりに付けた選手の写真には、下に選手名を重ねる
  * ・写真が無い記事・写真を読み込めないときは、チームカラーの札(記事の種類・チームの頭文字・チーム名)にする
  * ・写真を押しても拡大はせず、記事全体と同じく、その試合・記事・掲示板などを開く
@@ -1401,6 +1408,7 @@ private fun FeaturePhoto(
     story: FeatureStory,
     modifier: Modifier = Modifier,
     height: androidx.compose.ui.unit.Dp = FEATURE_PHOTO_HEIGHT,
+    imageAspectRatio: Float? = null,
     onImageAspectRatio: ((Float) -> Unit)? = null
 ) {
     val accent = story.team?.color ?: Ink
@@ -1408,7 +1416,10 @@ private fun FeaturePhoto(
         modifier = Modifier
             .then(modifier)
             .fillMaxWidth()
-            .height(height)
+            .then(
+                if (imageAspectRatio != null && imageAspectRatio > 0f) Modifier.aspectRatio(imageAspectRatio)
+                else Modifier.height(height)
+            )
             .background(accent)
     ) {
         // 写真を読み込むまで(読み込めないとき)は、色の札を出しておく
@@ -1422,7 +1433,8 @@ private fun FeaturePhoto(
                 highResolution = true,
                 backgroundColor = accent,
                 framed = false,
-                onImageAspectRatio = onImageAspectRatio
+                onImageAspectRatio = onImageAspectRatio,
+                imageAspectRatio = imageAspectRatio
             )
             story.photoCaption?.let { caption ->
                 Text(

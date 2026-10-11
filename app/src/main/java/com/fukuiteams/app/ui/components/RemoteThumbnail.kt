@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -236,7 +237,8 @@ fun RemoteThumbnail(
     highResolution: Boolean = false,
     backgroundColor: Color = DividerGray,
     framed: Boolean = true,
-    onImageAspectRatio: ((Float) -> Unit)? = null
+    onImageAspectRatio: ((Float) -> Unit)? = null,
+    imageAspectRatio: Float? = null
 ) {
     if (url.isBlank()) return
     // URLが変わったら(並べ替えで同じ位置に別の選手が来た・データが新しくなった など)、
@@ -266,7 +268,12 @@ fun RemoteThumbnail(
     }
     val img = trimmed ?: loaded
     var zoomed by remember(url) { mutableStateOf(false) }
-    val sizeModifier = if (fillWidth) Modifier.fillMaxWidth().height(height) else Modifier.size(width, height)
+    val sizeModifier = if (fillWidth) {
+        Modifier.fillMaxWidth().then(
+            if (imageAspectRatio != null && imageAspectRatio > 0f) Modifier.aspectRatio(imageAspectRatio)
+            else Modifier.height(height)
+        )
+    } else Modifier.size(width, height)
     Box(
         modifier = modifier
             .then(sizeModifier)
@@ -277,7 +284,7 @@ fun RemoteThumbnail(
         Image(
             bitmap = img,
             contentDescription = null,
-            modifier = sizeModifier,
+            modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Fit,
             alignment = if (alignTop) Alignment.TopCenter else Alignment.Center
         )

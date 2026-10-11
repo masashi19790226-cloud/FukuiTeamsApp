@@ -15,6 +15,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月11日",
+        title = "記事写真を元の比率に合わせて表示",
+        items = listOf(
+            "特集写真と速報に掲載した試合写真の枠の高さを、画像の縦横比に合わせて調整します",
+            "縦長・横長・正方形の画像を変形や切り抜きなしで全体表示し、高画質読み込み・キャッシュ・タップ操作を維持します"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月11日",
         title = "特集記事を写真に合わせた新聞レイアウトに",
         items = listOf(
             "横長の特集写真は記事の横に、縦長・正方形の写真は記事の上に配置します",
