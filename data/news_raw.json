@@ -2319,5 +2319,45 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.7xanQt5WJfaPPf0f-e7vLA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-11T12:29:06.987604+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12682128445121412439",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ アウェーで横浜に２連敗 - NHKニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.web.nhk/newsweb/na/nd-20261011de57984&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1tcClDut567QHg5KF4ktki",
+    "published": "2026-10-11T13:27:32Z",
+    "detected_at": "2026-10-11T14:59:48.129302+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15138183249462928641",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、前半リードも横浜エクセレンスに2連敗 バスケBリーグワン - UQライフ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://portal.uqmobile.jp/detail/1/2/5/10211_5_r_20261011_1791716722603469&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1dVfhLIVLi6IjRt_7Ekc65",
+    "published": "2026-10-11T12:04:50Z",
+    "detected_at": "2026-10-11T14:59:48.129339+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9072430851990001152",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、前半リードも横浜エクセレンスに2連敗 バスケＢリーグワン | スポーツ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2719975&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0G-Dsgpo-zGi3jw45O5IlQ",
+    "published": "2026-10-11T11:48:08Z",
+    "detected_at": "2026-10-11T14:59:48.129356+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13139070136081060738",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、前半リードも横浜エクセレンスに2連敗 バスケBリーグワン | au Webポータル",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://article.auone.jp/44fc8059-3bd8-4198-ae83-8a6e194874bf&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2vBAB8wcZvjav49irm2UYu",
+    "published": "2026-10-11T11:05:28Z",
+    "detected_at": "2026-10-11T14:59:48.129372+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13854230508135161522",
+    "team": "BLOWINDS",
+    "title": "本日行われた #福井ブローウィンズ 戦にて #横浜エクセレンス の #横浜武道館 開催試合としての ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/DeWPXCSTeNI/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw01lmRuUN-SNuFkDzXLCNRN",
+    "published": "2026-10-11T08:48:48Z",
+    "detected_at": "2026-10-11T14:59:48.129415+00:00"
   }
 ]
