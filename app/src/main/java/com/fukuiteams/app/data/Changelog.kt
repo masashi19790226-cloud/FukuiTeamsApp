@@ -14,6 +14,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月12日",
+        title = "トピックからSNSを検索",
+        items = listOf(
+            "トピック一覧の下にSNS検索を追加しました。検索条件はボタンを開いたときだけ表示します",
+            "選択中のチームと検索目的を使ってXまたはInstagramの検索ページを開けます。選手名などの自由入力にも対応しました"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月11日",
         title = "記事情報とチケット案内を改善",
         items = listOf(

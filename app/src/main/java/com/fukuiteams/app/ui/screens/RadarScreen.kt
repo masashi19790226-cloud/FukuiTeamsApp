@@ -23,11 +23,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,11 +44,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -70,6 +77,10 @@ import com.fukuiteams.app.data.eventInstant
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isTooOld
 import com.fukuiteams.app.data.articleDuplicateKey
+import com.fukuiteams.app.data.SnsSearchPlatform
+import com.fukuiteams.app.data.SnsSearchPurpose
+import com.fukuiteams.app.data.SnsTeamSearchTerms
+import com.fukuiteams.app.data.buildSnsSearchUrl
 import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.data.DataRefresher
@@ -88,6 +99,7 @@ import com.fukuiteams.app.ui.theme.Ivory
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.theme.Paper
+import android.widget.Toast
 
 /** トピック画面の分類。 */
 // 並び順がそのまま絞り込みボタンの順になる。
@@ -193,6 +205,10 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     }
     val selectedTeam = TeamSelection.current
     var selectedCategory by remember { mutableStateOf(startCategory) }
+    var showSnsSearch by remember { mutableStateOf(false) }
+    var snsSearchPurposes by remember { mutableStateOf(setOf(SnsSearchPurpose.LATEST)) }
+    var snsSearchPlatform by remember { mutableStateOf(SnsSearchPlatform.X) }
+    var snsSearchFreeText by remember { mutableStateOf("") }
     // 招待の中の切り替え(0 = 受付中、1 = 過去の招待)
     var inviteTab by remember { mutableStateOf(0) }
     var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
@@ -602,6 +618,38 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                         }
                     }
                 }
+                item {
+                    Button(
+                        onClick = { showSnsSearch = true },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("SNS検索")
+                    }
+                }
+                if (showSnsSearch) {
+                    item {
+                        SnsSearchPanel(
+                            selectedTeam = selectedTeam,
+                            purposes = snsSearchPurposes,
+                            onPurposesChange = { snsSearchPurposes = it },
+                            platform = snsSearchPlatform,
+                            onPlatformChange = { snsSearchPlatform = it },
+                            freeText = snsSearchFreeText,
+                            onFreeTextChange = { snsSearchFreeText = it },
+                            onClose = { showSnsSearch = false },
+                            onSearch = { platform, purposes, freeText ->
+                                val searchTeams = selectedTeam?.let { listOf(it) } ?: Team.values().toList()
+                                val url = buildSnsSearchUrl(
+                                    platform = platform,
+                                    teams = searchTeams.map(Team::snsSearchTerms),
+                                    purposes = purposes,
+                                    freeText = freeText
+                                )
+                                openSnsSearch(context, platform, url)
+                            }
+                        )
+                    }
+                }
                 // 右下のボタンに最後の行が隠れないよう、下に余白を空ける
                 item { Spacer(modifier = Modifier.height(ScrollJumpBottomPadding)) }
             }
@@ -610,6 +658,76 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                 state = pullToRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
+        }
+    }
+}
+
+@Composable
+private fun SnsSearchPanel(
+    selectedTeam: Team?,
+    purposes: Set<SnsSearchPurpose>,
+    onPurposesChange: (Set<SnsSearchPurpose>) -> Unit,
+    platform: SnsSearchPlatform,
+    onPlatformChange: (SnsSearchPlatform) -> Unit,
+    freeText: String,
+    onFreeTextChange: (String) -> Unit,
+    onClose: () -> Unit,
+    onSearch: (SnsSearchPlatform, Set<SnsSearchPurpose>, String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Ink)
+            .background(Paper)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("SNS検索", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
+            OutlinedButton(onClick = onClose) { Text("閉じる") }
+        }
+        Text("検索対象：${selectedTeam?.displayName ?: "3チーム"}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+        Text("検索目的（複数選択できます）", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+        SnsSearchPurpose.values().forEach { purpose ->
+            val checked = purpose in purposes
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .toggleable(value = checked, role = Role.Checkbox) {
+                        onPurposesChange(if (checked) purposes - purpose else purposes + purpose)
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(checked = checked, onCheckedChange = null)
+                Text(purpose.label, style = MaterialTheme.typography.bodyMedium)
+            }
+        }
+        OutlinedTextField(
+            value = freeText,
+            onValueChange = onFreeTextChange,
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("選手名・背番号・愛称など（任意）") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
+        )
+        Text("検索先", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            NewsChip("X", platform == SnsSearchPlatform.X, Modifier.weight(1f)) {
+                onPlatformChange(SnsSearchPlatform.X)
+            }
+            NewsChip("Instagram", platform == SnsSearchPlatform.INSTAGRAM, Modifier.weight(1f)) {
+                onPlatformChange(SnsSearchPlatform.INSTAGRAM)
+            }
+        }
+        if (platform == SnsSearchPlatform.INSTAGRAM) {
+            Text(
+                "Instagramのキーワード検索を開きます。検索結果は取得せず、必要に応じてInstagram側で条件を調整してください。",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+        }
+        Button(onClick = { onSearch(platform, purposes, freeText) }, modifier = Modifier.fillMaxWidth()) {
+            Text("検索する")
         }
     }
 }
@@ -790,3 +908,48 @@ private fun updatedLabel(status: DataStatus?): Pair<String, Boolean> {
 
 /** URLをブラウザなどで開く(共通の openExternalUrl を使う) */
 private fun openRadarUrl(context: Context, url: String) = openExternalUrl(context, url)
+
+private fun Team.snsSearchTerms(): SnsTeamSearchTerms {
+    val teamIdentifiers = when (this) {
+        Team.BLOWINDS -> listOf("福井ブローウィンズ", "ブローウィンズ", "#福井ブローウィンズ")
+        Team.RAC -> listOf("福井丸岡RUCK", "丸岡RUCK", "#福井丸岡RUCK")
+        Team.UNITED -> listOf("福井ユナイテッド", "#福井ユナイテッド")
+    }
+    val gameTerms = when (this) {
+        Team.RAC -> listOf("試合結果", "観戦")
+        else -> listOf("試合結果", "ホームゲーム")
+    }
+    return SnsTeamSearchTerms(
+        displayName = displayName,
+        identifiers = teamIdentifiers,
+        purposeTerms = mapOf(
+            SnsSearchPurpose.LATEST to listOf("お知らせ", "発表"),
+            SnsSearchPurpose.GAME to gameTerms,
+            SnsSearchPurpose.PLAYER to listOf("選手", "背番号"),
+            SnsSearchPurpose.TICKET to listOf("チケット譲渡", "チケット求む"),
+            SnsSearchPurpose.INVITE to listOf("無料招待", "招待企画"),
+            SnsSearchPurpose.EVENT_GOODS to listOf("ファン感謝祭", "グッズ"),
+            SnsSearchPurpose.FAN to listOf("応援", "観戦感想")
+        )
+    )
+}
+
+private fun openSnsSearch(context: Context, platform: SnsSearchPlatform, url: String) {
+    if (url.isBlank()) {
+        Toast.makeText(context, "検索語を設定できませんでした。条件を確認してください。", Toast.LENGTH_LONG).show()
+        return
+    }
+    val appPackage = when (platform) {
+        SnsSearchPlatform.X -> "com.twitter.android"
+        SnsSearchPlatform.INSTAGRAM -> "com.instagram.android"
+    }
+    fun intent(packageName: String? = null) = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+        if (packageName != null) setPackage(packageName)
+        if (context !is android.app.Activity) addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
+    val openedInApp = runCatching { context.startActivity(intent(appPackage)) }.isSuccess
+    if (openedInApp) return
+    val openedInBrowser = runCatching { context.startActivity(intent()) }.isSuccess
+    if (!openedInBrowser) Toast.makeText(context, "検索ページを開けませんでした。ブラウザをご確認ください。", Toast.LENGTH_LONG).show()
+}
