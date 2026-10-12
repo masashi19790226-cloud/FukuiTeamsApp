@@ -2441,5 +2441,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/8b0ad815a599b2998095a34cd903e1cb04b15252&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2cxSvvCEBCHUMfJFkDQi_V",
     "published": "2026-10-12T10:11:48Z",
     "detected_at": "2026-10-12T12:04:42.095101+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51708",
+    "team": "BLOWINDS",
+    "title": "「FUKUI CONNECTED SERIES」SPECIAL LIVE実施のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51708",
+    "published": "2026-10-12T09:00:00+09:00",
+    "detected_at": "2026-10-12T12:47:48.613905+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/SPECIAL%20LIVE.jpg"
   }
 ]
