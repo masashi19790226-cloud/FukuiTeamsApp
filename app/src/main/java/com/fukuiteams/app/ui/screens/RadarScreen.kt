@@ -7,6 +7,8 @@ import com.fukuiteams.app.ui.components.PublicViewingList
 import com.fukuiteams.app.ui.components.PublicViewingXSearch
 import android.content.Context
 import android.content.Intent
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,12 +32,14 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Button
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -81,6 +85,7 @@ import com.fukuiteams.app.data.SnsSearchPlatform
 import com.fukuiteams.app.data.SnsSearchPurpose
 import com.fukuiteams.app.data.SnsTeamSearchTerms
 import com.fukuiteams.app.data.buildSnsSearchUrl
+import com.fukuiteams.app.data.buildInstagramSearchTerms
 import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.data.DataRefresher
@@ -209,6 +214,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     var snsSearchPurposes by remember { mutableStateOf(setOf(SnsSearchPurpose.LATEST)) }
     var snsSearchPlatform by remember { mutableStateOf(SnsSearchPlatform.X) }
     var snsSearchFreeText by remember { mutableStateOf("") }
+    var instagramSearchTerms by remember { mutableStateOf<String?>(null) }
     // 招待の中の切り替え(0 = 受付中、1 = 過去の招待)
     var inviteTab by remember { mutableStateOf(0) }
     var newsResult by remember { mutableStateOf<AlertsResult?>(null) }
@@ -639,13 +645,18 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                             onClose = { showSnsSearch = false },
                             onSearch = { platform, purposes, freeText ->
                                 val searchTeams = selectedTeam?.let { listOf(it) } ?: Team.values().toList()
-                                val url = buildSnsSearchUrl(
-                                    platform = platform,
-                                    teams = searchTeams.map(Team::snsSearchTerms),
-                                    purposes = purposes,
-                                    freeText = freeText
-                                )
-                                openSnsSearch(context, platform, url)
+                                val searchTeamTerms = searchTeams.map(Team::snsSearchTerms)
+                                if (platform == SnsSearchPlatform.INSTAGRAM) {
+                                    val terms = buildInstagramSearchTerms(searchTeamTerms, purposes, freeText)
+                                    if (terms.isBlank()) {
+                                        Toast.makeText(context, "検索語を設定できませんでした。条件を確認してください。", Toast.LENGTH_LONG).show()
+                                    } else {
+                                        instagramSearchTerms = terms
+                                    }
+                                } else {
+                                    val url = buildSnsSearchUrl(platform, searchTeamTerms, purposes, freeText)
+                                    openSnsSearch(context, platform, url)
+                                }
                             }
                         )
                     }
@@ -659,6 +670,35 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                 modifier = Modifier.align(Alignment.TopCenter)
             )
         }
+    }
+    instagramSearchTerms?.let { terms ->
+        AlertDialog(
+            onDismissRequest = { instagramSearchTerms = null },
+            title = { Text("Instagramで手動検索") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Instagramアプリへ検索語を直接渡す公式な方法を確認できません。検索語をコピーし、Instagram内の検索欄に貼り付けてください。")
+                    Text(terms, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                    Text("検索結果はこのアプリでは取得しません。", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    clipboard.setPrimaryClip(ClipData.newPlainText("Instagram検索語", terms))
+                    Toast.makeText(context, "検索語をコピーしました。Instagram内で貼り付けて検索してください。", Toast.LENGTH_LONG).show()
+                }) { Text("検索語をコピー") }
+            },
+            dismissButton = {
+                Row {
+                    TextButton(onClick = {
+                        openInstagramHome(context)
+                        instagramSearchTerms = null
+                    }) { Text("Instagramを開く") }
+                    TextButton(onClick = { instagramSearchTerms = null }) { Text("閉じる") }
+                }
+            }
+        )
     }
 }
 
@@ -721,7 +761,7 @@ private fun SnsSearchPanel(
         }
         if (platform == SnsSearchPlatform.INSTAGRAM) {
             Text(
-                "Instagramのキーワード検索を開きます。検索結果は取得せず、必要に応じてInstagram側で条件を調整してください。",
+                "検索語をコピーしてInstagram内で検索します。検索結果はこのアプリでは取得しません。",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
@@ -952,4 +992,23 @@ private fun openSnsSearch(context: Context, platform: SnsSearchPlatform, url: St
     if (openedInApp) return
     val openedInBrowser = runCatching { context.startActivity(intent()) }.isSuccess
     if (!openedInBrowser) Toast.makeText(context, "検索ページを開けませんでした。ブラウザをご確認ください。", Toast.LENGTH_LONG).show()
+}
+
+/** Opens Instagram without a query. The user is shown the copied terms separately because
+ * Instagram does not document an app link that accepts arbitrary search text. */
+private fun openInstagramHome(context: Context) {
+    val uri = Uri.parse("https://www.instagram.com/")
+    fun intent(packageName: String? = null) = Intent(Intent.ACTION_VIEW, uri).apply {
+        if (packageName != null) setPackage(packageName)
+        if (context !is android.app.Activity) addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    val openedInApp = runCatching {
+        context.startActivity(intent("com.instagram.android"))
+    }.isSuccess
+    val openedInBrowser = openedInApp || runCatching {
+        context.startActivity(intent())
+    }.isSuccess
+    if (!openedInBrowser) {
+        Toast.makeText(context, "Instagramまたはブラウザを開けませんでした。検索語はコピーして手動で利用できます。", Toast.LENGTH_LONG).show()
+    }
 }

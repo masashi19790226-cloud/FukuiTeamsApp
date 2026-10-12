@@ -38,17 +38,48 @@ class SnsSearchTest {
     }
 
     @Test
-    fun instagramUsesKeywordSearchAndDoesNotApplyXLiveSyntax() {
+    fun instagramUrlDoesNotPretendToPassSearchTerms() {
         val url = buildSnsSearchUrl(
             SnsSearchPlatform.INSTAGRAM,
             listOf(team),
             setOf(SnsSearchPurpose.TICKET, SnsSearchPurpose.LATEST),
             "自由語"
         )
-        assertTrue(url.startsWith("https://www.instagram.com/explore/search/keyword/?q="))
-        assertFalse(url.contains("&f=live"))
-        assertFalse(url.contains("%28"))
-        assertTrue(url.contains("%E8%87%AA%E7%94%B1%E8%AA%9E"))
+        assertTrue(url == "https://www.instagram.com/")
+        assertFalse(url.contains("?q="))
+    }
+
+    @Test
+    fun instagramPhraseUsesTeamAndOnlySelectedNewsPurpose() {
+        val phrase = buildInstagramSearchTerms(listOf(team), setOf(SnsSearchPurpose.LATEST), "")
+        assertTrue(phrase.startsWith("福井ブローウィンズ"))
+        assertTrue(phrase.contains("お知らせ"))
+        assertTrue(phrase.contains("発表"))
+        assertFalse(phrase.contains("チケット"))
+    }
+
+    @Test
+    fun instagramPhraseSupportsGameTicketMultiplePurposesAndFreeText() {
+        val game = buildInstagramSearchTerms(listOf(team), setOf(SnsSearchPurpose.GAME), "")
+        val ticket = buildInstagramSearchTerms(listOf(team), setOf(SnsSearchPurpose.TICKET), "")
+        val combined = buildInstagramSearchTerms(
+            listOf(team), setOf(SnsSearchPurpose.GAME, SnsSearchPurpose.TICKET), "#12番"
+        )
+        assertTrue(game.contains("試合結果"))
+        assertFalse(game.contains("チケット"))
+        assertTrue(ticket.contains("チケット譲渡"))
+        assertFalse(ticket.contains("試合結果"))
+        assertTrue(combined.contains("試合結果"))
+        assertTrue(combined.contains("チケット譲渡"))
+        assertTrue(combined.endsWith("#12番"))
+    }
+
+    @Test
+    fun instagramPhraseWithoutPurposeStillIncludesTeamAndFreeText() {
+        val phrase = buildInstagramSearchTerms(listOf(team), emptySet(), "12番")
+        assertTrue(phrase.contains("福井ブローウィンズ"))
+        assertTrue(phrase.endsWith("12番"))
+        assertFalse(phrase.contains("お知らせ"))
     }
 
     @Test

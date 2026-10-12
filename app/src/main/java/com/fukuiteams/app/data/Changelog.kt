@@ -15,6 +15,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月12日",
+        title = "Instagram検索を改善",
+        items = listOf(
+            "選択したチーム・検索目的・自由入力から検索語を組み立て、確認とコピーができるようにしました",
+            "検索語を直接渡せる公式なInstagramアプリ用URLを確認できないため、アプリを開くだけで検索できたように見せない案内に変更しました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月12日",
         title = "トピックからSNSを検索",
         items = listOf(
             "トピック一覧の下にSNS検索を追加しました。検索条件はボタンを開いたときだけ表示します",

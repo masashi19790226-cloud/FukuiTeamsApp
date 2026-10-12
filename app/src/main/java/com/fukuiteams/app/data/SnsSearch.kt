@@ -47,17 +47,39 @@ fun buildSnsSearchUrl(
         SnsSearchPlatform.X -> listOf(teamExpression, purposeExpression, freeText.trim())
             .filter(String::isNotBlank)
             .joinToString(" ")
-        SnsSearchPlatform.INSTAGRAM -> listOf(
-            teams.map { it.displayName }.distinct().joinToString(" "),
-            purposeTerms.firstOrNull().orEmpty(),
-            freeText.trim()
-        ).filter(String::isNotBlank).joinToString(" ")
+        // Instagram does not document a query-bearing app deep link. Do not place
+        // terms on an unsupported URL and imply that the Instagram app will use them.
+        SnsSearchPlatform.INSTAGRAM -> "https://www.instagram.com/"
     }
     if (words.isBlank()) return ""
+    if (platform == SnsSearchPlatform.INSTAGRAM) return words
     val encoded = URLEncoder.encode(words, StandardCharsets.UTF_8.name()).replace("+", "%20")
 
     return when (platform) {
         SnsSearchPlatform.X -> "https://x.com/search?q=$encoded&f=live"
-        SnsSearchPlatform.INSTAGRAM -> "https://www.instagram.com/explore/search/keyword/?q=$encoded"
+        SnsSearchPlatform.INSTAGRAM -> words
     }
+}
+
+/**
+ * Terms to show and copy for a manual Instagram search. Instagram's official
+ * help describes searching inside the app, but does not document a query URL
+ * or app intent that accepts a search string.
+ */
+fun buildInstagramSearchTerms(
+    teams: List<SnsTeamSearchTerms>,
+    purposes: Set<SnsSearchPurpose>,
+    freeText: String
+): String {
+    val teamNames = teams.map { it.displayName.trim() }.filter(String::isNotBlank).distinct()
+    val purposeTerms = SnsSearchPurpose.entries
+        .filter { it in purposes }
+        .flatMap { purpose -> teams.flatMap { it.purposeTerms[purpose].orEmpty().take(2) } }
+        .map(String::trim)
+        .filter(String::isNotBlank)
+        .distinct()
+    return (teamNames + purposeTerms + freeText.trim().takeIf(String::isNotBlank).orEmpty())
+        .filter(String::isNotBlank)
+        .distinct()
+        .joinToString(" ")
 }
