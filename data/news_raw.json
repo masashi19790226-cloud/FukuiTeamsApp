@@ -2403,5 +2403,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DeXvCUIExXa/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3r5-QMzz67AcNZmUMfegB8",
     "published": "2026-10-12T00:27:57Z",
     "detected_at": "2026-10-12T04:03:42.494214+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=48374",
+    "team": "BLOWINDS",
+    "title": "【第4節 山形戦】グッズ購入で「シーズンビジュアルポストカード」プレゼント！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=48374",
+    "published": "2026-10-12T09:00:00+09:00",
+    "detected_at": "2026-10-12T10:04:01.190728+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_post%20card_campaign.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51712",
+    "team": "BLOWINDS",
+    "title": "【10/13(火)新商品】第4節 山形ワイヴァンズ戦 新グッズ販売のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51712",
+    "published": "2026-10-12T09:00:00+09:00",
+    "detected_at": "2026-10-12T10:04:01.190728+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_1013_newgoods.jpg"
   }
 ]
