@@ -10,6 +10,7 @@ class SnsSearchTest {
         identifiers = listOf("福井ブローウィンズ", "ブローウィンズ", "#福井ブローウィンズ"),
         purposeTerms = mapOf(
             SnsSearchPurpose.LATEST to listOf("お知らせ", "発表"),
+            SnsSearchPurpose.GAME to listOf("試合結果", "ホームゲーム"),
             SnsSearchPurpose.TICKET to listOf("チケット譲渡", "チケット求む")
         )
     )
