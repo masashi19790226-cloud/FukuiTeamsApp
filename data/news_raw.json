@@ -2507,5 +2507,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://note.com/tag/%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%25A6%25E3%2583%258A%25E3%2582%25A4%25E3%2583%2586%25E3%2583%2583%25E3%2583%2589FC&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3xc5knbaNpehSdYFNWCpnv",
     "published": "2026-10-12T02:24:57Z",
     "detected_at": "2026-10-13T00:02:44.946466+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2342414112967119432",
+    "team": "UNITED",
+    "title": "福井ユナイテッド ファン交流会 バギーリレーでフライング気味で   「ヨーイスタートて早く言って ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/kemiko8/status/2109660228220522541/video/2&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1VAK6kYuXu6WfFhuLO0Iqq",
+    "published": "2026-10-13T00:17:37Z",
+    "detected_at": "2026-10-13T07:48:20.941174+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51713",
+    "team": "BLOWINDS",
+    "title": "クラブ組織体制およびトップチーム強化体制変更のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51713",
+    "published": "2026-10-13T09:00:00+09:00",
+    "detected_at": "2026-10-13T07:48:22.789969+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
   }
 ]
