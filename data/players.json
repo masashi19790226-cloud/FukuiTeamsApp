@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-14T05:58:55.327440+00:00",
+    "updated_at": "2026-10-14T06:45:59.617928+00:00",
     "players": [
       {
         "number": "1",
@@ -3140,7 +3140,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=710&tab=1",
-    "updated_at": "2026-10-14T05:58:58.166540+00:00",
+    "updated_at": "2026-10-14T06:46:01.134078+00:00",
     "players": [
       {
         "number": "0",
@@ -4492,7 +4492,7 @@
       {
         "key": "RPG",
         "label": "平均リバウンド数",
-        "rank": 22,
+        "rank": 23,
         "value": "37.0",
         "unit": "本"
       },
