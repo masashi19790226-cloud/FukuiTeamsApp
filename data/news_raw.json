@@ -2605,5 +2605,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.albirex.com/detail_02_gnavi/id%3D25018&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3-yPleZxHfY1r0Lzm8_XHo",
     "published": "2026-10-14T05:41:46Z",
     "detected_at": "2026-10-14T10:59:01.355207+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11191013884580294577",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ快勝、連敗ストップ Bリーグワン 山形ワイヴァンズと対戦",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2722144&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw04GMeB5ms-n6rW8pI1O6MS",
+    "published": "2026-10-14T12:45:59Z",
+    "detected_at": "2026-10-14T13:09:08.950036+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2722149",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズが第3Qに流れつかみ快勝 バスケBリーグワン ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2722149",
+    "published": "2026-10-14T05:49:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.Wf-aM_pmRQLqp-NtU2EKmA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-14T13:09:09.810537+00:00"
   }
 ]
