@@ -2675,5 +2675,21 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.NYuFjhzF_Kkqxz6mxzZmgw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-14T14:02:08.840455+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1554959474937000524",
+    "team": "BLOWINDS",
+    "title": "【ハイライト】福井ブローウィンズvs山形ワイヴァンズ｜りそなグループ B.LEAGUE 2026-27",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DHAPbKB7VU8Q&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2gbPMptQJlrXpT-L6cO1vX",
+    "published": "2026-10-14T14:51:06Z",
+    "detected_at": "2026-10-14T15:16:17.300502+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3146472797675039565",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【 #Uniteファンディング 】 〈10/14現在〉 支援口数：15口 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2110339856316367342&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw381rFZwyPdQOerLCyAN-Mx",
+    "published": "2026-10-14T12:44:39Z",
+    "detected_at": "2026-10-14T15:16:17.416475+00:00"
   }
 ]
