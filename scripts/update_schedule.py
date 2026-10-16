@@ -109,9 +109,13 @@ def season_start_year(start_month: int) -> int:
 
 # ---------- ブローウィンズ ----------
 
+# 一覧の1試合分の並び(タグを外してつないだ文字)。
+#   以前:「HOME レギュラーシーズン 福井 福井 12/19 (土) 15:05 location_on 会場 岐阜 岐阜」
+#   2026年10月ごろから:「HOME レギュラーシーズン 福井 12/19 (土) 15:05 location_on 会場 岐阜 sports_basketball 試合情報」
+# の両方に対応する(「福井」が1つでも2つでもよく、相手の名前の後は同じ名前か「sports_basketball」)
 BW_PATTERN = re.compile(
-    r"(HOME|AWAY)\s+(\S+)\s+福井\s+福井\s+(\d{1,2})/(\d{1,2})\s*\(([月火水木金土日])\)\s*"
-    r"(\S+)?\s*location_on\s+(.+?)\s+(\S+)\s+\8(?=\s|$)"
+    r"(HOME|AWAY)\s+(\S+)\s+(?:福井\s+)+(\d{1,2})/(\d{1,2})\s*\(([月火水木金土日])\)\s*"
+    r"(\S+)?\s*location_on\s+(.+?)\s+(\S+)\s+(?:\8(?=\s|$)|sports_basketball)"
 )
 
 
@@ -119,9 +123,11 @@ def scrape_blowinds():
     games = {}
     start = season_start_year(9)  # B.LEAGUEは9月開幕・翌5月ごろ終了
     y, m = NOW.year, NOW.month
+    pages_ok = 0
     for _ in range(9):  # 今月から9か月先まで
         page = safe_fetch("BW", BLOWINDS_LIST_URL.format(year=y, month=m))
         if page:
+            pages_ok += 1
             joined = " ".join(html_to_lines(page))
             for mt in BW_PATTERN.finditer(joined):
                 home_away, kind, mo, d, _dow, time, venue, opp = mt.groups()
@@ -135,6 +141,9 @@ def scrape_blowinds():
         if m > 12:
             y, m = y + 1, 1
     print(f"[INFO] BW: {len(games)} 試合を読み取り")
+    if not games and pages_ok:
+        # ページは読めたのに1試合も読み取れない = サイトの作りが変わった。気づけるように失敗扱いにする
+        raise RuntimeError("BW: 試合日程のページは読めたが、試合を1つも読み取れませんでした(サイトの作りが変わった可能性)")
     return list(games.values())
 
 
@@ -382,6 +391,11 @@ def merge(games, scraped):
             g["time"] = s["time"]
             g["sort_key"] = sort_key_of(g)
             changes.append(f"開始時刻 {s['time']}")
+        elif s["team"] == "blowinds" and valid_time(g.get("time", "")) and valid_time(s["time"]) and g["time"] != s["time"]:
+            # ブローウィンズは公式サイトの時刻が正しいので、開始時刻が変わったらそれに合わせる
+            changes.append(f"開始時刻 {g['time']}→{s['time']}")
+            g["time"] = s["time"]
+            g["sort_key"] = sort_key_of(g)
         if any(w in g.get("venue", "") for w in ["調整中", "未定"]) and s["venue"] and "調整中" not in s["venue"]:
             g["venue"] = s["venue"]
             changes.append(f"会場 {s['venue']}")
@@ -399,6 +413,7 @@ def main():
         games = json.load(f)
 
     total_added = total_updated = 0
+    errors = []
     # 公式サイトを先に読み、最後に手動の日程で足りない分を補う
     for name, scraper in [("BW", scrape_blowinds), ("RUCK", scrape_ruck), ("UNITED", scrape_united), ("MANUAL", scrape_manual)]:
         try:
@@ -406,6 +421,7 @@ def main():
         except Exception as e:
             # 1チームで失敗しても他のチームの更新は続ける
             print(f"[WARN] {name}: 読み取り中にエラー {e}")
+            errors.append(name)
             continue
         a, u = merge(games, scraped)
         total_added += a
@@ -417,6 +433,9 @@ def main():
         with open(GAMES_PATH, "w", encoding="utf-8") as f:
             f.write("[\n" + ",\n".join("  " + json.dumps(g, ensure_ascii=False) for g in games) + "\n]\n")
     print(f"[INFO] 追加 {total_added} 件 / 更新 {total_updated} 件")
+    if errors:
+        # 他のチームの分は保存したうえで、失敗したことを「データの更新状況」に出す
+        raise SystemExit(f"[ERROR] 読み取りに失敗: {', '.join(errors)}")
 
 
 if __name__ == "__main__":

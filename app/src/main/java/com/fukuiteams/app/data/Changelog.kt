@@ -15,6 +15,15 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月16日",
+        title = "ブローウィンズの日程の自動更新",
+        items = listOf(
+            "ブローウィンズ公式サイトの日程ページの作りが変わり、10月上旬から日程(開始時刻など)が自動で更新されていなかったのを直しました",
+            "ブローウィンズの試合の開始時刻が公式サイトで変わったときも、自動で合わせるようにしました",
+            "日程を読み取れなかったときは「データの更新状況」で失敗と分かるようにしました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月16日",
         title = "一面の特集の写真",
         items = listOf(
             "特集の写真が読み込めない(ニュースの画像が直リンクを断られるなど)と色の札のままになっていたのを、そのチームの選手の写真に順に切り替えて、なるべく写真を出すようにしました",
