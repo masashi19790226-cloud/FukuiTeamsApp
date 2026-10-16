@@ -694,8 +694,9 @@ private fun ScorersTable(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
+                            // 得点の表に写真が無いときは、全選手のデータ(選手紹介)の写真を使う
                             RemoteThumbnail(
-                                r.photo, width = 40.dp, height = 50.dp, alignTop = true,
+                                r.photo.ifBlank { profileOf(r.name)?.photo.orEmpty() }, width = 40.dp, height = 50.dp, alignTop = true,
                                 // タップで大きく表示
                                 zoomCaption = (if (r.number.isNotBlank()) "#${r.number} " else "") + r.name
                             )

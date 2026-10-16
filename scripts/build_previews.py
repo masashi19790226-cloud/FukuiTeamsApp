@@ -710,6 +710,21 @@ def ruck_members_once():
     raise last
 
 
+def inherit_scorer_photos(rows, team_key):
+    """前回の data/standings.json の得点の表から、同じ名前の選手の写真を写す(写真の無い行だけ)。写した人数を返す"""
+    old_rows = load_json(STANDINGS_PATH, {}).get(team_key, {}).get("scorers", {}).get("rows") or []
+    old = {standings._name_key(r.get("name", "")): r for r in old_rows if r.get("photo")}
+    count = 0
+    for r in rows or []:
+        if r.get("photo"):
+            continue
+        prev = old.get(standings._name_key(r.get("name", "")))
+        if prev:
+            r["photo"] = prev["photo"]
+            count += 1
+    return count
+
+
 def attach_player_photos():
     """丸岡RUCK・ユナイテッドの得点の表に、公式サイトの選手紹介の顔写真を付ける(読めなければ付けない)"""
     rac = STANDINGS.get("RAC", {}).get("scorers")
@@ -720,6 +735,10 @@ def attach_player_photos():
         except Exception as e:
             print(f"[WARN] 写真: 丸岡RUCKの選手紹介の取得に失敗 {e!r}")
             rac["photo_report"] = {standings.RUCK_NAME: f"取得失敗 {type(e).__name__}"}
+            # 読めなかったときは、前回の得点の表に付いていた写真を引き継ぐ(一時的な失敗で写真が消えないように)
+            inherited = inherit_scorer_photos(rac.get("rows"), "RAC")
+            if inherited:
+                rac["photo_report"][standings.RUCK_NAME] += f"(前回の写真を{inherited}人分引き継ぎ)"
         # 相手クラブの選手の写真(各クラブの公式サイトから。1日1回だけ読み直す)
         try:
             old_cache = load_json(STANDINGS_PATH, {}).get("RAC", {}).get("scorers", {}).get("club_photo_cache", {})

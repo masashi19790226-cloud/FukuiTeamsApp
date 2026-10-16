@@ -66,21 +66,50 @@ private object ThumbnailCache {
     val failed: MutableSet<String> = java.util.Collections.synchronizedSet(HashSet())
 }
 
+/**
+ * 画像のダウンロードで試す名乗り方(よい順)。
+ * 1. アプリ独自の名乗り(以前からの方法。丸岡RUCK公式などはこれで読める)
+ * 2. ふつうのスマホのブラウザの名乗り+画像のサイト自身から開いたことにする(Referer)。独自の名乗りや直リンクを断るサイト対策
+ * サイトによって通る方法が違うため、1で読めなければ2を試す。
+ */
+private val REQUEST_PROFILES: List<Pair<String, Boolean>> = listOf(
+    "Mozilla/5.0 (Linux; Android) FukuiSpo" to false,
+    "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36" to true
+)
+
+/** 画像のデータをダウンロードする。名乗り方を順に試し、どれでも読めなければ例外 */
+private fun downloadBytes(url: String): ByteArray {
+    var last: Exception? = null
+    for ((userAgent, withReferer) in REQUEST_PROFILES) {
+        try {
+            val c = URL(url).openConnection() as HttpURLConnection
+            c.connectTimeout = 8_000
+            c.readTimeout = 8_000
+            c.setRequestProperty("User-Agent", userAgent)
+            if (withReferer) {
+                runCatching { URL(url).let { u -> c.setRequestProperty("Referer", "${u.protocol}://${u.host}/") } }
+            }
+            c.instanceFollowRedirects = true
+            try {
+                val bytes = c.inputStream.use { it.readBytes() }
+                // 画像として読めるものだけ返す(エラーのページなどが返ってきたら次の方法へ)
+                val check = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                BitmapFactory.decodeByteArray(bytes, 0, bytes.size, check)
+                if (check.outWidth > 0 && check.outHeight > 0) return bytes
+                last = IllegalStateException("画像ではないデータ")
+            } finally {
+                c.disconnect()
+            }
+        } catch (e: Exception) {
+            last = e
+        }
+    }
+    throw last ?: IllegalStateException("読み込めませんでした")
+}
+
 /** 画像をダウンロードし、短い辺が minSide px 以上残る範囲で縮小して読み込む。 */
 private fun downloadAndDecode(url: String, minSide: Int): ImageBitmap? {
-    val c = URL(url).openConnection() as HttpURLConnection
-    c.connectTimeout = 8_000
-    c.readTimeout = 8_000
-    // ふつうのスマホのブラウザと同じ名乗り方にする(独自の名乗りだと画像を返さないサイトがあるため)。
-    // 画像のサイト自身から開いたことにする(Referer)。直リンクを断るサイト対策
-    c.setRequestProperty(
-        "User-Agent",
-        "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36"
-    )
-    runCatching { URL(url).let { u -> c.setRequestProperty("Referer", "${u.protocol}://${u.host}/") } }
-    c.instanceFollowRedirects = true
-    val bytes = c.inputStream.use { it.readBytes() }
-    c.disconnect()
+    val bytes = downloadBytes(url)
     val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
     BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
     var sample = 1
