@@ -2953,5 +2953,15 @@
     "source": "日テレNEWS NNN",
     "image": "",
     "detected_at": "2026-10-16T12:44:50.796828+00:00"
+  },
+  {
+    "id": "official-news:https://ruck-fukui.com/archives/6461",
+    "team": "RAC",
+    "title": "2026年12月20日ホームゲーム同日開催のお知らせ",
+    "link": "https://ruck-fukui.com/archives/6461",
+    "published": "2026-10-16T13:31:58+00:00",
+    "detected_at": "2026-10-16T14:09:25.930990+00:00",
+    "source": "丸岡RUCK公式",
+    "image": ""
   }
 ]
