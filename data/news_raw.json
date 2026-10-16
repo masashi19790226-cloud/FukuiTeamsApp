@@ -3047,5 +3047,13 @@
     "source": "47NEWS",
     "image": "https://www.bing.com/th?id=ONUT.sS2yxgOdeUy0MlT9v15QcQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-16T21:55:08.549372+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5991060402742714770",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの売上高、昨季バスケB2で4位 2246万円の黒字、グッズは1.51倍の伸び",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://portal.uqmobile.jp/detail/1/2/5/10211_5_r_20261017_1792185552623583&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2XJU5SGKOd8O8U2E4h27kv",
+    "published": "2026-10-16T21:57:20Z",
+    "detected_at": "2026-10-16T23:08:37.843781+00:00"
   }
 ]
