@@ -3029,5 +3029,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fukuiruck/status/2110924826169000384&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3tyL7w52A5riHtHYqVr6E6",
     "published": "2026-10-16T04:16:50Z",
     "detected_at": "2026-10-16T19:35:05.167814+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16343803205999848368",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの売上高、昨季バスケB2で4位 2246万円の黒字、グッズは1.51倍の伸び",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2724107&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1veJS_8wn9ivKim_hywkwR",
+    "published": "2026-10-16T21:12:23Z",
+    "detected_at": "2026-10-16T21:55:07.783948+00:00"
+  },
+  {
+    "id": "bing:https://www.47news.jp/15094175.html",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの売上高、昨季バスケB2で4位 2246万円の黒字 ...",
+    "link": "https://www.47news.jp/15094175.html",
+    "published": "2026-10-16T03:00:00+00:00",
+    "source": "47NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.sS2yxgOdeUy0MlT9v15QcQ&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-16T21:55:08.549372+00:00"
   }
 ]
