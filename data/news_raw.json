@@ -2897,5 +2897,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51716&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2rypkyqQ93W3qGQc2zQqjy",
     "published": "2026-10-16T00:04:46Z",
     "detected_at": "2026-10-16T01:58:10.743905+00:00"
+  },
+  {
+    "id": "bing:https://www.afpbb.com/articles/-/3655562",
+    "team": "BLOWINDS",
+    "title": "【㈱アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
+    "link": "https://www.afpbb.com/articles/-/3655562",
+    "published": "2026-09-30T17:00:00+00:00",
+    "source": "AFPBB News",
+    "image": "",
+    "detected_at": "2026-10-16T03:59:25.222068+00:00"
   }
 ]
