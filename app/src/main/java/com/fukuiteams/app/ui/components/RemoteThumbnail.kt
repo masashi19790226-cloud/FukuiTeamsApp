@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -51,16 +50,16 @@ import java.net.URL
  * ・読み込めなかったときは、何も出さない(枠も出さない)
  */
 private object ThumbnailCache {
-    // 最大およそ 8MB 分の画像を覚えておく
-    val cache = object : LruCache<String, ImageBitmap>(8 * 1024 * 1024) {
+    // 最大およそ 24MB 分の画像を覚えておく(一面の特集の細かい画像も入るため)
+    val cache = object : LruCache<String, ImageBitmap>(24 * 1024 * 1024) {
         override fun sizeOf(key: String, value: ImageBitmap): Int = value.width * value.height * 4
     }
     // タップで拡大したときの大きい画像(数枚分だけ覚えておく。およそ 16MB まで)
     val largeCache = object : LruCache<String, ImageBitmap>(16 * 1024 * 1024) {
         override fun sizeOf(key: String, value: ImageBitmap): Int = value.width * value.height * 4
     }
-    // 透明な余白を切り取った画像(一面の特集で使う。およそ 8MB まで)
-    val trimmed = object : LruCache<String, ImageBitmap>(8 * 1024 * 1024) {
+    // 透明な余白を切り取った画像(一面の特集で使う。およそ 16MB まで)
+    val trimmed = object : LruCache<String, ImageBitmap>(16 * 1024 * 1024) {
         override fun sizeOf(key: String, value: ImageBitmap): Int = value.width * value.height * 4
     }
     // 読み込みに失敗したURL(同じものを何度も読みに行かない)
@@ -86,8 +85,21 @@ private fun downloadAndDecode(url: String, minSide: Int): ImageBitmap? {
     BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
     var sample = 1
     while (bounds.outWidth / (sample * 2) >= minSide && bounds.outHeight / (sample * 2) >= minSide) sample *= 2
-    return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, BitmapFactory.Options().apply { inSampleSize = sample })
-        ?.asImageBitmap()
+    val decoded = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, BitmapFactory.Options().apply { inSampleSize = sample })
+        ?: return null
+    // まだ必要よりかなり大きければ、短い辺が minSide になるよう滑らかに縮小する(メモリを使いすぎないように)
+    val shortSide = minOf(decoded.width, decoded.height)
+    if (shortSide > minSide * 3 / 2) {
+        val scale = minSide.toFloat() / shortSide
+        val scaled = android.graphics.Bitmap.createScaledBitmap(
+            decoded,
+            (decoded.width * scale).toInt().coerceAtLeast(1),
+            (decoded.height * scale).toInt().coerceAtLeast(1),
+            true
+        )
+        return scaled.asImageBitmap()
+    }
+    return decoded.asImageBitmap()
 }
 
 /**
@@ -127,61 +139,46 @@ private fun trimTransparentEdges(img: ImageBitmap): ImageBitmap {
     return android.graphics.Bitmap.createBitmap(bmp, left, top, right - left + 1, bottom - top + 1).asImageBitmap()
 }
 
-private suspend fun loadThumbnail(url: String, minSide: Int): ImageBitmap? = withContext(Dispatchers.IO) {
-    val cacheKey = "$url#$minSide"
-    ThumbnailCache.cache.get(cacheKey)?.let { return@withContext it }
-    if (cacheKey in ThumbnailCache.failed) return@withContext null
+/** キャッシュに使う名前(細かい画像は別に覚えておく) */
+private fun cacheKey(url: String, highRes: Boolean): String = if (highRes) "hi|$url" else url
+
+/**
+ * highRes:true なら、一面の特集のように大きく出す用に細かい画像を読む
+ * (WordPress の縮小版「-150x150」より元の画像を先に試し、600px 程度は残す)
+ */
+private suspend fun loadThumbnail(url: String, highRes: Boolean = false): ImageBitmap? = withContext(Dispatchers.IO) {
+    val key = cacheKey(url, highRes)
+    ThumbnailCache.cache.get(key)?.let { return@withContext it }
+    if (key in ThumbnailCache.failed) return@withContext null
     // 読めなければ、縮小版ではない元の画像(WordPress の「-150x150」を取ったもの)も試す
-    for (candidate in thumbnailCandidates(url, minSide >= 1600)) {
+    val candidates = if (highRes) (largeImageCandidates(url) + thumbnailCandidates(url)).distinct() else thumbnailCandidates(url)
+    for (candidate in candidates) {
         val bitmap = try {
-            // 表示用途ごとの解像度を保つ。特集は大きく表示するため高めに設定する。
-            downloadAndDecode(candidate, minSide)
+            // 大きな画像は縮小して読み込む(選手の顔写真を大きめに出してもぼやけないよう、320px 程度は残す)
+            downloadAndDecode(candidate, if (highRes) 600 else 320)
         } catch (e: Exception) {
             null
         }
         if (bitmap != null) {
-            ThumbnailCache.cache.put(cacheKey, bitmap)
+            ThumbnailCache.cache.put(key, bitmap)
             return@withContext bitmap
         }
     }
-    ThumbnailCache.failed.add(cacheKey)
+    ThumbnailCache.failed.add(key)
     null
 }
 
-/** 画像の候補(よい順):縮小版でない元画像 → 指定URL → 300x300版。
- * 高解像度表示では、Bingニュースが一覧用に付けた160pxの切り抜き指定も外したURLを先に試す。
- */
-private fun thumbnailCandidates(url: String, highResolution: Boolean): List<String> {
-    val list = mutableListOf<String>()
+/** 一覧の小さい画像の候補(よい順):そのままのURL → 縮小版でない元の画像 → 300x300 の縮小版 */
+private fun thumbnailCandidates(url: String): List<String> {
+    val list = mutableListOf(url)
     if (url.contains("/wp-content/uploads/")) {
-        val original = url.replace(Regex("""-\d+x\d+(?=\.[^./?]+(?:\?.*)?$)"""), "")
-        if (original != url) list += original
-    }
-    if (highResolution) {
-        val fullSize = withoutBingThumbnailSizing(url)
-        if (fullSize != url) list += fullSize
-    }
-    list += url
-    if (url.contains("/wp-content/uploads/")) {
-        val medium = url.replace(Regex("""-\d+x\d+(?=\.[^./?]+(?:\?.*)?$)"""), "-300x300")
-        if (medium != url) list += medium
+        val m = Regex("""-\d+x\d+(\.\w+)(\?.*)?$""").find(url)
+        if (m != null) {
+            list += url.replace(m.value, m.groupValues[1])
+            list += url.replace(m.value, "-300x300" + m.groupValues[1])
+        }
     }
     return list.distinct()
-}
-
-/** Bing用の一覧画像URLに付けた寸法・中央切り抜きを外し、元の画像候補を作る。 */
-private fun withoutBingThumbnailSizing(url: String): String {
-    val queryStart = url.indexOf('?')
-    if (queryStart < 0) return url
-    val base = url.substring(0, queryStart)
-    val queryAndFragment = url.substring(queryStart + 1)
-    val query = queryAndFragment.substringBefore('#')
-    val fragment = queryAndFragment.substringAfter('#', "").let { if (it.isEmpty()) "" else "#$it" }
-    val parts = query.split('&')
-    val hasKnownSizing = parts.contains("w=160") && parts.contains("h=160") && parts.contains("c=7")
-    if (!hasKnownSizing) return url
-    val retained = parts.filterNot { it == "w=160" || it == "h=160" || it == "c=7" }
-    return base + (if (retained.isEmpty()) "" else "?${retained.joinToString("&")}") + fragment
 }
 
 /**
@@ -217,11 +214,13 @@ private suspend fun loadLargeImage(url: String): ImageBitmap? = withContext(Disp
 
 /**
  * size:正方形の一辺。width・height を渡すと縦長などにできる。
- * alignTop:縦長の枠に収めるときに上側に寄せる(選手の顔写真は顔が上にあるため)
+ * alignTop:切り抜くときに上側を残す(選手の顔写真は顔が上にあるため)
  * zoomCaption:null 以外を渡すと、タップで画像を大きく表示する(渡した文字は拡大画面の下に出す)
  * fillWidth:true なら幅いっぱい(高さは height)にする(一面の特集のニュース画像など)
  * trimTransparent:true なら、透明な余白(切り抜き写真の周りなど)を切り取ってから表示する
  * backgroundColor:写真の透明な部分の後ろに見える色。framed:false なら枠線を付けない
+ * highRes:true なら細かい画像を読む(一面の特集など、大きく出すとき)
+ * onFailed:読み込めなかったときに呼ぶ(代わりの写真に切り替えるときに使う)
  */
 @Composable
 fun RemoteThumbnail(
@@ -234,46 +233,39 @@ fun RemoteThumbnail(
     zoomCaption: String? = null,
     fillWidth: Boolean = false,
     trimTransparent: Boolean = false,
-    highResolution: Boolean = false,
     backgroundColor: Color = DividerGray,
     framed: Boolean = true,
-    onImageAspectRatio: ((Float) -> Unit)? = null,
-    imageAspectRatio: Float? = null
+    highRes: Boolean = false,
+    onFailed: (() -> Unit)? = null
 ) {
     if (url.isBlank()) return
+    val key = cacheKey(url, highRes)
     // URLが変わったら(並べ替えで同じ位置に別の選手が来た・データが新しくなった など)、
     // 前の画像を引き継がず、そのURLの画像を読み直す。
     // (以前は前の画像が残ったままになり、名前と写真が食い違うことがあった)
-    val minSide = if (highResolution) 1600 else 900
-    val cacheKey = "$url#$minSide"
-    var image by remember(cacheKey) { mutableStateOf(ThumbnailCache.cache.get(cacheKey)) }
-    LaunchedEffect(cacheKey) {
-        if (image == null) image = loadThumbnail(url, minSide)
+    var image by remember(key) { mutableStateOf(ThumbnailCache.cache.get(key)) }
+    LaunchedEffect(key) {
+        if (image == null) {
+            image = loadThumbnail(url, highRes)
+            if (image == null) onFailed?.invoke()
+        }
     }
     val loaded = image ?: return
-    LaunchedEffect(cacheKey, loaded.width, loaded.height) {
-        if (loaded.height > 0) onImageAspectRatio?.invoke(loaded.width.toFloat() / loaded.height)
-    }
     // 透明な余白を切り取る指定なら、切り取った画像を使う(切り取るまでは元の画像)
-    var trimmed by remember(cacheKey, trimTransparent) {
-        mutableStateOf(if (trimTransparent) ThumbnailCache.trimmed.get(cacheKey) else null)
+    var trimmed by remember(key, trimTransparent) {
+        mutableStateOf(if (trimTransparent) ThumbnailCache.trimmed.get(key) else null)
     }
     if (trimTransparent) {
-        LaunchedEffect(cacheKey, loaded) {
+        LaunchedEffect(key, loaded) {
             if (trimmed == null) {
                 trimmed = withContext(Dispatchers.Default) { trimTransparentEdges(loaded) }
-                    .also { ThumbnailCache.trimmed.put(cacheKey, it) }
+                    .also { ThumbnailCache.trimmed.put(key, it) }
             }
         }
     }
     val img = trimmed ?: loaded
     var zoomed by remember(url) { mutableStateOf(false) }
-    val sizeModifier = if (fillWidth) {
-        Modifier.fillMaxWidth().then(
-            if (imageAspectRatio != null && imageAspectRatio > 0f) Modifier.aspectRatio(imageAspectRatio)
-            else Modifier.height(height)
-        )
-    } else Modifier.size(width, height)
+    val sizeModifier = if (fillWidth) Modifier.fillMaxWidth().height(height) else Modifier.size(width, height)
     Box(
         modifier = modifier
             .then(sizeModifier)
@@ -284,8 +276,8 @@ fun RemoteThumbnail(
         Image(
             bitmap = img,
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Fit,
+            modifier = sizeModifier,
+            contentScale = ContentScale.Crop,
             alignment = if (alignTop) Alignment.TopCenter else Alignment.Center
         )
     }

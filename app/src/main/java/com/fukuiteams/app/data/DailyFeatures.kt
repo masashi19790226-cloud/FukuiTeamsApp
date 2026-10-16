@@ -36,9 +36,11 @@ data class FeatureStory(
      * 記事の写真そのものなら null。
      */
     val photoCaption: String? = null,
-    val sourceLabel: String = "",
-    val publishedAtLabel: String = "",
-    val detectedAtLabel: String = ""
+    /**
+     * 記事の写真が読み込めなかったときに順に試す、代わりの選手の写真(URL と選手名)。
+     * ニュースの画像は直リンクを断られて読めないことがあるため、必ず何かの写真を出せるようにする。
+     */
+    val photoAlternates: List<Pair<String, String>> = emptyList()
 )
 
 private val JST: ZoneId = ZoneId.of("Asia/Tokyo")
@@ -123,8 +125,61 @@ fun buildFeatureStories(
         if (i < onePerKind.size) result += onePerKind[i++]
         if (result.size < MAX_STORIES_PER_DAY && j < topics.size) result += topics[j++]
     }
-    return result
+    return withFallbackPhotos(result, photoPool(players, birthdays), seed)
 }
+
+/** 記事に写真が無いときに代わりに使う、選手の写真の候補 */
+private data class PhotoCandidate(val team: Team?, val url: String, val label: String)
+
+/**
+ * 代わりの写真の候補。ブローウィンズは選手タブの顔写真(Bリーグ公式)、
+ * 3チームとも誕生日のデータにある写真(各チームの公式サイト・女子Fリーグ公式)を使う。次の対戦相手の選手は使わない。
+ */
+private fun photoPool(players: Map<String, TeamPlayers>, birthdays: List<PlayerBirthday>): List<PhotoCandidate> {
+    val list = mutableListOf<PhotoCandidate>()
+    Team.values().forEach { team ->
+        players[team.name]?.players.orEmpty().forEach { p ->
+            if (p.photo.isNotBlank()) list += PhotoCandidate(team, p.photo, p.head())
+        }
+    }
+    birthdays.forEach { b ->
+        if (b.photo.isNotBlank() && b.team != null) list += PhotoCandidate(b.team, b.photo, b.label)
+    }
+    return list.distinctBy { it.url }
+}
+
+/**
+ * 写真の無い記事に、その記事のチームの選手の写真を付ける(3チームまとめての記事は、どのチームの選手でもよい)。
+ * どの選手にするかは日替わりで、同じ日の記事どうしで同じ写真が重ならないようにする。
+ * 候補が無いとき(読み込み前など)は写真なしのまま(画面では写真の代わりに色の帯を出す)。
+ */
+private fun withFallbackPhotos(stories: List<FeatureStory>, pool: List<PhotoCandidate>, seed: Int): List<FeatureStory> {
+    if (pool.isEmpty()) return stories
+    val used = stories.map { it.photo }.filter { it.isNotBlank() }.toMutableSet()
+    return stories.map { story ->
+        val candidates = pool.filter { story.team == null || it.team == story.team }
+        if (candidates.isEmpty()) return@map story
+        // 日替わりで選手を選び、そこから順に並べる(同じ日の記事どうしで同じ写真が重ならないよう、まだ使っていない写真を先に)
+        val start = Math.floorMod(story.headline.hashCode() + seed * 31, candidates.size)
+        val rotated = candidates.drop(start) + candidates.take(start)
+        val ordered = rotated.filter { it.url !in used } + rotated.filter { it.url in used }
+        val alternates = ordered.filter { it.url != story.photo }.take(MAX_PHOTO_ALTERNATES)
+        if (story.photo.isNotBlank()) {
+            // 記事の写真はそのまま。読めなかったときの代わりだけ付ける
+            return@map story.copy(photoAlternates = alternates.map { it.url to it.label })
+        }
+        val pick = alternates.firstOrNull() ?: return@map story
+        used += pick.url
+        story.copy(
+            photo = pick.url,
+            photoCaption = pick.label,
+            photoAlternates = alternates.drop(1).map { it.url to it.label }
+        )
+    }
+}
+
+/** 写真が読めなかったときに試す代わりの写真の数 */
+private const val MAX_PHOTO_ALTERNATES = 4
 
 /** 直近のトピックの記事の小見出し(この記事は毎回必ず入れる) */
 private const val TOPIC_KICKER = "トピック"
@@ -408,19 +463,16 @@ private fun topNews(teams: List<Team>, news: List<RemoteInvitationAlert>, today:
     val items = news
         .filter { n -> n.title.isNotBlank() && teams.any { it.name == n.teamId } && (n.eventInstant()?.isAfter(border) == true) }
         .sortedByDescending { it.eventInstant() ?: java.time.Instant.EPOCH }
-        .distinctBy { it.title.lowercase().replace(Regex("[\\s　、。・:：!！?？『』「」（）()【】]"), "") }
+        .distinctBy { it.title.replace(Regex("[\\s　]"), "").take(15) }
         .take(TOPIC_SLOTS)
     return items.map { item ->
         FeatureStory(
             kicker = TOPIC_KICKER,
             team = Team.values().firstOrNull { it.name == item.teamId },
             headline = item.title,
-            body = item.snippet.ifBlank { "元記事を開いて詳しい内容を確認できます。" },
+            body = listOf(item.sourceLabel(), item.timeLabel()).filter { it.isNotBlank() }.joinToString("・") + "。押すと記事を開きます。",
             photo = item.image,
-            url = item.link,
-            sourceLabel = item.sourceLabel(),
-            publishedAtLabel = item.publishedTimeLabel(),
-            detectedAtLabel = item.detectedTimeLabel()
+            url = item.link
         )
     }
 }
@@ -547,7 +599,7 @@ private fun lastGameHeroes(team: Team, players: Map<String, TeamPlayers>, games:
                 team = team,
                 headline = "途中出場の${p.name}が${g.points}点",
                 body = "$dateText の${opp}戦、ベンチから出た${p.head()}が${g.minutes ?: "-"}の出場で${g.points}点" +
-                    (g.fieldGoalsMade?.let { m -> g.fieldGoalsAttempted?.let { a -> "(FG $m/$a)" } } ?: "") + "。",
+                    (g.fieldGoalsMade?.let { m -> g.fieldGoalsAttempted?.let { a -> "(FG $m/$a)" } } ?: "") + "。流れを変える働きを見せた。",
                 photo = p.photo,
                 bigNumber = g.points,
                 bigUnit = "点",
@@ -594,7 +646,7 @@ private fun opponentWatch(team: Team, games: List<Game>, previews: Map<String, G
         out += FeatureStory(
             kicker = "相手を知る",
             team = team,
-            headline = if (pv.opp.record.isNotBlank()) "次の相手${next.opponent}の今季成績" else "次の相手${next.opponent}の直近情報",
+            headline = "次の相手${next.opponent}は${pv.opp.record.ifBlank { "好調?" }}",
             body = listOfNotNull(
                 pv.opp.record.takeIf { it.isNotBlank() }?.let { "${next.opponent}の今季成績は$it" },
                 pv.opp.rank.takeIf { it.isNotBlank() }?.let { "順位は$it" },
@@ -692,7 +744,7 @@ private fun onSiteRecord(team: Team, games: List<Game>, results: Map<String, Rem
             team = team,
             headline = "現地観戦は${w}勝${l}敗" + (if (d > 0) "${d}分" else "") + (rate?.let { "、勝率${it}%" } ?: ""),
             body = "あなたが現地で見た${team.shortName}の試合は${seen.size}試合。" +
-                "勝敗は登録された観戦記録の集計です。" +
+                (if (rate != null && rate >= 60) "あなたが行くと勝つ「勝利の使者」かも。" else if (rate != null && rate < 40) "次の現地観戦で流れを変えよう。" else "次も会場から声援を。") +
                 "最後に見たのは${seen.maxByOrNull { it.first.sortKey }!!.let { "${it.first.shortLabel()}の${it.first.opponent}戦" }}。",
             bigNumber = rate?.let { "$it" } ?: "${seen.size}",
             bigUnit = if (rate != null) "%" else "試合"
@@ -705,7 +757,6 @@ private fun newsDigest(teams: List<Team>, news: List<RemoteInvitationAlert>, tod
     val border = today.minusDays(3).atStartOfDay(JST).toInstant()
     val items = news.filter { n -> teams.any { it.name == n.teamId } && (n.eventInstant()?.isAfter(border) == true) }
         .sortedByDescending { it.eventInstant() }
-        .distinctBy { it.title.lowercase().replace(Regex("[\\s　、。・:：!！?？『』「」（）()【】]"), "") }
     if (items.size < 3) return emptyList()
     return listOf(
         FeatureStory(

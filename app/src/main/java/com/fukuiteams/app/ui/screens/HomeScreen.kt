@@ -68,7 +68,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -492,7 +491,7 @@ private fun MatchDayCard(game: Game, weather: MatchWeather?, lp: GameLp?, onOpen
                 color = Ink
             )
         }
-        Text("チケット登録情報:${game.ticketStatus}・最新状況は公式サイトで確認", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        Text("チケット:${game.ticketStatus}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントも出す
         if (lp != null) {
             ThinRule(modifier = Modifier.padding(vertical = 4.dp))
@@ -750,53 +749,54 @@ private fun LatestResultHero(
         } else {
             Headline("${game.team.displayName}\n$resultLine", fontSize = 26)
         }
-        DoubleRule()
-        // 試合結果がすぐ分かるよう、取得元へ開くスコアを見出し直下に置く。
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(BorderStroke(1.5.dp, Ink))
-                // スコアボックスをタップすると取得元のページ(B.LEAGUE公式など)を開く
-                .clickable { openUrl(context, game.resultSourceUrl(result)) }
-                .background(Paper)
-                .padding(vertical = 10.dp, horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(game.team.displayName, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
-                Headline("${result.myScore}", fontSize = 34, color = if (outcome == GameOutcome.WIN) NewsRed else Ink)
-            }
-            Text("—", style = MaterialTheme.typography.titleLarge, color = InkSoft)
-            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(game.opponent, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
-                Headline("${result.opponentScore}", fontSize = 34)
-            }
-        }
+        // 記事の書き出し(リード文)。試合結果と、試合画面で書いたコメントから組み立てる
         Text(
-            "${game.team.displayName} ${result.myScore} — ${result.opponentScore} ${game.opponent}　｜　スコアをタップで取得元の詳報へ",
-            style = MaterialTheme.typography.bodySmall,
-            color = InkSoft,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+            resultLead(game, result, outcome, comment, ctx, weather),
+            style = MaterialTheme.typography.bodyMedium,
+            color = Ink
         )
-        // 実際に登録された試合写真を掲載。写真の後に記事本文を続ける。
+        // その試合に写真が登録されていれば、1枚目を写真説明付きで載せる
         val photos = remember(game.id, GamePhotos.version) { GamePhotos.list(context, game.id) }
         if (photos.isNotEmpty()) {
             val prefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
             NewspaperPhoto(
                 file = photos.first(),
                 caption = photoCaption(game, result, outcome, recordedWatchMethod(game.id, prefs)),
-                height = 200.dp,
-                matchImageAspectRatio = true
+                height = 200.dp
             )
         }
-        SectionLabel("試合の要点", modifier = Modifier.padding(top = 2.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(BorderStroke(2.dp, Ink))
+                // スコアボックスをタップすると取得元のページ(B.LEAGUE公式など)を開く
+                .clickable { openUrl(context, game.resultSourceUrl(result)) }
+                .background(Paper)
+                .padding(vertical = 10.dp, horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("福井", style = MaterialTheme.typography.labelMedium)
+                Text(
+                    when (outcome) {
+                        GameOutcome.WIN -> "WIN"
+                        GameOutcome.LOSE -> "LOSE"
+                        GameOutcome.DRAW -> "DRAW"
+                    },
+                    style = MaterialTheme.typography.labelSmall,
+                    color = if (outcome == GameOutcome.WIN) NewsRed else InkSoft
+                )
+            }
+            Headline("${result.myScore}", fontSize = 34, color = if (outcome == GameOutcome.WIN) NewsRed else Ink)
+            Text("-", style = MaterialTheme.typography.titleLarge)
+            Headline("${result.opponentScore}", fontSize = 34)
+            Text(game.opponent, style = MaterialTheme.typography.labelMedium, modifier = Modifier.width(72.dp))
+        }
         Text(
-            resultLead(game, result, outcome, comment, ctx, weather),
-            style = MaterialTheme.typography.bodyMedium,
-            color = Ink,
-            lineHeight = 23.sp
+            "スコアをタップで詳報(取得元のページ)",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
         )
         DoubleRule(modifier = Modifier.padding(top = 6.dp))
     }
@@ -923,7 +923,7 @@ private fun NextGameBlock(
             fontSize = 19
         )
         Text(
-            "${nextGame.venue}・チケット登録情報:${nextGame.ticketStatus}（最新状況は公式サイトで確認）",
+            "${nextGame.venue}・チケット:${nextGame.ticketStatus}",
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
@@ -1251,15 +1251,10 @@ private fun FeatureHero(
             verticalAlignment = Alignment.Top
         ) { page ->
             val story = stories[page.mod(stories.size)]
-            var photoAspectRatio by remember(story.photo) { mutableStateOf<Float?>(null) }
-            val imageBesideArticle = !story.photo.isBlank() && (photoAspectRatio ?: 0f) >= 1.35f
             val clickable = story.gameId != null || story.url != null || story.openInvites || story.openBbs
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(1.dp, Ink)
-                    .background(Paper)
-                    .padding(10.dp)
                     .then(
                         if (clickable) Modifier.clickable {
                             when {
@@ -1272,9 +1267,14 @@ private fun FeatureHero(
                     ),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 新聞の欄外見出し:記事種別とチーム
+                // 「特集」の大きな赤い札と、記事の種類・チーム名
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    SectionLabel("特集", red = true)
+                    Headline(
+                        "特集",
+                        fontSize = 16,
+                        color = White,
+                        modifier = Modifier.background(NewsRed).padding(horizontal = 10.dp, vertical = 1.dp)
+                    )
                     Text(
                         story.kicker,
                         style = MaterialTheme.typography.titleMedium,
@@ -1288,33 +1288,28 @@ private fun FeatureHero(
                         Text(it.displayName, style = MaterialTheme.typography.labelMedium, color = it.color, maxLines = 1)
                     }
                 }
-                Headline(story.headline, fontSize = 25)
-                DoubleRule()
-                if (imageBesideArticle) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        FeaturePhoto(
-                            story,
-                            modifier = Modifier.weight(0.9f),
-                            height = 142.dp,
-                            imageAspectRatio = photoAspectRatio,
-                            onImageAspectRatio = { photoAspectRatio = it }
-                        )
-                        FeatureArticleDetails(story, modifier = Modifier.weight(1.1f))
+                // 見出しを全幅で先に出し、その下で 本文(左)と縦長の写真(右)を並べる(新聞の囲み記事の形)
+                Headline(story.headline, fontSize = 21)
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        if (story.bigNumber != null) {
+                            Row(verticalAlignment = Alignment.Bottom) {
+                                Headline(story.bigNumber, fontSize = 40, color = NewsRed)
+                                story.bigUnit?.let {
+                                    Text(
+                                        it,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Ink,
+                                        modifier = Modifier.padding(start = 3.dp, bottom = 6.dp)
+                                    )
+                                }
+                            }
+                        }
+                        Text(story.body, style = MaterialTheme.typography.bodyLarge, color = Ink)
                     }
-                } else {
-                    // 縦長・正方形は写真を先に見せ、本文はその下に置く新聞写真記事の構成。
-                    FeaturePhoto(
-                        story,
-                        imageAspectRatio = photoAspectRatio,
-                        onImageAspectRatio = { photoAspectRatio = it }
-                    )
-                    FeatureArticleDetails(story)
+                    FeaturePhoto(story)
                 }
-                ThinRule(modifier = Modifier.padding(top = 3.dp), color = LineGray)
             }
         }
         if (stories.size > 1) {
@@ -1359,84 +1354,54 @@ private fun FeatureHero(
     }
 }
 
-@Composable
-private fun FeatureArticleDetails(story: FeatureStory, modifier: Modifier = Modifier) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        listOfNotNull(
-            story.publishedAtLabel.takeIf { it.isNotBlank() }?.let { "公開 $it" },
-            story.detectedAtLabel.takeIf { it.isNotBlank() }?.let { "取得 $it" }
-        ).takeIf { it.isNotEmpty() }?.let { dates ->
-            Column(
-                modifier = Modifier.fillMaxWidth().background(DividerGray).padding(horizontal = 8.dp, vertical = 5.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                story.sourceLabel.takeIf { it.isNotBlank() }?.let { SourceTag(it) }
-                Text(dates.joinToString("　"), style = MaterialTheme.typography.labelSmall, color = InkSoft)
-            }
-        } ?: story.sourceLabel.takeIf { it.isNotBlank() }?.let { SourceTag(it) }
-        if (story.bigNumber != null) {
-            Row(verticalAlignment = Alignment.Bottom) {
-                Headline(story.bigNumber, fontSize = 40, color = NewsRed)
-                story.bigUnit?.let {
-                    Text(it, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold,
-                        color = Ink, modifier = Modifier.padding(start = 3.dp, bottom = 6.dp))
-                }
-            }
-        }
-        SectionLabel("記事", modifier = Modifier.padding(top = 2.dp))
-        // 元記事の改行を保ったまま1つの文字列として表示し、段落を再構成しない。
-        Text(story.body, style = MaterialTheme.typography.bodyLarge, color = Ink, lineHeight = 25.sp)
-    }
-}
-
 /** 特集を左右にループさせるため、記事の本数の何倍のページを用意するか(端に着くことは実際には無い) */
 private const val LOOP_ROUNDS = 1000
 
-/** 実際の縦横比を取得するまでの一時的な写真枠の高さ */
+/** 一面の特集の写真の枠(縦長。顔が切れないように) */
+private val FEATURE_PHOTO_WIDTH = 150.dp
 private val FEATURE_PHOTO_HEIGHT = 200.dp
 
 /**
- * 一面の特集写真。読み込んだ画像の比率に枠を合わせ、画像全体を表示する。
+ * 一面の特集の縦長の写真。どの記事にも画像を出し、枠の中に余白を作らない。
  * ・選手の写真は顔が切れないよう上を残す。切り抜き写真の周りの透明な余白は切り取り、
- *   それでも見える透明な部分の後ろはチームカラーにする。
+ *   それでも見える透明な部分の後ろはチームカラーにする。ニュースの横長の画像は左右を切って枠に合わせる
  * ・代わりに付けた選手の写真には、下に選手名を重ねる
  * ・写真が無い記事・写真を読み込めないときは、チームカラーの札(記事の種類・チームの頭文字・チーム名)にする
  * ・写真を押しても拡大はせず、記事全体と同じく、その試合・記事・掲示板などを開く
  */
 @Composable
-private fun FeaturePhoto(
-    story: FeatureStory,
-    modifier: Modifier = Modifier,
-    height: androidx.compose.ui.unit.Dp = FEATURE_PHOTO_HEIGHT,
-    imageAspectRatio: Float? = null,
-    onImageAspectRatio: ((Float) -> Unit)? = null
-) {
+private fun FeaturePhoto(story: FeatureStory) {
     val accent = story.team?.color ?: Ink
+    // 試す写真の順番:記事の写真 → 代わりの選手の写真。読めなければ次へ進む
+    val photos = remember(story) {
+        (listOf(story.photo to story.photoCaption) + story.photoAlternates.map { it.first to it.second })
+            .filter { it.first.isNotBlank() }
+            .distinctBy { it.first }
+    }
+    var index by remember(story) { mutableStateOf(0) }
+    val current = photos.getOrNull(index)
+    // ニュースの横長の画像は左右を切って中央を出す(選手の写真は顔が切れないよう上を残す)
+    val newsImage = index == 0 && current != null && current.second == null && story.url != null && story.bigNumber == null
     Box(
         modifier = Modifier
-            .then(modifier)
-            .fillMaxWidth()
-            .then(
-                if (imageAspectRatio != null && imageAspectRatio > 0f) Modifier.aspectRatio(imageAspectRatio)
-                else Modifier.height(height)
-            )
+            .size(FEATURE_PHOTO_WIDTH, FEATURE_PHOTO_HEIGHT)
             .background(accent)
     ) {
-        // 写真を読み込むまで(読み込めないとき)は、色の札を出しておく
+        // 写真を読み込むまで(どの写真も読み込めないとき)は、色の札を出しておく
         FeatureGraphic(story, modifier = Modifier.fillMaxSize())
-        if (story.photo.isNotBlank()) {
+        if (current != null) {
             RemoteThumbnail(
-                story.photo,
-                fillWidth = true,
-                height = height,
-                trimTransparent = false,
-                highResolution = true,
+                current.first,
+                width = FEATURE_PHOTO_WIDTH,
+                height = FEATURE_PHOTO_HEIGHT,
+                alignTop = !newsImage,
+                trimTransparent = true,
                 backgroundColor = accent,
                 framed = false,
-                onImageAspectRatio = onImageAspectRatio,
-                imageAspectRatio = imageAspectRatio
+                highRes = true,
+                onFailed = { index++ }
             )
-            story.photoCaption?.let { caption ->
+            current.second?.let { caption ->
                 Text(
                     caption,
                     style = MaterialTheme.typography.labelSmall,
