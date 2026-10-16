@@ -208,5 +208,11 @@
     "opponent_score": 105,
     "checked_at": "2026-10-11T10:01:23.482982",
     "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507218"
+  },
+  "bw07": {
+    "my_score": 84,
+    "opponent_score": 64,
+    "checked_at": "2026-10-14T13:09:41.294748",
+    "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507235"
   }
 }
