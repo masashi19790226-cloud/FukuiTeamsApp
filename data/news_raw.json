@@ -3255,5 +3255,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2724651&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0OawFeuF3zYaYf0D1pETmh",
     "published": "2026-10-17T12:31:33Z",
     "detected_at": "2026-10-17T15:06:12.077122+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4766982488393526264",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"    地域貢献活動     第二早翠幼稚園にて行われた秋色の ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2111410092591681782&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0eph6Xck-FkqAgXLtuAIKV",
+    "published": "2026-10-17T13:26:19Z",
+    "detected_at": "2026-10-17T16:05:54.079506+00:00"
+  },
+  {
+    "id": "bing:https://prtimes.jp/main/html/rd/p/000000774.000043111.html",
+    "team": "BLOWINDS",
+    "title": "【㈱アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
+    "link": "https://prtimes.jp/main/html/rd/p/000000774.000043111.html",
+    "published": "2026-10-01T06:00:00+00:00",
+    "source": "PR TIMES",
+    "image": "",
+    "detected_at": "2026-10-17T16:05:54.270471+00:00"
   }
 ]
