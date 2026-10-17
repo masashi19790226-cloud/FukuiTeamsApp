@@ -28,23 +28,31 @@ private const val CACHE_FILE_NAME = "games_cache.json"
  */
 object GamesRepository {
 
-    /** 画面はこれを参照する。更新されると自動で画面も描き直される。 */
-    var games: List<Game> by mutableStateOf(MockData.upcomingGames)
-        private set
+    /** 公式の日程(GitHub の games.json)。 */
+    private var remoteGames: List<Game> by mutableStateOf(MockData.upcomingGames)
+
+    /**
+     * 画面はこれを参照する。更新されると自動で画面も描き直される。
+     * 公式の日程に、自分で追加した予定(Xの投稿などから。この端末の中だけ)を加えたもの。
+     */
+    val games: List<Game>
+        get() = remoteGames + MyGamesRepository.games
 
     private var cacheLoaded = false
 
     suspend fun refresh(context: Context): List<Game> {
         val appContext = context.applicationContext
+        // 自分で追加した予定を、まだ読んでいなければ読む
+        withContext(Dispatchers.IO) { MyGamesRepository.ensureLoaded(appContext) }
 
         if (!cacheLoaded) {
             cacheLoaded = true
             val cached = withContext(Dispatchers.IO) { readCache(appContext) }
-            if (!cached.isNullOrEmpty()) games = cached
+            if (!cached.isNullOrEmpty()) remoteGames = cached
         }
 
         val downloaded = withContext(Dispatchers.IO) { download(appContext) }
-        if (!downloaded.isNullOrEmpty()) games = downloaded
+        if (!downloaded.isNullOrEmpty()) remoteGames = downloaded
         return games
     }
 

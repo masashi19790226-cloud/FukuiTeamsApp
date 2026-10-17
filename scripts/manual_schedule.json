@@ -35,6 +35,18 @@
     {"team": "rac", "date": "2026-11-28", "time": "16:00", "opponent": "立川アスレティックFCレディース", "venue": "バルドラール浦安アリーナ", "is_home": false},
     {"team": "rac", "date": "2026-12-12", "time": "13:30", "opponent": "アルコ神戸", "venue": "俵田翁記念体育館", "is_home": false},
     {"team": "rac", "date": "2026-12-20", "time": "17:00", "opponent": "SWHレディース西宮", "venue": "セーレン・ドリームアリーナ", "is_home": true},
-    {"team": "rac", "date": "2027-02-14", "time": "14:00", "opponent": "フウガドールすみだレディース", "venue": "セーレン・ドリームアリーナ", "is_home": true}
+    {"team": "rac", "date": "2027-02-14", "time": "14:00", "opponent": "フウガドールすみだレディース", "venue": "セーレン・ドリームアリーナ", "is_home": true},
+    {"team": "united", "date": "2026-10-25", "time": "11:00", "opponent": "AS.Laranja Kyoto", "venue": "9.98スタジアム", "is_home": true},
+    {"team": "united", "date": "2026-11-13", "time": "時間未定", "opponent": "未定(地域CL 1次ラウンド)", "venue": "未定(群馬・兵庫・大分のいずれか。10/31の抽選で決定)", "is_home": false, "placeholder_until": "2026-11-13"},
+    {"team": "united", "date": "2026-11-14", "time": "時間未定", "opponent": "未定(地域CL 1次ラウンド)", "venue": "未定(群馬・兵庫・大分のいずれか。10/31の抽選で決定)", "is_home": false, "placeholder_until": "2026-11-14"},
+    {"team": "united", "date": "2026-11-15", "time": "時間未定", "opponent": "未定(地域CL 1次ラウンド)", "venue": "未定(群馬・兵庫・大分のいずれか。10/31の抽選で決定)", "is_home": false, "placeholder_until": "2026-11-15"},
+    {"team": "rac", "date": "2026-10-17", "time": "09:30", "opponent": "【U-20】Laufen", "venue": "会場未定(日本AMCカップ2026 女子U-20フットサル大会)", "is_home": true, "category": "U-20"},
+    {"team": "rac", "date": "2026-10-17", "time": "10:20", "opponent": "【サテ】Noah's", "venue": "会場未定(日本AMCカップ2026 女子U-20フットサル大会)", "is_home": true, "category": "サテライト"},
+    {"team": "rac", "date": "2026-10-17", "time": "12:50", "opponent": "【U-20】パスドゥーロ", "venue": "会場未定(日本AMCカップ2026 女子U-20フットサル大会)", "is_home": true, "category": "U-20"},
+    {"team": "rac", "date": "2026-10-17", "time": "13:40", "opponent": "【サテ】袋井", "venue": "会場未定(日本AMCカップ2026 女子U-20フットサル大会)", "is_home": true, "category": "サテライト"},
+    {"team": "rac", "date": "2026-10-17", "time": "16:10", "opponent": "【U-20】芦屋", "venue": "会場未定(日本AMCカップ2026 女子U-20フットサル大会)", "is_home": true, "category": "U-20"},
+    {"team": "rac", "date": "2026-10-17", "time": "17:00", "opponent": "【サテ】LETIZIA", "venue": "会場未定(日本AMCカップ2026 女子U-20フットサル大会)", "is_home": true, "category": "サテライト"},
+    {"team": "rac", "date": "2026-10-18", "time": "時間未定", "opponent": "【U-20】順位決定トーナメント(相手・時刻は17日の結果で決定)", "venue": "会場未定(日本AMCカップ2026 女子U-20フットサル大会)", "is_home": true, "category": "U-20"},
+    {"team": "rac", "date": "2026-10-18", "time": "時間未定", "opponent": "【サテ】順位決定トーナメント(相手・時刻は17日の結果で決定)", "venue": "会場未定(日本AMCカップ2026 女子U-20フットサル大会)", "is_home": true, "category": "サテライト"}
   ]
 }

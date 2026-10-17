@@ -1,6 +1,7 @@
 package com.fukuiteams.app
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.fukuiteams.app.navigation.AppNavHost
+import com.fukuiteams.app.navigation.Routes
+import com.fukuiteams.app.data.SharedPostRequest
 import com.fukuiteams.app.ui.components.PinchZoomContainer
 import com.fukuiteams.app.notifications.EXTRA_OPEN_ROUTE
 import com.fukuiteams.app.notifications.ensureAlertsNotificationChannel
@@ -52,8 +55,21 @@ class MainActivity : ComponentActivity() {
                 scheduleBbsKeywordCheck(applicationContext, BbsPrefs.load(applicationContext).notifyEnabled)
             }
         }
+        // ほかのアプリの「共有」でURLなどの文が送られてきたら、試合タブで「Xの投稿から予定を追加」を開く
+        val sharedText = if (savedInstanceState == null && intent?.action == Intent.ACTION_SEND) {
+            intent?.getStringExtra(Intent.EXTRA_TEXT)?.takeIf { it.isNotBlank() }
+        } else {
+            null
+        }
+        if (sharedText != null) SharedPostRequest.pendingText = sharedText
         // 通知から開いたときは、その通知の画面を開く(画面の回転などで作り直したときは開き直さない)
-        val openRoute = if (savedInstanceState == null) intent?.getStringExtra(EXTRA_OPEN_ROUTE) else null
+        val openRoute = if (sharedText != null) {
+            Routes.GAME_DETAIL
+        } else if (savedInstanceState == null) {
+            intent?.getStringExtra(EXTRA_OPEN_ROUTE)
+        } else {
+            null
+        }
         setContent {
             FukuiTeamsAppTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {

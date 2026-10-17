@@ -196,7 +196,9 @@ def scrape_manual():
     games = []
     for r in rows:
         y, m, d = (int(x) for x in r["date"].split("-"))
-        extra = {"placeholder_until": r.get("placeholder_until"), "placeholder_from": r.get("placeholder_from")}
+        # category:トップチーム以外(U-20・サテライトなど)の試合。同じ日に何試合あってもよい
+        extra = {"placeholder_until": r.get("placeholder_until"), "placeholder_from": r.get("placeholder_from"),
+                 "category": r.get("category")}
         games.append(make_game(r["team"], y, m, d, r.get("time", ""), r["opponent"], r.get("venue", ""),
                                bool(r.get("is_home")), **extra))
     print(f"[INFO] 手動の日程: {len(games)} 件を確認")
@@ -244,11 +246,14 @@ def parse_united_page(page: str):
             month, day = int(mmd.group(1)), int(mmd.group(2))
             # 年をまたぐ表示(12月に1月の予定など)への対応
             year = NOW.year + 1 if month < NOW.month - 6 else NOW.year
-        elif "KO" in ln and "vs" in ln and month and day:
+        elif re.search(r"\d{1,2}:\d{2}\s*KO", ln) and month and day:
             buf = ln
             j = i + 1
-            # 「vs.」と相手名、「@会場」がタグで分割されている場合があるのでつなげる
-            while j < len(lines) and j <= i + 3 and ("@" not in buf or buf.rstrip().endswith("@")):
+            # 「11:00KO」「vs.相手」「@会場」がタグで別々の行に分かれている場合があるのでつなげる
+            # (「vs」が次の行にあるときも読めるようにする)
+            while j < len(lines) and j <= i + 3 and (
+                "vs" not in buf or "@" not in buf and "＠" not in buf or buf.rstrip().endswith(("@", "＠"))
+            ):
                 buf += " " + lines[j]
                 j += 1
             ev = re.search(r"(\d{1,2}:\d{2})\s*KO\s*vs\.?\s*(.+?)\s*[@＠]\s*(.+)", buf)
@@ -364,7 +369,14 @@ def merge(games, scraped):
         if until and any(g.get("team") == s["team"] and not g.get("placeholder_until")
                          and start <= g.get("date", "") <= until for g in games):
             continue
-        same = [g for g in games if g.get("team") == s["team"] and g.get("date") == s["date"]]
+        if s.get("category"):
+            # トップチーム以外の試合は、同じ日・同じ時刻・同じ相手のときだけ同じ試合とみなす(1日に何試合もあるため)
+            same = [g for g in games if g.get("team") == s["team"] and g.get("date") == s["date"]
+                    and g.get("category") == s["category"] and g.get("time") == s["time"]
+                    and g.get("opponent") == s["opponent"]]
+        else:
+            same = [g for g in games if g.get("team") == s["team"] and g.get("date") == s["date"]
+                    and not g.get("category")]
         if not same:
             new = {"id": next_id(games, s["team"]), **s,
                    "ticket_status": "情報なし", "ticket_sale_start": "-"}
@@ -396,7 +408,8 @@ def merge(games, scraped):
             changes.append(f"開始時刻 {g['time']}→{s['time']}")
             g["time"] = s["time"]
             g["sort_key"] = sort_key_of(g)
-        if any(w in g.get("venue", "") for w in ["調整中", "未定"]) and s["venue"] and "調整中" not in s["venue"]:
+        if any(w in g.get("venue", "") for w in ["調整中", "未定"]) and s["venue"] and "調整中" not in s["venue"] \
+                and s["venue"] != g.get("venue"):
             g["venue"] = s["venue"]
             changes.append(f"会場 {s['venue']}")
         if s.get("gid") and not g.get("gid"):

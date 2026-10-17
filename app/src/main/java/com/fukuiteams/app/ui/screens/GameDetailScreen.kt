@@ -1,6 +1,9 @@
 package com.fukuiteams.app.ui.screens
 
 import com.fukuiteams.app.ui.components.NewsChip
+import com.fukuiteams.app.ui.components.AddFromXSheet
+import com.fukuiteams.app.data.MyGamesRepository
+import com.fukuiteams.app.data.SharedPostRequest
 import com.fukuiteams.app.ui.components.HomeAwayLabel
 import com.fukuiteams.app.ui.components.openExternalUrl
 import com.fukuiteams.app.data.isGoing
@@ -219,6 +222,17 @@ fun GameDetailScreen(
     var statsFilter by remember(selectedTeam) { mutableStateOf<StatsFilter?>(null) }
     val pullToRefreshState = rememberPullToRefreshState()
 
+    // 「Xの投稿から予定を追加」の画面(null なら閉じている。開くときは貼るURLなどの文、無ければ空)
+    var addSheetText by remember { mutableStateOf<String?>(null) }
+    // ほかのアプリの「共有」でXの投稿が送られてきたら、追加の画面を開く
+    val sharedText = SharedPostRequest.pendingText
+    LaunchedEffect(sharedText) {
+        if (sharedText != null) {
+            addSheetText = sharedText
+            SharedPostRequest.pendingText = null
+        }
+    }
+
     suspend fun refreshResults() {
         GamesRepository.refresh(context)
         autoResults = GameResultsRepository.fetch()
@@ -301,6 +315,16 @@ fun GameDetailScreen(
 
             // 成績(観戦成績とホーム・アウェイ別成績を1つにまとめた)。見出しと要点1行だけ出し、押すと開く
             StatsSummarySection(watchRecords, homeAwaySummary, onOpenList = { statsFilter = it })
+
+            // 公式の日程に載らない試合(U-20の大会など)を、Xの投稿から自分で追加する
+            OutlinedButton(
+                onClick = { addSheetText = "" },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(3.dp),
+                border = BorderStroke(1.dp, Ink)
+            ) {
+                Text("+ Xの投稿から予定を追加(U-20の大会など)", color = Ink, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+            }
 
             if (allTeamGames.isEmpty()) {
                 EmptyTeamState(selectedTeam)
@@ -386,6 +410,10 @@ fun GameDetailScreen(
                                     }
                                     // 押した試合は、その行のすぐ下に詳細を開く
                                     if (isSelected) {
+                                        // 自分で追加した予定は、元の投稿を開く・消すボタン
+                                        if (g.userAdded) {
+                                            MyGameActions(g, onDeleted = { selectedGameId = null })
+                                        }
                                         if (isPastTab) {
                                             PastGameInline(g, autoResults[g.id], gameLogPrefs, autoResults)
                                         } else {
@@ -417,6 +445,20 @@ fun GameDetailScreen(
             modifier = Modifier.align(Alignment.TopCenter)
         )
         }
+    }
+
+    addSheetText?.let { text ->
+        AddFromXSheet(
+            initialText = text,
+            defaultTeam = selectedTeam,
+            onDismiss = { addSheetText = null },
+            onAdded = { _, team ->
+                addSheetText = null
+                // 追加した予定のチームの「今後の試合」を出す
+                selectedTeam = team
+                TeamSelection.select(team)
+            }
+        )
     }
 
     statsFilter?.let { filter ->
@@ -692,6 +734,46 @@ private fun TicketSearchSection(
     }
 }
 
+/** 自分で追加した予定に付ける札 */
+@Composable
+private fun UserAddedBadge() {
+    Text(
+        "自分で追加",
+        fontSize = 10.sp,
+        fontWeight = FontWeight.ExtraBold,
+        color = Ink,
+        maxLines = 1,
+        modifier = Modifier.border(1.dp, Ink).padding(horizontal = 5.dp, vertical = 1.dp)
+    )
+}
+
+/** 自分で追加した予定の、元の投稿を開く・予定を消すボタン */
+@Composable
+private fun MyGameActions(game: Game, onDeleted: () -> Unit) {
+    val context = LocalContext.current
+    var confirm by remember(game.id) { mutableStateOf(false) }
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            "自分で追加した予定です(このスマホの中だけ)。",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            game.sourceUrl?.let { url ->
+                NewsChip("元の投稿を開く", false) { openUrl(context, url) }
+            }
+            NewsChip(if (confirm) "本当に消す" else "この予定を消す", confirm) {
+                if (confirm) {
+                    MyGamesRepository.remove(context, game.id)
+                    onDeleted()
+                } else {
+                    confirm = true
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun ScheduleTabChip(label: String, selected: Boolean, onClick: () -> Unit) =
     // ほかの画面の切り替えボタンと同じ、紙面風の四角いボタンにそろえる
@@ -745,9 +827,10 @@ private fun ScheduleRow(
                 if (game.specialDay() != null) SpecialDayBadge()
                 // パブリックビューイング(PV)がある試合は「PV」の札
                 if (game.publicViewings().isNotEmpty()) PublicViewingBadge()
-                if (showTeam || going) {
+                if (showTeam || going || game.userAdded) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         if (going) GoingBadge()
+                        if (game.userAdded) UserAddedBadge()
                         if (showTeam) {
                             Text(game.team.displayName, style = MaterialTheme.typography.labelSmall, color = game.team.color, maxLines = 1)
                         }

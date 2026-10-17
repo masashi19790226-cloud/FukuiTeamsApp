@@ -32,5 +32,9 @@ data class Game(
     val isHome: Boolean = true,
     val sortKey: String,
     // 公式サイトの結果ページURL(分かっているものだけ)。開いて自分でスコアを確認する用。
-    val resultPageUrl: String? = null
+    val resultPageUrl: String? = null,
+    // 自分で追加した予定(Xの投稿などから。この端末の中だけ)
+    val userAdded: Boolean = false,
+    // 自分で追加した予定の元の投稿のURL(無ければ null)
+    val sourceUrl: String? = null
 )
