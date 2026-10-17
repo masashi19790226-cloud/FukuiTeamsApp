@@ -40,45 +40,25 @@ import com.fukuiteams.app.ui.theme.Paper
  * - 丸岡RUCK・ユナイテッド: 女子Fリーグ公式の結果から計算した順位表/ユナイテッド公式の順位表(LeagueStandingsSection)
  */
 
-/**
- * 試合タブの「順位」。ふだんは見出しと要点1行(例「中地区 2位・4勝4敗・首位とゲーム差2」)だけで、押すと順位表が開く。
- * 順位表がまだ届いていなければ、そう書いた1行だけを出す。
- */
-@Composable
-fun TeamStandingsCard(team: Team, standings: LeagueStandings?, nextOpponent: String?, onOpenUrl: (String) -> Unit) {
-    var open by remember(team) { mutableStateOf(false) }
+/** 試合タブの「順位」の要点(例「中地区 2位・4勝4敗・首位とゲーム差2」)。順位表がまだ無ければ、その旨 */
+fun teamStandingsSummary(team: Team, standings: LeagueStandings?): String {
     val bleague = standings?.bleague?.takeIf { team == Team.BLOWINDS }
-    val summary = when {
-        standings == null || (team == Team.BLOWINDS && bleague == null) -> "順位表はまだ届いていません(自動更新が動くと表示されます)"
+    return when {
+        standings == null || (team == Team.BLOWINDS && bleague == null) -> "まだ届いていません(自動更新で表示)"
         bleague != null -> bleagueSummary(bleague)
         else -> leagueSummary(standings, team)
     }
-    val canOpen = standings != null && (team != Team.BLOWINDS || bleague != null)
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, Ink)
-            .background(Paper)
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Column(modifier = Modifier.fillMaxWidth().clickable(enabled = canOpen) { open = !open }) {
-            Text(
-                (if (canOpen) (if (open) "▲ " else "▼ ") else "") + "順位" +
-                    (standings?.league?.takeIf { it.isNotBlank() }?.let { "($it)" } ?: ""),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.ExtraBold,
-                color = Ink
-            )
-            Text(summary, style = MaterialTheme.typography.bodySmall, color = InkSoft)
-        }
-        if (open && standings != null) {
-            if (bleague != null) {
-                BleagueStandingsSection(standings, bleague, nextOpponent, onOpenUrl)
-            } else if (team != Team.BLOWINDS) {
-                LeagueStandingsSection(standings, team, nextOpponent)
-            }
-        }
+}
+
+/** 試合タブの「順位」を押したときに開く順位表。順位表がまだ無ければ何も出さない */
+@Composable
+fun TeamStandingsContent(team: Team, standings: LeagueStandings?, nextOpponent: String?, onOpenUrl: (String) -> Unit) {
+    if (standings == null) return
+    val bleague = standings.bleague
+    if (team == Team.BLOWINDS) {
+        if (bleague != null) BleagueStandingsSection(standings, bleague, nextOpponent, onOpenUrl)
+    } else {
+        LeagueStandingsSection(standings, team, nextOpponent)
     }
 }
 

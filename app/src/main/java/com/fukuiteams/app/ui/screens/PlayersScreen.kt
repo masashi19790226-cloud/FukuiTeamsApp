@@ -251,6 +251,12 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
+                // いつの数字かを一番上にまとめて出す(チームの数字は公式の更新日時、選手・得点はアプリが取り込んだ日時)
+                UpdateTimesBox(
+                    team = selectedTeam,
+                    roster = teamPlayers[selectedTeam.name],
+                    scorersUpdatedAt = leagueStandings[selectedTeam.name]?.takeIf { it.scorers != null }?.updatedAt
+                )
                 DoubleRule(modifier = Modifier.padding(top = 4.dp))
             }
 
@@ -555,6 +561,73 @@ private fun AsOfLine(updatedAt: java.time.Instant?, extra: String?) {
         fontWeight = FontWeight.Bold,
         color = Ink
     )
+}
+
+/**
+ * 選手タブの一番上の「いつの数字か」。
+ * ブローウィンズ:チームの数字(Bリーグ公式のクラブ成績の更新日時)と、選手の成績(アプリが取り込んだ日時)。
+ * 丸岡RUCK・ユナイテッド:得点(アプリが取り込んだ日時)。
+ * どれも「○時間前」を添え、1日以上前の数字は赤で出す。
+ */
+@Composable
+private fun UpdateTimesBox(team: Team, roster: TeamPlayers?, scorersUpdatedAt: java.time.Instant?) {
+    val now = java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Tokyo"))
+    val lines = mutableListOf<Pair<String, java.time.ZonedDateTime?>>()
+    if (team == Team.BLOWINDS) {
+        if (roster?.teamStats?.isNotEmpty() == true) {
+            lines += "チームの数字(公式の更新)" to parseOfficialTime(roster.teamStatsUpdated)
+        }
+        lines += "選手の成績(取り込み)" to roster?.updatedAt?.atZone(now.zone)
+    } else {
+        lines += "得点(取り込み)" to scorersUpdatedAt?.atZone(now.zone)
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 4.dp)
+            .border(1.dp, Ink)
+            .background(Paper)
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        lines.forEach { (label, time) ->
+            val old = time != null && java.time.Duration.between(time, now).toHours() >= 24
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(label, style = MaterialTheme.typography.bodySmall, color = InkSoft, modifier = Modifier.weight(1f))
+                Text(
+                    time?.let { "${timeLabel(it)}(${agoLabel(it, now)})" } ?: "まだ届いていません",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = if (old) NewsRed else Ink
+                )
+            }
+        }
+    }
+}
+
+/** 「2026年10月17日21:40」(Bリーグ公式の更新日時の書き方)を日本時間の日時にする。読めなければ null */
+private fun parseOfficialTime(text: String): java.time.ZonedDateTime? {
+    val m = Regex("""(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2}):(\d{2})""").find(text) ?: return null
+    val (y, mo, d, h, mi) = m.destructured
+    return runCatching {
+        java.time.ZonedDateTime.of(y.toInt(), mo.toInt(), d.toInt(), h.toInt(), mi.toInt(), 0, 0, java.time.ZoneId.of("Asia/Tokyo"))
+    }.getOrNull()
+}
+
+/** 「10/17(土) 21:40」 */
+private fun timeLabel(t: java.time.ZonedDateTime): String {
+    val week = "月火水木金土日"[t.dayOfWeek.value - 1]
+    return "%d/%d(%s) %02d:%02d".format(t.monthValue, t.dayOfMonth, week, t.hour, t.minute)
+}
+
+/** 「15分前」「3時間前」「2日前」 */
+private fun agoLabel(t: java.time.ZonedDateTime, now: java.time.ZonedDateTime): String {
+    val min = java.time.Duration.between(t, now).toMinutes().coerceAtLeast(0)
+    return when {
+        min < 60 -> "${min}分前"
+        min < 60 * 24 -> "${min / 60}時間前"
+        else -> "${min / (60 * 24)}日前"
+    }
 }
 
 /** 展望データ(相手の注目選手・主な選手)を作った時刻。自動更新で展望の作成に失敗していれば分からないので null。 */

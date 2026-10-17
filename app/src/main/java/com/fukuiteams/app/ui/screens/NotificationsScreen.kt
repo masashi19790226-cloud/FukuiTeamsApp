@@ -24,6 +24,10 @@ import com.fukuiteams.app.ui.components.MastheadTopBar
 import com.fukuiteams.app.ui.components.ScrollJumpButtons
 import com.fukuiteams.app.ui.components.ScrollJumpBottomPadding
 import com.fukuiteams.app.ui.components.MenuLinkRow
+import com.fukuiteams.app.ui.components.NewsChip
+import com.fukuiteams.app.ui.components.openExternalUrl
+import com.fukuiteams.app.data.officialXUrl
+import com.fukuiteams.app.data.officialInstagramUrl
 import com.fukuiteams.app.ui.components.UiScale
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -303,9 +307,9 @@ fun NotificationsScreen(
                 }
             }
 
-            // 3チームの公式サイト(一面から移した)
+            // 3チームの公式サイトと公式SNS(X・インスタグラム)。SNSはチームごとに公式サイトの下に並べる
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                SectionLabel("公式サイト")
+                SectionLabel("公式サイト・SNS")
                 Team.values().forEach { team ->
                     team.officialSiteUrl?.let { url ->
                         MenuLinkRow(
@@ -317,6 +321,12 @@ fun NotificationsScreen(
                                 }
                             }
                         )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        NewsChip("公式X", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, team.officialXUrl) }
+                        team.officialInstagramUrl?.let { ig ->
+                            NewsChip("公式インスタグラム", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, ig) }
+                        }
                     }
                 }
             }

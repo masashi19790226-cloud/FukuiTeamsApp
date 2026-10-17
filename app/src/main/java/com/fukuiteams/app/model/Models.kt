@@ -36,5 +36,13 @@ data class Game(
     // 自分で追加した予定(Xの投稿などから。この端末の中だけ)
     val userAdded: Boolean = false,
     // 自分で追加した予定の元の投稿のURL(無ければ null)
-    val sourceUrl: String? = null
+    val sourceUrl: String? = null,
+    // トップチーム以外の試合の区分(例「U-20」「サテライト」)。トップチームの試合は null
+    val category: String? = null
 )
+
+/**
+ * トップチームの公式の試合か(U-20・サテライトなどの試合と、自分で追加した予定は false)。
+ * 一面・特集・ウィジェットは、この試合だけを使う。試合タブの一覧には全部並べる。
+ */
+fun Game.isMainTeamGame(): Boolean = category.isNullOrBlank() && !userAdded

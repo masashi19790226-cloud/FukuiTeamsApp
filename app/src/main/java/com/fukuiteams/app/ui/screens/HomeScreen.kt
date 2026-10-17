@@ -146,6 +146,7 @@ import com.fukuiteams.app.data.timeLabel
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isUpcoming
 import com.fukuiteams.app.model.Game
+import com.fukuiteams.app.model.isMainTeamGame
 import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.data.DataRefresher
 import com.fukuiteams.app.model.Team
@@ -204,11 +205,11 @@ fun HomeScreen(
         players = d.players
         standings = d.standings
         // 今日の試合の天気
-        weathers = GamesRepository.games.filter { it.isToday() }
+        weathers = mainGames().filter { it.isToday() }
             .mapNotNull { g -> WeatherRepository.forGame(g)?.let { g.id to it } }
             .toMap()
         // 3日以内に試合があれば、その天気予報(ブローウィンズのホームゲームは入場の時刻も)
-        forecasts = GamesRepository.games
+        forecasts = mainGames()
             .filter { g -> g.isUpcoming() && (g.daysUntil() ?: 99L) in 0L..3L }
             .mapNotNull { g ->
                 WeatherRepository.preGameForecast(g, GameLpRepository.latest[g.id]?.entryTime)?.let { g.id to it }
@@ -280,7 +281,7 @@ fun HomeScreen(
         ) {
 
             // 試合当日だけ、一番上に当日のまとめ(開始時刻・会場の地図・天気)
-            val todayGames = GamesRepository.games
+            val todayGames = mainGames()
                 .filter { (selectedTeam == null || it.team == selectedTeam) && it.isToday() && !autoResults.containsKey(it.id) }
                 .sortedBy { it.sortKey }
             if (todayGames.isNotEmpty()) {
@@ -310,7 +311,7 @@ fun HomeScreen(
 
             item {
                 // 一面トップ:選択中のチーム(「すべて」なら全チーム)の最新の試合結果
-                val latest = GamesRepository.games
+                val latest = mainGames()
                     .filter { (selectedTeam == null || it.team == selectedTeam) && autoResults.containsKey(it.id) }
                     .maxByOrNull { it.sortKey }
                 if (latest != null && isFreshResult(latest)) {
@@ -327,7 +328,7 @@ fun HomeScreen(
                     val stories = remember(teams, autoResults, previews, players, standings, newsResult, invitationsResult, GamesRepository.games, birthdays, onSiteIds, buzzForFeature) {
                         buildFeatureStories(
                             teams = teams,
-                            games = GamesRepository.games,
+                            games = mainGames(),
                             results = autoResults,
                             previews = previews,
                             players = players,
@@ -360,7 +361,7 @@ fun HomeScreen(
                 // 一面の「次の試合」と他チームの近況。
                 // 次の試合の日にほかのチームの試合もあれば、同じ日の試合をすべて「次の試合」に並べる
                 // (並びは開始時刻順。「時間未定」の試合は後ろ)
-                val upcoming = GamesRepository.games
+                val upcoming = mainGames()
                     .filter { (selectedTeam == null || it.team == selectedTeam) && it.isUpcoming() }
                 val firstDay = upcoming.minByOrNull { it.sortKey }?.sortKey?.take(8)
                 val nextGames = upcoming
@@ -385,23 +386,19 @@ fun HomeScreen(
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    SectionLabel("今後の日程")
+                    SectionLabel("その後の日程")
                     // 特定のチームを選んだときはそのチームの直近3件、「すべて」のときは全体の直近3件を表示。
                     // 試合スケジュールの一覧は「試合」タブにまとめてあるので、ここでは概要だけ。
-                    val games = if (selectedTeam != null) {
-                        GamesRepository.games
-                            .filter { it.team == selectedTeam && it.isUpcoming() }
-                            .sortedBy { it.sortKey }
-                            .take(3)
-                    } else {
-                        GamesRepository.games
-                            .filter { it.isUpcoming() }
-                            .sortedBy { it.sortKey }
-                            .take(3)
-                    }
+                    // 上の「次の試合」に出ている日の試合は除いて、その次から3件(同じ試合を2回出さない)
+                    val upcomingAll = mainGames()
+                        .filter { (selectedTeam == null || it.team == selectedTeam) && it.isUpcoming() }
+                        .sortedBy { it.sortKey }
+                    val nextDay = upcomingAll.firstOrNull()?.sortKey?.take(8)
+                    val games = upcomingAll.filter { it.sortKey.take(8) != nextDay }.take(3)
                     if (games.isEmpty()) {
                         Text(
-                            "このチームの試合データはまだ準備できていません",
+                            if (nextDay != null) "次の試合のあとの予定は、まだ発表されていません"
+                            else "このチームの試合データはまだ準備できていません",
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
@@ -426,16 +423,8 @@ fun HomeScreen(
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        SectionLabel("ニュース")
-                        IconButton(onClick = { pullToRefreshState.startRefresh() }) {
-                            Icon(Icons.Filled.Refresh, contentDescription = "ニュースを更新")
-                        }
-                    }
+                    // 更新は右上のボタンか、画面を下に引っ張って行う(ニュース欄だけの更新ボタンは置かない)
+                    SectionLabel("ニュース")
                     // ニュース・招待などの自動更新が最後に動いた時刻
                     DataStatusLine(dataStatus)
                     NewsSection(newsResult, selectedTeam) { onOpenRadar(selectedTeam) }
@@ -705,7 +694,7 @@ private fun LatestResultHero(
 ) {
     // 連勝・連敗、前回対戦、今季の成績(見出しと記事に使う)
     val ctx = remember(game.id, allResults, GamesRepository.games) {
-        buildResultContext(game, GamesRepository.games, allResults)
+        buildResultContext(game, mainGames(), allResults)
     }
     val outcome = when {
         result.myScore > result.opponentScore -> GameOutcome.WIN
@@ -1074,7 +1063,7 @@ private fun KeyPlayerRow(player: KeyPlayer) {
 /** 右段の1チーム分。最新結果(あれば)と次の試合を1〜2行で。 */
 @Composable
 private fun TeamBrief(team: Team, autoResults: Map<String, RemoteGameResult>, onOpenGame: (String) -> Unit) {
-    val teamGames = GamesRepository.games.filter { it.team == team }
+    val teamGames = mainGames().filter { it.team == team }
     val latest = teamGames.filter { autoResults.containsKey(it.id) }.maxByOrNull { it.sortKey }
     val next = teamGames.filter { it.isUpcoming() }.minByOrNull { it.sortKey }
     Column(
@@ -1177,7 +1166,7 @@ private fun BirthdayCard(players: List<PlayerBirthday>, today: java.time.LocalDa
 @Composable
 private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
     val h2h = remember(game.id, results, GamesRepository.games) {
-        com.fukuiteams.app.data.headToHead(game, GamesRepository.games, results)
+        com.fukuiteams.app.data.headToHead(game, mainGames(), results)
     }
     Column(
         modifier = Modifier
@@ -1488,3 +1477,9 @@ private fun PreviousResultLine(game: Game, result: RemoteGameResult, onClick: ()
         Text("›", style = MaterialTheme.typography.titleMedium, color = InkSoft)
     }
 }
+
+/**
+ * 一面で使う試合(トップチームの公式の試合だけ)。
+ * U-20・サテライトなどの試合と、自分で追加した予定は、試合タブの一覧にだけ出す
+ */
+private fun mainGames(): List<Game> = GamesRepository.games.filter { it.isMainTeamGame() }

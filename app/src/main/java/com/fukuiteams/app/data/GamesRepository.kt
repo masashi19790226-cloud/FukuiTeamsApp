@@ -124,7 +124,8 @@ object GamesRepository {
                 ticketSaleStart = o.optString("ticket_sale_start", "-"),
                 isHome = o.optBoolean("is_home", true),
                 sortKey = o.optString("sort_key").ifBlank { fallbackSortKey },
-                resultPageUrl = o.optString("result_page_url").ifBlank { null }
+                resultPageUrl = o.optString("result_page_url").ifBlank { null },
+                category = o.optString("category").takeIf { it.isNotBlank() && it != "null" }
             )
         }
         return list

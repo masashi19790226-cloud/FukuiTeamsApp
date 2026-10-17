@@ -2,7 +2,12 @@ package com.fukuiteams.app.ui.screens
 
 import com.fukuiteams.app.ui.components.NewsChip
 import com.fukuiteams.app.ui.components.AddFromXSheet
-import com.fukuiteams.app.ui.components.TeamStandingsCard
+import com.fukuiteams.app.ui.components.TeamStandingsContent
+import com.fukuiteams.app.ui.components.teamStandingsSummary
+import com.fukuiteams.app.model.isMainTeamGame
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material.icons.filled.Add
 import com.fukuiteams.app.data.LeagueStandings
 import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.MyGamesRepository
@@ -194,7 +199,9 @@ fun GameDetailScreen(
     val context = LocalContext.current
 
     var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
-    // 3チームのリーグの順位表(「成績」の下の「順位」で使う)
+    // 「成績」「順位」のどちらを開いているか(チームを切り替えたら閉じる)
+    var topPanel by remember(selectedTeam) { mutableStateOf(TopPanel.NONE) }
+    // 3チームのリーグの順位表(「順位」で使う)
     var leagueStandings by remember { mutableStateOf<Map<String, LeagueStandings>>(emptyMap()) }
     // 観戦方法・勝敗の記録は、変更されるたびに観戦成績カードへ即反映させる
     val gameLogPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
@@ -206,8 +213,9 @@ fun GameDetailScreen(
         computeWatchRecords(allTeamGames, gameLogPrefs, autoResults)
     }
     // ホーム・アウェイ別成績(観戦成績と同じ勝敗の決め方で集計)
+    // (U-20・サテライトなどの試合と、自分で追加した予定は入れない。リーグの成績と合わせるため)
     val homeAwaySummary = remember(allTeamGames, gameLogPrefs, autoResults) {
-        computeHomeAwaySummary(allTeamGames, gameLogPrefs, autoResults)
+        computeHomeAwaySummary(allTeamGames.filter { it.isMainTeamGame() }, gameLogPrefs, autoResults)
     }
     // 一面などから特定の試合を開いたときに、その試合の位置まで画面を動かすための情報
     val listScroll = rememberScrollState()
@@ -277,12 +285,19 @@ fun GameDetailScreen(
             MastheadTopBar(
                 section = "試合面",
                 edition = "${selectedTeam.displayName}版",
+                // 「戻る」は、一面などから特定の試合を開いたときだけ出す(下のタブから開いたときは出さない)
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
+                    if (gameId != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
+                        }
                     }
                 },
                 actions = {
+                    // Xの投稿から予定を追加(U-20の大会など)
+                    IconButton(onClick = { addSheetText = "" }) {
+                        Icon(Icons.Filled.Add, contentDescription = "Xの投稿から予定を追加")
+                    }
                     IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "結果を更新")
                     }
@@ -321,25 +336,39 @@ fun GameDetailScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            // 成績(観戦成績とホーム・アウェイ別成績を1つにまとめた)。見出しと要点1行だけ出し、押すと開く
-            StatsSummarySection(watchRecords, homeAwaySummary, onOpenList = { statsFilter = it })
-
-            // 順位(リーグの順位表)。見出しと要点1行だけ出し、押すと開く。ブローウィンズはBリーグ公式の地区別の順位表
-            TeamStandingsCard(
-                team = selectedTeam,
-                standings = leagueStandings[selectedTeam.name],
-                nextOpponent = upcomingTeamGames.firstOrNull { !it.userAdded }?.opponent,
-                onOpenUrl = { url -> openUrl(context, url) }
-            )
-
-            // 公式の日程に載らない試合(U-20の大会など)を、Xの投稿から自分で追加する
-            OutlinedButton(
-                onClick = { addSheetText = "" },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(3.dp),
-                border = BorderStroke(1.dp, Ink)
-            ) {
-                Text("+ Xの投稿から予定を追加(U-20の大会など)", color = Ink, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+            // 「成績」と「順位」は横に並べた小さな囲みにし、押した方の中身をその下に開く
+            // (日程の一覧をなるべく上に出すため)
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    SummaryTile(
+                        title = "成績",
+                        summary = statsSummaryText(watchRecords, homeAwaySummary),
+                        open = topPanel == TopPanel.STATS,
+                        modifier = Modifier.weight(1f).fillMaxHeight()
+                    ) { topPanel = if (topPanel == TopPanel.STATS) TopPanel.NONE else TopPanel.STATS }
+                    SummaryTile(
+                        title = "順位",
+                        summary = teamStandingsSummary(selectedTeam, leagueStandings[selectedTeam.name]),
+                        open = topPanel == TopPanel.STANDINGS,
+                        modifier = Modifier.weight(1f).fillMaxHeight()
+                    ) { topPanel = if (topPanel == TopPanel.STANDINGS) TopPanel.NONE else TopPanel.STANDINGS }
+                }
+                when (topPanel) {
+                    TopPanel.STATS -> {
+                        WatchStatsCard(watchRecords) { statsFilter = it }
+                        HomeAwayRecordCard(homeAwaySummary)
+                    }
+                    TopPanel.STANDINGS -> TeamStandingsContent(
+                        team = selectedTeam,
+                        standings = leagueStandings[selectedTeam.name],
+                        nextOpponent = upcomingTeamGames.firstOrNull { it.isMainTeamGame() }?.opponent,
+                        onOpenUrl = { url -> openUrl(context, url) }
+                    )
+                    TopPanel.NONE -> {}
+                }
             }
 
             if (allTeamGames.isEmpty()) {
@@ -453,6 +482,16 @@ fun GameDetailScreen(
                         }
                     }
                 }
+            }
+
+            // 公式の日程に載らない試合(U-20の大会など)を、Xの投稿から自分で追加する(右上の「+」と同じ)
+            OutlinedButton(
+                onClick = { addSheetText = "" },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(3.dp),
+                border = BorderStroke(1.dp, LineGray)
+            ) {
+                Text("+ Xの投稿から予定を追加(U-20の大会など)", color = InkSoft, fontSize = 12.sp)
             }
         }
         }
@@ -750,11 +789,11 @@ private fun TicketSearchSection(
     }
 }
 
-/** 自分で追加した予定に付ける札 */
+/** 自分で追加した予定に付ける札(「U-20」などトップチーム以外の試合の札にも使う) */
 @Composable
-private fun UserAddedBadge() {
+private fun UserAddedBadge(label: String = "自分で追加") {
     Text(
-        "自分で追加",
+        label,
         fontSize = 10.sp,
         fontWeight = FontWeight.ExtraBold,
         color = Ink,
@@ -843,10 +882,13 @@ private fun ScheduleRow(
                 if (game.specialDay() != null) SpecialDayBadge()
                 // パブリックビューイング(PV)がある試合は「PV」の札
                 if (game.publicViewings().isNotEmpty()) PublicViewingBadge()
-                if (showTeam || going || game.userAdded) {
+                val category = game.category
+                if (showTeam || going || game.userAdded || category != null) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         if (going) GoingBadge()
                         if (game.userAdded) UserAddedBadge()
+                        // U-20・サテライトなど、トップチーム以外の試合の札
+                        if (category != null) UserAddedBadge(category)
                         if (showTeam) {
                             Text(game.team.displayName, style = MaterialTheme.typography.labelSmall, color = game.team.color, maxLines = 1)
                         }
@@ -1160,39 +1202,32 @@ private fun MonthHeader(
     }
 }
 
-/**
- * 成績(観戦成績とホーム・アウェイ別成績)。ふだんは見出しと要点1行だけで、押すと両方の表が開く。
- */
-@Composable
-private fun StatsSummarySection(
-    records: Map<WatchMethod, WatchRecord>,
-    homeAway: HomeAwaySummary,
-    onOpenList: (StatsFilter) -> Unit
-) {
-    var open by remember { mutableStateOf(false) }
+/** 試合タブの上の「成績」「順位」のどちらを開いているか */
+private enum class TopPanel { NONE, STATS, STANDINGS }
+
+/** 「成績」の要点(2行):全体の勝敗と、現地観戦の勝敗 */
+private fun statsSummaryText(records: Map<WatchMethod, WatchRecord>, homeAway: HomeAwaySummary): String {
     val onSite = records[WatchMethod.ON_SITE] ?: WatchRecord()
-    val summary = if (homeAway.total.games == 0 && onSite.watched == 0) {
+    return if (homeAway.total.games == 0 && onSite.watched == 0) {
         "まだ終了した試合はありません"
     } else {
-        "観戦 現地${onSite.summaryLabel()} ・ 全体 ${homeAway.total.recordLabel()}" +
-            "(HOME ${homeAway.home.recordLabel()} / AWAY ${homeAway.away.recordLabel()})"
+        "全体 ${homeAway.total.recordLabel()}\n現地観戦 ${onSite.summaryLabel()}"
     }
+}
+
+/** 「成績」「順位」の小さな囲み(見出しと要点)。押すと、その中身が囲みの下に開く */
+@Composable
+private fun SummaryTile(title: String, summary: String, open: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, Ink)
-            .background(Paper)
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = modifier
+            .border(if (open) 2.dp else 1.dp, Ink)
+            .background(if (open) Ink.copy(alpha = 0.05f) else Paper)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth().clickable { open = !open }) {
-            Text("${if (open) "▲" else "▼"} 成績", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.ExtraBold, color = Ink)
-            Text(summary, style = MaterialTheme.typography.bodySmall, color = InkSoft)
-        }
-        if (open) {
-            WatchStatsCard(records, onOpenList)
-            HomeAwayRecordCard(homeAway)
-        }
+        Text("${if (open) "▲" else "▼"} $title", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.ExtraBold, color = Ink)
+        Text(summary, style = MaterialTheme.typography.bodySmall, color = InkSoft, maxLines = 3, overflow = TextOverflow.Ellipsis)
     }
 }
 

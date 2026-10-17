@@ -43,6 +43,8 @@ import com.fukuiteams.app.data.XPostRepository
 import com.fukuiteams.app.data.extractCandidates
 import com.fukuiteams.app.data.findXStatusUrl
 import com.fukuiteams.app.data.guessTeam
+import com.fukuiteams.app.data.officialXUrl
+import com.fukuiteams.app.model.shortName
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.Ink
@@ -135,6 +137,18 @@ fun AddFromXSheet(
             Text("Xの投稿から予定を追加", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Text(
                 "U-20の大会など、公式の日程に載らない試合を自分で追加できます。追加した予定はこのスマホの中だけに保存されます。",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+            // 各チームの公式X。開いた投稿を「共有」→「ふくスポ」で送ると、この画面で読み込む
+            Text("公式のXを開く", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Team.values().forEach { t ->
+                    NewsChip(t.shortName, false, modifier = Modifier.weight(1f)) { openExternalUrl(context, t.officialXUrl) }
+                }
+            }
+            Text(
+                "開いたXで投稿の「共有」→「ふくスポ」を選ぶと、この画面でその投稿を読み込みます。",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )

@@ -21,6 +21,7 @@ import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.hasMatchingInvite
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isUpcoming
+import com.fukuiteams.app.model.isMainTeamGame
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.model.Team
 import kotlinx.coroutines.CoroutineScope
@@ -81,7 +82,8 @@ class NextGameWidget : AppWidgetProvider() {
             // 3チームそれぞれの次の試合を1行ずつ
             ROWS.forEach { row ->
                 val next: Game? = games
-                    .filter { it.team == row.team && it.isUpcoming() && !results.containsKey(it.id) }
+                    // トップチームの試合だけ(U-20・サテライトなどの試合は出さない)
+                    .filter { it.team == row.team && it.isMainTeamGame() && it.isUpcoming() && !results.containsKey(it.id) }
                     .minByOrNull { it.sortKey }
                 views.setInt(row.bar, "setBackgroundColor", row.team.color.toArgb())
                 views.setTextViewText(row.teamLabel, row.label)
