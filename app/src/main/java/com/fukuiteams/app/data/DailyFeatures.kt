@@ -396,10 +396,10 @@ private fun spotlight(
     )
 }
 
-// ---------- 順位(丸岡RUCK・ユナイテッド) ----------
+// ---------- 順位(3チーム。ブローウィンズはBリーグ公式の地区の順位表) ----------
 
 private fun standing(team: Team, standings: Map<String, LeagueStandings>, games: List<Game>): List<FeatureStory> {
-    if (team == Team.BLOWINDS) return emptyList()
+    if (team == Team.BLOWINDS) return blowindsStanding(standings, games)
     val league = standings[team.name] ?: return emptyList()
     val part = league.final?.takeIf { it.rows.isNotEmpty() } ?: league.regular ?: return emptyList()
     val word = if (team == Team.RAC) "丸岡" else "ユナイテッド"
@@ -414,6 +414,41 @@ private fun standing(team: Team, standings: Map<String, LeagueStandings>, games:
     } else {
         "${part.label}で勝点${me.points}の${me.rank}位。首位の${top.team}とは勝点差$gap。"
     }) + (next?.let { "次は${it.shortLabel()}の${it.opponent}戦。" } ?: "")
+    return listOf(
+        FeatureStory(
+            kicker = "順位",
+            team = team,
+            headline = headline,
+            body = body,
+            bigNumber = "${me.rank}",
+            bigUnit = "位",
+            url = league.sourceUrl.takeIf { it.isNotBlank() }
+        )
+    )
+}
+
+/** ブローウィンズの地区の順位(Bリーグ公式の順位表から)。まだ1試合もしていなければ作らない */
+private fun blowindsStanding(standings: Map<String, LeagueStandings>, games: List<Game>): List<FeatureStory> {
+    val league = standings[Team.BLOWINDS.name] ?: return emptyList()
+    val b = league.bleague ?: return emptyList()
+    val own = b.own ?: return emptyList()
+    val me = b.me ?: return emptyList()
+    if (me.win + me.lose == 0) return emptyList()
+    val team = Team.BLOWINDS
+    val next = games.filter { it.team == team && it.isUpcoming() }.minByOrNull { it.sortKey }
+    val headline = if (me.rank == 1) "${team.shortName}、${own.label}の首位" else "${team.shortName}、${own.label}${me.rank}位"
+    val gap = if (me.rank == 1) {
+        own.rows.filter { it.rank > 1 }.minByOrNull { it.rank }
+            ?.let { "2位の${it.shortName}とはゲーム差${it.gamesBehind.ifBlank { "0" }}。" }.orEmpty()
+    } else {
+        own.rows.minByOrNull { it.rank }?.let { "首位の${it.shortName}とはゲーム差${me.gamesBehind.ifBlank { "0" }}。" }.orEmpty()
+    }
+    fun wl(t: String): String? = Regex("""(\d+)\s*-\s*(\d+)""").find(t)?.let { "${it.groupValues[1]}勝${it.groupValues[2]}敗" }
+    val homeAway = listOfNotNull(wl(me.home)?.let { "ホーム$it" }, wl(me.away)?.let { "アウェー$it" }).joinToString("・")
+    val body = "${league.league} ${own.label}で${me.win}勝${me.lose}敗(勝率${me.pct})。" + gap +
+        (me.streakLabel.takeIf { it.isNotBlank() }?.let { "いま$it。" } ?: "") +
+        (if (homeAway.isNotBlank()) "$homeAway。" else "") +
+        (next?.let { "次は${it.shortLabel()}の${it.opponent}戦。" } ?: "")
     return listOf(
         FeatureStory(
             kicker = "順位",

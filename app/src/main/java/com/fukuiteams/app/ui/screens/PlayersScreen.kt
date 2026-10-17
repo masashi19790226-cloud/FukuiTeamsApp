@@ -68,7 +68,6 @@ import com.fukuiteams.app.data.LeagueScorers
 import com.fukuiteams.app.data.LeagueStandings
 import com.fukuiteams.app.data.ScorerRow
 import com.fukuiteams.app.data.TeamStat
-import com.fukuiteams.app.data.StandingRow
 import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.TeamPlayers
 import com.fukuiteams.app.data.TeamSelection
@@ -298,7 +297,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             } else {
                 val st = leagueStandings[selectedTeam.name]
                 if (selectedTeam != Team.BLOWINDS && st != null) {
-                    // 丸岡RUCK・ユナイテッドは、選手の得点(取れたとき)とリーグの順位表を出す
+                    // 丸岡RUCK・ユナイテッドは、選手の得点(取れたとき)を出す。リーグの順位表は試合タブの「順位」にある
                     val scorers = st.scorers
                     if (scorers != null) {
                         SectionLabel("${selectedTeam.displayName}の得点", modifier = Modifier.onGloballyPositioned { marks.own = it })
@@ -310,22 +309,21 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                             emptyMessage = "まだ得点した選手はいません。",
                             profileOf = { name -> profiles[profileKey(selectedTeam, name)] }
                         )
+                    } else {
+                        SectionLabel("${selectedTeam.displayName}の得点", modifier = Modifier.onGloballyPositioned { marks.own = it })
+                        NoDataBox("得点のデータはまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。")
                     }
-                    SectionLabel(
-                        "${st.league}の順位",
-                        modifier = if (scorers == null) Modifier.onGloballyPositioned { marks.own = it } else Modifier
-                    )
-                    StandingsSection(
-                        standings = st,
-                        ownTeam = selectedTeam,
-                        nextOpponent = nextGame?.opponent
+                    Text(
+                        "${st.league.ifBlank { "リーグ" }}の順位表は、試合タブの「順位」で見られます。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
                     )
                 } else {
                     SectionLabel("${selectedTeam.displayName}の選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
                     NoDataBox(
                         when (selectedTeam) {
                             Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(約20分おき)が動くと、Bリーグ公式の選手情報から全選手の成績が表示されます。"
-                            Team.RAC, Team.UNITED -> "このチームの順位表はまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。"
+                            Team.RAC, Team.UNITED -> "このチームの得点のデータはまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。"
                         }
                     )
                 }
@@ -563,35 +561,7 @@ private fun AsOfLine(updatedAt: java.time.Instant?, extra: String?) {
 private fun previewUpdatedAt(status: DataStatus?): java.time.Instant? =
     status?.takeIf { "展望" !in it.failedSteps }?.updatedAt
 
-/**
- * 丸岡RUCK・ユナイテッドのリーグ順位表。自チームの行は太字・チームカラー、次の対戦相手の行には「次」を付ける。
- * 丸岡RUCKは試合数・勝敗・得失点差・直近5試合まで、ユナイテッドは順位と勝点だけ(公式サイトにある分だけ)。
- */
-@Composable
-private fun StandingsSection(standings: LeagueStandings, ownTeam: Team, nextOpponent: String?) {
-    val ownWord = when (ownTeam) {
-        Team.RAC -> "丸岡"
-        Team.UNITED -> "福井ユナイテッド"
-        Team.BLOWINDS -> "ブローウィンズ"
-    }
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        AsOfLine(standings.updatedAt, null)
-        Text(
-            listOf(standings.note, "出典:${standings.sourceUrl}").filter { it.isNotBlank() }.joinToString("\n"),
-            style = MaterialTheme.typography.bodySmall,
-            color = InkSoft
-        )
-        // ファイナルシーズンに試合があればそちらを先に出す
-        listOfNotNull(
-            standings.final?.takeIf { p -> p.rows.any { (it.played ?: 0) > 0 } },
-            standings.regular,
-            standings.final?.takeIf { p -> p.rows.none { (it.played ?: 0) > 0 } }
-        ).forEach { part ->
-            Text(part.label, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.ExtraBold, color = Ink)
-            StandingsTable(part.rows, ownWord, ownTeam.color, nextOpponent)
-        }
-    }
-}
+
 
 /** 順位表・得点の表で、そのチームの行を見分けるための文字 */
 private fun teamWord(team: Team): String = when (team) {
@@ -733,51 +703,6 @@ private fun ScorersTable(
     }
 }
 
-@Composable
-private fun StandingsTable(rows: List<StandingRow>, ownWord: String, ownColor: androidx.compose.ui.graphics.Color, nextOpponent: String?) {
-    val detailed = rows.any { it.played != null }
-    val headers = if (detailed) listOf("順", "チーム", "勝点", "試合", "勝", "分", "敗", "差") else listOf("順位", "チーム", "勝点")
-    val weights = if (detailed) listOf(0.7f, 3.4f, 1f, 1f, 0.8f, 0.8f, 0.8f, 1f) else listOf(1f, 4f, 1.2f)
-    Column(modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper)) {
-        Row(modifier = Modifier.fillMaxWidth().background(Ink).padding(vertical = 5.dp, horizontal = 6.dp)) {
-            headers.forEachIndexed { i, h ->
-                Text(h, modifier = Modifier.weight(weights[i]), color = Paper, fontSize = 11.sp, fontWeight = FontWeight.Bold,
-                    textAlign = if (i == 1) TextAlign.Start else TextAlign.Center, maxLines = 1)
-            }
-        }
-        rows.forEach { r ->
-            val own = r.team.contains(ownWord)
-            val next = !own && nextOpponent != null && (r.team.contains(nextOpponent) || nextOpponent.contains(r.team))
-            val cells = if (detailed) {
-                listOf("${r.rank}", r.team + if (next) " ◀次" else "", "${r.points}", "${r.played ?: "-"}", "${r.win ?: "-"}",
-                    "${r.draw ?: "-"}", "${r.lose ?: "-"}", r.goalDiff?.let { if (it > 0) "+$it" else "$it" } ?: "-")
-            } else {
-                listOf("${r.rank}", r.team + if (next) " ◀次" else "", "${r.points}")
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(if (own) ownColor.copy(alpha = 0.08f) else Paper)
-                    .padding(vertical = 6.dp, horizontal = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                cells.forEachIndexed { i, c ->
-                    Text(
-                        c,
-                        modifier = Modifier.weight(weights[i]),
-                        fontSize = 12.sp,
-                        fontWeight = if (own) FontWeight.ExtraBold else FontWeight.Normal,
-                        color = if (own && i == 1) ownColor else Ink,
-                        textAlign = if (i == 1) TextAlign.Start else TextAlign.Center,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-            ThinRule(color = LineGray)
-        }
-    }
-}
 
 /** 「自チーム」「相手」へ飛ぶための位置の入れ物(スクロールする部分と、それぞれの見出し)。 */
 private class JumpMarks {

@@ -143,6 +143,112 @@ def united_standings(text: str):
     }
 
 
+# ---------- ブローウィンズ(Bリーグ公式の順位表) ----------
+
+BLEAGUE_STANDINGS = "https://www.bleague.jp/standings/?tab={tab}"
+# 順位表のタブ(1=B.PREMIER、2=B.ONE、3=B.NEXT)。ブローウィンズが載っているタブを先頭から探す
+BLEAGUE_TABS = (2, 1, 3)
+
+
+def _int_or_none(s):
+    m = re.fullmatch(r"\s*(-?\d+)\s*", s or "")
+    return int(m.group(1)) if m else None
+
+
+def parse_bleague_standings(page: str):
+    """Bリーグ公式の順位表ページ1つ分(表示中のリーグのタブだけがページに入っている)。
+    [{"label": "中地区", "table": [行…]}] と、リーグ名(例「B.ONE」)。
+    行の列は公式の表のまま:順位・クラブ・勝・負・勝率・差・得点・失点・得失点差・ホーム・アウェー・過去5試合・連勝/連敗・試合数・試合消化率・地区優勝"""
+    page = re.sub(r"<!--.*?-->", "", page, flags=re.S)
+    lm = re.search(r'class="tab-item[^"]*\bis-active\b[^"]*"[^>]*>(.*?)</li>', page, flags=re.S)
+    league = _text(lm.group(1)) if lm else ""
+    districts = []
+    parts = re.split(r'<h3 class="box-container"[^>]*>(.*?)</h3>', page, flags=re.S)
+    # parts = [前置き, 見出し1, 中身1, 見出し2, 中身2, …]
+    for i in range(1, len(parts) - 1, 2):
+        label = _text(parts[i])
+        tm = re.search(r"<table[^>]*table-standings[^>]*>(.*?)</table>", parts[i + 1], flags=re.S)
+        if not tm:
+            continue
+        body = re.search(r"<tbody[^>]*>(.*?)</tbody>", tm.group(1), flags=re.S)
+        rows = []
+        for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", body.group(1) if body else "", flags=re.S):
+            tds = re.findall(r"<td[^>]*>(.*?)</td>", tr, flags=re.S)
+            if len(tds) < 16:
+                continue
+            tid = re.search(r"TeamID=(\d+)", tds[1])
+            full = re.search(r'team-name-line[^"]*">(.*?)</span>', tds[1], flags=re.S)
+            short = re.search(r'class="pc-tab-dn">(.*?)</span>', tds[1], flags=re.S)
+            cells = [_text(x) for x in tds]
+            rank, win, lose = _int_or_none(cells[0]), _int_or_none(cells[2]), _int_or_none(cells[3])
+            if rank is None or win is None or lose is None:
+                continue
+            rows.append({
+                "rank": rank,
+                "team": _text(full.group(1)) if full else cells[1],
+                "short": _text(short.group(1)) if short else "",
+                "team_id": tid.group(1) if tid else "",
+                "win": win, "lose": lose,
+                "pct": cells[4],                         # 勝率(例「.500」)
+                "gb": "" if cells[5] in ("--", "-") else cells[5],  # 1位とのゲーム差(1位は空)
+                "pf": _int_or_none(cells[6]), "pa": _int_or_none(cells[7]), "diff": _int_or_none(cells[8]),
+                "home": cells[9], "away": cells[10],    # ホーム・アウェーの勝敗(例「3-0」)
+                "last5": cells[11],                      # 過去5試合の勝敗(例「2-3」)
+                "streak": cells[12],                     # 連勝・連敗(例「W4」「L1」)
+                "games": _int_or_none(cells[13]),
+                "progress": cells[14],                   # 試合消化率(例「13.33%」)
+                "clinch": "" if cells[15] in ("--", "-") else cells[15],  # 地区優勝(決まったとき)
+            })
+        if rows:
+            districts.append({"label": label, "table": rows})
+    return districts, league
+
+
+def _pct_value(r):
+    games = (r.get("win") or 0) + (r.get("lose") or 0)
+    return (r["win"] / games) if games else 0.0
+
+
+def bleague_standings(fetch, team_id: str):
+    """ブローウィンズのリーグ(B.ONE など)の地区別の順位表と、リーグ全体を勝率で並べた参考の表。読めなければ None。"""
+    for tab in BLEAGUE_TABS:
+        url = BLEAGUE_STANDINGS.format(tab=tab)
+        try:
+            page = fetch(url)
+        except Exception as e:
+            print(f"[WARN] 順位: Bリーグ公式の順位表(tab={tab})の取得に失敗 {e!r}")
+            continue
+        if f"TeamID={team_id}" not in page:
+            continue
+        districts, league = parse_bleague_standings(page)
+        own = next((d for d in districts if any(r["team_id"] == team_id for r in d["table"])), None)
+        if not own:
+            continue
+        # リーグ全体(全地区)を 勝率 → 得失点差 → 勝ち数 の順に並べた参考の表(公式の順位ではない)
+        everyone = [dict(r, district=d["label"]) for d in districts for r in d["table"]]
+        everyone.sort(key=lambda r: (-_pct_value(r), -(r.get("diff") or 0), -(r.get("win") or 0), r["team"]))
+        for i, r in enumerate(everyone, 1):
+            r["rank"] = i
+        me = next(r for r in own["table"] if r["team_id"] == team_id)
+        print(f"[順位] Bリーグ {league}: {len(districts)}地区・{len(everyone)}クラブ"
+              f"・福井は{own['label']}{me['rank']}位({me['win']}勝{me['lose']}敗)")
+        return {
+            "league": league or "Bリーグ",
+            "source_url": url,
+            "note": "Bリーグ公式の順位表(地区ごと)",
+            "own_district": own["label"],
+            "team_id": team_id,
+            "districts": districts,
+            "overall": {
+                "label": f"{league or 'リーグ'}全体(勝率順・参考)",
+                "note": "全地区のクラブを勝率→得失点差の順に並べたもので、公式の順位ではありません",
+                "table": everyone,
+            },
+        }
+    print("[WARN] 順位: Bリーグ公式の順位表にブローウィンズが見つかりません")
+    return None
+
+
 # ---------- 選手の得点 ----------
 
 WFL_GOALRANK = "https://w-fleague.jp/score/goalrank.html"

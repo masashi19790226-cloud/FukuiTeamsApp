@@ -2,6 +2,9 @@ package com.fukuiteams.app.ui.screens
 
 import com.fukuiteams.app.ui.components.NewsChip
 import com.fukuiteams.app.ui.components.AddFromXSheet
+import com.fukuiteams.app.ui.components.TeamStandingsCard
+import com.fukuiteams.app.data.LeagueStandings
+import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.MyGamesRepository
 import com.fukuiteams.app.data.SharedPostRequest
 import com.fukuiteams.app.ui.components.HomeAwayLabel
@@ -191,6 +194,8 @@ fun GameDetailScreen(
     val context = LocalContext.current
 
     var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
+    // 3チームのリーグの順位表(「成績」の下の「順位」で使う)
+    var leagueStandings by remember { mutableStateOf<Map<String, LeagueStandings>>(emptyMap()) }
     // 観戦方法・勝敗の記録は、変更されるたびに観戦成績カードへ即反映させる
     val gameLogPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
     // 「行く予定」にした今後の試合(3チームまとめて、日付順)
@@ -243,11 +248,14 @@ fun GameDetailScreen(
     }
 
     LaunchedEffect(Unit) { refreshResults() }
+    LaunchedEffect(Unit) { leagueStandings = StandingsRepository.fetch() }
 
     // 手動で更新したときは、アプリのすべての情報を読み直す
     if (pullToRefreshState.isRefreshing) {
         LaunchedEffect(true) {
-            autoResults = DataRefresher.refreshAll(context).results
+            val d = DataRefresher.refreshAll(context)
+            autoResults = d.results
+            leagueStandings = d.standings
             pullToRefreshState.endRefresh()
         }
     }
@@ -315,6 +323,14 @@ fun GameDetailScreen(
 
             // 成績(観戦成績とホーム・アウェイ別成績を1つにまとめた)。見出しと要点1行だけ出し、押すと開く
             StatsSummarySection(watchRecords, homeAwaySummary, onOpenList = { statsFilter = it })
+
+            // 順位(リーグの順位表)。見出しと要点1行だけ出し、押すと開く。ブローウィンズはBリーグ公式の地区別の順位表
+            TeamStandingsCard(
+                team = selectedTeam,
+                standings = leagueStandings[selectedTeam.name],
+                nextOpponent = upcomingTeamGames.firstOrNull { !it.userAdded }?.opponent,
+                onOpenUrl = { url -> openUrl(context, url) }
+            )
 
             // 公式の日程に載らない試合(U-20の大会など)を、Xの投稿から自分で追加する
             OutlinedButton(

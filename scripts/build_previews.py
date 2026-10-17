@@ -658,6 +658,13 @@ def load_standings():
             print("[WARN] ユナイテッド: 順位表が読み取れませんでした")
     except Exception as e:
         print(f"[WARN] ユナイテッド公式サイトの取得に失敗 {e!r}")
+    # ブローウィンズ(Bリーグ公式の地区別の順位表)。読めなかったときは前回の内容を残す
+    try:
+        b = standings.bleague_standings(fetch, BLOWINDS_TEAM_ID)
+        if b:
+            STANDINGS["BLOWINDS"] = b
+    except Exception as e:
+        print(f"[WARN] 順位: Bリーグ公式の順位表の読み取りに失敗 {e!r}")
     # 選手の得点。読めなかったときは前回の内容を残す(main で standings.json にまとめるときに前回分を使う)
     old = load_json(STANDINGS_PATH, {})
     if "RAC" in STANDINGS:
@@ -872,6 +879,8 @@ def build_one(team, games, results, today, previews):
 
 def main():
     games = load_json(GAMES_PATH, [])
+    # 展望(次の試合・直近の成績)はトップチームの試合だけで作る。U-20・サテライトなど(category 付き)の試合は使わない
+    games = [g for g in games if not g.get("category")]
     results = load_json(RESULTS_PATH, {})
     today = datetime.now(JST).strftime("%Y-%m-%d")
     previews = {}

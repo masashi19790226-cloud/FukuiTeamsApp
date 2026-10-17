@@ -12,6 +12,7 @@ import java.net.URL
  * - 丸岡RUCK : 女子Fリーグ公式の試合結果から計算した順位表(レギュラーシーズン・ファイナルシーズン)
  * - ユナイテッド: ユナイテッド公式サイトの順位表(順位・勝点のみ)
  * どちらも選手の得点(scorers)が付く。
+ * - ブローウィンズ: Bリーグ公式の地区別の順位表(勝敗・勝率・ゲーム差・得失点・ホーム/アウェー・連勝など。bleague)
  */
 private const val STANDINGS_JSON_URL =
     "https://raw.githubusercontent.com/masashi19790226-cloud/FukuiTeamsApp/main/data/standings.json"
@@ -39,8 +40,67 @@ data class LeagueStandings(
     val regular: StandingsPart?,
     val final: StandingsPart?,
     /** 選手の得点(後から追加した項目。古い standings.json に無ければ null) */
-    val scorers: LeagueScorers? = null
+    val scorers: LeagueScorers? = null,
+    /** Bリーグの地区別の順位表(ブローウィンズだけ。無ければ null) */
+    val bleague: BleagueStandings? = null
 )
+
+/** Bリーグ公式の順位表の1行(公式の表の列のまま。読めなかった数字は null、文字は空) */
+data class BleagueRow(
+    val rank: Int,
+    val team: String,
+    /** 短い名前(例「福井」「横浜EX」) */
+    val short: String,
+    val teamId: String,
+    val win: Int,
+    val lose: Int,
+    /** 勝率(例「.500」) */
+    val pct: String,
+    /** 1位とのゲーム差(1位は空) */
+    val gamesBehind: String,
+    val pointsFor: Int?,
+    val pointsAgainst: Int?,
+    val pointDiff: Int?,
+    /** ホーム・アウェーの勝敗(例「3-0」) */
+    val home: String,
+    val away: String,
+    /** 過去5試合の勝敗(例「2-3」) */
+    val last5: String,
+    /** 連勝・連敗(例「W4」「L1」) */
+    val streak: String,
+    val games: Int?,
+    /** 試合消化率(例「13.33%」) */
+    val progress: String,
+    /** 地区優勝(決まったときだけ) */
+    val clinch: String,
+    /** 地区(リーグ全体の表のときだけ) */
+    val district: String
+) {
+    /** 「4連勝」「1連敗」。読めなければ空 */
+    val streakLabel: String
+        get() {
+            val m = Regex("""([WL])\s*(\d+)""").find(streak) ?: return ""
+            return m.groupValues[2] + if (m.groupValues[1] == "W") "連勝" else "連敗"
+        }
+
+    /** 名前の短い方(無ければ正式名) */
+    val shortName: String get() = short.ifBlank { team }
+}
+
+data class BleagueDistrict(val label: String, val rows: List<BleagueRow>)
+
+data class BleagueStandings(
+    /** 自チームのいる地区(例「中地区」) */
+    val ownDistrict: String,
+    val teamId: String,
+    val districts: List<BleagueDistrict>,
+    /** リーグ全体を勝率で並べた参考の表(公式の順位ではない) */
+    val overall: BleagueDistrict?,
+    val overallNote: String
+) {
+    val own: BleagueDistrict? get() = districts.firstOrNull { it.label == ownDistrict }
+    val me: BleagueRow? get() = own?.rows?.firstOrNull { it.teamId == teamId }
+}
 
 /**
  * 選手1人分の得点。
@@ -92,7 +152,8 @@ object StandingsRepository {
                     },
                     regular = o.optJSONObject("regular")?.let { parsePart(it) },
                     final = o.optJSONObject("final")?.let { parsePart(it) },
-                    scorers = o.optJSONObject("scorers")?.let { parseScorers(it) }
+                    scorers = o.optJSONObject("scorers")?.let { parseScorers(it) },
+                    bleague = if (o.has("districts")) parseBleague(o) else null
                 )
             }
             map
@@ -122,6 +183,48 @@ object StandingsRepository {
         }
         if (rows.isEmpty()) return null
         return LeagueScorers(o.optString("label"), o.optString("note"), o.optString("source_url"), rows)
+    }
+
+    private fun parseBleague(o: JSONObject): BleagueStandings? {
+        fun rowsOf(arr: org.json.JSONArray?): List<BleagueRow> = (0 until (arr?.length() ?: 0)).mapNotNull { i ->
+            val r = arr?.optJSONObject(i) ?: return@mapNotNull null
+            fun intOrNull(key: String): Int? = if (r.has(key) && !r.isNull(key)) r.optInt(key) else null
+            BleagueRow(
+                rank = r.optInt("rank"),
+                team = r.optString("team"),
+                short = r.optString("short"),
+                teamId = r.optString("team_id"),
+                win = r.optInt("win"),
+                lose = r.optInt("lose"),
+                pct = r.optString("pct"),
+                gamesBehind = r.optString("gb"),
+                pointsFor = intOrNull("pf"),
+                pointsAgainst = intOrNull("pa"),
+                pointDiff = intOrNull("diff"),
+                home = r.optString("home"),
+                away = r.optString("away"),
+                last5 = r.optString("last5"),
+                streak = r.optString("streak"),
+                games = intOrNull("games"),
+                progress = r.optString("progress"),
+                clinch = r.optString("clinch"),
+                district = r.optString("district")
+            )
+        }
+        val arr = o.optJSONArray("districts") ?: return null
+        val districts = (0 until arr.length()).mapNotNull { i ->
+            val d = arr.optJSONObject(i) ?: return@mapNotNull null
+            BleagueDistrict(d.optString("label"), rowsOf(d.optJSONArray("table"))).takeIf { it.rows.isNotEmpty() }
+        }
+        if (districts.isEmpty()) return null
+        val ov = o.optJSONObject("overall")
+        return BleagueStandings(
+            ownDistrict = o.optString("own_district"),
+            teamId = o.optString("team_id"),
+            districts = districts,
+            overall = ov?.let { BleagueDistrict(it.optString("label"), rowsOf(it.optJSONArray("table"))) }?.takeIf { it.rows.isNotEmpty() },
+            overallNote = ov?.optString("note").orEmpty()
+        )
     }
 
     private fun parsePart(o: JSONObject): StandingsPart {
