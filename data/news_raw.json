@@ -3137,5 +3137,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/Deln9wyTYqH/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2UOqT0vkKFonW73cPKyiCo",
     "published": "2026-10-17T08:00:43Z",
     "detected_at": "2026-10-17T08:33:48.859849+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2724651",
+    "team": "BLOWINDS",
+    "title": "シュート精度欠きリズムつかめず…福井ブローウィンズ、新潟 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2724651",
+    "published": "2026-10-17T02:01:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.ynwo3C40fUBz71YC140eAw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-17T09:08:37.384805+00:00"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7043",
+    "team": "UNITED",
+    "title": "【 10/25 AS京都戦 】全国地域サッカーチャンピオンズリーグ2026壮行試合「森永北陸乳業スペシャルマッチ」開催のお知らせ",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7043",
+    "published": "2026-10-17T09:00:00+09:00",
+    "detected_at": "2026-10-17T09:08:38.793848+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
   }
 ]
