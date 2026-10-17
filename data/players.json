@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-17T05:54:32.559043+00:00",
+    "updated_at": "2026-10-17T11:08:00.589523+00:00",
     "players": [
       {
         "number": "1",
@@ -3140,7 +3140,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=695&tab=1",
-    "updated_at": "2026-10-17T05:54:34.139438+00:00",
+    "updated_at": "2026-10-17T11:08:03.378365+00:00",
     "players": [
       {
         "number": "1",
@@ -6217,6 +6217,6 @@
       }
     },
     "team_name": "新潟",
-    "game_id": "bw08"
+    "game_id": "bw09"
   }
 }
