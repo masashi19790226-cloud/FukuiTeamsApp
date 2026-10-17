@@ -1048,6 +1048,7 @@ private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, sort: 
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
+                PlayerReading(p.reading)
                 (p.position.ifBlank { row?.position.orEmpty() }).takeIf { it.isNotBlank() }?.let {
                     Text("ポジション:$it", style = MaterialTheme.typography.bodySmall, color = InkSoft)
                 }
@@ -1203,6 +1204,19 @@ private fun SortChip(label: String, selected: Boolean, modifier: Modifier = Modi
  * 押すと、シュート成功率・スティール・ブロック・貢献度が開く。
  * 今季まだ成績が1つも無い選手は、数字の段の代わりに「今季の出場なし」の1行にし、押しても開かない。
  */
+/** 選手名の下に出す読み方(ローマ字)。分からない選手は何も出さない */
+@Composable
+private fun PlayerReading(reading: String) {
+    if (reading.isBlank()) return
+    Text(
+        reading,
+        style = MaterialTheme.typography.bodySmall,
+        color = InkSoft,
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
 @Composable
 private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUMBER, profile: PlayerBirthday? = null) {
     var expanded by remember(player.number, player.name) { mutableStateOf(false) }
@@ -1241,6 +1255,7 @@ private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUM
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
+                PlayerReading(profile?.reading.orEmpty())
                 Text(
                     "ポジション:${player.position.ifBlank { NO_DATA }}",
                     style = MaterialTheme.typography.bodySmall,

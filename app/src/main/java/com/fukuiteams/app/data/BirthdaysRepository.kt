@@ -36,7 +36,9 @@ data class PlayerBirthday(
     /** ポジション(例「GK」「FP」「C/PF」)。分からなければ空 */
     val position: String = "",
     /** 出身高校(ブローウィンズはBリーグ公式、ユナイテッドは経歴の最初の高校・ユース)。分からなければ空 */
-    val highSchool: String = ""
+    val highSchool: String = "",
+    /** 名前の読み方(ローマ字。例「Yoshiaki Fujinaga」。各チームの公式サイト・女子Fリーグ公式から)。分からなければ空 */
+    val reading: String = ""
 ) {
     /** その日に迎える年齢(例:2026年10月8日に1999年10月8日生まれ → 27) */
     fun ageOn(date: LocalDate): Int = date.year - birthday.year
@@ -122,7 +124,8 @@ object BirthdaysRepository {
                     hometown = o.optString("hometown"),
                     school = o.optString("school"),
                     position = o.optString("position"),
-                    highSchool = o.optString("high_school")
+                    highSchool = o.optString("high_school"),
+                    reading = o.optString("reading")
                 )
             }
         } catch (e: Exception) {

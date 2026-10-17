@@ -14,6 +14,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月17日",
+        title = "選手の名前の読み方",
+        items = listOf(
+            "選手タブの選手の一覧(ブローウィンズの選手・丸岡RUCKとユナイテッドの全選手)で、名前の下に読み方(ローマ字)を出すようにしました",
+            "読み方は各チームの公式サイト(丸岡RUCKは女子Fリーグ公式の名簿)から自動で読み取ります。読み取れなかった選手は出しません"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月16日",
         title = "ブローウィンズの日程の自動更新",
         items = listOf(

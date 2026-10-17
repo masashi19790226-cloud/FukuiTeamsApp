@@ -36,7 +36,7 @@ BLEAGUE_ROSTER = "https://www.bleague.jp/roster_detail/?PlayerID="
 
 # 手で直すプロフィール(公式サイトに載っていない出身高校など)
 MANUAL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "manual_profiles.json")
-MANUAL_KEYS = ("height", "weight", "hometown", "high_school", "school", "position")
+MANUAL_KEYS = ("height", "weight", "hometown", "high_school", "school", "position", "reading")
 
 
 def _load_manual():
@@ -52,7 +52,7 @@ def _load_manual():
         return {}, ""
 
 # データの形の版。身長などを足したときに上げると、その日のうちに作り直す
-VERSION = 4
+VERSION = 5
 
 
 def _text(fragment: str) -> str:
@@ -62,6 +62,45 @@ def _text(fragment: str) -> str:
     t = htmllib.unescape(t)
     t = re.sub(r"[ \t　]+", " ", t)
     return re.sub(r"\n\s*\n+", "\n", t).strip()
+
+
+_LATIN_WORD = r"[A-Za-z][A-Za-z'’.\-]*"
+_POSITION_RE = re.compile(r"^(?:PG|SG|SF|PF|C|G|F|GK|FP|FW|MF|DF)(?:/(?:PG|SG|SF|PF|C|G|F))*$")
+
+
+def _romaji(text: str) -> str:
+    """ローマ字の名前を「Yoshiaki Fujinaga」の形にそろえる(すべて大文字・小文字の表記も)"""
+    t = re.sub(r"\s+", " ", text or "").strip()
+    return t.title() if re.search(r"[A-Za-z]", t) else ""
+
+
+def _reading_blowinds(body: str, name: str) -> str:
+    """ブローウィンズ公式の選手ページから読み方(ローマ字)。名前の行のすぐ後の「YOSHIAKI FUJINAGA PG」のような行"""
+    key = re.sub(r"[\s　#]+", "", name)
+    if not key:
+        return ""
+    lines = [ln.strip() for ln in body.split("\n")]
+    for i, ln in enumerate(lines):
+        if re.sub(r"[\s　#]+", "", ln) != key:
+            continue
+        for nxt in lines[i + 1:i + 4]:
+            # ポジションは「PF/C」のように / が入ることがある
+            if re.fullmatch(rf"{_LATIN_WORD}(?: {_LATIN_WORD})+(?: [A-Z]{{1,2}}(?:/[A-Z]{{1,2}})+)?", nxt):
+                words = nxt.split(" ")
+                if len(words) > 2 and _POSITION_RE.match(words[-1]):
+                    words = words[:-1]  # 後ろのポジション(PG など)は除く
+                return _romaji(" ".join(words))
+    return ""
+
+
+def _reading_before_name(body: str, name: str) -> str:
+    """名前のすぐ前にあるローマ字(ユナイテッド公式の「Takuya SUGIMOTO杉本 拓也」の形)"""
+    chars = [c for c in re.sub(r"[\s　]+", "", name)]
+    if not chars:
+        return ""
+    pattern = rf"({_LATIN_WORD}(?:[ ]+{_LATIN_WORD})+)\s*" + r"[\s　]*".join(re.escape(c) for c in chars)
+    m = re.search(pattern, body)
+    return _romaji(m.group(1)) if m else ""
 
 
 def _birthday_in(text: str):
@@ -139,7 +178,8 @@ def blowinds(fetch, cache, today):
         key = f"blowinds:{pid}"
         hit = cache.get(key)
         # 身長・ポジションなどを入れる前に覚えた分("position" が無い)は読み直す
-        if not (hit and _fresh(hit, today) and "high_school" in hit):
+        # 読み方(reading)を入れる前に覚えた分も読み直す
+        if not (hit and _fresh(hit, today) and "high_school" in hit and "reading" in hit):
             url = f"{BLOWINDS_SITE}/team/players/detail/id={detail_id}?PlayerID={pid}"
             try:
                 html = fetch(url)
@@ -168,7 +208,7 @@ def blowinds(fetch, cache, today):
                 fetched += 1
             except Exception as e:
                 print(f"[WARN] 誕生日: Bリーグ公式の選手ページを読めませんでした PlayerID={pid} {e!r}")
-            hit = {"team": "BLOWINDS", "name": name, "number": number, "photo": photo,
+            hit = {"team": "BLOWINDS", "name": name, "reading": _reading_blowinds(body, name), "number": number, "photo": photo,
                    "birthday": _birthday_in(body), **_profile(body), "high_school": high_school,
                    "checked": today.isoformat()}
         out.append((key, hit))
@@ -195,7 +235,7 @@ def united(fetch, cache, today):
     for pid, number in links:
         key = f"united:{pid}"
         hit = cache.get(key)
-        if not (hit and _fresh(hit, today) and "high_school" in hit):
+        if not (hit and _fresh(hit, today) and "high_school" in hit and "reading" in hit):
             url = f"{UNITED_SITE}/team/detail.php?id={pid}"
             try:
                 html = fetch(url)
@@ -211,7 +251,7 @@ def united(fetch, cache, today):
             profile = _profile(body)
             # ユナイテッドの選手ページには出身校の欄が無い(「出身校」の文字が別の場所にあっても使わない)
             profile["school"] = ""
-            hit = {"team": "UNITED", "name": name, "number": number,
+            hit = {"team": "UNITED", "name": name, "reading": _reading_before_name(body, name), "number": number,
                    "photo": photos.get(re.sub(r"[\s　]+", "", name), ""),
                    "birthday": _birthday_in(body), **profile, "high_school": _high_school_career(body),
                    "checked": today.isoformat()}
@@ -253,7 +293,7 @@ def ruck(fetch, ruck_photos):
         key = re.sub(r"\s+", "", name)
         info = (ruck_photos or {}).get(key)
         out.append((f"ruck:{key}", {
-            "team": "RAC", "name": name, "number": tds[1].strip(),
+            "team": "RAC", "name": name, "reading": _romaji(tds[3]), "number": tds[1].strip(),
             "position": tds[0].strip() or _ruck_info(info, "position"),
             "photo": _ruck_photo(info),
             # 身長・出身地は丸岡RUCK公式の選手紹介から(体重・出身校は載っていない)
