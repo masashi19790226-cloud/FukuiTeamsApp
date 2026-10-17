@@ -76,6 +76,8 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.9.1")
     // 掲示板(j-basketball.club)のページを読み取る
     implementation("org.jsoup:jsoup:1.17.2")
+    // 画像(スクリーンショット)の中の文字を読む(日本語。Google Play 開発者サービスの文字認識。読み取りは端末の中だけ)
+    implementation("com.google.android.gms:play-services-mlkit-text-recognition-japanese:16.0.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }

@@ -25,7 +25,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
+            <!-- スクリーンショットなどの画像を「共有」→「ふくスポ」で、画像の文字から予定を追加する画面を開く -->
+            <intent-filter android:label="ふくスポに予定を追加">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
         </activity>
+
+        <!-- 画像の文字を読み取るためのデータ(日本語)を、アプリを入れたときに用意してもらう -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr_japanese" />
 
         <!-- ホーム画面ウィジェット「次の試合」 -->
         <receiver

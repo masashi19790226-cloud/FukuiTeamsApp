@@ -62,8 +62,18 @@ class MainActivity : ComponentActivity() {
             null
         }
         if (sharedText != null) SharedPostRequest.pendingText = sharedText
+        // 画像(スクリーンショットなど)が共有されてきたら、画像の文字から予定を追加する画面を開く
+        @Suppress("DEPRECATION")
+        val sharedImage = if (savedInstanceState == null && sharedText == null && intent?.action == Intent.ACTION_SEND &&
+            intent?.type?.startsWith("image/") == true
+        ) {
+            intent?.getParcelableExtra<android.net.Uri>(Intent.EXTRA_STREAM)?.toString()
+        } else {
+            null
+        }
+        if (sharedImage != null) SharedPostRequest.pendingImage = sharedImage
         // 通知から開いたときは、その通知の画面を開く(画面の回転などで作り直したときは開き直さない)
-        val openRoute = if (sharedText != null) {
+        val openRoute = if (sharedText != null || sharedImage != null) {
             Routes.GAME_DETAIL
         } else if (savedInstanceState == null) {
             intent?.getStringExtra(EXTRA_OPEN_ROUTE)

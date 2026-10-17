@@ -111,6 +111,20 @@ object MyGamesRepository {
         return true
     }
 
+    /** IDから予定を探す(無ければ null) */
+    fun find(context: Context, id: String): MyGameEntry? {
+        ensureLoaded(context)
+        return entries.firstOrNull { it.id == id }
+    }
+
+    /** 予定を書き換える(足りなかった時刻・相手・会場などをあとから補う)。同じIDの予定を置き換える */
+    @Synchronized
+    fun update(context: Context, entry: MyGameEntry) {
+        ensureLoaded(context)
+        entries = entries.map { if (it.id == entry.id) entry else it }.sortedBy { it.toGame().sortKey }
+        save(context)
+    }
+
     /** 予定を消す */
     @Synchronized
     fun remove(context: Context, id: String) {
@@ -131,7 +145,9 @@ object MyGamesRepository {
     fun newId(): String = "my" + System.currentTimeMillis()
 }
 
-/** ほかのアプリの「共有」から送られてきた、まだ開いていない投稿のURL(試合タブで追加の画面を開く) */
+/** ほかのアプリの「共有」から送られてきた、まだ開いていない投稿のURLや画像(試合タブで追加の画面を開く) */
 object SharedPostRequest {
     var pendingText: String? by mutableStateOf(null)
+    /** 共有された画像(スクリーンショットなど)の場所(content://…) */
+    var pendingImage: String? by mutableStateOf(null)
 }

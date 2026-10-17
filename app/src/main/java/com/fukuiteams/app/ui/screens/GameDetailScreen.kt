@@ -2,6 +2,7 @@ package com.fukuiteams.app.ui.screens
 
 import com.fukuiteams.app.ui.components.NewsChip
 import com.fukuiteams.app.ui.components.AddFromXSheet
+import com.fukuiteams.app.ui.components.MyGameEditSheet
 import com.fukuiteams.app.ui.components.TeamStandingsContent
 import com.fukuiteams.app.ui.components.teamStandingsSummary
 import com.fukuiteams.app.model.isMainTeamGame
@@ -235,14 +236,27 @@ fun GameDetailScreen(
     var statsFilter by remember(selectedTeam) { mutableStateOf<StatsFilter?>(null) }
     val pullToRefreshState = rememberPullToRefreshState()
 
-    // 「Xの投稿から予定を追加」の画面(null なら閉じている。開くときは貼るURLなどの文、無ければ空)
+    // 「投稿から予定を追加」の画面(null なら閉じている。開くときは貼るURLなどの文、無ければ空)
     var addSheetText by remember { mutableStateOf<String?>(null) }
-    // ほかのアプリの「共有」でXの投稿が送られてきたら、追加の画面を開く
+    // 共有で送られてきた画像(スクリーンショットなど)。追加の画面で文字を読み取る
+    var addSheetImage by remember { mutableStateOf<String?>(null) }
+    // 「足りないところを補足」で開いている自分で追加した予定のID(null なら閉じている)
+    var editGameId by remember { mutableStateOf<String?>(null) }
+    // ほかのアプリの「共有」でXの投稿・画像が送られてきたら、追加の画面を開く
     val sharedText = SharedPostRequest.pendingText
     LaunchedEffect(sharedText) {
         if (sharedText != null) {
+            addSheetImage = null
             addSheetText = sharedText
             SharedPostRequest.pendingText = null
+        }
+    }
+    val sharedImage = SharedPostRequest.pendingImage
+    LaunchedEffect(sharedImage) {
+        if (sharedImage != null) {
+            addSheetImage = sharedImage
+            addSheetText = ""
+            SharedPostRequest.pendingImage = null
         }
     }
 
@@ -296,7 +310,7 @@ fun GameDetailScreen(
                 actions = {
                     // Xの投稿から予定を追加(U-20の大会など)
                     IconButton(onClick = { addSheetText = "" }) {
-                        Icon(Icons.Filled.Add, contentDescription = "Xの投稿から予定を追加")
+                        Icon(Icons.Filled.Add, contentDescription = "投稿・画像から予定を追加")
                     }
                     IconButton(onClick = { pullToRefreshState.startRefresh() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "結果を更新")
@@ -457,7 +471,7 @@ fun GameDetailScreen(
                                     if (isSelected) {
                                         // 自分で追加した予定は、元の投稿を開く・消すボタン
                                         if (g.userAdded) {
-                                            MyGameActions(g, onDeleted = { selectedGameId = null })
+                                            MyGameActions(g, onDeleted = { selectedGameId = null }, onEdit = { editGameId = g.id })
                                         }
                                         if (isPastTab) {
                                             PastGameInline(g, autoResults[g.id], gameLogPrefs, autoResults)
@@ -491,7 +505,7 @@ fun GameDetailScreen(
                 shape = RoundedCornerShape(3.dp),
                 border = BorderStroke(1.dp, LineGray)
             ) {
-                Text("+ Xの投稿から予定を追加(U-20の大会など)", color = InkSoft, fontSize = 12.sp)
+                Text("+ 投稿・画像から予定を追加(U-20の大会など)", color = InkSoft, fontSize = 12.sp)
             }
         }
         }
@@ -505,15 +519,21 @@ fun GameDetailScreen(
     addSheetText?.let { text ->
         AddFromXSheet(
             initialText = text,
+            initialImage = addSheetImage,
             defaultTeam = selectedTeam,
-            onDismiss = { addSheetText = null },
+            onDismiss = { addSheetText = null; addSheetImage = null },
             onAdded = { _, team ->
                 addSheetText = null
+                addSheetImage = null
                 // 追加した予定のチームの「今後の試合」を出す
                 selectedTeam = team
                 TeamSelection.select(team)
             }
         )
+    }
+
+    editGameId?.let { id ->
+        MyGameEditSheet(gameId = id, onDismiss = { editGameId = null })
     }
 
     statsFilter?.let { filter ->
@@ -804,15 +824,30 @@ private fun UserAddedBadge(label: String = "自分で追加") {
 
 /** 自分で追加した予定の、元の投稿を開く・予定を消すボタン */
 @Composable
-private fun MyGameActions(game: Game, onDeleted: () -> Unit) {
+private fun MyGameActions(game: Game, onDeleted: () -> Unit, onEdit: () -> Unit) {
     val context = LocalContext.current
     var confirm by remember(game.id) { mutableStateOf(false) }
+    // まだ分かっていないところ(画像・投稿から読み取れなかったところ)
+    val missing = listOfNotNull(
+        "開始時刻".takeIf { game.timeLabel == "時間未定" },
+        "相手".takeIf { game.opponent == "相手未定" },
+        "会場".takeIf { game.venue == "会場未定" }
+    )
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(
             "自分で追加した予定です(このスマホの中だけ)。",
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
+        if (missing.isNotEmpty()) {
+            Text(
+                "まだ分からないところ:${missing.joinToString("・")}",
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Bold,
+                color = NewsRed
+            )
+        }
+        NewsChip(if (missing.isNotEmpty()) "足りないところを補足する" else "予定を直す", missing.isNotEmpty(), modifier = Modifier.fillMaxWidth()) { onEdit() }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             game.sourceUrl?.let { url ->
                 NewsChip("元の投稿を開く", false) { openUrl(context, url) }
