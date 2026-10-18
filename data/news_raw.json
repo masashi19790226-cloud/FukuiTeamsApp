@@ -3595,5 +3595,15 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.AZr-sjQEAkBWukh4qA8ofA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-18T12:37:52.768385+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261018de61205",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ アウェーで新潟に連敗",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261018de61205",
+    "published": "2026-10-17T20:34:00+00:00",
+    "source": "news.web",
+    "image": "https://www.bing.com/th?id=ONUT.VVQMGc7euSrTVmSiT9AP0A&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-18T13:16:32.697100+00:00"
   }
 ]
