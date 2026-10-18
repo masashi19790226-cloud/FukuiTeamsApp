@@ -3493,5 +3493,13 @@
     "source": "Yahoo!ニュース",
     "image": "",
     "detected_at": "2026-10-18T05:10:51.448241+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14311484316261087693",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                               AMCカップ2日目始まります ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2111608743792419319&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3NBc6agDZ72vvC2tLu76RD",
+    "published": "2026-10-18T03:08:45Z",
+    "detected_at": "2026-10-18T07:54:21.131501+00:00"
   }
 ]
