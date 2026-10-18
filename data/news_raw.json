@@ -444,16 +444,6 @@
     "image": ""
   },
   {
-    "id": "official-news:https://ruck-fukui.com/archives/6355",
-    "team": "RAC",
-    "title": "【第9節】メットライフ生命日本女子Fリーグ2026-27 のお知らせ",
-    "link": "https://ruck-fukui.com/archives/6355",
-    "published": "2026-09-03T13:59:35+00:00",
-    "detected_at": "2026-09-03T13:59:35+00:00",
-    "source": "丸岡RUCK公式",
-    "image": ""
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -3605,5 +3595,21 @@
     "source": "news.web",
     "image": "https://www.bing.com/th?id=ONUT.VVQMGc7euSrTVmSiT9AP0A&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-18T13:16:32.697100+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:112235666504846753",
+    "team": "BLOWINDS",
+    "title": "【ハイライト】新潟アルビレックスBBvs福井ブローウィンズ｜りそなグループ B.LEAGUE 2026-27",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DetcU6Lq4Yc0&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw264zfbFIGUcn56DCS3yO4a",
+    "published": "2026-10-18T11:09:22Z",
+    "detected_at": "2026-10-18T14:31:14.741121+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3051917113488562750",
+    "team": "BLOWINDS",
+    "title": "GAME PHOTO   10月18日(日)14:05TIPOFF #福井ブローウィンズ アオーレ長岡 試合情報 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.facebook.com/NiigataAlbirexBB/posts/game-photo10%25E6%259C%258818%25E6%2597%25A5%25E6%2597%25A51405tipoff%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA%25E3%2582%25A2%25E3%2582%25AA%25E3%2583%25BC%25E3%2583%25AC%25E9%2595%25B7%25E5%25B2%25A1%25E8%25A9%25A6%25E5%2590%2588%25E6%2583%2585%25E5%25A0%25B1albirexcomnewsdetailid24998/1786848420114451/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw396JJYQMxVZf4S4yR64YKj",
+    "published": "2026-10-18T10:15:37Z",
+    "detected_at": "2026-10-18T14:31:14.741206+00:00"
   }
 ]
