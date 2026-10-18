@@ -3501,5 +3501,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2111608743792419319&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3NBc6agDZ72vvC2tLu76RD",
     "published": "2026-10-18T03:08:45Z",
     "detected_at": "2026-10-18T07:54:21.131501+00:00"
+  },
+  {
+    "id": "bing:https://www.msn.com/ja-jp/sports/%E5%85%A8%E8%88%AC/%E5%89%8D%E5%8D%8A%E3%81%AE%E3%83%AA%E3%83%BC%E3%83%89%E7%94%9F%E3%81%8B%E3%81%9B%E3%81%9A%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E9%80%86%E8%BB%A2%E8%B2%A0%E3%81%91-%E6%96%B0%E6%BD%9F%E3%82%A2%E3%83%AB%E3%83%93%E3%83%AC%E3%83%83%E3%82%AF%E3%82%B9bb%E3%81%A8%E5%AF%BE%E6%88%A6-%E3%83%90%E3%82%B9%E3%82%B1b%E3%83%AA%E3%83%BC%E3%82%B0%E3%83%AF%E3%83%B3/ar-AA2etgrx",
+    "team": "BLOWINDS",
+    "title": "前半のリード生かせず福井ブローウィンズ逆転負け 新潟 ...",
+    "link": "https://www.msn.com/ja-jp/sports/%E5%85%A8%E8%88%AC/%E5%89%8D%E5%8D%8A%E3%81%AE%E3%83%AA%E3%83%BC%E3%83%89%E7%94%9F%E3%81%8B%E3%81%9B%E3%81%9A%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E9%80%86%E8%BB%A2%E8%B2%A0%E3%81%91-%E6%96%B0%E6%BD%9F%E3%82%A2%E3%83%AB%E3%83%93%E3%83%AC%E3%83%83%E3%82%AF%E3%82%B9bb%E3%81%A8%E5%AF%BE%E6%88%A6-%E3%83%90%E3%82%B9%E3%82%B1b%E3%83%AA%E3%83%BC%E3%82%B0%E3%83%AF%E3%83%B3/ar-AA2etgrx",
+    "published": "2026-10-18T02:30:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.AZr-sjQEAkBWukh4qA8ofA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-18T10:32:02.630101+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/reader/2725197",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ逆転負け、新潟に2連敗 バスケットボールB ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/reader/2725197",
+    "published": "2026-10-18T02:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.wPm0Mk8ES99N4va9HGafog&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-18T10:32:02.630134+00:00"
   }
 ]
