@@ -52,7 +52,7 @@ def _load_manual():
         return {}, ""
 
 # データの形の版。身長などを足したときに上げると、その日のうちに作り直す
-VERSION = 5
+VERSION = 6
 
 
 def _text(fragment: str) -> str:
@@ -272,8 +272,21 @@ def _ruck_info(info, key):
     return info.get(key, "") if isinstance(info, dict) else ""
 
 
+def _ruck_key(name: str) -> str:
+    """丸岡RUCKの選手名を比べるための形(空白を取り、﨑→崎 などの字の違いをそろえる)。
+    女子Fリーグの名簿は「嶋﨑」、丸岡RUCK公式は「嶋崎」のように字が違うことがあるため"""
+    t = re.sub(r"[\s　]+", "", name or "")
+    for a, b in (("﨑", "崎"), ("髙", "高"), ("濵", "浜"), ("邉", "邊"), ("𠮷", "吉")):
+        t = t.replace(a, b)
+    return t
+
+
 def ruck(fetch, ruck_photos):
-    """女子Fリーグ公式のクラブページから、今季の選手名簿(背番号・氏名・生年月日)。毎回1〜2ページだけ読む"""
+    """女子Fリーグ公式のクラブページから、今季の選手名簿(背番号・氏名・生年月日)。毎回1〜2ページだけ読む。
+    読み方(ローマ字)は丸岡RUCK公式の選手紹介を先に使い、載っていなければ女子Fリーグの名簿の表記を使う。
+    丸岡RUCK公式にいて女子Fリーグの名簿にいない選手も、丸岡RUCK公式の生年月日などで加える"""
+    # 丸岡RUCK公式の選手紹介を、字の違いをそろえた名前で引けるようにする
+    club_info = {_ruck_key(k): v for k, v in (ruck_photos or {}).items() if isinstance(v, dict)}
     club = fetch(WFL_RUCK_CLUB)
     m = re.search(r"var\s+team\s*=\s*(\d+)", club)
     if not m:
@@ -291,9 +304,11 @@ def ruck(fetch, ruck_photos):
         if not bd or not name:
             continue
         key = re.sub(r"\s+", "", name)
-        info = (ruck_photos or {}).get(key)
+        info = (ruck_photos or {}).get(key) or club_info.get(_ruck_key(name))
         out.append((f"ruck:{key}", {
-            "team": "RAC", "name": name, "reading": _romaji(tds[3]), "number": tds[1].strip(),
+            "team": "RAC", "name": name,
+            "reading": _romaji(_ruck_info(info, "reading")) or _romaji(tds[3]),
+            "number": tds[1].strip(),
             "position": tds[0].strip() or _ruck_info(info, "position"),
             "photo": _ruck_photo(info),
             # 身長・出身地は丸岡RUCK公式の選手紹介から(体重・出身校は載っていない)
@@ -301,7 +316,24 @@ def ruck(fetch, ruck_photos):
             "hometown": _ruck_info(info, "hometown"), "school": "", "high_school": "",
             "birthday": f"{int(bd.group(1)):04d}-{int(bd.group(2)):02d}-{int(bd.group(3)):02d}",
         }))
-    print(f"[誕生日] 丸岡RUCK: {len(out)}人")
+    # 丸岡RUCK公式にいて、女子Fリーグの名簿にいない選手(登録が後からの選手など)
+    listed = {_ruck_key(v["name"]) for _, v in out}
+    added = 0
+    for k, info in club_info.items():
+        # 名前を読み取れなかった選手(かっこなどが残っている)は加えない(同じ選手が2人並ばないように)
+        if k in listed or not info.get("name") or not info.get("birthday") or re.search(r"[（()）0-9]", info["name"]):
+            continue
+        name = re.sub(r"[\s　]+", " ", info["name"]).strip()
+        nkey = re.sub(r"[\s　]+", "", name)
+        out.append((f"ruck:{nkey}", {
+            "team": "RAC", "name": name, "reading": _romaji(info.get("reading", "")),
+            "number": info.get("number", ""), "position": info.get("position", ""),
+            "photo": _ruck_photo(info), "height": info.get("height", ""), "weight": "",
+            "hometown": info.get("hometown", ""), "school": "", "high_school": "",
+            "birthday": info["birthday"],
+        }))
+        added += 1
+    print(f"[誕生日] 丸岡RUCK: {len(out)}人(うち丸岡RUCK公式だけに載っている選手{added}人)")
     return out
 
 
