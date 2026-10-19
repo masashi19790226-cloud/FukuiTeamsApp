@@ -3701,5 +3701,57 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/DenfoeHKORT/&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2wr548zigQ36Aa8UlyV65-",
     "published": "2026-10-18T01:30:08Z",
     "detected_at": "2026-10-19T01:30:19.434943+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13151821824714139046",
+    "team": "BLOWINDS",
+    "title": "ただ長くいるだけのジョーではなく（福井ブローウィンズ 満田丈太郎） … - Yahoo!ニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/6bdc9336b33ee14a20709975197daba5b46ebda4&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1LjaeUjsIyAz4jrYyZZAnV",
+    "published": "2026-10-19T02:37:43Z",
+    "detected_at": "2026-10-19T06:56:22.328929+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11749588944847384090",
+    "team": "BLOWINDS",
+    "title": "ただ長くいるだけのジョーではなく（福井ブローウィンズ 満田丈太郎） - Yahoo!ニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/6bdc9336b33ee14a20709975197daba5b46ebda4/images/000&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw04H8BaJUo603t8XQRNKkeM",
+    "published": "2026-10-19T02:20:51Z",
+    "detected_at": "2026-10-19T06:56:22.328952+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:400077720904449202",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 على X: \"               試合速報   日本AMCカップ ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2111392069298380865%3Flang%3Dar-x-fm&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2kbw2kxwJF_gDBkul2rGWz",
+    "published": "2026-10-18T09:53:38Z",
+    "detected_at": "2026-10-19T06:56:22.517110+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3961008627917303636",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"               試合速報   日本AMCカップ2026",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2111670863754146079&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3Pjp2qK6BjkZbBvRU1c3qm",
+    "published": "2026-10-18T09:30:50Z",
+    "detected_at": "2026-10-19T06:56:22.517136+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51729",
+    "team": "BLOWINDS",
+    "title": "【第6節】会場アクセス・駐車場情報について",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51729",
+    "published": "2026-10-19T09:00:00+09:00",
+    "detected_at": "2026-10-19T06:56:24.462914+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7024",
+    "team": "UNITED",
+    "title": "「Uniteファンディング2026」 支援者一覧",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7024",
+    "published": "2026-10-19T09:00:00+09:00",
+    "detected_at": "2026-10-19T06:56:24.462914+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
   }
 ]
