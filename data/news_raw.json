@@ -3685,5 +3685,21 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.mDi2fYy-WNsX8YzZzuci6A&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-18T21:04:59.343306+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5455761372952244457",
+    "team": "BLOWINDS",
+    "title": "スターティング5   10月18日(日)14:05TIPOFF #福井ブローウィンズ 🏟️アオーレ長岡 バスケット ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.facebook.com/NiigataAlbirexBB/posts/%25E3%2582%25B9%25E3%2582%25BF%25E3%2583%25BC%25E3%2583%2586%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25B0510%25E6%259C%258818%25E6%2597%25A5%25E6%2597%25A51405tipoff%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA%25EF%25B8%258F%25E3%2582%25A2%25E3%2582%25AA%25E3%2583%25BC%25E3%2583%25AC%25E9%2595%25B7%25E5%25B2%25A1-%25E3%2583%2590%25E3%2582%25B9%25E3%2582%25B1%25E3%2583%2583%25E3%2583%2588live/1786605473472079/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw18-W3N3Hw_y8hg9OS60mAu",
+    "published": "2026-10-18T10:49:28Z",
+    "detected_at": "2026-10-19T01:30:19.163576+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8903911757724161931",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 | ・ ⁡ 【 #Uniteファンディング 】 11/13(金)からはじまる全国地域SCL ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/DenfoeHKORT/&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2wr548zigQ36Aa8UlyV65-",
+    "published": "2026-10-18T01:30:08Z",
+    "detected_at": "2026-10-19T01:30:19.434943+00:00"
   }
 ]
