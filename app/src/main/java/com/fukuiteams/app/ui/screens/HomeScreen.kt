@@ -751,7 +751,9 @@ private fun LatestResultHero(
             NewspaperPhoto(
                 file = photos.first(),
                 caption = photoCaption(game, result, outcome, recordedWatchMethod(game.id, prefs)),
-                height = 200.dp
+                // 枠を画像の形に合わせる(横長は横幅いっぱい、縦長は高さ260dpで中央。左右の灰色の帯を出さない)
+                height = 260.dp,
+                fitFrameToImage = true
             )
         }
         Row(
@@ -885,15 +887,17 @@ private fun NextGameBlock(
             // チェックインした試合は「行く予定」の札
             val nextLogPrefs by LocalContext.current.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
             if (isGoing(nextGame.id, nextLogPrefs)) GoingBadge()
+            // チーム名は残りの幅に収め、入りきらないときは「…」で切る
+            // (「行く予定」の札が付くと幅が足りなくなり、右端の「あと○日」が1文字ずつ縦に折り返していたため)
             Text(
                 nextGame.team.displayName,
+                modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.labelMedium,
                 color = nextGame.team.color,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.weight(1f))
-            // 「あと○日」は赤い枠と赤い文字(塗りつぶしにすると、赤地に白文字の HOME の札と見分けにくいため)
+            // 「あと○日」は赤い枠と赤い文字(塗りつぶしにすると、赤地に白文字の HOME の札と見分けにくいため)。折り返さず1行で出す
             nextGame.countdownLabel()?.let { label ->
                 Text(
                     label,
@@ -903,7 +907,9 @@ private fun NextGameBlock(
                         .padding(horizontal = 8.dp, vertical = 2.dp),
                     color = NewsRed,
                     style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.ExtraBold
+                    fontWeight = FontWeight.ExtraBold,
+                    maxLines = 1,
+                    softWrap = false
                 )
             }
         }

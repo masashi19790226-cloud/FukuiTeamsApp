@@ -14,6 +14,21 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月19日",
+        title = "速報の写真の枠・次の試合の札",
+        items = listOf(
+            "一面の「次の試合」で「行く予定」の札が付くと、右端の「あと○日」が1文字ずつ縦に折り返して大きな余白ができていたのを直しました(チーム名が長いときは「…」で切ります)",
+            "一面の速報に載せる写真の枠を、写真の形に合わせるようにしました。横長の写真は横幅いっぱい、縦長の画像(スコアの画像など)は少し大きめにして中央に置き、左右に灰色の余白が出ないようにしました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月18日",
+        title = "XのURLの貼り付け",
+        items = listOf(
+            "「投稿から予定を追加」の入力欄で、長押しの「貼り付け」が出ずにXのURLを貼り付けられないことがあったため、「コピーしたURLを貼り付けて読み込む」ボタンを加えました。Xで投稿の「共有」→「リンクをコピー」をしてから押すと、そのまま読み込みます"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月17日",
         title = "画像から予定を追加",
         items = listOf(

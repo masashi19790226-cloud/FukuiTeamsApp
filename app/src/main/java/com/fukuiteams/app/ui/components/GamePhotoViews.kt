@@ -120,31 +120,40 @@ fun NewspaperPhoto(
     height: Dp,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    matchImageAspectRatio: Boolean = false
+    matchImageAspectRatio: Boolean = false,
+    /**
+     * true なら、枠を画像の形に合わせる(余白の灰色の帯を出さない)。
+     * 横長の画像は横幅いっぱい、縦長の画像は高さ height で幅を画像に合わせて中央に置く(一面の速報の写真で使う)
+     */
+    fitFrameToImage: Boolean = false
 ) {
     val image = rememberPhoto(file)
     val imageRatio = image?.let { bitmap ->
         if (bitmap.height > 0) bitmap.width.toFloat() / bitmap.height else null
     }
+    // 枠の大きさ:縦長の画像を枠に合わせるときは、高さを決めて幅を画像の比率にする(中央に置く)
+    val portraitFit = fitFrameToImage && imageRatio != null && imageRatio < 1f
+    val frameSize = when {
+        portraitFit -> Modifier.height(height).aspectRatio(imageRatio!!)
+        (matchImageAspectRatio || fitFrameToImage) && imageRatio != null -> Modifier.fillMaxWidth().aspectRatio(imageRatio)
+        else -> Modifier.fillMaxWidth().height(height)
+    }
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(3.dp)) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(
-                    if (matchImageAspectRatio && imageRatio != null) Modifier.aspectRatio(imageRatio)
-                    else Modifier.height(height)
-                )
-                .border(1.dp, Ink)
-                .background(DividerGray)
-                .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
-        ) {
-            if (image != null) {
-                Image(
-                    bitmap = image,
-                    contentDescription = caption,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Fit
-                )
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
+            Box(
+                modifier = frameSize
+                    .border(1.dp, Ink)
+                    .background(DividerGray)
+                    .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            ) {
+                if (image != null) {
+                    Image(
+                        bitmap = image,
+                        contentDescription = caption,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Fit
+                    )
+                }
             }
         }
         if (caption != null) {

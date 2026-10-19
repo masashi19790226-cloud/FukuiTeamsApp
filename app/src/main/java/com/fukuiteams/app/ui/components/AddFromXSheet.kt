@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -92,6 +93,7 @@ fun AddFromXSheet(
     initialImage: String? = null
 ) {
     val context = LocalContext.current
+    val clipboard = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -215,6 +217,25 @@ fun AddFromXSheet(
         }
     }
 
+    /**
+     * コピーしてあるXのURLを読み込む。下から出る画面の中の入力欄では、長押しの「貼り付け」が出ない端末があるため、
+     * ボタンでコピーしたURLを入れられるようにする。URLが見つからなければ理由を出す
+     */
+    fun pasteAndLoad() {
+        val copied = clipboard.getText()?.text.orEmpty()
+        val url = findXStatusUrl(copied)
+        if (url == null) {
+            error = if (copied.isBlank()) {
+                "コピーした文字がありません。Xで投稿の「共有」→「リンクをコピー」をしてから押してください"
+            } else {
+                "コピーした文字にXの投稿のURLがありません。Xで投稿の「共有」→「リンクをコピー」をしてから押してください"
+            }
+            return
+        }
+        urlText = url
+        loadX()
+    }
+
     // 写真(スクリーンショット)を選ぶ
     val pickImage = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) loadImage(uri)
@@ -271,13 +292,24 @@ fun AddFromXSheet(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+            // コピーしたURLを貼り付けて、そのまま読み込む
             Button(
-                onClick = { loadX() },
+                onClick = { pasteAndLoad() },
                 enabled = !loading,
                 colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = White),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Xの投稿を読み込む")
+                Text("コピーしたURLを貼り付けて読み込む")
+            }
+            // 入力欄に打ち込んだ(または貼り付けた)URLを読み込む
+            if (urlText.isNotBlank()) {
+                OutlinedButton(
+                    onClick = { loadX() },
+                    enabled = !loading,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("入力欄のURLを読み込む", color = Ink)
+                }
             }
             OutlinedButton(
                 onClick = { pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
