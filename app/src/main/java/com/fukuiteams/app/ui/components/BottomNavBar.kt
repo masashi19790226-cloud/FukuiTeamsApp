@@ -7,15 +7,28 @@ import androidx.compose.material.icons.filled.Stadium
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.NavigationBarDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,25 +58,42 @@ val bottomNavItems = listOf(
 @Composable
 fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
     // 紙面の下端らしく、二重罫線の下に少し濃い紙色の帯
+    // 標準の NavigationBar は高さが80dpに決まっていて上下の余白が大きいので、同じ役目の帯を自前で作り、
+    // アイコンと文字の上下の余白を狭くする(高さは最低56dp。文字を大きくしている端末では、そのぶん高くなる)
     Column {
     DoubleRule()
-    NavigationBar(containerColor = DividerGray) {
-        bottomNavItems.forEach { item ->
-            val selected = currentRoute == item.route
-            NavigationBarItem(
-                selected = selected,
-                onClick = { onNavigate(item.route) },
-                // アイコンは標準(24dp)より少し小さくして、文字とのつり合いをとる
-                icon = { Icon(item.icon, contentDescription = item.label, modifier = Modifier.size(20.dp)) },
-                label = { NavLabel(item.label, selected) },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = NewsRed,
-                    selectedTextColor = Ink,
-                    unselectedIconColor = InkSoft,
-                    unselectedTextColor = InkSoft,
-                    indicatorColor = Color.Transparent
-                )
-            )
+    Surface(color = DividerGray) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(NavigationBarDefaults.windowInsets)
+                .heightIn(min = 56.dp)
+                .selectableGroup(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            bottomNavItems.forEach { item ->
+                val selected = currentRoute == item.route
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .selectable(selected = selected, role = Role.Tab, onClick = { onNavigate(item.route) })
+                        .padding(vertical = 6.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // アイコンは標準(24dp)より少し小さくして、文字とのつり合いをとる
+                    Icon(
+                        item.icon,
+                        contentDescription = item.label,
+                        modifier = Modifier.size(20.dp),
+                        tint = if (selected) NewsRed else InkSoft
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    CompositionLocalProvider(LocalContentColor provides if (selected) Ink else InkSoft) {
+                        NavLabel(item.label, selected)
+                    }
+                }
+            }
         }
     }
 }

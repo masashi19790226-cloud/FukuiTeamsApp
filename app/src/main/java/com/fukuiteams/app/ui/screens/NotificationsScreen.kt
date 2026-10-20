@@ -307,7 +307,7 @@ fun NotificationsScreen(
                 }
             }
 
-            // 3チームの公式サイトと公式SNS(X・インスタグラム)。SNSはチームごとに公式サイトの下に並べる
+            // 4チームの公式サイトと公式SNS(X・インスタグラム)。SNSはチームごとに公式サイトの下に並べる
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SectionLabel("公式サイト・SNS")
                 Team.values().forEach { team ->

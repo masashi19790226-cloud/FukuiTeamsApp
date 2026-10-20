@@ -14,6 +14,20 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月21日",
+        title = "丸岡RUCKの公式インスタグラム",
+        items = listOf(
+            "メニューの「公式サイト・SNS」と「投稿から予定を追加」の「公式のインスタを開く」に、丸岡RUCKの公式インスタグラム(@fukuimaruokaruck)を加えました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月21日",
+        title = "下のメニューの余白",
+        items = listOf(
+            "画面の一番下のメニュー(一面・試合・選手・トピック・掲示板・メニュー)の上下の余白を狭くし、帯を低くしました(そのぶん画面の中身が広く見えます)"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月20日",
         title = "ブルーサンダーのニュース・招待・特集",
         items = listOf(
