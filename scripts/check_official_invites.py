@@ -1,11 +1,12 @@
 """
-3チームの公式サイト・公式ストアを直接見に行き、無料招待・プレゼント情報を
+4チームの公式サイト・公式ストアを直接見に行き、無料招待・プレゼント情報を
 data/invitations_raw.json に追記する。Googleアラートでは拾えない情報の穴埋め用。
 
 見ている場所
 - ブローウィンズ : 公式ニュース一覧(本文まで確認)、トップページの招待特設ページ(/invitation/...)
 - ユナイテッド   : 公式ニュース一覧(本文まで確認)、公式オンラインストアの¥0招待チケット
 - 丸岡RUCK       : 公式サイトのRSS(本文まで確認)
+- ブルーサンダー : 公式サイトのトピックス一覧(本文まで確認。公式サイトのRSSは中身が空なので一覧を読む)
 - 福井市         : 市のスポーツ・スポーツ課のページ一覧(本文まで確認、チーム名が出てくるものだけ)
 
 新しい記事だけ本文を読み、読んだ記事は data/official_seen.json に記録して二度読まない。
@@ -52,6 +53,7 @@ TEAM_WORDS = [
     ("BLOWINDS", re.compile(r"ブローウィンズ|BLOWINDS", re.I)),
     ("UNITED", re.compile(r"ユナイテッド|UNITED", re.I)),
     ("RAC", re.compile(r"RUCK|ラック|丸岡", re.I)),
+    ("THUNDER", re.compile(r"ブルーサンダー|ブルー・サンダー|永平寺.{0,10}ハンド|福井永平寺", re.I)),
 ]
 
 # 福井市:スポーツ関連ページの一覧(市民向けの無料招待はここに載る)
@@ -509,6 +511,8 @@ def main():
     c.check_news_list("UNITED", "https://fukuiunited.co.jp/news/", r"news/detail\.php\?(post_)?id=\d+", "ユナイテッド公式")
     c.check_united_store()
     c.check_ruck_feed()
+    c.check_news_list("THUNDER", "https://www.fukuieiheijihand.co.jp/topics/",
+                      r"fukuieiheijihand\.co\.jp/topics/(?!page/)[^/?#]+/?$", "ブルーサンダー公式")
     c.check_city(FUKUI_CITY_LISTS, r"/p\d{5,}\.html", "福井市")
     c.check_manabi_feed()
     c.fill_news_images()

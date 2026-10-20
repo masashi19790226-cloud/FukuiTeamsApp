@@ -369,9 +369,9 @@ private fun spotlight(
             )
         )
     }
-    // 丸岡RUCK・ユナイテッドは、チーム内の得点の表から
+    // 丸岡RUCK・ユナイテッド・ブルーサンダーは、チーム内の得点の表から
     val st = standings[team.name]?.scorers ?: return emptyList()
-    val word = if (team == Team.RAC) "丸岡" else "ユナイテッド"
+    val word = teamWordOf(team)
     val mine = st.rows.filter { it.team.contains(word) && it.goals > 0 }
     if (mine.isEmpty()) return emptyList()
     val p = mine[day.absoluteValue % mine.size]
@@ -380,6 +380,10 @@ private fun spotlight(
         "今季${p.goals}得点で、リーグの得点ランキング${p.rank}位" +
             (p.shots?.let { "(シュート${it}本)" } ?: "") + "。" +
             (p.games?.let { "${it}試合に出場。" } ?: "")
+    } else if (team == Team.THUNDER) {
+        "今季のリーグHで${p.goals}得点(チーム内${p.rank}位)" +
+            (p.shots?.takeIf { it > 0 }?.let { "。シュート${it}本で成功率${(p.goals * 100 / it)}%" } ?: "") + "。" +
+            (p.games?.let { "${it}試合でメンバー入り。" } ?: "")
     } else {
         "今季の北信越リーグで${p.goals}得点(チーム内${p.rank}位)。" +
             listOfNotNull(p.starts?.let { "先発${it}試合" }, p.bench?.let { "ベンチ入り${it}試合" }).joinToString("・")
@@ -389,7 +393,7 @@ private fun spotlight(
         FeatureStory(
             kicker = "今日の注目選手",
             team = team,
-            headline = "$head、今季${p.goals}ゴール",
+            headline = if (team == Team.THUNDER) "$head、今季${p.goals}得点" else "$head、今季${p.goals}ゴール",
             body = body,
             photo = p.photo,
             bigNumber = "${p.goals}",
@@ -398,13 +402,20 @@ private fun spotlight(
     )
 }
 
-// ---------- 順位(3チーム。ブローウィンズはBリーグ公式の地区の順位表) ----------
+/** 得点の表・順位表で、そのチームの行を見分けるための文字 */
+private fun teamWordOf(team: Team): String = when (team) {
+    Team.RAC -> "丸岡"
+    Team.THUNDER -> "ブルーサンダー"
+    else -> "ユナイテッド"
+}
+
+// ---------- 順位(4チーム。ブローウィンズはBリーグ公式の地区の順位表) ----------
 
 private fun standing(team: Team, standings: Map<String, LeagueStandings>, games: List<Game>): List<FeatureStory> {
     if (team == Team.BLOWINDS) return blowindsStanding(standings, games)
     val league = standings[team.name] ?: return emptyList()
     val part = league.final?.takeIf { it.rows.isNotEmpty() } ?: league.regular ?: return emptyList()
-    val word = if (team == Team.RAC) "丸岡" else "ユナイテッド"
+    val word = teamWordOf(team)
     val me = part.rows.firstOrNull { it.team.contains(word) } ?: return emptyList()
     val top = part.rows.minByOrNull { it.rank } ?: return emptyList()
     val next = games.filter { it.team == team && it.isUpcoming() }.minByOrNull { it.sortKey }
@@ -751,7 +762,12 @@ private fun biggestComeback(team: Team, games: List<Game>, results: Map<String, 
         .mapNotNull { g -> results[g.id]?.takeIf { it.outcome() == GameOutcome.WIN }?.let { g to it } }
     val close = wins.minByOrNull { it.second.myScore - it.second.opponentScore } ?: return emptyList()
     val diff = close.second.myScore - close.second.opponentScore
-    val limit = if (team == Team.BLOWINDS) 5 else 1
+    // 「接戦」とみなす点差(バスケは5点、ハンドボールは2点、サッカー・フットサルは1点まで)
+    val limit = when (team) {
+        Team.BLOWINDS -> 5
+        Team.THUNDER -> 2
+        else -> 1
+    }
     if (diff > limit || wins.size < 2) return emptyList()
     val (g, r) = close
     return listOf(

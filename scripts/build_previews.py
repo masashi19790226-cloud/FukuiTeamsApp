@@ -44,9 +44,9 @@ UA = "Mozilla/5.0 (Linux; Android 14) FukuiSpoBot/1.0 (+https://github.com/masas
 BLEAGUE = "https://www.bleague.jp"
 BLOWINDS_TEAM_ID = "2891"
 # 今季の試合とみなす日付(これより前の試合は直近成績に入れない)
-SEASON_START = {"BLOWINDS": "2026-08-01", "UNITED": "2026-03-01", "RAC": "2026-05-01"}
+SEASON_START = {"BLOWINDS": "2026-08-01", "UNITED": "2026-03-01", "RAC": "2026-05-01", "THUNDER": "2026-08-01"}
 
-MY_LABEL = {"BLOWINDS": "福井", "UNITED": "福井", "RAC": "丸岡"}
+MY_LABEL = {"BLOWINDS": "福井", "UNITED": "福井", "RAC": "丸岡", "THUNDER": "福井永平寺"}
 
 # 女子Fリーグのクラブページ(相手の選手一覧へのリンク用)
 WFLEAGUE_CLUBS = {
@@ -750,6 +750,47 @@ def load_thunder():
     elif old_t.get("scorers"):
         st["scorers"] = old_t["scorers"]
     STANDINGS["THUNDER"] = st
+    # 個人ランキング(得点)。次の対戦相手の注目選手に使う(standings.json には入れない)
+    global THUNDER_LEADERS
+    try:
+        THUNDER_LEADERS = leagueh.leaders(fetch(leagueh.LEADERS_URL))
+        print(f"[順位] ブルーサンダー: 個人ランキング(得点) {len(THUNDER_LEADERS)}人")
+    except Exception as e:
+        print(f"[WARN] ブルーサンダー: 個人ランキングの取得に失敗 {e!r}")
+
+
+# リーグH公式の個人ランキング(得点)。load_thunder で読む
+THUNDER_LEADERS = []
+
+
+def thunder_extra(next_game, preview):
+    """ブルーサンダーの展望:リーグH公式の順位表から両チームの順位・勝敗、
+    福井永平寺の直近の勝敗(試合ごとの記録から)、相手の注目選手(個人ランキングの得点上位)"""
+    st = STANDINGS.get("THUNDER")
+    if st:
+        for r in st.get("regular", {}).get("table", []):
+            if r.get("slug") == leagueh.TEAM_SLUG or "福井永平寺" in r["team"]:
+                side = "my"
+            elif leagueh.same_team(next_game["opponent"], r["team"]):
+                side = "opp"
+                if r.get("slug"):
+                    preview["opp_link"] = f"{leagueh.LEAGUEH}/team/{r['slug']}/profile/"
+            else:
+                continue
+            if not r.get("played"):
+                continue
+            preview[side]["rank"] = f"{r['rank']}位(勝ち点{r['points']})"
+            preview[side]["record"] = r["record"]
+            if r.get("form"):
+                preview[side]["form"] = r["form"]
+    top = [x for x in THUNDER_LEADERS if leagueh.same_team(next_game["opponent"], x["team"])][:3]
+    if top:
+        preview["key_players"] = [
+            {"number": x["number"], "name": x["name"], "position": x["position"],
+             "stat": f"今季{x['goals']}得点(リーグ{x['rank']}位)", "photo": x["photo"]}
+            for x in top
+        ]
+        preview["players_note"] = "リーグH公式の個人ランキング(得点)から"
 
 
 # 丸岡RUCK公式の選手紹介(写真・身長・出身地)。1回の実行で読めた分を、得点の表と誕生日のデータの両方で使う
@@ -884,7 +925,7 @@ def build_summary(team, next_game, p):
     my, opp = p["my"], p["opp"]
     me, them = MY_LABEL[team], next_game["opponent"]
     parts = []
-    if my.get("rank") and opp.get("rank") and team == "UNITED":
+    if my.get("rank") and opp.get("rank") and team in ("UNITED", "THUNDER"):
         parts.append(f"{my['rank'].split('(')[0]}の{me}と{opp['rank'].split('(')[0]}の{them}の対戦。")
     if my.get("form"):
         f = my["form"]
@@ -925,7 +966,7 @@ def build_one(team, games, results, today, previews):
         "last_meeting": last_meeting, "key_players": [], "players_note": "", "opp_link": None,
     }
     try:
-        {"BLOWINDS": blowinds_extra, "UNITED": united_extra, "RAC": ruck_extra}[team](game, p)
+        {"BLOWINDS": blowinds_extra, "UNITED": united_extra, "RAC": ruck_extra, "THUNDER": thunder_extra}[team](game, p)
     except Exception as e:
         print(f"[WARN] {team}: 追加データの取得中にエラー {e}")
     p["summary"] = build_summary(team, game, p)
@@ -946,7 +987,7 @@ def main():
     load_standings()
     attach_player_photos()
 
-    for team in ["BLOWINDS", "RAC", "UNITED"]:
+    for team in ["BLOWINDS", "RAC", "UNITED", "THUNDER"]:
         try:
             build_one(team, games, results, today, previews)
         except Exception as e:

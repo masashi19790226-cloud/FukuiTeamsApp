@@ -37,6 +37,8 @@ BING_NEWS_QUERIES = {
     "BLOWINDS": ["福井ブローウィンズ", "ブローウィンズ パブリックビューイング", "ブローウィンズ 観戦会"],
     "RAC": ["丸岡RUCK", "丸岡ラック", "丸岡RUCK パブリックビューイング"],
     "UNITED": ["福井ユナイテッド", "福井ユナイテッド パブリックビューイング"],
+    # ブルーサンダー(ハンドボール)。Googleアラートはまだ無いので、Bingニュースだけで探す
+    "THUNDER": ["福井永平寺ブルーサンダー", "ブルーサンダー ハンドボール"],
 }
 BING_NEWS_URL = "https://www.bing.com/news/search?q={q}&format=rss&setlang=ja&cc=JP"
 
@@ -65,6 +67,9 @@ TEAM_WORDS = {
     # 「ユナイテッド」だけだと海外サッカー(マンチェスター・ユナイテッド等)まで入るので福井とセットのときだけ
     "UNITED": re.compile(r"福井\s*ユナイテッド|福井U(?![A-Za-z0-9])|FUKUI\s*UNITED|ユナイテッド.{0,20}福井|福井.{0,20}ユナイテッド", re.I),
     "RAC": re.compile(r"丸岡\s*(RUCK|ラック)|丸岡\s*de\s*フットサル|RUCK.{0,20}丸岡|丸岡.{0,20}RUCK|福井丸岡", re.I),
+    # 「ブルーサンダー」だけだと別のもの(映画・ほかの競技のチームなど)も入るので、福井・永平寺・ハンドボールとセットのときだけ
+    "THUNDER": re.compile(r"福井永平寺|永平寺\s*ブルー\s*サンダー|ブルー\s*サンダー.{0,30}(福井|永平寺|ハンド|リーグ\s*[HＨ])|"
+                          r"(福井|永平寺|ハンド|リーグ\s*[HＨ]).{0,30}ブルー\s*サンダー|BLUE\s*THUNDER.{0,20}(FUKUI|EIHEIJI)", re.I),
 }
 
 # ニュースから外すもの(通販・求人・フリマなど、チーム名が入っていても記事ではないもの)
@@ -94,7 +99,7 @@ def is_personal_x_post(title: str) -> bool:
 
 
 def is_good_news(title: str) -> bool:
-    """3チームのどれかがはっきり書かれていて、ノイズでも古い情報でも個人のXの投稿でもない記事だけ残す。"""
+    """4チームのどれかがはっきり書かれていて、ノイズでも古い情報でも個人のXの投稿でもない記事だけ残す。"""
     if not any(rx.search(title or "") for rx in TEAM_WORDS.values()):
         return False
     if is_personal_x_post(title):

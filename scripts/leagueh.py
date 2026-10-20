@@ -17,6 +17,7 @@ from datetime import datetime
 
 LEAGUEH = "https://leagueh.jp"
 MATRIX_URL = LEAGUEH + "/rankings/matrix/"
+LEADERS_URL = LEAGUEH + "/rankings/leaders/"
 RANKINGS_URL = LEAGUEH + "/rankings/"
 CLUB_SITE = "https://www.fukuieiheijihand.co.jp"
 CLUB_SCHEDULE_URL = CLUB_SITE + "/schedule/"
@@ -180,7 +181,7 @@ def standings_from(rank_page: str, form_by_slug=None):
         return None
     table = []
     for r in rows:
-        row = {k: r[k] for k in ("rank", "team", "points", "played", "win", "draw", "lose", "gf", "ga", "gd")}
+        row = {k: r[k] for k in ("rank", "team", "slug", "points", "played", "win", "draw", "lose", "gf", "ga", "gd")}
         row["record"] = f"{r['win']}勝{r['lose']}敗" + (f"{r['draw']}分" if r["draw"] else "")
         form = (form_by_slug or {}).get(r["slug"])
         if form:
@@ -192,6 +193,48 @@ def standings_from(rank_page: str, form_by_slug=None):
         "note": "リーグH公式の順位表(勝ち点は勝ち2・引き分け1)",
         "regular": {"label": "レギュラーシーズン", "table": table},
     }
+
+
+# ---------- 個人ランキング(得点) ----------
+
+def leaders(page: str):
+    """リーグH公式の個人ランキング(男子)の最初の表「得点(フィールド得点+7mスロー)」。
+    [{"rank","name","team","number","position","goals","photo"}, ...]"""
+    m = re.search(r"<ol\b[^>]*class=[\"'][^\"']*ranking-stats[^\"']*[\"'][^>]*>(.*?)</ol>", page, flags=re.S | re.I)
+    if not m:
+        return []
+    out = []
+    # 1人分は <li …><div class="field"> で始まる(中に背番号・ポジションの小さな <li> がある)
+    for li in re.split(r"<li\b[^>]*>\s*(?=<div\b[^>]*class=[\"']field[\"'])", m.group(1), flags=re.I)[1:]:
+        rank = re.search(r"<em>\s*(\d+)\s*</em>", li)
+        team = re.search(r"class=[\"']team[\"'][^>]*>.*?<span>(.*?)</span>", li, flags=re.S | re.I)
+        name = re.search(r"<strong>\s*(?:<a\b[^>]*>)?(.*?)(?:</a>)?\s*</strong>", li, flags=re.S | re.I)
+        score = re.search(r"class=[\"']score[\"'][^>]*>\s*(\d+)", li)
+        if not (rank and team and name and score):
+            continue
+        num = re.search(r"背番号[:：]\s*#?\s*(\d+)", _text(li))
+        pos = re.search(r"ポジション[:：]\s*([A-Z]{2})", _text(li))
+        photo = re.search(r"<img\b[^>]*src=[\"'](/files/[^\"']*/player/[^\"']+)[\"']", li)
+        out.append({
+            "rank": int(rank.group(1)), "name": re.sub(r"\s+", " ", _text(name.group(1))),
+            "team": _text(team.group(1)), "number": num.group(1) if num else "",
+            "position": pos.group(1) if pos else "", "goals": int(score.group(1)),
+            "photo": LEAGUEH + photo.group(1) if photo else "",
+        })
+    return out
+
+
+def same_team(a: str, b: str) -> bool:
+    """クラブ公式とリーグH公式でチーム名の書き方が少し違っても同じチームか
+    (例「アルバモス大阪」と「アルバモス大阪高石」、「ブレイヴキングス刈谷」と「トヨタ車体ブレイヴキングス刈谷」)"""
+    a, b = re.sub(r"[\s　]+", "", a or ""), re.sub(r"[\s　]+", "", b or "")
+    if not a or not b:
+        return False
+    if a in b or b in a:
+        return True
+    # 6文字以上の共通部分があれば同じとみなす
+    short, long_ = (a, b) if len(a) <= len(b) else (b, a)
+    return any(short[i:i + 6] in long_ for i in range(0, max(0, len(short) - 5)))
 
 
 # ---------- 選手の得点(試合ごとのページを足し合わせる) ----------
