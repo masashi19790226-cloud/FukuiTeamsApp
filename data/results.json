@@ -226,5 +226,23 @@
     "opponent_score": 73,
     "checked_at": "2026-10-18T08:34:29.074739",
     "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507254"
+  },
+  "th01": {
+    "my_score": 26,
+    "opponent_score": 28,
+    "checked_at": "2026-10-20T18:47:38.046719",
+    "source_url": "https://leagueh.jp/schedule/511M11/",
+    "periods": [
+      {
+        "label": "前半",
+        "my": 16,
+        "opp": 14
+      },
+      {
+        "label": "後半",
+        "my": 10,
+        "opp": 14
+      }
+    ]
   }
 }
