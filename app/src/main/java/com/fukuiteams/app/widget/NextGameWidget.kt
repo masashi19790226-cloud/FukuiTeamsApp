@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 /**
  * ホーム画面のウィジェット「次の試合」。
- * 3チームそれぞれの次の試合(日付・相手・会場・HOME/AWAY)を1行ずつ出し、その試合向けの招待があれば「招待あり」を出す。
+ * 4チームそれぞれの次の試合(日付・相手・会場・HOME/AWAY)を1行ずつ出し、その試合向けの招待があれば「招待あり」を出す。
  * 更新のきっかけ: ウィジェットの定期更新(約1時間)・アプリの一面を開いたとき・招待の定期チェック。
  */
 class NextGameWidget : AppWidgetProvider() {
@@ -57,7 +57,8 @@ class NextGameWidget : AppWidgetProvider() {
         private val ROWS = listOf(
             Row(Team.BLOWINDS, "ブローウィンズ", R.id.bar_b, R.id.team_b, R.id.date_b, R.id.homeaway_b, R.id.opp_b, R.id.invite_b),
             Row(Team.RAC, "丸岡RUCK", R.id.bar_r, R.id.team_r, R.id.date_r, R.id.homeaway_r, R.id.opp_r, R.id.invite_r),
-            Row(Team.UNITED, "ユナイテッド", R.id.bar_u, R.id.team_u, R.id.date_u, R.id.homeaway_u, R.id.opp_u, R.id.invite_u)
+            Row(Team.UNITED, "ユナイテッド", R.id.bar_u, R.id.team_u, R.id.date_u, R.id.homeaway_u, R.id.opp_u, R.id.invite_u),
+            Row(Team.THUNDER, "ブルーサンダー", R.id.bar_t, R.id.team_t, R.id.date_t, R.id.homeaway_t, R.id.opp_t, R.id.invite_t)
         )
 
         private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -79,7 +80,7 @@ class NextGameWidget : AppWidgetProvider() {
                 ?.filterNot { it.isLikelyClosed() } ?: emptyList()
 
             val views = RemoteViews(context.packageName, R.layout.widget_next_game)
-            // 3チームそれぞれの次の試合を1行ずつ
+            // 4チームそれぞれの次の試合を1行ずつ
             ROWS.forEach { row ->
                 val next: Game? = games
                     // トップチームの試合だけ(U-20・サテライトなどの試合は出さない)

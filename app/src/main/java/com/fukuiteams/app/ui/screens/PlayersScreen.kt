@@ -330,6 +330,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                         when (selectedTeam) {
                             Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(約20分おき)が動くと、Bリーグ公式の選手情報から全選手の成績が表示されます。"
                             Team.RAC, Team.UNITED -> "このチームの得点のデータはまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。"
+                            Team.THUNDER -> "ブルーサンダーの選手の数字は、これから対応します(いまは試合の日程・結果だけです)。"
                         }
                     )
                 }
@@ -421,6 +422,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                         Team.BLOWINDS -> "Bリーグ公式"
                         Team.RAC -> "女子Fリーグ公式"
                         Team.UNITED -> "ユナイテッド公式"
+                        Team.THUNDER -> "ブルーサンダー公式"
                     } +
                     "から取り直しています。下に引っ張ると最新のデータを読み込みます。",
                 style = MaterialTheme.typography.bodySmall,
@@ -641,6 +643,7 @@ private fun teamWord(team: Team): String = when (team) {
     Team.RAC -> "丸岡"
     Team.UNITED -> "福井ユナイテッド"
     Team.BLOWINDS -> "ブローウィンズ"
+    Team.THUNDER -> "ブルーサンダー"
 }
 
 /**

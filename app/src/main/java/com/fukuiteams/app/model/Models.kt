@@ -4,11 +4,14 @@ import androidx.compose.ui.graphics.Color
 import com.fukuiteams.app.ui.theme.TeamBlowinds
 import com.fukuiteams.app.ui.theme.TeamRac
 import com.fukuiteams.app.ui.theme.TeamUnited
+import com.fukuiteams.app.ui.theme.TeamThunder
 
 enum class Team(val displayName: String, val initial: String, val color: Color, val officialSiteUrl: String?) {
     BLOWINDS("福井ブローウィンズ", "B", TeamBlowinds, "https://www.fukuiblowinds.com/"),
     RAC("福井丸岡ラック", "R", TeamRac, "https://ruck-fukui.com/"),
-    UNITED("福井ユナイテッド", "U", TeamUnited, "https://fukuiunited.co.jp/")
+    UNITED("福井ユナイテッド", "U", TeamUnited, "https://fukuiunited.co.jp/"),
+    // 男子ハンドボール・リーグH
+    THUNDER("福井永平寺ブルーサンダー", "T", TeamThunder, "https://www.fukuieiheijihand.co.jp/")
 }
 
 /** チームの短い呼び方(例「ブローウィンズ」「丸岡RUCK」「ユナイテッド」)。画面・記事のどこでもこれを使う */
@@ -17,6 +20,7 @@ val Team.shortName: String
         Team.BLOWINDS -> "ブローウィンズ"
         Team.RAC -> "丸岡RUCK"
         Team.UNITED -> "ユナイテッド"
+        Team.THUNDER -> "ブルーサンダー"
     }
 
 data class Game(

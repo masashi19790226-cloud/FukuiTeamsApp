@@ -364,7 +364,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
             ) {
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        SectionLabel(selectedTeam?.let { "${it.displayName}のトピック" } ?: "3チームのトピック", red = true)
+                        SectionLabel(selectedTeam?.let { "${it.displayName}のトピック" } ?: "全チームのトピック", red = true)
                         Headline(
                             when {
                                 loading -> "情報を集めています"
@@ -726,7 +726,7 @@ private fun SnsSearchPanel(
             Text("SNS検索", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
             OutlinedButton(onClick = onClose) { Text("閉じる") }
         }
-        Text("検索対象：${selectedTeam?.displayName ?: "3チーム"}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+        Text("検索対象：${selectedTeam?.displayName ?: "全チーム"}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
         Text("検索目的（複数選択できます）", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
         SnsSearchPurpose.values().forEach { purpose ->
             val checked = purpose in purposes
@@ -954,6 +954,7 @@ private fun Team.snsSearchTerms(): SnsTeamSearchTerms {
         Team.BLOWINDS -> listOf("福井ブローウィンズ", "ブローウィンズ", "#福井ブローウィンズ")
         Team.RAC -> listOf("福井丸岡RUCK", "丸岡RUCK", "#福井丸岡RUCK")
         Team.UNITED -> listOf("福井ユナイテッド", "#福井ユナイテッド")
+        Team.THUNDER -> listOf("福井永平寺ブルーサンダー", "ブルーサンダー", "#福井永平寺ブルーサンダー")
     }
     val gameTerms = when (this) {
         Team.RAC -> listOf("試合結果", "観戦")

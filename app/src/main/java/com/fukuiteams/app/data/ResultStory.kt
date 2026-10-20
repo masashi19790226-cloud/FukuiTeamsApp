@@ -46,6 +46,8 @@ private fun Team.seasonStart(game: Game): String {
         Team.RAC -> "%04d0501".format(if (month >= 5) year else year - 1)
         // 北信越リーグは春から秋
         Team.UNITED -> "%04d0301".format(year)
+        // リーグH(ハンドボール)も秋に始まり春に終わる
+        Team.THUNDER -> "%04d0801".format(if (month >= 8) year else year - 1)
     }
 }
 

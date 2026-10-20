@@ -98,6 +98,7 @@ private fun defaultItemsFor(team: Team): List<PackingItem> = when (team) {
     Team.BLOWINDS -> BLOWINDS_ITEMS
     Team.UNITED -> BASE_ITEMS + PackingItem("rain", "雨具(屋外の試合)")
     Team.RAC -> BASE_ITEMS
+    Team.THUNDER -> BASE_ITEMS
 }
 
 // ---- アプリ内での編集(チームごとに保存し、そのチームの全試合に反映) ----

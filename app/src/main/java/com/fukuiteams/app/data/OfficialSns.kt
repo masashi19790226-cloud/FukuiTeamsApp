@@ -13,6 +13,7 @@ val Team.officialXUrl: String
         Team.BLOWINDS -> "https://x.com/fukui_blowinds"
         Team.RAC -> "https://x.com/RUCK_PR"
         Team.UNITED -> "https://x.com/fkiutd_official"
+        Team.THUNDER -> "https://x.com/fu_ei_bluethun"
     }
 
 /** 公式インスタグラムのアカウント(公式サイトに載っていないチームは null) */
@@ -21,4 +22,5 @@ val Team.officialInstagramUrl: String?
         Team.BLOWINDS -> "https://www.instagram.com/fukui_blowinds/"
         Team.RAC -> null
         Team.UNITED -> "https://www.instagram.com/fukuiunited_official/"
+        Team.THUNDER -> "https://www.instagram.com/fukui_eiheiji_bluethunder/"
     }

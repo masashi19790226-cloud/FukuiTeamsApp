@@ -32,7 +32,8 @@ UNITED_URLS = ["https://fukuiunited.co.jp/team/schedule.php", "https://fukuiunit
 
 WEEKDAY_JP = ["月", "火", "水", "木", "金", "土", "日"]
 EN_WEEKDAYS = "Mon|Tue|Wed|Thu|Fri|Sat|Sun"
-ID_PREFIX = {"blowinds": "bw", "rac": "rc", "united": "un"}
+# thunder:福井永平寺ブルーサンダー(男子ハンドボール・リーグH)。日程は今のところ manual_schedule.json から
+ID_PREFIX = {"blowinds": "bw", "rac": "rc", "united": "un", "thunder": "th"}
 
 # ホーム判定に使う会場名のキーワード(ユナイテッド用。RUCKはセーレン・ドリームアリーナのみホーム)
 FUKUI_VENUE_WORDS = ["福井", "セーレン", "テクノポート", "9.98", "９．９８", "丸岡", "坂井", "敦賀", "鯖江", "越前", "武生", "三国", "大野", "勝山", "小浜"]

@@ -291,6 +291,7 @@ fun GameDetailScreen(
         Team.BLOWINDS -> "ブローウィンズ"
         Team.UNITED -> "福井ユナイテッド"
         Team.RAC -> "丸岡ラック"
+        Team.THUNDER -> "ブルーサンダー"
     }
     val encodedAdKeyword = URLEncoder.encode(adSearchKeyword, "UTF-8")
 

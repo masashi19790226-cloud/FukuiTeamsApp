@@ -845,13 +845,22 @@ private fun TwoColumnFront(
             }
         }
 
-        // 他チームの近況(2段)。同じ日に3チームとも試合があるときは出さない
+        // 他チームの近況。1段に2チームずつ並べる(4チームになり、横に3つ並べると狭くなるため)。
+        // 同じ日に全チームとも試合があるときは出さない
         if (sideTeams.isNotEmpty()) {
             SectionLabel("各チームの近況", modifier = Modifier.padding(top = 6.dp))
-            Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-                sideTeams.forEachIndexed { index, team ->
-                    if (index > 0) Box(modifier = Modifier.padding(horizontal = 8.dp).width(1.dp).fillMaxHeight().background(Ink))
-                    Box(modifier = Modifier.weight(1f)) { TeamBrief(team, autoResults, onOpenGame) }
+            sideTeams.chunked(2).forEachIndexed { rowIndex, pair ->
+                if (rowIndex > 0) ThinRule(color = LineGray, modifier = Modifier.padding(vertical = 6.dp))
+                Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+                    pair.forEachIndexed { index, team ->
+                        if (index > 0) Box(modifier = Modifier.padding(horizontal = 8.dp).width(1.dp).fillMaxHeight().background(Ink))
+                        Box(modifier = Modifier.weight(1f)) { TeamBrief(team, autoResults, onOpenGame) }
+                    }
+                    // 奇数のときは右側を空けて、幅をそろえる
+                    if (pair.size == 1) {
+                        Box(modifier = Modifier.padding(horizontal = 8.dp).width(1.dp))
+                        Box(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }
@@ -1113,6 +1122,7 @@ private fun Team.shortLabelForFront(): String = when (this) {
     Team.BLOWINDS -> "ブローウィンズ"
     Team.RAC -> "丸岡RUCK"
     Team.UNITED -> "ユナイテッド"
+    Team.THUNDER -> "ブルーサンダー"
 }
 
 /**
@@ -1432,7 +1442,7 @@ private fun FeatureGraphic(story: FeatureStory, modifier: Modifier = Modifier) {
         )
         Headline(story.team?.initial ?: "特集", fontSize = if (story.team != null) 64 else 34, color = White)
         Text(
-            story.team?.displayName ?: "3チーム",
+            story.team?.displayName ?: "全チーム",
             style = MaterialTheme.typography.labelSmall,
             color = White.copy(alpha = 0.85f),
             maxLines = 1

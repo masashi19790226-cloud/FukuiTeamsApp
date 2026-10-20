@@ -218,6 +218,7 @@ private fun Team.chipWeight(): Float = when (this) {
     Team.BLOWINDS -> 1.35f
     Team.RAC -> 1f
     Team.UNITED -> 1.15f
+    Team.THUNDER -> 1.35f
 }
 
 @Composable
@@ -235,17 +236,22 @@ private fun TeamSelectorChip(
             .clickable(onClick = onClick)
     ) {
         Box(modifier = Modifier.fillMaxWidth().height(4.dp).background(color))
+        // ボタンが5つ並ぶと名前が入りきらないことがあるので、入りきらないときは文字を少しずつ小さくする
+        var fontSize by remember(label) { mutableStateOf(11.sp) }
         Text(
             label,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 2.dp, vertical = 7.dp),
             color = if (selected) White else Ink,
-            fontSize = 11.sp,
+            fontSize = fontSize,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             maxLines = 1,
-            softWrap = false
+            softWrap = false,
+            onTextLayout = { result ->
+                if (result.didOverflowWidth && fontSize.value > 7f) fontSize = (fontSize.value * 0.9f).sp
+            }
         )
     }
 }

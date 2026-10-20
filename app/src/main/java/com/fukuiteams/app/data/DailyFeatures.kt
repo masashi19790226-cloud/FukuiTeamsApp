@@ -56,6 +56,8 @@ private fun seasonStart(team: Team, today: LocalDate): LocalDate = when (team) {
     Team.BLOWINDS -> LocalDate.of(if (today.monthValue >= 8) today.year else today.year - 1, 8, 1)
     Team.RAC -> LocalDate.of(if (today.monthValue >= 5) today.year else today.year - 1, 5, 1)
     Team.UNITED -> LocalDate.of(today.year, 3, 1)
+    // リーグHは秋から翌年の春
+    Team.THUNDER -> LocalDate.of(if (today.monthValue >= 8) today.year else today.year - 1, 8, 1)
 }
 
 /**

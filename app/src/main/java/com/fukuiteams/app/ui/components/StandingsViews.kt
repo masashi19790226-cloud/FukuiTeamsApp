@@ -73,7 +73,11 @@ private fun bleagueSummary(b: BleagueStandings): String {
 
 /** 「レギュラーシーズン 6位・勝点13」(ファイナルシーズンに試合があればそちら) */
 private fun leagueSummary(st: LeagueStandings, team: Team): String {
-    val word = if (team == Team.RAC) "丸岡" else "福井ユナイテッド"
+    val word = when (team) {
+        Team.RAC -> "丸岡"
+        Team.THUNDER -> "ブルーサンダー"
+        else -> "福井ユナイテッド"
+    }
     val part = st.final?.takeIf { p -> p.rows.any { (it.played ?: 0) > 0 } } ?: st.regular
         ?: return "順位表を読み取れませんでした"
     val me = part.rows.firstOrNull { it.team.contains(word) } ?: return part.label
@@ -122,6 +126,7 @@ fun LeagueStandingsSection(standings: LeagueStandings, ownTeam: Team, nextOppone
         Team.RAC -> "丸岡"
         Team.UNITED -> "福井ユナイテッド"
         Team.BLOWINDS -> "ブローウィンズ"
+        Team.THUNDER -> "ブルーサンダー"
     }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         StandingsAsOfLine(standings.updatedAt, null)

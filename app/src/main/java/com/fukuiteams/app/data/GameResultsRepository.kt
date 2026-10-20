@@ -24,6 +24,7 @@ fun Game.resultSourceUrl(result: RemoteGameResult?): String =
             Team.BLOWINDS -> "https://www.bleague.jp/record/?club1=2891&club2=0"
             Team.RAC -> "https://ruck-fukui.com/schedules-results"
             Team.UNITED -> "https://fukuiunited.co.jp/"
+            Team.THUNDER -> "https://www.fukuieiheijihand.co.jp/latestmatch/"
         }
 
 object GameResultsRepository {

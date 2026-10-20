@@ -215,6 +215,7 @@ private fun Game.hashtag(): String = when (team) {
     com.fukuiteams.app.model.Team.BLOWINDS -> "#福井ブローウィンズ"
     com.fukuiteams.app.model.Team.RAC -> "#福井丸岡RUCK"
     com.fukuiteams.app.model.Team.UNITED -> "#福井ユナイテッド"
+    com.fukuiteams.app.model.Team.THUNDER -> "#福井永平寺ブルーサンダー"
 }
 
 /** 投稿用の日付「2026年9月27日(土)」。 */
