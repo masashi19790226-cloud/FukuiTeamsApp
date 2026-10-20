@@ -8,6 +8,9 @@ import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.NavigationBar
@@ -50,7 +53,8 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
             NavigationBarItem(
                 selected = selected,
                 onClick = { onNavigate(item.route) },
-                icon = { Icon(item.icon, contentDescription = item.label) },
+                // アイコンは標準(24dp)より少し小さくして、文字とのつり合いをとる
+                icon = { Icon(item.icon, contentDescription = item.label, modifier = Modifier.size(20.dp)) },
                 label = { NavLabel(item.label, selected) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = NewsRed,

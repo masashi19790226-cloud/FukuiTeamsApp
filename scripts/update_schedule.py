@@ -1,9 +1,10 @@
 """
-3チームの公式サイトから試合日程を読み取り、data/games.json を自動で更新する。
+4チームの公式サイトから試合日程を読み取り、data/games.json を自動で更新する。
 
 - ブローウィンズ : 公式サイトの試合日程一覧(月ごと)
 - 丸岡RUCK       : 公式サイトの「対戦スケジュール / 試合結果」の表
 - ユナイテッド   : 公式サイトの月間スケジュール(「◯◯KO vs.相手@会場」の行)
+- ブルーサンダー : 公式サイトの試合スケジュールの表(見出し「LEAGUE H 2026-27」の年で年を決める)
 
 動き:
 - まだ games.json に無い試合 → 新しく追加
@@ -23,6 +24,8 @@ import re
 import urllib.request
 from datetime import datetime, timedelta
 
+import leagueh
+
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 GAMES_PATH = os.path.join(BASE_DIR, "games.json")
 
@@ -32,7 +35,8 @@ UNITED_URLS = ["https://fukuiunited.co.jp/team/schedule.php", "https://fukuiunit
 
 WEEKDAY_JP = ["月", "火", "水", "木", "金", "土", "日"]
 EN_WEEKDAYS = "Mon|Tue|Wed|Thu|Fri|Sat|Sun"
-# thunder:福井永平寺ブルーサンダー(男子ハンドボール・リーグH)。日程は今のところ manual_schedule.json から
+# thunder:福井永平寺ブルーサンダー(男子ハンドボール・リーグH)。日程は公式サイトの試合スケジュールから
+# (読めなかったときは manual_schedule.json の分で補う)
 ID_PREFIX = {"blowinds": "bw", "rac": "rc", "united": "un", "thunder": "th"}
 
 # ホーム判定に使う会場名のキーワード(ユナイテッド用。RUCKはセーレン・ドリームアリーナのみホーム)
@@ -183,6 +187,33 @@ def scrape_ruck():
     return games
 
 
+# ---------- 福井永平寺ブルーサンダー ----------
+
+# 公式サイトの試合スケジュールを読めたか
+THUNDER_OK = False
+
+
+def scrape_thunder():
+    """公式サイトの試合スケジュールの表。年は表の上の見出し(例「LEAGUE H 2026-27」)から決める"""
+    page = safe_fetch("THUNDER", leagueh.CLUB_SCHEDULE_URL)
+    if not page:
+        raise RuntimeError("公式サイトの試合スケジュールを読めませんでした")
+    games = []
+    for r in leagueh.club_schedule(page):
+        y = leagueh.season_year(r["start_year"], r["month"])
+        try:
+            games.append(make_game("thunder", y, r["month"], r["day"], r["time"], r["opponent"], r["venue"], r["is_home"]))
+        except ValueError:
+            print(f"[WARN] THUNDER: 日付を読めない行 {r}")
+    print(f"[INFO] THUNDER: {len(games)} 試合を読み取り")
+    if games:
+        # 公式サイトから読めたときは、manual_schedule.json のブルーサンダーの行は使わない
+        # (公式サイトで時刻が変わったときに、手で写した古い時刻に戻さないため)
+        global THUNDER_OK
+        THUNDER_OK = True
+    return games
+
+
 # ---------- 手動の日程(scripts/manual_schedule.json) ----------
 
 MANUAL_PATH = os.path.join(os.path.dirname(__file__), "manual_schedule.json")
@@ -196,6 +227,8 @@ def scrape_manual():
         rows = json.load(f).get("games", [])
     games = []
     for r in rows:
+        if r.get("team") == "thunder" and THUNDER_OK:
+            continue
         y, m, d = (int(x) for x in r["date"].split("-"))
         # category:トップチーム以外(U-20・サテライトなど)の試合。同じ日に何試合あってもよい
         extra = {"placeholder_until": r.get("placeholder_until"), "placeholder_from": r.get("placeholder_from"),
@@ -404,8 +437,9 @@ def merge(games, scraped):
             g["time"] = s["time"]
             g["sort_key"] = sort_key_of(g)
             changes.append(f"開始時刻 {s['time']}")
-        elif s["team"] == "blowinds" and valid_time(g.get("time", "")) and valid_time(s["time"]) and g["time"] != s["time"]:
-            # ブローウィンズは公式サイトの時刻が正しいので、開始時刻が変わったらそれに合わせる
+        elif s["team"] in ("blowinds", "thunder") and valid_time(g.get("time", "")) \
+                and valid_time(s["time"]) and g["time"] != s["time"]:
+            # ブローウィンズ・ブルーサンダーは公式サイトの時刻が正しいので、開始時刻が変わったらそれに合わせる
             changes.append(f"開始時刻 {g['time']}→{s['time']}")
             g["time"] = s["time"]
             g["sort_key"] = sort_key_of(g)
@@ -429,7 +463,8 @@ def main():
     total_added = total_updated = 0
     errors = []
     # 公式サイトを先に読み、最後に手動の日程で足りない分を補う
-    for name, scraper in [("BW", scrape_blowinds), ("RUCK", scrape_ruck), ("UNITED", scrape_united), ("MANUAL", scrape_manual)]:
+    for name, scraper in [("BW", scrape_blowinds), ("RUCK", scrape_ruck), ("UNITED", scrape_united),
+                          ("THUNDER", scrape_thunder), ("MANUAL", scrape_manual)]:
         try:
             scraped = scraper()
         except Exception as e:

@@ -303,7 +303,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             } else {
                 val st = leagueStandings[selectedTeam.name]
                 if (selectedTeam != Team.BLOWINDS && st != null) {
-                    // 丸岡RUCK・ユナイテッドは、選手の得点(取れたとき)を出す。リーグの順位表は試合タブの「順位」にある
+                    // 丸岡RUCK・ユナイテッド・ブルーサンダーは、選手の得点(取れたとき)を出す。リーグの順位表は試合タブの「順位」にある
                     val scorers = st.scorers
                     if (scorers != null) {
                         SectionLabel("${selectedTeam.displayName}の得点", modifier = Modifier.onGloballyPositioned { marks.own = it })
@@ -329,8 +329,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                     NoDataBox(
                         when (selectedTeam) {
                             Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(約20分おき)が動くと、Bリーグ公式の選手情報から全選手の成績が表示されます。"
-                            Team.RAC, Team.UNITED -> "このチームの得点のデータはまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。"
-                            Team.THUNDER -> "ブルーサンダーの選手の数字は、これから対応します(いまは試合の日程・結果だけです)。"
+                            Team.RAC, Team.UNITED, Team.THUNDER -> "このチームの得点のデータはまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。"
                         }
                     )
                 }
@@ -689,10 +688,13 @@ private fun ScorersSection(
             )
         }
         Text(
-            if (isUnited) {
-                "先発=先発メンバーに入った試合数、ベンチ=控えでメンバー入りした試合数です(途中から出たかどうかは公式に載っていないため数えていません)。"
-            } else {
-                "順位はリーグ全体の得点ランキングの順位です。出場・アシストなど、ほかの数字は公式に載っていないため表示していません。"
+            when {
+                isUnited ->
+                    "先発=先発メンバーに入った試合数、ベンチ=控えでメンバー入りした試合数です(途中から出たかどうかは公式に載っていないため数えていません)。"
+                team == Team.THUNDER ->
+                    "順位はチームの中の得点の順位です。シュート=打ったシュートの数(7mスローを含む)、出場=試合のメンバー(ベンチ入り)に入った試合数です。"
+                else ->
+                    "順位はリーグ全体の得点ランキングの順位です。出場・アシストなど、ほかの数字は公式に載っていないため表示していません。"
             },
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
@@ -998,8 +1000,11 @@ private fun AllPlayersSection(team: Team, roster: List<PlayerBirthday>, scorerRo
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(
             "公式サイトの選手紹介の${roster.size}人です。同じ並び順のボタンをもう一度押すと逆の順になります。" +
-                (if (team == Team.RAC) "得点・シュート・出場は女子Fリーグ公式の得点ランキングから(得点していない選手は得点0、ほかは「-」)。"
-                else "得点・先発・ベンチは公式サイトの試合結果から数えた数字です(試合のメンバーに入っていない選手は0)。"),
+                (when (team) {
+                    Team.RAC -> "得点・シュート・出場は女子Fリーグ公式の得点ランキングから(得点していない選手は得点0、ほかは「-」)。"
+                    Team.THUNDER -> "得点・シュート・出場はリーグH公式の試合ごとの記録から数えた数字です(出場=試合のメンバーに入った試合数。メンバーに入っていない選手のシュート・出場は「-」)。"
+                    else -> "得点・先発・ベンチは公式サイトの試合結果から数えた数字です(試合のメンバーに入っていない選手は0)。"
+                }),
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
@@ -1067,7 +1072,7 @@ private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, sort: 
         )
         Row(modifier = Modifier.fillMaxWidth()) {
             StatCell("得点", "${row?.goals ?: 0}", Modifier.weight(1f))
-            if (team == Team.RAC) {
+            if (team == Team.RAC || team == Team.THUNDER) {
                 StatCell("シュート", row?.shots?.toString() ?: "-", Modifier.weight(1f))
                 StatCell("出場", row?.games?.let { "${it}試合" } ?: "-", Modifier.weight(1f))
             } else {

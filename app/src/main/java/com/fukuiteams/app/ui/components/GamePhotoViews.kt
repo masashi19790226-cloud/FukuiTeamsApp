@@ -73,8 +73,10 @@ fun photoCaption(game: Game, result: RemoteGameResult?, outcome: GameOutcome?, m
     val score = result?.let { "${it.myScore}－${it.opponentScore}で" } ?: ""
     val basketball = game.team == Team.BLOWINDS
     val diff = result?.let { kotlin.math.abs(it.myScore - it.opponentScore) }
-    val close = diff != null && (if (basketball) diff <= 3 else diff <= 1)
-    val big = diff != null && (if (basketball) diff >= 15 else diff >= 3)
+    // ハンドボール(ブルーサンダー)は点がたくさん入るので、点差の基準をバスケとサッカーの間にする
+    val handball = game.team == Team.THUNDER
+    val close = diff != null && when { basketball -> diff <= 3; handball -> diff <= 2; else -> diff <= 1 }
+    val big = diff != null && when { basketball -> diff >= 15; handball -> diff >= 8; else -> diff >= 3 }
     val body = when (outcome) {
         GameOutcome.WIN -> when {
             close -> "${opp}に${score}競り勝った${team}の一戦"

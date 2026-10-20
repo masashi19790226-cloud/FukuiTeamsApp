@@ -4,6 +4,7 @@
 - ブローウィンズ: 公式サイトの選手一覧 → 各選手の詳細ページの「生年月日」
 - 丸岡RUCK    : 女子Fリーグ公式サイトのクラブページの選手名簿(背番号・氏名・生年月日が1つの表にある)
 - ユナイテッド : 公式サイトのチームページ → 各選手の詳細ページ(detail.php?id=)の「生年月日」
+- ブルーサンダー: 公式サイトの選手紹介(/staff/)。1ページに全員の背番号・ローマ字・生年月日・身長/体重・出身地・球歴がある
 
 あわせて、選手の詳細ページ・選手紹介にある身長・体重・出身地・出身校も入れる(アプリの選手タブと特集で使う)。
 - ブローウィンズ: 身長/体重・出身地・出身校(大学など)。出身高校はBリーグ公式の選手ページ(roster_detail)から
@@ -29,6 +30,7 @@ UNITED_SITE = "https://fukuiunited.co.jp"
 UNITED_TEAM = UNITED_SITE + "/team/"
 WFL_SITE = "https://w-fleague.jp"
 WFL_RUCK_CLUB = WFL_SITE + "/club/maruoka/"
+THUNDER_STAFF = "https://www.fukuieiheijihand.co.jp/staff/"
 
 CACHE_DAYS = 30
 
@@ -52,7 +54,8 @@ def _load_manual():
         return {}, ""
 
 # データの形の版。身長などを足したときに上げると、その日のうちに作り直す
-VERSION = 6
+# 7: ブルーサンダーの選手を追加
+VERSION = 7
 
 
 def _text(fragment: str) -> str:
@@ -337,6 +340,84 @@ def ruck(fetch, ruck_photos):
     return out
 
 
+def _thunder_dd(block: str) -> dict:
+    """選手紹介の1人分の「項目名 → 中身」(項目名の中の改行や空白は取る)"""
+    out = {}
+    for dt, dd in re.findall(r"<dt>(.*?)</dt>\s*<dd>(.*?)</dd>", block, flags=re.S | re.I):
+        key = re.sub(r"[\s　]+", "", _text(dt))
+        if key and key not in out:
+            out[key] = re.sub(r"\s+", " ", _text(dd)).strip()
+    return out
+
+
+def _thunder_birthday(text: str) -> str:
+    """「2000.10.17」「2000/6/6」「2003年7月29日」→ 2000-10-17。読めなければ空"""
+    m = re.search(r"(\d{4})\s*[年./-]\s*(\d{1,2})\s*[月./-]\s*(\d{1,2})", text or "")
+    if not m:
+        return ""
+    try:
+        return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3))).strftime("%Y-%m-%d")
+    except ValueError:
+        return ""
+
+
+def _thunder_schools(career: str):
+    """球歴(例「岐大HC→ヴァルト岐阜→岐阜東高→愛知大学」)から 出身高校・出身大学。分からなければ空"""
+    parts = [p.strip() for p in re.split(r"[→⇒]|->|＞", career or "") if p.strip()]
+    hs_i = next((i for i, p in enumerate(parts) if re.search(r"(高|高校|高等学校)$", p) and len(p) <= 30), None)
+    rest = parts[hs_i + 1:] if hs_i is not None else parts
+    univ = next((p for p in rest if re.search(r"大(学)?$", p) and len(p) <= 30), "")
+    return (parts[hs_i] if hs_i is not None else ""), univ
+
+
+def thunder(fetch):
+    """ブルーサンダー公式の選手紹介(1ページ)から全選手。毎回このページだけを読む"""
+    from urllib.parse import quote
+    page = fetch(THUNDER_STAFF)
+    page = re.sub(r"<!--.*?-->", " ", page, flags=re.S)
+    start = page.find('id="playerList"')
+    end = page.find('id="staffList"', start)
+    if start < 0:
+        print("[WARN] 誕生日: ブルーサンダーの選手紹介(playerList)が見つかりません")
+        return []
+    section = page[start:end if end > start else len(page)]
+    out = []
+    # 1人分は <a class="js-modal-open" ... data-target="背番号"> で始まる(一覧の写真+くわしい紹介)
+    for block in re.split(r"<li\b[^>]*>\s*<a\b[^>]*class=[\"']js-modal-open[\"']", section)[1:]:
+        thumb = re.search(r"<img\b[^>]*src=[\"']([^\"']+)[\"'][^>]*class=[\"'][^\"']*thumbnailImg", block)
+        txt = block.split('class="txt"', 1)[-1]
+        nm = re.search(r"<dl\b[^>]*class=[\"']name[\"'][^>]*>\s*<dt>(.*?)</dt>\s*<dd>(.*?)<span>(.*?)</span>", txt, flags=re.S | re.I)
+        if not nm:
+            continue
+        number = _text(nm.group(1)).strip()
+        name = re.sub(r"[\s　]+", " ", _text(nm.group(2))).strip()
+        reading = re.sub(r"[\s　]+", " ", _text(nm.group(3))).strip()
+        pos = re.search(r"class=[\"']position[\"'][^>]*>(.*?)</div>", txt, flags=re.S | re.I)
+        info = _thunder_dd(txt)
+        birthday = _thunder_birthday(info.get("生年月日", ""))
+        hw = info.get("身長/体重/利き腕", "")
+        h = re.search(r"(\d{3}(?:\.\d)?)\s*(?:cm|㎝|ｃｍ|センチ)", hw, flags=re.I)
+        w = re.search(r"(\d{2,3}(?:\.\d)?)\s*(?:kg|㎏|ｋｇ|キロ)", hw, flags=re.I)
+        height = h.group(1) if h and 140 <= float(h.group(1)) <= 235 else ""
+        weight = w.group(1) if w and 35 <= float(w.group(1)) <= 160 else ""
+        high_school, school = _thunder_schools(info.get("球歴", ""))
+        photo = thumb.group(1).strip() if thumb else ""
+        if photo:
+            # 写真のファイル名に日本語が入っているので、アプリで読めるように%で書き直す
+            photo = quote(htmllib.unescape(photo), safe=":/%?=&~#+@,;")
+        if not name:
+            continue
+        out.append((f"thunder:{number or re.sub(r'[\s　]+', '', name)}", {
+            "team": "THUNDER", "name": name, "reading": _romaji(reading), "number": number,
+            "position": _text(pos.group(1)) if pos else "",
+            "photo": photo, "height": height, "weight": weight,
+            "hometown": info.get("出身地", ""), "school": school, "high_school": high_school,
+            "birthday": birthday,
+        }))
+    print(f"[誕生日] ブルーサンダー: {len(out)}人(生年月日が読めなかった選手 {sum(1 for _, v in out if not v['birthday'])}人)")
+    return out
+
+
 def build(fetch, old, ruck_photos=None):
     """誕生日のデータを作る。old は前回の分(無ければ {})。
     今日すでに作っていれば None(書き直さない)。チームごとに失敗しても、前回の分を残す。"""
@@ -349,7 +430,8 @@ def build(fetch, old, ruck_photos=None):
     entries = []
     for label, team, func in (("ブローウィンズ", "BLOWINDS", lambda: blowinds(fetch, cache, today)),
                               ("丸岡RUCK", "RAC", lambda: ruck(fetch, ruck_photos)),
-                              ("ユナイテッド", "UNITED", lambda: united(fetch, cache, today))):
+                              ("ユナイテッド", "UNITED", lambda: united(fetch, cache, today)),
+                              ("ブルーサンダー", "THUNDER", lambda: thunder(fetch))):
         try:
             got = func()
             if not got:
@@ -366,7 +448,7 @@ def build(fetch, old, ruck_photos=None):
                 for kk in ("photo", "height", "hometown"):
                     if not v.get(kk) and old.get(kk):
                         v[kk] = old[kk]
-    new_cache = {k: v for k, v in entries if not k.startswith("ruck:")}
+    new_cache = {k: v for k, v in entries if not k.startswith(("ruck:", "thunder:"))}
     players = []
     for k, v in entries:
         if not v.get("birthday") or not v.get("name"):

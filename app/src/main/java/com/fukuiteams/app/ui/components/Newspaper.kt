@@ -187,15 +187,19 @@ fun TeamSelectorRow(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         // 横スクロールせずに全ボタンが1画面に収まるよう、幅を分け合って横一列に並べる
+        // 文字の大きさは全ボタンでそろえる(どれか1つでも入りきらなければ、全部いっしょに小さくする)。
+        // ボタンの高さも固定にして、文字の大きさに関係なく同じ高さで並ぶようにする。
+        var chipFontSize by remember { mutableStateOf(11f) }
+        val shrink: () -> Unit = { if (chipFontSize > 7f) chipFontSize *= 0.9f }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             if (showAll) {
-                TeamSelectorChip("すべて", Ink, selectedTeam == null, Modifier.weight(0.75f)) { onSelect(null) }
+                TeamSelectorChip("すべて", Ink, selectedTeam == null, chipFontSize, shrink, Modifier.weight(0.75f)) { onSelect(null) }
             }
             Team.values().forEach { team ->
-                TeamSelectorChip(team.shortLabel(), team.color, selectedTeam == team, Modifier.weight(team.chipWeight())) {
+                TeamSelectorChip(team.shortLabel(), team.color, selectedTeam == team, chipFontSize, shrink, Modifier.weight(team.chipWeight())) {
                     onSelect(team)
                 }
             }
@@ -226,6 +230,8 @@ private fun TeamSelectorChip(
     label: String,
     color: Color,
     selected: Boolean,
+    fontSizeSp: Float,
+    onOverflow: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -236,23 +242,29 @@ private fun TeamSelectorChip(
             .clickable(onClick = onClick)
     ) {
         Box(modifier = Modifier.fillMaxWidth().height(4.dp).background(color))
-        // ボタンが5つ並ぶと名前が入りきらないことがあるので、入りきらないときは文字を少しずつ小さくする
-        var fontSize by remember(label) { mutableStateOf(11.sp) }
-        Text(
-            label,
+        // 高さは固定(文字の大きさが変わってもボタンの高さはそろう)。文字は上下まん中に置く
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 2.dp, vertical = 7.dp),
-            color = if (selected) White else Ink,
-            fontSize = fontSize,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            softWrap = false,
-            onTextLayout = { result ->
-                if (result.didOverflowWidth && fontSize.value > 7f) fontSize = (fontSize.value * 0.9f).sp
-            }
-        )
+                .height(30.dp)
+                .padding(horizontal = 2.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                label,
+                modifier = Modifier.fillMaxWidth(),
+                color = if (selected) White else Ink,
+                fontSize = fontSizeSp.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                softWrap = false,
+                onTextLayout = { result ->
+                    // ボタンが5つ並ぶと名前が入りきらないことがあるので、入りきらないときは全ボタンの文字を少しずつ小さくする
+                    if (result.didOverflowWidth) onOverflow()
+                }
+            )
+        }
     }
 }
 
@@ -280,9 +292,13 @@ fun resultHeadline(
     }
     val diff = kotlin.math.abs(myScore - opponentScore)
     val basketball = game.team == Team.BLOWINDS
-    val close = if (basketball) diff <= 3 else diff <= 1
-    val big = if (basketball) diff >= 15 else diff >= 3
-    val huge = if (basketball) diff >= 25 else diff >= 5
+    // ハンドボール(ブルーサンダー)は1試合で両チーム25点前後入るので、点差の基準をバスケとサッカーの間にする
+    val handball = game.team == Team.THUNDER
+    // サッカー・フットサル(丸岡RUCK・ユナイテッド)だけの言い回し(完封・ゴールラッシュなど)に使う
+    val soccer = !basketball && !handball
+    val close = when { basketball -> diff <= 3; handball -> diff <= 2; else -> diff <= 1 }
+    val big = when { basketball -> diff >= 15; handball -> diff >= 8; else -> diff >= 3 }
+    val huge = when { basketball -> diff >= 25; handball -> diff >= 12; else -> diff >= 5 }
     val prev = ctx?.prevMeetingResult?.let {
         when {
             it.myScore > it.opponentScore -> GameOutcome.WIN
@@ -314,10 +330,10 @@ fun resultHeadline(
             b2b == GameOutcome.WIN -> game.pick(listOf("${opp}に連勝", "${opp}との連戦に連勝"))
             b2b == GameOutcome.LOSE -> game.pick(listOf("${opp}に前日の雪辱", "${opp}にやり返す"))
             streak == 2 -> game.pick(listOf("${opp}下し連勝", "${opp}破り2連勝"))
-            !basketball && opponentScore == 0 -> game.pick(listOf("${opp}に完封勝ち", "${opp}を零封", "無失点で${opp}下す"))
+            soccer && opponentScore == 0 -> game.pick(listOf("${opp}に完封勝ち", "${opp}を零封", "無失点で${opp}下す"))
             prev == GameOutcome.LOSE -> game.pick(listOf("${opp}に雪辱", "${opp}にリベンジ", "${opp}に借り返す"))
             basketball && myScore >= 100 -> game.pick(listOf("${myScore}点を記録し${opp}に勝利", "${myScore}得点で${opp}に勝利"))
-            !basketball && myScore >= 4 -> game.pick(listOf("${myScore}得点で${opp}に大勝", "ゴールラッシュ ${opp}下す"))
+            soccer && myScore >= 4 -> game.pick(listOf("${myScore}得点で${opp}に大勝", "ゴールラッシュ ${opp}下す"))
             basketball && opponentScore <= 65 -> "${opp}に${myScore}-${opponentScore}で勝利"
             close -> game.pick(listOf("${opp}に競り勝つ", "${opp}との接戦制す", "${opp}との激闘制す", "${at}${opp}に辛勝", "${diff}点差守り${opp}に勝利"))
             huge -> "${diff}点差で${opp}に勝利"
@@ -333,7 +349,7 @@ fun resultHeadline(
             b2b == GameOutcome.LOSE -> game.pick(listOf("${opp}に連敗", "${opp}との連戦に連敗"))
             b2b == GameOutcome.WIN -> game.pick(listOf("${opp}に連勝ならず", "${opp}に雪辱許す"))
             streak == 2 -> game.pick(listOf("${opp}に敗れ連敗", "2連敗 ${opp}に屈す"))
-            !basketball && myScore == 0 -> game.pick(listOf("${opp}に零封負け", "${opp}の前に無得点", "ゴール遠く${opp}に敗戦"))
+            soccer && myScore == 0 -> game.pick(listOf("${opp}に零封負け", "${opp}の前に無得点", "ゴール遠く${opp}に敗戦"))
             prev == GameOutcome.WIN -> game.pick(listOf("${opp}に雪辱許す", "${opp}に借り返される"))
             basketball && myScore < 65 -> "${myScore}得点で${opp}に敗れる"
             close -> game.pick(listOf("${opp}に惜敗", "${opp}に競り負け", "${opp}に一歩及ばず", "${diff}点差に泣く", "${at}${opp}に惜敗"))
@@ -344,7 +360,7 @@ fun resultHeadline(
         GameOutcome.DRAW -> when {
             ctx?.seasonOpener == true -> "開幕戦は${opp}とドロー"
             myScore == 0 -> game.pick(listOf("${opp}とスコアレスドロー", "${opp}と0-0の引き分け"))
-            !basketball && myScore >= 3 -> game.pick(listOf("${opp}と打ち合いドロー", "${sum}得点の乱戦 ${opp}とドロー"))
+            soccer && myScore >= 3 -> game.pick(listOf("${opp}と打ち合いドロー", "${sum}得点の乱戦 ${opp}とドロー"))
             !basketball -> game.pick(listOf("${opp}と痛み分け", "${opp}とドロー", "${opp}と引き分け", "${opp}と勝ち点1分け合う", "${at}${opp}とドロー"))
             else -> game.pick(listOf("${opp}と痛み分け", "${opp}と引き分け"))
         }

@@ -28,6 +28,7 @@ import urllib.parse
 import urllib.request
 
 import standings
+import leagueh
 from datetime import datetime, timedelta, timezone
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
@@ -665,6 +666,11 @@ def load_standings():
             STANDINGS["BLOWINDS"] = b
     except Exception as e:
         print(f"[WARN] 順位: Bリーグ公式の順位表の読み取りに失敗 {e!r}")
+    # ブルーサンダー(リーグH公式の順位表と、試合ごとのページから数えた得点)。読めなかったときは前回の内容を残す
+    try:
+        load_thunder()
+    except Exception as e:
+        print(f"[WARN] 順位: ブルーサンダー(リーグH公式)の読み取りに失敗 {e!r}")
     # 選手の得点。読めなかったときは前回の内容を残す(main で standings.json にまとめるときに前回分を使う)
     old = load_json(STANDINGS_PATH, {})
     if "RAC" in STANDINGS:
@@ -692,6 +698,58 @@ def load_standings():
             for k in ("scorers", "match_cache"):
                 if old_u.get(k):
                     STANDINGS["UNITED"][k] = old_u[k]
+
+
+# ---------- ブルーサンダー(リーグH公式) ----------
+
+def load_thunder():
+    """リーグH公式の順位表(男子)と、福井永平寺の試合ごとの記録から数えた選手の得点を STANDINGS["THUNDER"] に入れる。
+    試合ごとの記録は "match_cache"(試合番号 → 日付・点数・選手の成績)に残し、終わってから2日たった試合は読み直さない。
+    順位表が読めなかったときは何も入れない(standings.json の前回の内容が残る)"""
+    old_t = load_json(STANDINGS_PATH, {}).get("THUNDER", {})
+    cache = dict(old_t.get("match_cache") or {})
+    today = datetime.now(JST).date()
+    try:
+        links = leagueh.matrix_games(fetch(leagueh.MATRIX_URL))
+    except Exception as e:
+        print(f"[WARN] ブルーサンダー: リーグH公式の星取表の取得に失敗 {e!r}")
+        links = None
+    if links is not None:
+        read = 0
+        for link in links:
+            hit = cache.get(link["code"])
+            if hit and hit.get("my") == link["my"] and hit.get("opp") == link["opp"]:
+                try:
+                    # 公式の記録は試合の後で直ることがあるので、試合から2日たつまでは読み直す
+                    if (today - datetime.strptime(hit.get("date", ""), "%Y-%m-%d").date()).days >= 2:
+                        continue
+                except ValueError:
+                    pass
+            try:
+                g = leagueh.parse_game(fetch(link["url"]))
+            except Exception as e:
+                print(f"[WARN] ブルーサンダー: 試合ページの取得に失敗 {link['url']} {e!r}")
+                g = None
+            if g:
+                g["url"] = link["url"]
+                cache[link["code"]] = g
+                read += 1
+        # 星取表に無くなった試合(取り消しなど)は数えない
+        if links:
+            cache = {k: v for k, v in cache.items() if k in {l["code"] for l in links}}
+        print(f"[順位] ブルーサンダー: 終わった試合 {len(links)} 件(試合ページを{read}件読み込み)")
+    st = leagueh.standings_from(fetch(leagueh.RANKINGS_URL),
+                                {leagueh.TEAM_SLUG: leagueh.form_of(cache)} if cache else None)
+    if not st:
+        print("[WARN] ブルーサンダー: リーグH公式の順位表を読み取れませんでした")
+        return
+    st["match_cache"] = cache
+    sc = leagueh.scorers_from(cache)
+    if sc:
+        st["scorers"] = sc
+    elif old_t.get("scorers"):
+        st["scorers"] = old_t["scorers"]
+    STANDINGS["THUNDER"] = st
 
 
 # 丸岡RUCK公式の選手紹介(写真・身長・出身地)。1回の実行で読めた分を、得点の表と誕生日のデータの両方で使う

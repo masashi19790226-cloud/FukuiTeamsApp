@@ -1,9 +1,10 @@
 """
-3チームの公式サイト等を見に行き、終了した試合のスコアを data/results.json に記録する。
+4チームの公式サイト等を見に行き、終了した試合のスコアを data/results.json に記録する。
 
 - ブローウィンズ : 公式サイトのトップページ(直近の試合カード)
 - 丸岡RUCK       : 女子Fリーグ公式のクラブ日程ページ(gid=試合番号ごとのスコアリンク)
 - ユナイテッド   : 公式サイトのトップページ「LATEST MATCH」欄
+- ブルーサンダー : リーグH公式の星取表(福井永平寺の行)→ 試合ごとのページ(日付・点数・前後半)
 
 どのサイトも構造が変わると取れなくなるので、GitHub Actionsの実行ログ
 (print文の出力)を見ながら調整する想定。
@@ -15,6 +16,8 @@ import os
 import re
 import urllib.request
 from datetime import datetime, timedelta
+
+import leagueh
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 GAMES_PATH = os.path.join(BASE_DIR, "games.json")
@@ -279,6 +282,30 @@ def united_score(latest, game_dt: datetime, game: dict):
     return None
 
 
+# ---------- ブルーサンダー(リーグH公式) ----------
+
+def thunder_results(results):
+    """リーグH公式の星取表から福井永平寺の終わった試合を探し、まだ記録していない試合のページを読んで
+    日付 → {"my","opp","url","periods"} を返す。記録済みの試合(source_url が同じ)のページは読み直さない"""
+    page = safe_fetch("THUNDER", leagueh.MATRIX_URL)
+    if not page:
+        return {}
+    known = {r.get("source_url") for r in results.values() if isinstance(r, dict)}
+    found = {}
+    links = leagueh.matrix_games(page)
+    print(f"[INFO] THUNDER: 星取表で終わった試合 {len(links)} 件")
+    for link in links:
+        if link["url"] in known:
+            continue
+        detail = safe_fetch("THUNDER", link["url"])
+        g = leagueh.parse_game(detail) if detail else None
+        if not g:
+            print(f"[WARN] THUNDER: 試合ページを読み取れませんでした {link['url']}")
+            continue
+        found[g["date"]] = {"my": g["my"], "opp": g["opp"], "url": link["url"], "periods": g["periods"]}
+    return found
+
+
 # ---------- メイン ----------
 
 def safe_fetch(name, url):
@@ -335,6 +362,7 @@ def main():
         print(f"[INFO] BLEAGUE: {len(bleague)} 試合の結果を検出 {sorted(bleague)}")
     ruck_page = safe_fetch("RUCK", RUCK_URL) if "rac" in teams else None
     un_page = safe_fetch("UNITED", UNITED_URL) if "united" in teams else None
+    thunder_found = thunder_results(results) if "thunder" in teams else {}
 
     ruck_parsed = parse_ruck_page(ruck_page) if ruck_page else None
     if ruck_parsed:
@@ -368,6 +396,12 @@ def main():
                 if page_url:
                     source_url = page_url
 
+        elif team == "thunder":
+            hit = thunder_found.get(game["date"])
+            if hit:
+                score = (hit["my"], hit["opp"])
+                source_url = hit["url"]
+
         label = f"{game['id']} ({game['date']} vs {game['opponent']})"
         if score:
             results[game["id"]] = {
@@ -376,6 +410,9 @@ def main():
                 "checked_at": datetime.utcnow().isoformat(),
                 "source_url": source_url,
             }
+            # ブルーサンダーは前半・後半の点数も残す(リーグH公式の試合ページから)
+            if team == "thunder" and thunder_found.get(game["date"], {}).get("periods"):
+                results[game["id"]]["periods"] = thunder_found[game["date"]]["periods"]
             updated += 1
             print(f"[INFO] {label}: {score[0]} - {score[1]} を記録")
         else:
