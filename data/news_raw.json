@@ -4111,5 +4111,53 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://t.co/3NLxQSnCP1&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3M-hWVgAfefG7WI50hFGUJ",
     "published": "2026-10-20T11:29:31Z",
     "detected_at": "2026-10-21T05:22:03.788471+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16754434746062436558",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ 26-27 ボトルキャップアクスタ 10 オルギル・ヒシグバータル - Yahoo!フリマ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://paypayfleamarket.yahoo.co.jp/item/z707976066&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw352kFHd8X9r3E4cU0atyvt",
+    "published": "2026-10-20T11:22:47Z",
+    "detected_at": "2026-10-21T10:26:05.485599+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261021de63032",
+    "team": "THUNDER",
+    "title": "ハンドボール 福井永平寺ブルーサンダー 開幕戦は黒星 福井",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261021de63032",
+    "published": "2026-10-20T20:57:00+00:00",
+    "source": "news.web",
+    "image": "https://www.bing.com/th?id=ONUT.ZhHLvWM0EsUdS79Kj8Qt7Q&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-21T10:26:07.573773+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51743",
+    "team": "BLOWINDS",
+    "title": "【10/23(金)新商品】第6節 さいたまブロンコス戦 新グッズ販売のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51743",
+    "published": "2026-10-21T09:00:00+09:00",
+    "detected_at": "2026-10-21T10:26:07.893415+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_1023_newitem.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51728",
+    "team": "BLOWINDS",
+    "title": "【第11節】11/21（土）、22（日）vs 新潟アルビレックスBB戦 冠パートナー決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51728",
+    "published": "2026-10-21T09:00:00+09:00",
+    "detected_at": "2026-10-21T10:26:07.893415+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E6%95%A6%E8%B3%80%E9%96%8B%E5%82%AC%E3%83%8F%E3%82%99%E3%83%8A%E3%83%BC.png"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51742",
+    "team": "BLOWINDS",
+    "title": "2025-26シーズン クラブ決算概要および2027-28シーズン「B.ONEライセンス」交付のご報告～地域とともに成長し、さらなる挑戦へ～",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51742",
+    "published": "2026-10-21T09:00:00+09:00",
+    "detected_at": "2026-10-21T10:26:07.893415+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
   }
 ]
