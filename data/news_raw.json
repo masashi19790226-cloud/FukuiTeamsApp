@@ -434,16 +434,6 @@
     "image": ""
   },
   {
-    "id": "official-news:https://ruck-fukui.com/archives/6358",
-    "team": "RAC",
-    "title": "【第9節】メットライフ生命日本女子Fリーグ2026-27 結果",
-    "link": "https://ruck-fukui.com/archives/6358",
-    "published": "2026-09-06T14:17:43+00:00",
-    "detected_at": "2026-09-06T14:17:43+00:00",
-    "source": "丸岡RUCK公式",
-    "image": ""
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -4159,5 +4149,109 @@
     "detected_at": "2026-10-21T10:26:07.893415+00:00",
     "source": "ブローウィンズ公式",
     "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1153954818969551152",
+    "team": "BLOWINDS",
+    "title": "目指すは「Bプレミア」 全試合で入場率9割目指しさらなる集客へ 「福井ブローウィンズ」社長や ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/22ecaf121ee6b18d5737d5c1df0877f2f2bc6712&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw135w_K2jc3a2qvx_fy1kBN",
+    "published": "2026-10-21T09:15:06Z",
+    "detected_at": "2026-10-21T15:31:52.806804+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15129531098854322273",
+    "team": "BLOWINDS",
+    "title": "【10/23(金)新商品】第6節 さいたまブロンコス戦 新グッズ販売のお知らせ | 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51743&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3RTscuEQuLkqK2KgZTEFuQ",
+    "published": "2026-10-21T08:42:26Z",
+    "detected_at": "2026-10-21T15:31:52.806851+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3284147718109807191",
+    "team": "BLOWINDS",
+    "title": "目指すは「Bプレミア」 全試合で入場率9割目指しさらなる集客へ 「福井ブローウィンズ」社長や ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukui-tv.co.jp/%3Fpost_type%3Dfukui_news%26p%3D203071&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2cXGR2bGAidJaOwgwj_4pS",
+    "published": "2026-10-21T06:54:24Z",
+    "detected_at": "2026-10-21T15:31:52.806913+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7826350275724838423",
+    "team": "THUNDER",
+    "title": "ハンドボール 福井永平寺ブルーサンダー 開幕戦は黒星 福井 - NHKニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.web.nhk/newsweb/na/nd-20261021de63032&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw3vy3I4rtNDiz-DhldeOGPp",
+    "published": "2026-10-21T09:34:34Z",
+    "detected_at": "2026-10-21T15:31:53.105043+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7726452415715938054",
+    "team": "THUNDER",
+    "title": "2026/11/14 (土) 【リーグH 第5節】 VS 福井永平寺ブルーサンダー （和光市総合体育館） - Teket",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://teket.jp/12488/80450&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw0IQhTj5cQuJRG3StdWXOBD",
+    "published": "2026-10-21T09:32:13Z",
+    "detected_at": "2026-10-21T15:31:53.105101+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2990106365374055192",
+    "team": "THUNDER",
+    "title": "福井永平寺ブルーサンダー【公式】 on X: \"  ⚡️ THANK YOU！ ホーム開幕戦に 過去最多1,655 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fu_ei_bluethun/status/2112814000530690529&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw34CbNT5SwPey1DRp4hr6X5",
+    "published": "2026-10-21T09:12:08Z",
+    "detected_at": "2026-10-21T15:31:53.105137+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:468393882704413891",
+    "team": "THUNDER",
+    "title": "福井永平寺ブルーサンダー【公式】 on X - @fu_ei_bluethun",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fu_ei_bluethun/status/2112797962019672074&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw1rurIWQS17ZqaWxetKQo0z",
+    "published": "2026-10-21T08:02:07Z",
+    "detected_at": "2026-10-21T15:31:53.105191+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15623934445165868545",
+    "team": "THUNDER",
+    "title": "141 ゲスト：福井永平寺ブルーサンダー 熊谷選手・玉井選手・落田選手 登場！ - JFN Pods",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://jfn-pods.com/program/300007078/voice/8Rvg7JGKM0&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw160NLsTmHZRljUj0-MDcXK",
+    "published": "2026-10-21T07:51:32Z",
+    "detected_at": "2026-10-21T15:31:53.105224+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12781521128281742762",
+    "team": "THUNDER",
+    "title": "141 ゲスト：福井永平寺ブルーサンダー 熊谷選手・玉井選手・落田選手 登場！ - radiko",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://radiko.jp/podcast/episodes/8803a1fa-b0ad-4337-a8ee-ee21d51d550d%3Fplay%3Dauto&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw26jv4N00xt_DgX0nqTZUMw",
+    "published": "2026-10-21T07:46:25Z",
+    "detected_at": "2026-10-21T15:31:53.105290+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6328453556466093098",
+    "team": "THUNDER",
+    "title": "2026-27リーグH レギュラーシーズン VS 福井永平寺ブルーサンダー | 大同特殊鋼PhenixTOKAI",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.daido-sports.jp/phenix/games/51th_league_261020/&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw26K3760NSzkuWkQrppfqGG",
+    "published": "2026-10-21T03:17:33Z",
+    "detected_at": "2026-10-21T15:31:53.105340+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3589217589842399519",
+    "team": "THUNDER",
+    "title": "1655の1   #セーレンドリームアリーナ が #福井永平寺ブルーサンダー の青  で染まって楽しかった ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/aoids_fukui/status/2112701679749722318/video/1&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw3psy__qlUfiJ1DhKQYNIe7",
+    "published": "2026-10-21T01:15:43Z",
+    "detected_at": "2026-10-21T15:31:53.105377+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6340889385745297511",
+    "team": "THUNDER",
+    "title": "福井永平寺ブルーサンダー、黒星発進 ハンドボール「リーグH」",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2727036&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw3ZgDoSj-cK9RZfVXosgFlP",
+    "published": "2026-10-20T21:53:40Z",
+    "detected_at": "2026-10-21T15:31:53.105421+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14569490306637993025",
+    "team": "THUNDER",
+    "title": "ハンドボール #福井永平寺ブルーサンダー 開幕戦  ⚡️ 白熱した試合展開で会場は大盛り上がりを ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/JurakuFukui12/status/2112542351810064525/video/1&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw1O92vGbgLLjHQUJMORZXaZ",
+    "published": "2026-10-20T21:53:40Z",
+    "detected_at": "2026-10-21T15:31:53.105451+00:00"
   }
 ]
