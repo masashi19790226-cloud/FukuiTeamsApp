@@ -14,6 +14,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月22日",
+        title = "選手の写真の名前の表示",
+        items = listOf(
+            "選手の写真の下の名前が途中で折り返して読みにくかったので、1行目に背番号、2行目に名前を1行で出すようにしました(長い名前は文字を小さくして収めます)"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月21日",
         title = "丸岡RUCKの試合の写真・あの選手は今・過去の実績",
         items = listOf(
