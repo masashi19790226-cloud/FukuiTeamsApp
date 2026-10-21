@@ -15,6 +15,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月21日",
+        title = "ブルーサンダーのGoogleアラート",
+        items = listOf(
+            "ブルーサンダーのニュースと無料招待を、ほかのチームと同じようにGoogleアラートからも集めるようにしました(トピックの「ニュース」「招待」に出ます)"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月21日",
         title = "丸岡RUCKの公式インスタグラム",
         items = listOf(
             "メニューの「公式サイト・SNS」と「投稿から予定を追加」の「公式のインスタを開く」に、丸岡RUCKの公式インスタグラム(@fukuimaruokaruck)を加えました"

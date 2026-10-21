@@ -21,6 +21,8 @@ INVITATION_FEEDS = {
     "BLOWINDS": "https://www.google.com/alerts/feeds/17849435109291614678/858967028642974105",
     "UNITED": "https://www.google.com/alerts/feeds/17849435109291614678/6859633318614752326",
     "RAC": "https://www.google.com/alerts/feeds/17849435109291614678/858967028642975140",
+    # "福井永平寺ブルーサンダー" 招待 OR プレゼント
+    "THUNDER": "https://www.google.com/alerts/feeds/17849435109291614678/2315867429159385569",
 }
 
 # チーム名だけの一般ニュース用
@@ -28,6 +30,8 @@ NEWS_FEEDS = {
     "BLOWINDS": "https://www.google.com/alerts/feeds/17849435109291614678/14992852420762577242",
     "UNITED": "https://www.google.com/alerts/feeds/17849435109291614678/14992852420762577495",
     "RAC": "https://www.google.com/alerts/feeds/17849435109291614678/11869471234840652241",
+    # "福井永平寺ブルーサンダー"
+    "THUNDER": "https://www.google.com/alerts/feeds/17849435109291614678/14835578762564072479",
 }
 
 # Bingニュースの検索結果(RSS)。Googleアラートより新しい記事が早く出ることが多いので、ニュースに加える。
@@ -37,7 +41,7 @@ BING_NEWS_QUERIES = {
     "BLOWINDS": ["福井ブローウィンズ", "ブローウィンズ パブリックビューイング", "ブローウィンズ 観戦会"],
     "RAC": ["丸岡RUCK", "丸岡ラック", "丸岡RUCK パブリックビューイング"],
     "UNITED": ["福井ユナイテッド", "福井ユナイテッド パブリックビューイング"],
-    # ブルーサンダー(ハンドボール)。Googleアラートはまだ無いので、Bingニュースだけで探す
+    # ブルーサンダー(ハンドボール)。Googleアラートに加えて、Bingニュースでも探す
     "THUNDER": ["福井永平寺ブルーサンダー", "ブルーサンダー ハンドボール"],
 }
 BING_NEWS_URL = "https://www.bing.com/news/search?q={q}&format=rss&setlang=ja&cc=JP"
