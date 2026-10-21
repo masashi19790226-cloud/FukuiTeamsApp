@@ -38,7 +38,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import com.fukuiteams.app.navigation.Routes
-import com.fukuiteams.app.ui.theme.DividerGray
+import com.fukuiteams.app.ui.theme.NavBarColor
+import com.fukuiteams.app.ui.theme.NavSelectedIconColor
+import com.fukuiteams.app.ui.theme.OnBarColor
+import com.fukuiteams.app.ui.theme.OnBarSoftColor
 import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.theme.InkSoft
@@ -62,7 +65,8 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
     // アイコンと文字の上下の余白を狭くする(高さは最低56dp。文字を大きくしている端末では、そのぶん高くなる)
     Column {
     DoubleRule()
-    Surface(color = DividerGray) {
+    // 地色・文字の色は着せ替えで変わる(標準は淡い紙の色、チームの色の着せ替えはチームの色に白)
+    Surface(color = NavBarColor) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -86,10 +90,10 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
                         item.icon,
                         contentDescription = item.label,
                         modifier = Modifier.size(20.dp),
-                        tint = if (selected) NewsRed else InkSoft
+                        tint = if (selected) NavSelectedIconColor else OnBarSoftColor
                     )
                     Spacer(modifier = Modifier.height(2.dp))
-                    CompositionLocalProvider(LocalContentColor provides if (selected) Ink else InkSoft) {
+                    CompositionLocalProvider(LocalContentColor provides if (selected) OnBarColor else OnBarSoftColor) {
                         NavLabel(item.label, selected)
                     }
                 }

@@ -331,6 +331,28 @@ fun NotificationsScreen(
                 }
             }
 
+            // 着せ替え(アプリ全体の色)。標準(新聞)・選んだチームに合わせる・各チームの色から選ぶ。選んだものはスマホに保存する
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("着せ替え")
+                Text(
+                    "アプリの色を各チームの色に変えられます。上の帯・下のメニューがチームの色になり、紙面にもチームの色がうっすら入ります。" +
+                        "「選んだチームに合わせる」にすると、画面の上のチームのボタンで選んだチームの色に変わります(「すべて」のときは標準)。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                com.fukuiteams.app.ui.theme.SkinMode.values().toList().chunked(2).forEach { pair ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        pair.forEach { m ->
+                            NewsChip(
+                                m.label,
+                                com.fukuiteams.app.ui.theme.AppSkin.mode == m,
+                                modifier = Modifier.weight(1f)
+                            ) { com.fukuiteams.app.ui.theme.AppSkin.set(context, m) }
+                        }
+                    }
+                }
+            }
+
             // 表示の大きさ(二本指で変えた大きさを元に戻す)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SectionLabel("表示の大きさ")

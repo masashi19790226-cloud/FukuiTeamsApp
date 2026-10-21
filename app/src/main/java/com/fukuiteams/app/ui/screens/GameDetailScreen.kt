@@ -390,23 +390,27 @@ fun GameDetailScreen(
                 EmptyTeamState(selectedTeam)
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        ScheduleTabChip(
-                            label = "今後の試合 ${upcomingTeamGames.size}",
-                            selected = scheduleTabIndex == 0,
-                            onClick = { scheduleTabIndex = 0 }
-                        )
-                        ScheduleTabChip(
-                            label = "過去の試合 ${pastTeamGames.size}",
-                            selected = scheduleTabIndex == 1,
-                            onClick = { scheduleTabIndex = 1 }
-                        )
-                        // 「行く予定」にした今後の試合だけ(3チームまとめて)
-                        ScheduleTabChip(
-                            label = "行く予定 ${goingGames.size}",
-                            selected = scheduleTabIndex == 2,
-                            onClick = { scheduleTabIndex = 2 }
-                        )
+                    // 3つのボタンを画面の幅に収める(幅は文字数に合わせて分け合う)。
+                    // 入りきらないときは、3つとも同じだけ文字を小さくする(「行く予定」が途中で切れないように)
+                    var tabFontSize by remember { mutableStateOf(13f) }
+                    val shrinkTabs: () -> Unit = { if (tabFontSize > 9f) tabFontSize *= 0.92f }
+                    val tabLabels = listOf(
+                        "今後の試合 ${upcomingTeamGames.size}",
+                        "過去の試合 ${pastTeamGames.size}",
+                        // 「行く予定」にした今後の試合だけ(4チームまとめて)
+                        "行く予定 ${goingGames.size}"
+                    )
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        tabLabels.forEachIndexed { i, label ->
+                            ScheduleTabChip(
+                                label = label,
+                                selected = scheduleTabIndex == i,
+                                fontSizeSp = tabFontSize,
+                                onOverflow = shrinkTabs,
+                                modifier = Modifier.weight(label.length + 2f),
+                                onClick = { scheduleTabIndex = i }
+                            )
+                        }
                     }
                     val isPastTab = scheduleTabIndex == 1
                     val isGoingTab = scheduleTabIndex == 2
@@ -866,9 +870,36 @@ private fun MyGameActions(game: Game, onDeleted: () -> Unit, onEdit: () -> Unit)
 }
 
 @Composable
-private fun ScheduleTabChip(label: String, selected: Boolean, onClick: () -> Unit) =
-    // ほかの画面の切り替えボタンと同じ、紙面風の四角いボタンにそろえる
-    NewsChip(label, selected, fontSize = 13.sp, horizontalPadding = 12.dp, verticalPadding = 8.dp, onClick = onClick)
+private fun ScheduleTabChip(
+    label: String,
+    selected: Boolean,
+    fontSizeSp: Float,
+    onOverflow: () -> Unit,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    // ほかの画面の切り替えボタンと同じ、紙面風の四角いボタン。幅は呼ぶ側で決め、文字が入りきらなければ onOverflow で小さくする
+    Box(
+        modifier = modifier
+            .border(1.dp, Ink)
+            .background(if (selected) Ink else Paper)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 4.dp, vertical = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            label,
+            modifier = Modifier.fillMaxWidth(),
+            color = if (selected) Ivory else Ink,
+            fontSize = fontSizeSp.sp,
+            fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            maxLines = 1,
+            softWrap = false,
+            onTextLayout = { result -> if (result.didOverflowWidth) onOverflow() }
+        )
+    }
+}
 @Composable
 private fun ScheduleRow(
     game: Game,

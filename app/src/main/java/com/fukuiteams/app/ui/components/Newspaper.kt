@@ -78,10 +78,11 @@ fun MastheadTopBar(
     val updated = status?.updatedAt?.atZone(JST)
     // 3時間より前なら、自動更新が止まっているかもしれないので赤字にする
     val stale = updated != null && java.time.Duration.between(updated, now).toMinutes() > 180
+    // 帯の地色・文字の色は着せ替えで変わる(標準は紙面と同じ生成りに墨、チームの色の着せ替えはチームの色に白)
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Ivory)
+            .background(com.fukuiteams.app.ui.theme.TopBarColor)
             .padding(horizontal = 8.dp)
     ) {
         // 左右のボタンの残りの幅に、現在の日時と最終更新日時を同じ形(9/30(水) 22:45)で1行に並べる。
@@ -91,14 +92,18 @@ fun MastheadTopBar(
             modifier = Modifier.fillMaxWidth().heightIn(min = 44.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            navigationIcon()
+            androidx.compose.runtime.CompositionLocalProvider(
+                androidx.compose.material3.LocalContentColor provides com.fukuiteams.app.ui.theme.OnBarColor
+            ) {
+                navigationIcon()
+            }
             Text(
                 buildAnnotatedString {
                     append(shortDateTime(now))
                     append("  |  最終更新 ")
                     if (updated != null) {
                         if (stale) {
-                            withStyle(SpanStyle(color = NewsRed, fontWeight = FontWeight.Bold)) { append(shortDateTime(updated)) }
+                            withStyle(SpanStyle(color = com.fukuiteams.app.ui.theme.BarWarnColor, fontWeight = FontWeight.Bold)) { append(shortDateTime(updated)) }
                         } else {
                             append(shortDateTime(updated))
                         }
@@ -109,7 +114,7 @@ fun MastheadTopBar(
                 modifier = Modifier.weight(1f).padding(horizontal = 4.dp, vertical = 4.dp),
                 fontSize = fontSizeSp.sp,
                 fontWeight = FontWeight.Bold,
-                color = Ink,
+                color = com.fukuiteams.app.ui.theme.OnBarColor,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 softWrap = false,
@@ -117,7 +122,12 @@ fun MastheadTopBar(
                     if (result.hasVisualOverflow && fontSizeSp > 9f) fontSizeSp -= 0.5f
                 }
             )
-            Row(content = actions)
+            // 右上のボタン(更新など)のアイコンも帯の文字と同じ色にする
+            androidx.compose.runtime.CompositionLocalProvider(
+                androidx.compose.material3.LocalContentColor provides com.fukuiteams.app.ui.theme.OnBarColor
+            ) {
+                Row(content = actions)
+            }
         }
         Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(Ink))
     }
@@ -384,7 +394,8 @@ fun HomeAwayTag(
     // 文字の大きさ(一面の「次の試合」では大きめにして目立たせる)
     fontSize: androidx.compose.ui.unit.TextUnit = 10.sp
 ) {
-    val away = androidx.compose.ui.graphics.Color(0xFF2B4C7E)
+    // AWAYの色は着せ替えで変わる(標準は紺。チームの色の着せ替えでは、HOMEの札と見分けやすい灰色)
+    val away = com.fukuiteams.app.ui.theme.AwayColor
     androidx.compose.material3.Text(
         if (isHome) "HOME" else "AWAY",
         modifier = modifier
