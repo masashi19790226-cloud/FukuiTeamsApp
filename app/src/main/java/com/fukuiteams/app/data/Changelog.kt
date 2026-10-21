@@ -15,6 +15,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月21日",
+        title = "その後の日程・ブルーサンダーの対戦相手の選手",
+        items = listOf(
+            "一面の「その後の日程」に出す試合を、3試合から6試合に増やしました",
+            "選手タブでブルーサンダーを選んだとき、「次の対戦相手の選手」に相手チームの全選手(写真・背番号・ポジション)と、今季の得点・シュート・出場試合数を出すようにしました(リーグH公式のチームページと試合ごとの記録から)"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月21日",
         title = "ブルーサンダーのGoogleアラート",
         items = listOf(
             "ブルーサンダーのニュースと無料招待を、ほかのチームと同じようにGoogleアラートからも集めるようにしました(トピックの「ニュース」「招待」に出ます)"

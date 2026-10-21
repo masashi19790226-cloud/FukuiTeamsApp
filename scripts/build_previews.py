@@ -709,8 +709,10 @@ def load_thunder():
     old_t = load_json(STANDINGS_PATH, {}).get("THUNDER", {})
     cache = dict(old_t.get("match_cache") or {})
     today = datetime.now(JST).date()
+    global THUNDER_MATRIX
     try:
-        links = leagueh.matrix_games(fetch(leagueh.MATRIX_URL))
+        THUNDER_MATRIX = fetch(leagueh.MATRIX_URL)
+        links = leagueh.matrix_games(THUNDER_MATRIX)
     except Exception as e:
         print(f"[WARN] ブルーサンダー: リーグH公式の星取表の取得に失敗 {e!r}")
         links = None
@@ -761,6 +763,66 @@ def load_thunder():
 
 # リーグH公式の個人ランキング(得点)。load_thunder で読む
 THUNDER_LEADERS = []
+# リーグH公式の星取表のページ(load_thunder で読み、相手チームの試合を探すのにも使う)
+THUNDER_MATRIX = ""
+
+
+def thunder_opponent(games, results, today):
+    """ブルーサンダーの次の対戦相手の全選手(リーグH公式のチームページ)と、今季の得点・シュート・メンバー入りした試合数
+    (相手の試合ごとのページから数える)を、standings.json の "THUNDER" の得点の表(scorers の rows)に加える。
+    相手の試合ごとの記録は "opp_cache" に残し、相手が変わったら作り直す。終わってから2日たった試合は読み直さない"""
+    st = STANDINGS.get("THUNDER")
+    if not st or not THUNDER_MATRIX:
+        return
+    upcoming = sorted(
+        [g for g in games if g.get("team") == "thunder" and not g.get("category") and g["date"] >= today and g["id"] not in results],
+        key=lambda g: g.get("sort_key", g["date"]),
+    )
+    if not upcoming:
+        return
+    nxt = upcoming[0]
+    row = next((r for r in st.get("regular", {}).get("table", [])
+                if r.get("slug") and r.get("slug") != leagueh.TEAM_SLUG and leagueh.same_team(nxt["opponent"], r["team"])), None)
+    if not row:
+        print(f"[WARN] ブルーサンダー: 次の相手({nxt['opponent']})がリーグH公式の順位表に見つかりません")
+        return
+    slug = row["slug"]
+    old = load_json(STANDINGS_PATH, {}).get("THUNDER", {}).get("opp_cache") or {}
+    cache = dict(old.get("games") or {}) if old.get("slug") == slug else {}
+    links = leagueh.matrix_games(THUNDER_MATRIX, slug)
+    read = 0
+    for link in links:
+        hit = cache.get(link["code"])
+        if hit:
+            try:
+                if (datetime.strptime(today, "%Y-%m-%d").date() - datetime.strptime(hit.get("date", ""), "%Y-%m-%d").date()).days >= 2:
+                    continue
+            except ValueError:
+                pass
+        try:
+            page = fetch(link["url"])
+        except Exception as e:
+            print(f"[WARN] ブルーサンダー: 相手の試合ページの取得に失敗 {link['url']} {e!r}")
+            continue
+        players = leagueh.game_players(page, slug)
+        if players:
+            cache[link["code"]] = {"date": leagueh.game_date(page), "players": players}
+            read += 1
+    cache = {k: v for k, v in cache.items() if k in {l["code"] for l in links}}
+    try:
+        roster = leagueh.team_roster(fetch(f"{leagueh.LEAGUEH}/team/{slug}/"))
+    except Exception as e:
+        print(f"[WARN] ブルーサンダー: 相手のチームページの取得に失敗 {e!r}")
+        roster = []
+    rows = leagueh.opponent_rows(nxt["opponent"], roster, cache)
+    if not rows:
+        return
+    sc = st.get("scorers") or {"label": "今季の得点", "note": "", "source_url": leagueh.MATRIX_URL, "rows": []}
+    # 相手チームの行は、チーム名を日程の相手の名前にしておく(アプリはこの名前で相手の選手を探す)
+    sc["rows"] = [r for r in sc["rows"] if "ブルーサンダー" in r.get("team", "")] + rows
+    st["scorers"] = sc
+    st["opp_cache"] = {"slug": slug, "games": cache}
+    print(f"[順位] ブルーサンダー: 次の相手 {nxt['opponent']} の選手 {len(rows)}人(試合ページを{read}件読み込み・{len(cache)}試合分)")
 
 
 def thunder_extra(next_game, preview):
@@ -986,6 +1048,11 @@ def main():
 
     load_standings()
     attach_player_photos()
+    # ブルーサンダーの次の対戦相手の全選手(順位表を読めたときだけ)
+    try:
+        thunder_opponent(games, results, today)
+    except Exception as e:
+        print(f"[WARN] ブルーサンダー: 次の相手の選手の取得に失敗 {e!r}")
 
     for team in ["BLOWINDS", "RAC", "UNITED", "THUNDER"]:
         try:

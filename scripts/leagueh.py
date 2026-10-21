@@ -40,14 +40,14 @@ def _int(s):
 
 # ---------- 星取表(福井永平寺の行の試合) ----------
 
-def matrix_games(page: str):
+def matrix_games(page: str, slug: str = TEAM_SLUG):
     """星取表の福井永平寺の行から、終わった試合の一覧。
     [{"code": "511M11", "url": "https://leagueh.jp/schedule/511M11/", "my": 26, "opp": 28}, ...]
     (1つのマスに同じ相手との2試合が入ることがある)"""
     body = page.split("<tbody", 1)[1] if "<tbody" in page else page
     for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", body, flags=re.S | re.I):
         head = re.search(r"<th\b[^>]*>(.*?)</th>", tr, flags=re.S | re.I)
-        if not head or f"/team/{TEAM_SLUG}/" not in head.group(1):
+        if not head or f"/team/{slug}/" not in head.group(1):
             continue
         out = []
         for m in re.finditer(
@@ -110,13 +110,25 @@ def parse_game(page: str):
     }
 
 
-def game_players(page: str):
+def game_date(page: str) -> str:
+    """試合ごとのページの日付(2026-10-20)。読めなければ空"""
+    m = re.search(r"class=[\"']date[^\"']*[\"'][^>]*>(.*?)</p>", page or "", flags=re.S | re.I)
+    nums = re.findall(r"<em>\s*(\d+)\s*</em>", m.group(1)) if m else []
+    if len(nums) < 3:
+        return ""
+    try:
+        return datetime(int(nums[0]), int(nums[1]), int(nums[2])).strftime("%Y-%m-%d")
+    except ValueError:
+        return ""
+
+
+def game_players(page: str, slug: str = TEAM_SLUG):
     """試合ごとのページの「スコア」の表のうち、福井永平寺の選手の分。
     [{"name","number","position","goals","shots","saves","save_total"}, ...]
     列は ポジション・背番号・選手・フィールドシュート(得点・シュート・阻止・総数)・7mスロー(得点・シュート・阻止・総数)・警告・退場・失格"""
     for sec in re.findall(r"<section>(.*?)</section>", page.split("class=\"score\"", 1)[-1], flags=re.S | re.I):
         h1 = re.search(r"<h1\b[^>]*>(.*?)</h1>", sec, flags=re.S | re.I)
-        if not h1 or f"/team/{TEAM_SLUG}/" not in h1.group(0):
+        if not h1 or f"/team/{slug}/" not in h1.group(0):
             continue
         body = re.search(r"<tbody>(.*?)</tbody>", sec, flags=re.S | re.I)
         if not body:
@@ -193,6 +205,72 @@ def standings_from(rank_page: str, form_by_slug=None):
         "note": "リーグH公式の順位表(勝ち点は勝ち2・引き分け1)",
         "regular": {"label": "レギュラーシーズン", "table": table},
     }
+
+
+# ---------- 相手チームの選手(チームページ+試合ごとの記録) ----------
+
+def team_roster(page: str):
+    """リーグH公式のチームページ(/team/xxx/)の選手一覧。
+    [{"number","name","position","birthday","photo"}, ...]"""
+    m = re.search(r"<ul\b[^>]*class=[\"'][^\"']*player-list[^\"']*[\"'][^>]*>(.*)", page, flags=re.S | re.I)
+    if not m:
+        return []
+    # 選手のタブ(div_player)の中だけを見る(後ろにチーム紹介・日程のタブがある)
+    body = re.sub(r"<!--.*?-->", " ", m.group(1).split('id="div_profile"', 1)[0], flags=re.S)
+    out = []
+    # スタッフ(ヘッドコーチなど)は選手ページへのリンクが無いので入らない
+    for li in re.split(r"<li\b[^>]*class=[\"']col[\"'][^>]*>", body)[1:]:
+        name = re.search(r"<strong>(.*?)</strong>", li, flags=re.S | re.I)
+        # 選手は選手ページへのリンク(href="/player/…")がある。スタッフの写真も /player/ の下にあるので href で見分ける
+        if not name or not re.search(r"href=[\"'](?:https?://leagueh\.jp)?/player/\d+", li):
+            continue
+        num = re.search(r"<em>\s*(\d+)\s*</em>", li)
+        pos = re.search(r"<span>\s*ポジション\s*</span>\s*([^<]*)", li)
+        bd = re.search(r"<span>\s*生年月日\s*</span>\s*(\d{4})\.(\d{1,2})\.(\d{1,2})", li)
+        photo = re.search(r"<img\b[^>]*src=[\"'](/files/[^\"']+)[\"']", li)
+        out.append({
+            "number": num.group(1) if num else "",
+            "name": re.sub(r"\s+", " ", _text(name.group(1))),
+            "position": _text(pos.group(1)) if pos else "",
+            "birthday": f"{int(bd.group(1)):04d}-{int(bd.group(2)):02d}-{int(bd.group(3)):02d}" if bd else "",
+            "photo": LEAGUEH + photo.group(1) if photo else "",
+        })
+    return out
+
+
+def opponent_rows(team_name: str, roster, cache: dict):
+    """相手チームの全選手の今季の成績(得点・シュート・メンバー入りした試合数)。
+    roster: team_roster の結果、cache: 試合番号 → {"date","players"}(相手チームの選手の分)。
+    丸岡RUCKの得点の表と同じ形(standings.json の scorers の rows)にする。チームの中の得点順"""
+    stats = {}
+    for g in cache.values():
+        for p in g.get("players") or []:
+            k = re.sub(r"[\s　]+", "", p["name"])
+            t = stats.setdefault(k, {"goals": 0, "shots": 0, "games": 0, "number": p.get("number", ""), "position": p.get("position", "")})
+            t["goals"] += p.get("goals", 0)
+            t["shots"] += p.get("shots", 0)
+            t["games"] += 1
+    rows, seen = [], set()
+    for r in roster:
+        k = re.sub(r"[\s　]+", "", r["name"])
+        seen.add(k)
+        st = stats.get(k, {})
+        rows.append({"name": r["name"], "team": team_name, "goals": st.get("goals", 0), "shots": st.get("shots", 0),
+                     "games": st.get("games", 0), "number": r["number"] or st.get("number", ""),
+                     "position": st.get("position") or r["position"], "photo": r["photo"]})
+    # チームページに無いが試合に出た選手(登録の追加など)
+    for k, st in stats.items():
+        if k not in seen:
+            name = next(p["name"] for g in cache.values() for p in g.get("players") or [] if re.sub(r"[\s　]+", "", p["name"]) == k)
+            rows.append({"name": name, "team": team_name, "goals": st["goals"], "shots": st["shots"], "games": st["games"],
+                         "number": st["number"], "position": st["position"], "photo": ""})
+    rows.sort(key=lambda r: (-r["goals"], -r["shots"], -r["games"], _int(r["number"]) or 999))
+    rank, prev = 0, None
+    for i, r in enumerate(rows):
+        if r["goals"] != prev:
+            rank, prev = i + 1, r["goals"]
+        r["rank"] = rank
+    return rows
 
 
 # ---------- 個人ランキング(得点) ----------

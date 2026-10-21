@@ -367,15 +367,19 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             } else {
                 null
             }
-            // 丸岡RUCKは、相手チームの得点者(女子Fリーグ公式の得点ランキングから)を表で出す
-            val oppScorers = if (selectedTeam == Team.RAC && nextGame != null) {
-                leagueStandings[Team.RAC.name]?.scorers
+            // 丸岡RUCKは、相手チームの得点者(女子Fリーグ公式の得点ランキングから)を表で出す。
+            // ブルーサンダーは、相手チームの全選手(リーグH公式のチームページと試合ごとの記録から)を表で出す
+            val oppScorers = if ((selectedTeam == Team.RAC || selectedTeam == Team.THUNDER) && nextGame != null) {
+                leagueStandings[selectedTeam.name]?.scorers?.takeIf { sc ->
+                    selectedTeam == Team.RAC || sc.rows.any { r -> r.team.contains(nextGame.opponent) || nextGame.opponent.contains(r.team) }
+                }
             } else {
                 null
             }
             SectionLabel(
                 when {
                     oppRoster != null -> "次の対戦相手の選手"
+                    oppScorers != null && selectedTeam == Team.THUNDER -> "次の対戦相手の選手"
                     oppScorers != null -> "次の対戦相手の得点"
                     else -> "次の対戦相手の注目選手"
                 },
@@ -397,7 +401,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                         r.team.contains(nextGame.opponent) || nextGame.opponent.contains(r.team)
                     },
                     team = selectedTeam,
-                    updatedAt = leagueStandings[Team.RAC.name]?.updatedAt,
+                    updatedAt = leagueStandings[selectedTeam.name]?.updatedAt,
                     emptyMessage = "${nextGame.opponent}の選手は得点ランキングに載っていません。"
                 )
             } else if (oppPlayers.isNotEmpty()) {

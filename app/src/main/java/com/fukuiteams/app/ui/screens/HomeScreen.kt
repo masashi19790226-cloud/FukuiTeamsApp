@@ -387,14 +387,14 @@ fun HomeScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     SectionLabel("その後の日程")
-                    // 特定のチームを選んだときはそのチームの直近3件、「すべて」のときは全体の直近3件を表示。
+                    // 特定のチームを選んだときはそのチームの直近6件、「すべて」のときは全体の直近6件を表示。
                     // 試合スケジュールの一覧は「試合」タブにまとめてあるので、ここでは概要だけ。
-                    // 上の「次の試合」に出ている日の試合は除いて、その次から3件(同じ試合を2回出さない)
+                    // 上の「次の試合」に出ている日の試合は除いて、その次から6件(同じ試合を2回出さない)
                     val upcomingAll = mainGames()
                         .filter { (selectedTeam == null || it.team == selectedTeam) && it.isUpcoming() }
                         .sortedBy { it.sortKey }
                     val nextDay = upcomingAll.firstOrNull()?.sortKey?.take(8)
-                    val games = upcomingAll.filter { it.sortKey.take(8) != nextDay }.take(3)
+                    val games = upcomingAll.filter { it.sortKey.take(8) != nextDay }.take(6)
                     if (games.isEmpty()) {
                         Text(
                             if (nextDay != null) "次の試合のあとの予定は、まだ発表されていません"
