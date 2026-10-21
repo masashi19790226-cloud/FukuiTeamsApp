@@ -4253,5 +4253,57 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/JurakuFukui12/status/2112542351810064525/video/1&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw1O92vGbgLLjHQUJMORZXaZ",
     "published": "2026-10-20T21:53:40Z",
     "detected_at": "2026-10-21T15:31:53.105451+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4179101898773458236",
+    "team": "BLOWINDS",
+    "title": "BLUE RUCK PROJECT   12/20はブローウィンズさんと共同開催   鮮やかなブルーに、赤の ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/Y_HIYORI_728/status/2112304221219684385%3Futm_source%3Dyjrealtime%26utm_medium%3Dsearch&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2oUaBTUq1fmRhRP1w_78HL",
+    "published": "2026-10-20T01:02:05Z",
+    "detected_at": "2026-10-21T19:40:55.493233+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9420330382055039822",
+    "team": "RAC",
+    "title": "福井丸岡ＲＵＣＫ Ｕ２０頂点 フットサル日本ＡＭＣカップ | スポーツ | 福井のニュース - 福井新聞",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2726314&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw1NHwxFbtKQmm3hlOBSQsxT",
+    "published": "2026-10-19T21:00:09Z",
+    "detected_at": "2026-10-21T19:40:55.493303+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13313939466900835833",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【イベント】 第6回大人サッカー教室を開催しました⚽️ ゲスト ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2112861459784802637&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw17oBA7xkjh-S7XI5gWPzyx",
+    "published": "2026-10-21T11:03:22Z",
+    "detected_at": "2026-10-21T19:40:55.843366+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16800665336927886360",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"  HAPPY BIRTHDAY   本日10月21日は #野村魁 選手26歳のお ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2112740661355270363&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1Iaf93-4txWEsE_l1Fq6Ty",
+    "published": "2026-10-21T03:19:03Z",
+    "detected_at": "2026-10-21T19:40:55.843407+00:00"
+  },
+  {
+    "id": "bing:https://news.yahoo.co.jp/articles/2bbbc0878a1af6dea4d5cef22e232a7f555d5040",
+    "team": "THUNDER",
+    "title": "「厳しい試合でも勝ちきるパフォーマンスを」福井永平寺ブルー ...",
+    "link": "https://news.yahoo.co.jp/articles/2bbbc0878a1af6dea4d5cef22e232a7f555d5040",
+    "published": "2026-10-07T03:08:00+00:00",
+    "source": "Yahoo!ニュース",
+    "image": "",
+    "detected_at": "2026-10-21T19:40:58.251498+00:00"
+  },
+  {
+    "id": "bing:https://news.yahoo.co.jp/articles/3392f1f84bc7b140394d18824d6474898e84b64d",
+    "team": "THUNDER",
+    "title": "プレーオフ進出目指し本番へ ハンドボール福井永平寺ブルー ...",
+    "link": "https://news.yahoo.co.jp/articles/3392f1f84bc7b140394d18824d6474898e84b64d",
+    "published": "2026-10-07T03:03:00+00:00",
+    "source": "Yahoo!ニュース",
+    "image": "",
+    "detected_at": "2026-10-21T19:40:58.458156+00:00"
   }
 ]
