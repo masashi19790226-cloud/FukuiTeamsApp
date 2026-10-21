@@ -46,7 +46,7 @@ fun PublicViewingBadge(modifier: Modifier = Modifier) {
 
 /**
  * パブリックビューイングの一覧(1件ずつ枠で囲む)。押すと告知の出どころ(Xのポスト・お知らせ)を開く。
- * showTeam:3チームまとめて出すときはチーム名も出す
+ * showTeam:4チームまとめて出すときはチーム名も出す
  */
 @Composable
 fun PublicViewingList(items: List<PublicViewing>, showTeam: Boolean = false) {

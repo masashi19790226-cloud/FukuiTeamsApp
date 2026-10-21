@@ -36,6 +36,7 @@ object DataRefresher {
         val status = async { DataStatusRepository.fetch() }
         val players = async { PlayersRepository.fetch() }
         val standings = async { StandingsRepository.fetch() }
+        val birthdays = async { runCatching { BirthdaysRepository.fetch() }.getOrDefault(emptyList()) }
         games.await()
         // 「行く予定」にしていて始まった試合は、観戦方法を「現地観戦」として記録する
         runCatching { recordGoingAsOnSite(appContext, GamesRepository.games) }
@@ -44,17 +45,25 @@ object DataRefresher {
         pv.await()
         // ニュースの中のパブリックビューイングの記事も、試合と結び付けられるようにする
         val newsResult = news.await()
-        (newsResult as? AlertsResult.Success)?.let { PublicViewingsRepository.updateFromNews(it.items) }
+        (newsResult as? AlertsResult.Success)?.let {
+            PublicViewingsRepository.updateFromNews(it.items)
+            // 公式サイトのお知らせの写真(試合・イベント)も、アプリのあちこちで使う写真に加える
+            TeamPhotos.updateNews(it.items)
+        }
         // ホーム画面のウィジェットも最新にする
         NextGameWidget.requestUpdate(appContext)
+        // ニュース・一面・試合の詳細に出す選手の写真も入れ直す
+        val playersData = players.await()
+        val standingsData = standings.await()
+        TeamPhotos.update(playersData, standingsData, birthdays.await())
         AllData(
             results = results.await(),
             invitations = invitations.await(),
             news = newsResult,
             previews = previews.await(),
             status = status.await(),
-            players = players.await(),
-            standings = standings.await()
+            players = playersData,
+            standings = standingsData
         )
     }
 }

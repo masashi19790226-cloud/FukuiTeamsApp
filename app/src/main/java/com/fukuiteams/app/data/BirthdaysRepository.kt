@@ -10,7 +10,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 /**
- * 3チームの選手の誕生日。GitHub Actions(build_previews.py)が1日1回、
+ * 4チームの選手の誕生日。GitHub Actions(build_previews.py)が1日1回、
  * ブローウィンズ・ユナイテッドの公式サイトの選手ページと、女子Fリーグ公式の丸岡RUCKの選手名簿から集め、
  * data/standings.json の "BIRTHDAYS" に入れている。
  * あわせて、身長・体重・出身地・出身校(公式サイトに載っている分だけ)も入っている。

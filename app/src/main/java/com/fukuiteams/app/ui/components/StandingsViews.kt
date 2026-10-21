@@ -35,7 +35,7 @@ import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.Paper
 
 /*
- * 3チームのリーグの順位表(試合タブの「順位」で使う)。
+ * 4チームのリーグの順位表(試合タブの「順位」で使う)。
  * - ブローウィンズ: Bリーグ公式の地区別の順位表(BleagueStandingsSection)
  * - 丸岡RUCK・ユナイテッド: 女子Fリーグ公式の結果から計算した順位表/ユナイテッド公式の順位表(LeagueStandingsSection)
  */

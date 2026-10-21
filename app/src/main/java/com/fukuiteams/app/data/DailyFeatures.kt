@@ -104,6 +104,8 @@ fun buildFeatureStories(
         out += onSiteRecord(team, games, results, onSiteIds)
         out += tallest(team, birthdays)
         out += localPlayers(team, birthdays)
+        out += alumniStory(team, today)
+        out += historyStory(team, today)
     }
     out += topNews(teams, news, today)
     out += newsDigest(teams, news, today)
@@ -135,7 +137,7 @@ private data class PhotoCandidate(val team: Team?, val url: String, val label: S
 
 /**
  * 代わりの写真の候補。ブローウィンズは選手タブの顔写真(Bリーグ公式)、
- * 3チームとも誕生日のデータにある写真(各チームの公式サイト・女子Fリーグ公式)を使う。次の対戦相手の選手は使わない。
+ * 4チームとも誕生日のデータにある写真(各チームの公式サイト・女子Fリーグ公式)を使う。次の対戦相手の選手は使わない。
  */
 private fun photoPool(players: Map<String, TeamPlayers>, birthdays: List<PlayerBirthday>): List<PhotoCandidate> {
     val list = mutableListOf<PhotoCandidate>()
@@ -147,11 +149,24 @@ private fun photoPool(players: Map<String, TeamPlayers>, birthdays: List<PlayerB
     birthdays.forEach { b ->
         if (b.photo.isNotBlank() && b.team != null) list += PhotoCandidate(b.team, b.photo, b.label)
     }
-    return list.distinctBy { it.url }
+    // 得点の表などにある選手の写真も候補にする(アプリ全体で使う選手の写真の入れ物から)
+    TeamPhotos.own.forEach { (team, photos) ->
+        photos.forEach { list += PhotoCandidate(team, it.url, it.label) }
+    }
+    // 公式サイトのお知らせの写真(試合・イベント)も混ぜる(選手の顔写真ばかりにならないように)。
+    // 選手の写真とお知らせの写真が交互に並ぶようにする
+    val scenes = Team.values().flatMap { t -> TeamPhotos.scenes[t].orEmpty().map { PhotoCandidate(t, it.url, it.label) } }
+    val players = list.distinctBy { it.url }
+    val mixed = mutableListOf<PhotoCandidate>()
+    for (i in 0 until maxOf(players.size, scenes.size)) {
+        players.getOrNull(i)?.let { mixed += it }
+        scenes.getOrNull(i)?.let { mixed += it }
+    }
+    return mixed.distinctBy { it.url }
 }
 
 /**
- * 写真の無い記事に、その記事のチームの選手の写真を付ける(3チームまとめての記事は、どのチームの選手でもよい)。
+ * 写真の無い記事に、その記事のチームの選手の写真を付ける(4チームまとめての記事は、どのチームの選手でもよい)。
  * どの選手にするかは日替わりで、同じ日の記事どうしで同じ写真が重ならないようにする。
  * 候補が無いとき(読み込み前など)は写真なしのまま(画面では写真の代わりに色の帯を出す)。
  */
@@ -185,7 +200,8 @@ private fun withFallbackPhotos(stories: List<FeatureStory>, pool: List<PhotoCand
 }
 
 /** 写真が読めなかったときに試す代わりの写真の数 */
-private const val MAX_PHOTO_ALTERNATES = 4
+// (チームの公式サイトが止まって写真がまとめて読めないときもあるので、多めに用意する)
+private const val MAX_PHOTO_ALTERNATES = 8
 
 /** 直近のトピックの記事の小見出し(この記事は毎回必ず入れる) */
 private const val TOPIC_KICKER = "トピック"
@@ -814,6 +830,74 @@ private fun scorerRace(team: Team, standings: Map<String, LeagueStandings>): Lis
     )
 }
 
+/**
+ * 「あの選手は今」:以前チームにいた選手の近況(日替わりで1人)。
+ * 今もリーグのほかのクラブでプレーしている選手を先に選ぶ(今季の得点が分かれば添える)
+ */
+private fun alumniStory(team: Team, today: LocalDate): List<FeatureStory> {
+    val list = Alumni.players.filter { it.team == team }
+    if (list.isEmpty()) return emptyList()
+    val active = list.filter { it.now.isNotBlank() }
+    val pool = active.ifEmpty { list }
+    val p = pool[Math.floorMod(today.toEpochDay().toInt(), pool.size)]
+    val when_ = runCatching { LocalDate.parse(p.left) }.getOrNull()?.let { "${it.year}年${it.monthValue}月" } ?: "以前"
+    val head = if (p.number.isNotBlank()) "元#${p.number} ${p.name}" else p.name
+    val short = team.shortName
+    // 写真はチームの試合・イベントの写真(今の選手の顔写真だと、その選手と見間違えるため)
+    val scenes = TeamPhotos.rotate(TeamPhotos.scenesFor(team), "alumni-" + p.name)
+    val story = if (p.now.isNotBlank()) {
+        listOf(
+            FeatureStory(
+                kicker = "あの選手は今",
+                team = team,
+                headline = "$head、いまは${p.now}で" + (p.goals?.let { "今季${it}得点" } ?: "プレー"),
+                body = "${when_}に${short}を${p.kind}した${p.name}は、いま${p.now}" +
+                    (if (p.nowNumber.isNotBlank()) "(#${p.nowNumber})" else "") + "でプレーしています。" +
+                    (p.goals?.let { "今季はここまで${it}得点(リーグの得点ランキングより)。" } ?: "") +
+                    "${short}との対戦では古巣との一戦になります。",
+                bigNumber = p.goals?.toString(),
+                bigUnit = p.goals?.let { "得点" },
+                url = p.nowUrl.ifBlank { p.link }.ifBlank { null }
+            )
+        )
+    } else {
+        listOf(
+            FeatureStory(
+                kicker = "あの選手は今",
+                team = team,
+                headline = "$head、${when_}に${p.kind}",
+                body = "${when_}に${short}を${p.kind}した${p.name}(当時#${p.number})。" +
+                    (if (p.dest.isNotBlank()) "移籍先は${p.dest}。" else "") +
+                    "いまはリーグの選手名簿には載っていません。お知らせのページで当時のコメントが読めます。",
+                url = p.link.ifBlank { null }
+            )
+        )
+    }
+    val first = scenes.firstOrNull() ?: return story
+    return story.map {
+        it.copy(photo = first.url, photoCaption = first.label, photoAlternates = scenes.drop(1).take(MAX_PHOTO_ALTERNATES).map { s -> s.url to s.label })
+    }
+}
+
+/** 「過去の実績」:チームの歩み・過去の成績(TeamHistory.kt。日替わりで1つ。出典のページを開ける) */
+private fun historyStory(team: Team, today: LocalDate): List<FeatureStory> {
+    val list = TEAM_HISTORY.filter { it.team == team }
+    if (list.isEmpty()) return emptyList()
+    val h = list[Math.floorMod(today.toEpochDay().toInt() * 7 + team.ordinal, list.size)]
+    val ago = today.year - h.year
+    return listOf(
+        FeatureStory(
+            kicker = "過去の実績",
+            team = team,
+            headline = "${h.year}年、${h.title}",
+            body = h.detail + (if (ago > 0) "(${ago}年前)" else "") + "\n出典:${h.source}",
+            bigNumber = "${h.year}",
+            bigUnit = "年",
+            url = h.url
+        )
+    )
+}
+
 /** 今季いちばんの接戦の勝利 */
 private fun biggestComeback(team: Team, games: List<Game>, results: Map<String, RemoteGameResult>, today: LocalDate): List<FeatureStory> {
     val start = seasonStart(team, today)
@@ -883,7 +967,7 @@ private fun newsDigest(teams: List<Team>, news: List<RemoteInvitationAlert>, tod
     )
 }
 
-/** この先7日間の試合(3チームまとめて) */
+/** この先7日間の試合(4チームまとめて) */
 private fun weekAhead(teams: List<Team>, games: List<Game>): List<FeatureStory> {
     val week = games.filter { g -> g.team in teams && g.isUpcoming() && (g.daysUntil() ?: 99L) in 0L..7L }.sortedBy { it.sortKey }
     if (week.size < 2) return emptyList()

@@ -207,6 +207,72 @@ def standings_from(rank_page: str, form_by_slug=None):
     }
 
 
+# ---------- 試合ごとのページの「Information」(開場時刻・チケット・観戦案内など) ----------
+
+# リーグH公式で福井永平寺を選んだ日ごとの試合一覧(この日の福井永平寺の試合の番号を探す)
+TEAM_ID = "1006"
+DAY_SEARCH_URL = LEAGUEH + "/schedule/?s={season}&gt=R&y={y}&m={m}&d={d}&t=" + TEAM_ID + "&g=M"
+
+
+def day_search_url(date: str, season: int) -> str:
+    """「2026-10-24」の福井永平寺の試合を探す一覧ページのURL"""
+    y, m, d = (int(x) for x in date.split("-"))
+    return DAY_SEARCH_URL.format(season=season, y=y, m=m, d=d)
+
+
+def day_game_codes(page: str):
+    """日ごとの試合一覧のページから、試合の番号(511M18 など)。福井永平寺の試合だけが並ぶ"""
+    m = re.search(r"<ul\b[^>]*class=[\"'][^\"']*unit-2-lg[^\"']*[\"'][^>]*>(.*?)</ul>\s*</div>", page, flags=re.S | re.I)
+    body = m.group(1) if m else ""
+    codes = []
+    for code in re.findall(r"href=[\"']/schedule/(\w+)/?[\"']", body):
+        if code not in codes:
+            codes.append(code)
+    return codes
+
+
+def game_info(page: str):
+    """試合ごとのページの「Information」欄を、アプリの「試合情報(公式)」の形にする。
+    {"open": "15:00", "timeline": [...], "events": [{"title","text"}, ...], "title": "…男子第3節"}。読めなければ None。
+    「◉開場時刻」「◉チケット販売」「◉観戦案内」のような見出しごとにまとめる"""
+    m = re.search(r"class=[\"']information[\"'].*?<div\b[^>]*class=[\"']body[\"'][^>]*>(.*?)</div>", page or "", flags=re.S | re.I)
+    if not m:
+        return None
+    t = re.sub(r"<br\s*/?>", "\n", m.group(1), flags=re.I)
+    lines = [re.sub(r"\s+", " ", _text(x)).strip() for x in t.split("\n")]
+    lines = [x for x in lines if x]
+    head, sections, cur = [], [], None
+    for ln in lines:
+        if ln.startswith("◉") or ln.startswith("◎") or ln.startswith("■"):
+            cur = {"title": ln.lstrip("◉◎■ ").strip(), "lines": []}
+            sections.append(cur)
+        elif cur is None:
+            head.append(ln)
+        else:
+            cur["lines"].append(ln)
+    out = {"open": "", "timeline": [], "events": [], "title": " ".join(head)}
+    for sec in sections:
+        body = " ".join(sec["lines"]).strip()
+        if "開場" in sec["title"]:
+            tm = re.search(r"\d{1,2}:\d{2}", body)
+            if tm:
+                out["open"] = tm.group(0)
+                # 「18:00（17:30FC先行）」のような補足は、かっこの中に残す
+                rest = body.replace(tm.group(0), "", 1).strip(" （）()")
+                out["timeline"].append({"time": tm.group(0), "text": "開場" + (f"({rest})" if rest else "")})
+            continue
+        if sec["title"] or body:
+            out["events"].append({"title": sec["title"] or "お知らせ", "text": body[:200]})
+    # 試合開始の時刻(ページの上の日時)
+    dm = re.search(r"class=[\"']date[^\"']*[\"'][^>]*>(.*?)</p>", page, flags=re.S | re.I)
+    times = re.findall(r"<em>\s*(\d{1,2}:\d{2})\s*</em>", dm.group(1)) if dm else []
+    if times:
+        out["timeline"].append({"time": times[0], "text": "試合開始"})
+    if not out["open"] and not out["events"]:
+        return None
+    return out
+
+
 # ---------- 相手チームの選手(チームページ+試合ごとの記録) ----------
 
 def team_roster(page: str):

@@ -192,9 +192,9 @@ private fun RemoteInvitationAlert.isNewArrival(): Boolean =
 /**
  * トピック(旧RADAR)。既存のニュース(news_raw.json)と招待情報(invitations_raw.json)をまとめ、
  * 「ニュース・チケット・イベント・招待・その他」に分けて絞り込めるようにした画面。
- * 初期表示は「すべて」(3チーム)。チーム切替で1チームに絞り込める。
+ * 初期表示は「すべて」(4チーム)。チーム切替で1チームに絞り込める。
  * 旧・招待タブの役割もここに移した:「招待」では受付中と過去の招待を切り替えられる。
- * initialCategory に "INVITE" を渡すと招待、"ALL" を渡すとすべての分類で開く(チームは initialTeam、なければ3チームすべて)。
+ * initialCategory に "INVITE" を渡すと招待、"ALL" を渡すとすべての分類で開く(チームは initialTeam、なければ4チームすべて)。
  */
 @Composable
 fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
@@ -202,7 +202,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     val startCategory = remember(initialCategory) {
         RadarCategory.values().find { it.name.equals(initialCategory, ignoreCase = true) }
     }
-    // 最初は3チームすべて(「すべて」)。一面などからチームを指定して開いたときは、そのチーム
+    // 最初は4チームすべて(「すべて」)。一面などからチームを指定して開いたときは、そのチーム
     // 選んでいるチーム(null = すべて)。ほかのタブと共通なので、タブを切り替えても変わらない。
     // 一面などからチームを指定して開いたときは、そのチームにする
     LaunchedEffect(initialTeam) {
@@ -229,13 +229,18 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     suspend fun refresh() {
         newsResult = NewsAlertsRepository.fetch()
         // ニュースの中のパブリックビューイングの記事と、手で登録した分も読み直す
-        (newsResult as? AlertsResult.Success)?.let { PublicViewingsRepository.updateFromNews(it.items) }
+        (newsResult as? AlertsResult.Success)?.let {
+            PublicViewingsRepository.updateFromNews(it.items)
+            com.fukuiteams.app.data.TeamPhotos.updateNews(it.items)
+        }
         PublicViewingsRepository.refresh()
         inviteResult = InvitationAlertsRepository.fetch()
         dataStatus = DataStatusRepository.fetch()
     }
 
     LaunchedEffect(Unit) { refresh() }
+    // 画像の無い記事に出す選手の写真(一面を通らずに開いたときは、ここで読み込む)
+    LaunchedEffect(Unit) { com.fukuiteams.app.data.TeamPhotos.ensureLoaded() }
 
     // 手動で更新したときは、アプリのすべての情報を読み直す
     if (pullToRefreshState.isRefreshing) {
@@ -878,9 +883,15 @@ private fun RadarRow(
                 softWrap = false
             )
         }
-        // 見出し。サムネイル画像があれば左に小さく出す(Bingニュース・公式サイトのお知らせ)
+        // 見出し。サムネイル画像があれば左に小さく出す(Bingニュース・公式サイトのお知らせ)。
+        // 画像が無い・読めない記事は、そのチームの選手の写真を日替わりで代わりに出す
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
-            if (alert.image.isNotBlank()) RemoteThumbnail(alert.image, size = 64.dp)
+            val photos = com.fukuiteams.app.data.TeamPhotos
+            val candidates = androidx.compose.runtime.remember(alert.id, alert.image, photos.own) {
+                listOfNotNull(alert.image.takeIf { it.isNotBlank() }?.let { com.fukuiteams.app.data.PhotoRef(it, "") }) +
+                    photos.rotate(photos.forTeam(team), alert.id).take(6)
+            }
+            com.fukuiteams.app.ui.components.FallbackPhoto(candidates, width = 64.dp, height = 64.dp)
             Text(
                 alert.title,
                 modifier = Modifier.weight(1f),

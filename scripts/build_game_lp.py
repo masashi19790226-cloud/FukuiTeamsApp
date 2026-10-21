@@ -7,6 +7,9 @@
   (ページのURLは試合ごとに決まった形ではない(例:game_202601003_20261004)ため、作らずに探す)。
 - 1つのページに2日分(土日)が載っているので、日付ごとに data/games.json の試合と結び付ける。
 - 読めなかった日の試合は、前回のデータを残す(試合当日にページのリンクが外れても表示できるように)。
+
+福井永平寺ブルーサンダーは、リーグH公式の試合ごとのページの「Information」(開場時刻・チケット・観戦案内など)を読む
+(この先 THUNDER_DAYS 日以内の試合だけ。日ごとの試合一覧から試合の番号を探す)。
 """
 
 import html as htmllib
@@ -18,6 +21,8 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urljoin
 
+import leagueh
+
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 GAMES_PATH = os.path.join(BASE_DIR, "games.json")
 OUT_PATH = os.path.join(BASE_DIR, "game_lp.json")
@@ -28,6 +33,8 @@ SITE = "https://www.fukuiblowinds.com"
 LIST_PAGES = [SITE + "/schedule/", SITE + "/"]
 # 過ぎた試合のデータを残す日数
 KEEP_PAST_DAYS = 2
+# ブルーサンダーの試合情報を読む範囲(今日から何日先まで)
+THUNDER_DAYS = 14
 
 
 def fetch(url: str) -> str:
@@ -143,6 +150,43 @@ def parse_lp(url: str, page: str):
     return days
 
 
+def thunder_info(games, result, now_iso):
+    """ブルーサンダーの今日から THUNDER_DAYS 日以内の試合の、リーグH公式の試合ページの Information を result に入れる"""
+    today = datetime.now(JST).date()
+    targets = [g for g in games if g.get("team") == "thunder" and not g.get("category")]
+    for g in sorted(targets, key=lambda x: x.get("sort_key", x["date"])):
+        try:
+            d = datetime.strptime(g["date"], "%Y-%m-%d").date()
+        except ValueError:
+            continue
+        if not (today <= d <= today + timedelta(days=THUNDER_DAYS)):
+            continue
+        # シーズンは「2026-27」の最初の年(7月以降はその年、6月以前は前の年)
+        season = d.year if d.month >= 7 else d.year - 1
+        try:
+            codes = leagueh.day_game_codes(fetch(leagueh.day_search_url(g["date"], season)))
+        except Exception as e:
+            print(f"[WARN] 試合情報(ブルーサンダー): {g['date']} の試合一覧の取得に失敗 {e}")
+            continue
+        if not codes:
+            print(f"[試合情報] ブルーサンダー {g['date']} の試合がリーグH公式に見つかりません")
+            continue
+        url = f"{leagueh.LEAGUEH}/schedule/{codes[0]}/"
+        try:
+            info = leagueh.game_info(fetch(url))
+        except Exception as e:
+            print(f"[WARN] 試合情報(ブルーサンダー): {url} の取得に失敗 {e}")
+            continue
+        if not info:
+            print(f"[試合情報] ブルーサンダー {g['id']} {g['date']} はまだ案内が載っていません({url})")
+            continue
+        info["url"] = url
+        info["date"] = g["date"]
+        info["updated_at"] = now_iso
+        result[g["id"]] = info
+        print(f"[試合情報] {g['id']} {g['date']} 開場{info.get('open') or '?'} イベント{len(info.get('events', []))}件(ブルーサンダー)")
+
+
 def main():
     with open(GAMES_PATH, "r", encoding="utf-8") as f:
         games = json.load(f)
@@ -172,6 +216,12 @@ def main():
             result[game_id] = info
             print(f"[試合情報] {game_id} {date} 開場{info.get('open', '?')} "
                   f"スケジュール{len(info.get('timeline', []))}件 イベント{len(info.get('events', []))}件")
+
+    # ブルーサンダー(リーグH公式の試合ページの Information)。1つのチームの不調で、ほかの分が止まらないようにする
+    try:
+        thunder_info(games, result, now_iso)
+    except Exception as e:
+        print(f"[WARN] 試合情報(ブルーサンダー): 読み取りに失敗 {e!r}")
 
     # 今回読めなかった試合は、試合日から KEEP_PAST_DAYS 日までは前回のデータを残す
     today = datetime.now(JST).date()

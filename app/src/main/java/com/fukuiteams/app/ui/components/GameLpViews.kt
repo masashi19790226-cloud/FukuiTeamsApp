@@ -78,7 +78,9 @@ fun GameLpSection(lp: GameLp, startExpanded: Boolean) {
             }
         }
         Text(
-            "公式の試合情報ページを開く(グルメ・会場マップ・アクセスなど) ›",
+            // ブルーサンダーはリーグH公式の試合ページ、ブローウィンズは公式の試合情報ページ
+            if (lp.url.contains("leagueh.jp")) "リーグH公式の試合ページを開く(チケット・観戦案内など) ›"
+            else "公式の試合情報ページを開く(グルメ・会場マップ・アクセスなど) ›",
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Bold,
             color = Accent,

@@ -43,6 +43,7 @@ import com.fukuiteams.app.data.GamePhotos
 import com.fukuiteams.app.ui.theme.Ivory
 import androidx.compose.ui.text.style.TextOverflow
 import com.fukuiteams.app.data.resultSourceUrl
+import com.fukuiteams.app.data.periodsLabel
 import androidx.compose.ui.text.font.FontWeight
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.components.resultMark
@@ -202,11 +203,11 @@ fun GameDetailScreen(
     var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
     // 「成績」「順位」のどちらを開いているか(チームを切り替えたら閉じる)
     var topPanel by remember(selectedTeam) { mutableStateOf(TopPanel.NONE) }
-    // 3チームのリーグの順位表(「順位」で使う)
+    // 4チームのリーグの順位表(「順位」で使う)
     var leagueStandings by remember { mutableStateOf<Map<String, LeagueStandings>>(emptyMap()) }
     // 観戦方法・勝敗の記録は、変更されるたびに観戦成績カードへ即反映させる
     val gameLogPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
-    // 「行く予定」にした今後の試合(3チームまとめて、日付順)
+    // 「行く予定」にした今後の試合(4チームまとめて、日付順)
     val goingGames = remember(allGames, gameLogPrefs) {
         allGames.filter { it.isUpcoming() && isGoing(it.id, gameLogPrefs) }.sortedBy { it.sortKey }
     }
@@ -468,7 +469,7 @@ fun GameDetailScreen(
                                             showResult = isPastTab,
                                             photoCount = photoCount,
                                             going = !isPastTab && isGoing(g.id, gameLogPrefs),
-                                            // 「行く予定」は3チームまとめて並べるので、チーム名も出す
+                                            // 「行く予定」は4チームまとめて並べるので、チーム名も出す
                                             showTeam = isGoingTab
                                         )
                                     }
@@ -614,6 +615,15 @@ private fun QuickRecordPanel(
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        // 前半・後半の点数(ブルーサンダーの試合。リーグH公式の試合ページから)
+        autoResult?.periodsLabel?.takeIf { it.isNotBlank() }?.let { label ->
+            Text(
+                "${autoResult.myScore}-${autoResult.opponentScore}(${label})",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = Ink
+            )
+        }
         Text("観戦方法", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             WatchMethod.values().forEach { method ->
@@ -911,7 +921,7 @@ private fun ScheduleRow(
     photoCount: Int = 0,
     /** 「行く予定」の印が付いている */
     going: Boolean = false,
-    /** チーム名も出す(3チームまとめて並べるとき) */
+    /** チーム名も出す(4チームまとめて並べるとき) */
     showTeam: Boolean = false
 ) {
     Card(
@@ -1119,7 +1129,8 @@ private fun UpcomingGameInline(
             }
         }
 
-        // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベント
+        // ブローウィンズのホームゲームは公式の試合情報ページ、ブルーサンダーはリーグH公式の試合ページの
+        // 開場時刻・当日スケジュール・イベント(チケット・観戦案内など)
         if (lp != null) {
             ToggleBlock(
                 title = "試合情報(公式)",
@@ -1129,6 +1140,34 @@ private fun UpcomingGameInline(
                 ).joinToString("・"),
                 startOpen = game.isToday()
             ) { GameLpSection(lp, startExpanded = game.isToday()) }
+        }
+
+        // 両チームの選手の写真(福井側は日替わりで4人、相手は成績の上の選手から4人。相手の写真が無いチームは福井側だけ)
+        LaunchedEffect(Unit) { com.fukuiteams.app.data.TeamPhotos.ensureLoaded() }
+        val ownPhotos = com.fukuiteams.app.data.TeamPhotos.rotate(com.fukuiteams.app.data.TeamPhotos.forTeam(game.team), game.id)
+        val oppPhotos = com.fukuiteams.app.data.TeamPhotos.forOpponent(game)
+        if (ownPhotos.isNotEmpty() || oppPhotos.isNotEmpty()) {
+            ToggleBlock(
+                title = "選手",
+                summary = listOfNotNull(
+                    game.team.shortLabel().takeIf { ownPhotos.isNotEmpty() },
+                    game.opponent.takeIf { oppPhotos.isNotEmpty() }
+                ).joinToString("・"),
+                startOpen = true
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    com.fukuiteams.app.ui.components.PlayerPhotoRow(ownPhotos, count = 4, title = game.team.shortLabel())
+                    com.fukuiteams.app.ui.components.PlayerPhotoRow(oppPhotos, count = 4, title = game.opponent)
+                    // 公式サイトのお知らせの写真(試合・イベント)。日替わりで3枚
+                    com.fukuiteams.app.ui.components.PlayerPhotoRow(
+                        com.fukuiteams.app.data.TeamPhotos.rotate(com.fukuiteams.app.data.TeamPhotos.scenesFor(game.team), game.id),
+                        count = 3,
+                        title = "最近の写真(公式サイトから)",
+                        photoWidth = 96.dp,
+                        photoHeight = 64.dp
+                    )
+                }
+            }
         }
 
         // 持ち物チェック(見出しを押すと開く。試合当日は最初から開いている)

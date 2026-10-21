@@ -141,7 +141,22 @@ object StandingsRepository {
             connection.disconnect()
             val root = JSONObject(text)
             val map = mutableMapOf<String, LeagueStandings>()
+            // 試合・イベントの写真(丸岡RUCK公式サイトの試合結果の記事などから)。順位表ではないので別に読む
+            root.optJSONObject("PHOTOS")?.optJSONObject("teams")?.let { teams ->
+                val gallery = mutableMapOf<com.fukuiteams.app.model.Team, List<PhotoRef>>()
+                teams.keys().forEach { key ->
+                    val t = com.fukuiteams.app.model.Team.values().firstOrNull { it.name == key } ?: return@forEach
+                    val arr = teams.optJSONArray(key) ?: return@forEach
+                    gallery[t] = (0 until arr.length()).mapNotNull { i ->
+                        arr.optJSONObject(i)?.let { p -> PhotoRef(p.optString("url"), p.optString("label")) }
+                    }.filter { it.url.isNotBlank() }
+                }
+                TeamPhotos.updateGallery(gallery)
+            }
+            // 「あの選手は今」(以前チームにいた選手)。これも順位表ではないので別に読む
+            Alumni.update(root.optJSONObject("ALUMNI"))
             root.keys().forEach { team ->
+                if (team == "PHOTOS" || team == "ALUMNI") return@forEach
                 val o = root.optJSONObject(team) ?: return@forEach
                 map[team] = LeagueStandings(
                     league = o.optString("league"),

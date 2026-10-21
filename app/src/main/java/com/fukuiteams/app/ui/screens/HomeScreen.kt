@@ -1,5 +1,10 @@
 package com.fukuiteams.app.ui.screens
 
+import com.fukuiteams.app.data.PhotoRef
+import com.fukuiteams.app.data.TeamPhotos
+import com.fukuiteams.app.ui.components.FallbackPhoto
+import com.fukuiteams.app.ui.components.PlayerPhotoRow
+
 import com.fukuiteams.app.model.shortName
 import com.fukuiteams.app.ui.components.HomeAwayLabel
 import com.fukuiteams.app.ui.components.openExternalUrl
@@ -181,7 +186,7 @@ fun HomeScreen(
     var weathers by remember { mutableStateOf<Map<String, MatchWeather>>(emptyMap()) }
     // 「次の試合」の天気予報(試合の3日前から。入場の時刻と試合開始の時刻)
     var forecasts by remember { mutableStateOf<Map<String, GameForecast>>(emptyMap()) }
-    // 3チームの選手の誕生日(一面の「誕生日」欄)
+    // 4チームの選手の誕生日(一面の「誕生日」欄)
     var birthdays by remember { mutableStateOf<List<PlayerBirthday>>(emptyList()) }
     // 一面の「特集」(試合が無い日の読み物)に使う、選手の成績と順位
     var players by remember { mutableStateOf<Map<String, TeamPlayers>>(emptyMap()) }
@@ -663,6 +668,12 @@ private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             Text(team?.initial ?: "?", color = White, style = MaterialTheme.typography.titleMedium)
+            // 記事の画像(無い・読めないときは、そのチームの選手の写真を日替わりで)を、チームの頭文字の上に重ねる
+            val candidates = remember(news.id, news.image, TeamPhotos.own) {
+                listOfNotNull(news.image.takeIf { it.isNotBlank() }?.let { PhotoRef(it, "") }) +
+                    TeamPhotos.rotate(TeamPhotos.forTeam(team), news.id).take(6)
+            }
+            FallbackPhoto(candidates, width = 48.dp, height = 48.dp)
         }
         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
             // 1行目:引用元(どこの記事か)を枠付きで目立たせ、その横にチーム名と日時
@@ -931,6 +942,13 @@ private fun NextGameBlock(
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
+        // 福井側の選手の写真(日替わりで4人)
+        PlayerPhotoRow(
+            TeamPhotos.rotate(TeamPhotos.forTeam(nextGame.team), nextGame.id),
+            count = 4,
+            photoWidth = 56.dp,
+            photoHeight = 70.dp
+        )
         // この相手とのこれまでの対戦成績(アプリが記録している試合結果から)
         HeadToHeadBox(nextGame, results)
         // 天気予報(試合の3日前から。入場の時刻 → 試合開始の時刻の順)
@@ -972,8 +990,12 @@ private fun NextGameBlock(
 
             ThinRule(modifier = Modifier.padding(vertical = 6.dp))
             SectionLabel("相手の注目選手")
+            val oppPhotos = TeamPhotos.forOpponent(nextGame)
             if (preview.keyPlayers.isNotEmpty()) {
-                preview.keyPlayers.forEach { KeyPlayerRow(it) }
+                preview.keyPlayers.forEach { KeyPlayerRow(it, TeamPhotos.findByName(oppPhotos, it.name)) }
+                // 注目選手のほかの相手の選手の写真
+                val others = oppPhotos.filter { p -> preview.keyPlayers.none { TeamPhotos.findByName(listOf(p), it.name) != null } }
+                PlayerPhotoRow(others, count = 4, photoWidth = 52.dp, photoHeight = 65.dp)
                 if (preview.playersNote.isNotBlank()) {
                     Text("※${preview.playersNote}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
                 }
@@ -1061,9 +1083,11 @@ private fun PreviewTable(preview: GamePreview) {
 }
 
 @Composable
-private fun KeyPlayerRow(player: KeyPlayer) {
+private fun KeyPlayerRow(player: KeyPlayer, photo: PhotoRef? = null) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.padding(vertical = 2.dp)) {
+        // 相手の選手の写真が分かれば左に出す
+        if (photo != null) RemoteThumbnail(photo.url, width = 44.dp, height = 55.dp, alignTop = true, zoomCaption = photo.label)
         // 丸岡RUCKの相手の得点者は背番号が分からないので「-」
         Headline(if (player.number.isNotBlank()) "#${player.number}" else "#-", fontSize = 20, modifier = Modifier.width(52.dp))
         Column(modifier = Modifier.weight(1f)) {
@@ -1091,7 +1115,10 @@ private fun TeamBrief(team: Team, autoResults: Map<String, RemoteGameResult>, on
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
             Box(modifier = Modifier.width(4.dp).height(12.dp).background(team.color))
-            Text(team.shortLabelForFront(), style = MaterialTheme.typography.labelMedium)
+            Text(team.shortLabelForFront(), style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
+            // そのチームの選手の写真(日替わりで1人)
+            val candidates = remember(team, TeamPhotos.own, TeamPhotos.scenes) { TeamPhotos.mixed(team, "brief-" + team.name).take(8) }
+            FallbackPhoto(candidates, width = 30.dp, height = 38.dp)
         }
         if (latest != null) {
             val r = autoResults.getValue(latest.id)

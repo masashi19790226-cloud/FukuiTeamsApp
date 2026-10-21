@@ -144,7 +144,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
     // 丸岡RUCK・ユナイテッドの順位表
     var leagueStandings by remember { mutableStateOf<Map<String, LeagueStandings>>(emptyMap()) }
 
-    // 3チームの選手の身長・体重・出身地など(公式サイトの選手ページから。チーム+名前で引く)
+    // 4チームの選手の身長・体重・出身地など(公式サイトの選手ページから。チーム+名前で引く)
     var profiles by remember { mutableStateOf<Map<String, PlayerBirthday>>(emptyMap()) }
 
     suspend fun load() {

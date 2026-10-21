@@ -1089,6 +1089,29 @@ def main():
     except Exception as e:
         print(f"[WARN] 誕生日: 作成に失敗しました {e!r}")
 
+    # 「あの選手は今」(以前チームにいた選手の近況。1日1回だけ作り直す)。standings.json の "ALUMNI" に入れる
+    try:
+        import alumni
+        old_all = load_json(STANDINGS_PATH, {})
+        bd = STANDINGS.get("BIRTHDAYS") or old_all.get("BIRTHDAYS", {})
+        ruck_now = [p.get("name", "") for p in bd.get("players") or [] if p.get("team") == "RAC"]
+        scorers_rows = (STANDINGS.get("RAC") or old_all.get("RAC", {})).get("scorers", {}).get("rows") or []
+        al = alumni.build(fetch, old_all.get("ALUMNI", {}), scorers_rows, ruck_now)
+        if al and STANDINGS:
+            STANDINGS["ALUMNI"] = al
+            print(f"[あの選手は今] {len(al['players'])}人分")
+    except Exception as e:
+        print(f"[WARN] あの選手は今: 作成に失敗しました {e!r}")
+
+    # 試合・イベントの写真(1日1回だけ作り直す。アプリで選手の顔写真と混ぜて使う)。standings.json の "PHOTOS" に入れる
+    try:
+        import photos
+        ph = photos.build(fetch, load_json(STANDINGS_PATH, {}).get("PHOTOS", {}))
+        if ph and STANDINGS:
+            STANDINGS["PHOTOS"] = ph
+    except Exception as e:
+        print(f"[WARN] 写真: 作成に失敗しました {e!r}")
+
     # 丸岡RUCK・ユナイテッドの順位表。読めなかったリーグは前回の内容を残す
     if STANDINGS:
         merged = load_json(STANDINGS_PATH, {})
