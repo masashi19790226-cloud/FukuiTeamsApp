@@ -52,6 +52,15 @@ fun AppNavHost(initialRoute: String? = null) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route?.substringBefore("/")
 
+    // 着せ替えを画面ごとに固定する:掲示板はブローウィンズの色、メニュー(使い方・更新履歴も)は標準の新聞の色
+    androidx.compose.runtime.SideEffect {
+        com.fukuiteams.app.ui.theme.AppSkin.screenOverride = when (currentRoute) {
+            Routes.BBS -> com.fukuiteams.app.ui.theme.SkinMode.BLOWINDS
+            Routes.NOTIFICATIONS, Routes.CHANGELOG, Routes.HOW_TO_USE -> com.fukuiteams.app.ui.theme.SkinMode.STANDARD
+            else -> null
+        }
+    }
+
     LaunchedEffect(initialRoute) {
         if (initialRoute != null) {
             // 知らないルートが来てもアプリが落ちないようにする

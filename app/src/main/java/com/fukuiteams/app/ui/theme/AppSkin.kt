@@ -15,6 +15,7 @@ import com.fukuiteams.app.model.Team
  * - 自動     : 画面の上のチームのボタンで選んだチームの色に合わせて変わる(「すべて」のときは標準)
  * - 各チーム : そのチームの色で固定
  * 選んだものはスマホに保存し、次にアプリを開いたときも同じ着せ替えで表示する。
+ * ただし、掲示板の画面はブローウィンズの色、メニュー(とそこから開く使い方・更新履歴)は標準で固定する(screenOverride)。
  *
  * Color.kt の Ivory・Paper・NewsRed などは、ここで決めた色を返す(画面のどこでも、着せ替えがすぐに反映される)。
  */
@@ -67,6 +68,9 @@ object AppSkin {
 
     var mode by mutableStateOf(SkinMode.STANDARD)
         private set
+
+    /** 画面ごとに色を固定するとき(掲示板=ブローウィンズ、メニュー=標準)。null なら選んだ着せ替えのまま。NavGraph で決める */
+    var screenOverride by mutableStateOf<SkinMode?>(null)
     private var loaded = false
 
     fun load(context: Context) {
@@ -83,10 +87,10 @@ object AppSkin {
 
     /** いま使うチーム(標準のときは null) */
     val team: Team?
-        get() = when (mode) {
+        get() = when (val m = screenOverride ?: mode) {
             SkinMode.STANDARD -> null
             SkinMode.AUTO -> TeamSelection.current
-            else -> mode.team
+            else -> m.team
         }
 
     /** いまの色 */

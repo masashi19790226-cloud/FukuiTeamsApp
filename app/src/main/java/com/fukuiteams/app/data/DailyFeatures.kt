@@ -97,7 +97,7 @@ fun buildFeatureStories(
         out += sharpshooter(team, players)
         out += lastGameHeroes(team, players, games)
         out += ironman(team, players)
-        out += opponentWatch(team, games, previews)
+        out += opponentWatch(team, games, previews, players, standings)
         out += remaining(team, games, today)
         out += scorerRace(team, standings)
         out += biggestComeback(team, games, results, today)
@@ -168,7 +168,11 @@ private fun withFallbackPhotos(stories: List<FeatureStory>, pool: List<PhotoCand
         val alternates = ordered.filter { it.url != story.photo }.take(MAX_PHOTO_ALTERNATES)
         if (story.photo.isNotBlank()) {
             // 記事の写真はそのまま。読めなかったときの代わりだけ付ける
-            return@map story.copy(photoAlternates = alternates.map { it.url to it.label })
+            // (相手チームの選手の写真の記事は、まず相手の別の選手の写真を試し、それも読めなければ福井側の選手の写真)
+            return@map story.copy(
+                photoAlternates = (story.photoAlternates + alternates.map { it.url to it.label })
+                    .distinctBy { it.first }.take(MAX_PHOTO_ALTERNATES + story.photoAlternates.size)
+            )
         }
         val pick = alternates.firstOrNull() ?: return@map story
         used += pick.url
@@ -675,11 +679,55 @@ private fun ironman(team: Team, players: Map<String, TeamPlayers>): List<Feature
 }
 
 /** 次の相手の要注意選手と近況(展望のデータから) */
-private fun opponentWatch(team: Team, games: List<Game>, previews: Map<String, GamePreview>): List<FeatureStory> {
+/**
+ * 次の対戦相手の選手の写真(URL と「#23 渡邉 雄大(堺リエゾン)」のような名前)。
+ * - ブローウィンズ : 選手タブの相手の全選手(Bリーグ公式)
+ * - 丸岡RUCK・ブルーサンダー: 得点の表の相手チームの選手(写真があるものだけ)
+ * - ユナイテッド   : 相手の選手の写真は無いので空
+ * 得点・成績が上の選手から並べる
+ */
+private fun opponentPhotos(
+    team: Team,
+    next: Game,
+    players: Map<String, TeamPlayers>,
+    standings: Map<String, LeagueStandings>
+): List<Pair<String, String>> {
+    val opp = next.opponent
+    return when (team) {
+        Team.BLOWINDS -> players[BLOWINDS_OPP_KEY]?.takeIf { it.gameId.isBlank() || it.gameId == next.id }?.players.orEmpty()
+            .filter { it.photo.isNotBlank() }
+            .sortedByDescending { it.points?.toDoubleOrNull() ?: -1.0 }
+            .map { it.photo to "${it.head()}($opp)" }
+        Team.RAC, Team.THUNDER -> standings[team.name]?.scorers?.rows.orEmpty()
+            .filter { r -> r.photo.isNotBlank() && (r.team.contains(opp) || opp.contains(r.team)) }
+            .sortedWith(compareByDescending<ScorerRow> { it.goals }.thenBy { it.rank })
+            .map { r -> r.photo to ((if (r.number.isNotBlank()) "#${r.number} " else "") + "${r.name}($opp)") }
+        else -> emptyList()
+    }
+}
+
+private fun opponentWatch(
+    team: Team,
+    games: List<Game>,
+    previews: Map<String, GamePreview>,
+    players: Map<String, TeamPlayers>,
+    standings: Map<String, LeagueStandings>
+): List<FeatureStory> {
     val next = games.filter { it.team == team && it.isUpcoming() }.minByOrNull { it.sortKey } ?: return emptyList()
     val pv = previews[next.id] ?: return emptyList()
     val out = mutableListOf<FeatureStory>()
+    // 相手の選手の写真(「要注意人物」はその選手の写真、「相手を知る」は相手でいちばん成績のよい選手の写真)
+    val oppPhotos = opponentPhotos(team, next, players, standings)
+    fun photoFor(name: String?): Pair<String, String>? {
+        if (name != null) {
+            val key = playerNameKey(name)
+            oppPhotos.firstOrNull { (_, label) -> playerNameKey(label.replace(Regex("^#\\S+\\s+"), "").substringBefore("(")) == key }
+                ?.let { return it }
+        }
+        return oppPhotos.firstOrNull()
+    }
     pv.keyPlayers.firstOrNull()?.let { k ->
+        val ph = photoFor(k.name)
         out += FeatureStory(
             kicker = "要注意人物",
             team = team,
@@ -687,7 +735,10 @@ private fun opponentWatch(team: Team, games: List<Game>, previews: Map<String, G
             body = "次の相手${next.opponent}(${next.shortLabel()})で警戒したいのは${k.name}" +
                 (if (k.position.isNotBlank()) "(${k.position})" else "") + "。${k.stat}。" +
                 (pv.keyPlayers.drop(1).takeIf { it.isNotEmpty() }?.let { rest -> "ほかに" + rest.joinToString("、") { it.name } + "も。" } ?: ""),
-            gameId = next.id
+            gameId = next.id,
+            photo = ph?.first.orEmpty(),
+            photoCaption = ph?.second,
+            photoAlternates = oppPhotos.filter { it != ph }.take(MAX_PHOTO_ALTERNATES)
         )
     }
     if (pv.opp.record.isNotBlank() || pv.opp.form.isNotBlank()) {
@@ -705,7 +756,15 @@ private fun opponentWatch(team: Team, games: List<Game>, previews: Map<String, G
                     pv.my.form.takeIf { it.isNotBlank() }?.let { "直近$it" }
                 ).joinToString("・").let { if (it.isNotBlank()) "$it。" else "" },
             gameId = next.id
-        )
+        ).let { story ->
+            // 相手の注目選手(いなければ相手でいちばん成績のよい選手)の写真を付ける
+            val ph = photoFor(pv.keyPlayers.firstOrNull()?.name)
+            if (ph == null) story else story.copy(
+                photo = ph.first,
+                photoCaption = ph.second,
+                photoAlternates = oppPhotos.filter { it != ph }.take(MAX_PHOTO_ALTERNATES)
+            )
+        }
     }
     return out
 }
