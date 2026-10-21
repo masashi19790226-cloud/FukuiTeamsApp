@@ -4103,5 +4103,13 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.4_UbSQYV7kgZ7qincU2xdg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-20T21:56:53.444126+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1441993530935548523",
+    "team": "BLOWINDS",
+    "title": "2026/10/18 新潟アルビレックスＢＢ vs 福井ブローウィンズ アルビレックスチアリーダーズ ハーフ ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://t.co/3NLxQSnCP1&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3M-hWVgAfefG7WI50hFGUJ",
+    "published": "2026-10-20T11:29:31Z",
+    "detected_at": "2026-10-21T05:22:03.788471+00:00"
   }
 ]
