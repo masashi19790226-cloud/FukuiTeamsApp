@@ -37,6 +37,7 @@ RESULTS_PATH = os.path.join(BASE_DIR, "results.json")
 PREVIEWS_PATH = os.path.join(BASE_DIR, "previews.json")
 PLAYERS_PATH = os.path.join(BASE_DIR, "players.json")
 STANDINGS_PATH = os.path.join(BASE_DIR, "standings.json")
+HISTORY_PATH = os.path.join(BASE_DIR, "history.json")
 
 JST = timezone(timedelta(hours=9))
 UA = "Mozilla/5.0 (Linux; Android 14) FukuiSpoBot/1.0 (+https://github.com/masashi19790226-cloud/FukuiTeamsApp)"
@@ -1111,6 +1112,17 @@ def main():
             STANDINGS["PHOTOS"] = ph
     except Exception as e:
         print(f"[WARN] 写真: 作成に失敗しました {e!r}")
+
+    # 過去の試合の記録(1日1回だけ作り直す。アプリの「過去の記録」で使う)。data/history.json に書き出す
+    try:
+        import history
+        hi = history.build(fetch, post_json, load_json(HISTORY_PATH, {}))
+        if hi:
+            with open(HISTORY_PATH, "w", encoding="utf-8") as f:
+                json.dump(hi, f, ensure_ascii=False, indent=1)
+            print(f"[過去の記録] " + "・".join(f"{k} {len(v.get('matches') or [])}試合" for k, v in hi["teams"].items()))
+    except Exception as e:
+        print(f"[WARN] 過去の記録: 作成に失敗しました {e!r}")
 
     # 丸岡RUCK・ユナイテッドの順位表。読めなかったリーグは前回の内容を残す
     if STANDINGS:

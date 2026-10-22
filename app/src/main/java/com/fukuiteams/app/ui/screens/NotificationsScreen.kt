@@ -93,6 +93,8 @@ private val kindDefs = listOf(
 fun NotificationsScreen(
     onOpenChangelog: () -> Unit = {},
     onOpenHowToUse: () -> Unit = {},
+    // 過去の記録(シーズンごとの成績・相手別の対戦成績・過去の試合)を開く
+    onOpenArchive: () -> Unit = {},
     // 掲示板タブを開いて、掲示板の設定(キーワード通知の言葉・NGなど)を開く
     onOpenBbsSettings: () -> Unit = {}
 ) {
@@ -305,6 +307,16 @@ fun NotificationsScreen(
                         onClick = onOpenBbsSettings
                     )
                 }
+            }
+
+            // 過去の記録への入口
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("過去の記録")
+                MenuLinkRow(
+                    title = "過去の記録",
+                    sub = "シーズンごとの成績・相手別の通算の対戦成績・過去の試合・チームの歩み",
+                    onClick = onOpenArchive
+                )
             }
 
             // 4チームの公式サイトと公式SNS(X・インスタグラム)。SNSはチームごとに公式サイトの下に並べる

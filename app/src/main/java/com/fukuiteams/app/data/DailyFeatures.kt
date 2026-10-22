@@ -228,14 +228,17 @@ private fun countdown(
     if (days < 1 || days > 30) return emptyList()
     val h2h = headToHead(next, games, results)
     val h2hLine = h2h?.let {
-        val last = it.meetings.first()
-        val mark = when (last.second.outcome()) {
+        // 前回の対戦(アプリの記録と過去の記録をまとめて、いちばん新しい試合)
+        val last = it.lines().first()
+        val mark = when (last.outcome) {
             GameOutcome.WIN -> "勝利"
             GameOutcome.LOSE -> "敗戦"
             GameOutcome.DRAW -> "引き分け"
         }
+        // 今季の試合は「9/26(土)」、過去の記録の試合は年も付けて「2025/10/4(土)」
+        val when_ = last.game?.shortLabel() ?: last.dateLabel
         "${next.opponent}とはこれまで${it.wins}勝${it.losses}敗" + (if (it.draws > 0) "${it.draws}分" else "") +
-            "。前回(${last.first.shortLabel()})は${last.second.myScore}-${last.second.opponentScore}で$mark。"
+            "。前回(${when_})は${last.myScore}-${last.opponentScore}" + (if (last.pk.isNotBlank()) "(PK${last.pk})" else "") + "で$mark。"
     } ?: "${next.opponent}とは今季(記録上)初めての対戦。"
     val summary = previews[next.id]?.summary?.takeIf { it.isNotBlank() }
     val where = if (next.isHome) "ホーム・${next.venue}" else "敵地・${next.venue}"
@@ -502,7 +505,7 @@ private fun onThisDay(team: Team, games: List<Game>, results: Map<String, Remote
         val d = g.localDate() ?: return@filter false
         g.team == team && d.year < today.year && d.monthValue == today.monthValue && d.dayOfMonth == today.dayOfMonth &&
             results.containsKey(g.id)
-    }.maxByOrNull { it.sortKey } ?: return emptyList()
+    }.maxByOrNull { it.sortKey } ?: return onThisDayFromHistory(team, today)
     val r = results.getValue(hit.id)
     val years = today.year - (hit.localDate()?.year ?: today.year)
     val verb = when (r.outcome()) {
@@ -519,6 +522,43 @@ private fun onThisDay(team: Team, games: List<Game>, results: Map<String, Remote
             bigNumber = "$years",
             bigUnit = "年前",
             gameId = hit.id
+        )
+    )
+}
+
+/**
+ * 「今日は何の日」を過去の記録(data/history.json。ユナイテッド・ブルーサンダー)から。
+ * 何年か前の今日に試合があれば、いちばん近い年の試合を出す(押すと公式の結果のページを開く)
+ */
+private fun onThisDayFromHistory(team: Team, today: LocalDate): List<FeatureStory> {
+    val hit = HistoryRepository.matchesFor(team).filter { m ->
+        val d = m.localDate ?: return@filter false
+        !m.isExhibition && d.year < today.year && d.monthValue == today.monthValue && d.dayOfMonth == today.dayOfMonth
+    }.maxByOrNull { it.date } ?: return emptyList()
+    val years = today.year - (hit.localDate?.year ?: today.year)
+    val verb = when (hit.outcome) {
+        GameOutcome.WIN -> "に勝利"
+        GameOutcome.LOSE -> "に敗れた"
+        GameOutcome.DRAW -> "と引き分けた"
+    }
+    val where = when (hit.homeAway) {
+        "H" -> "ホームの"
+        "A" -> "アウェイの"
+        else -> ""
+    }
+    val scorers = hit.scorers.takeIf { it.isNotEmpty() }?.joinToString("・") { (n, g) -> if (g > 1) "$n(${g}点)" else n }
+    return listOf(
+        FeatureStory(
+            kicker = "今日は何の日",
+            team = team,
+            headline = "${years}年前の今日、${hit.opponent}$verb",
+            body = "${hit.dateLabel}、${hit.title.ifBlank { hit.competition }}。" +
+                "$where${hit.opponent}戦は${hit.myScore}-${hit.opponentScore}" + (if (hit.pk.isNotBlank()) "(PK${hit.pk})" else "") + "。" +
+                (scorers?.let { "得点は$it。" } ?: "") +
+                (hit.visitors?.let { "観客は${"%,d".format(it)}人。" } ?: ""),
+            bigNumber = "$years",
+            bigUnit = "年前",
+            url = hit.url.ifBlank { null }
         )
     )
 }

@@ -1208,7 +1208,9 @@ private fun BirthdayCard(players: List<PlayerBirthday>, today: java.time.LocalDa
  */
 @Composable
 private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
-    val h2h = remember(game.id, results, GamesRepository.games) {
+    // 過去の記録(history.json)を読み終えたら数え直す
+    val history = com.fukuiteams.app.data.HistoryRepository.data
+    val h2h = remember(game.id, results, GamesRepository.games, history) {
         com.fukuiteams.app.data.headToHead(game, mainGames(), results)
     }
     Column(
@@ -1232,20 +1234,21 @@ private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
             fontWeight = FontWeight.Bold,
             color = Ink
         )
-        h2h.meetings.take(3).forEach { (g, r) ->
-            val mark = when {
-                r.myScore > r.opponentScore -> "○"
-                r.myScore < r.opponentScore -> "●"
-                else -> "△"
+        h2h.lines().take(3).forEach { line ->
+            val ha = when (line.isHome) {
+                true -> " HOME"
+                false -> " AWAY"
+                null -> ""
             }
             Text(
-                "$mark ${r.myScore}-${r.opponentScore}  ${g.dateLabel}(${g.dayOfWeek}) ${if (g.isHome) "HOME" else "AWAY"}",
+                "${line.scoreLabel.take(1)} ${line.scoreLabel.drop(1)}  ${line.dateLabel}$ha",
                 style = MaterialTheme.typography.bodySmall,
-                color = if (mark == "○") NewsRed else Ink
+                color = if (line.outcome == com.fukuiteams.app.data.GameOutcome.WIN) NewsRed else Ink
             )
         }
         Text(
-            "※このアプリが記録している試合(今季など)から数えています",
+            if (h2h.usesHistory) "※公式サイトの過去の試合の記録と、このアプリが記録している試合から数えています(公式戦)"
+            else "※このアプリが記録している試合(今季など)から数えています",
             style = MaterialTheme.typography.labelSmall,
             color = InkSoft
         )

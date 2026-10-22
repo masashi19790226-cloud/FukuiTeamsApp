@@ -37,7 +37,10 @@ object DataRefresher {
         val players = async { PlayersRepository.fetch() }
         val standings = async { StandingsRepository.fetch() }
         val birthdays = async { runCatching { BirthdaysRepository.fetch() }.getOrDefault(emptyList()) }
+        // 過去の試合の記録(過去の記録の画面・一面の「○年前の今日」・次の相手との通算の対戦成績)
+        val history = async { HistoryRepository.refresh() }
         games.await()
+        history.await()
         // 「行く予定」にしていて始まった試合は、観戦方法を「現地観戦」として記録する
         runCatching { recordGoingAsOnSite(appContext, GamesRepository.games) }
         special.await()

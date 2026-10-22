@@ -24,6 +24,7 @@ import com.fukuiteams.app.ui.screens.PlayersScreen
 import com.fukuiteams.app.ui.screens.RadarScreen
 import com.fukuiteams.app.ui.screens.BbsScreen
 import com.fukuiteams.app.ui.screens.BbsScreenRequest
+import com.fukuiteams.app.ui.screens.ArchiveScreen
 
 object Routes {
     const val HOME = "home"
@@ -44,6 +45,8 @@ object Routes {
     const val PLAYERS = "players"
     // 福井ブローウィンズ掲示板(読むだけ)
     const val BBS = "bbs"
+    // 過去の記録(シーズンごとの成績・相手別の対戦成績・過去の試合)。メニューから開く
+    const val ARCHIVE = "archive"
 }
 
 @Composable
@@ -59,8 +62,9 @@ fun AppNavHost(initialRoute: String? = null) {
             Routes.NOTIFICATIONS, Routes.CHANGELOG, Routes.HOW_TO_USE -> com.fukuiteams.app.ui.theme.SkinMode.STANDARD
             else -> null
         }
-        // 試合・選手は1チームだけを表示する画面(「選んだチームに合わせる」のとき、表示しているチームの色にする)
-        com.fukuiteams.app.ui.theme.AppSkin.singleTeamScreen = currentRoute == Routes.GAME_DETAIL || currentRoute == Routes.PLAYERS
+        // 試合・選手・過去の記録は1チームだけを表示する画面(「選んだチームに合わせる」のとき、表示しているチームの色にする)
+        com.fukuiteams.app.ui.theme.AppSkin.singleTeamScreen =
+            currentRoute == Routes.GAME_DETAIL || currentRoute == Routes.PLAYERS || currentRoute == Routes.ARCHIVE
     }
 
     LaunchedEffect(initialRoute) {
@@ -140,6 +144,7 @@ fun AppNavHost(initialRoute: String? = null) {
                     NotificationsScreen(
                         onOpenChangelog = { navController.navigate(Routes.CHANGELOG) },
                         onOpenHowToUse = { navController.navigate(Routes.HOW_TO_USE) },
+                        onOpenArchive = { navController.navigate(Routes.ARCHIVE) },
                         onOpenBbsSettings = {
                             BbsScreenRequest.openSettings = true
                             navigateTab(Routes.BBS)
@@ -148,6 +153,13 @@ fun AppNavHost(initialRoute: String? = null) {
                 }
                 composable(Routes.CHANGELOG) {
                     ChangelogScreen(onBack = { navController.popBackStack() })
+                }
+                composable(Routes.ARCHIVE) {
+                    ArchiveScreen(
+                        onBack = { navController.popBackStack() },
+                        onOpenTopics = { team -> navController.navigate(Routes.radarAll(team)) },
+                        onOpenInvites = { navController.navigate(Routes.RADAR_INVITES) }
+                    )
                 }
                 composable(Routes.HOW_TO_USE) {
                     HowToUseScreen(onBack = { navController.popBackStack() })
