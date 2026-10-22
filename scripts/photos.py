@@ -5,6 +5,7 @@
 - 丸岡RUCK : 公式サイト(WordPress)の試合結果の記事に載っている写真(ギャラリー)。
              記事は WordPress の公開API(/wp-json/wp/v2/posts)で探し、写真は /wp-json/wp/v2/media で
              ちょうどよい大きさ(横768pxほど)の画像のURLを調べる。新しい記事から RUCK_POSTS 件、1記事 RUCK_PER_POST 枚まで
+             (API で読めないときは、サイト内検索の RSS と写真ごとのページから読む。ruck_wp.py)
 
 読めなかったときは前回の分を残す。
 """
@@ -15,6 +16,8 @@ import re
 from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
 
+import ruck_wp
+
 JST = timezone(timedelta(hours=9))
 
 RUCK_SITE = "https://ruck-fukui.com"
@@ -22,7 +25,7 @@ RUCK_POSTS = 6
 RUCK_PER_POST = 12
 
 # データの形の版。変えたときに上げると、その日のうちに作り直す
-VERSION = 1
+VERSION = 2
 
 
 def _title(t: str) -> str:
@@ -36,7 +39,7 @@ def _title(t: str) -> str:
 
 def ruck_gallery(fetch):
     """丸岡RUCK公式サイトの試合結果の記事の写真。[{"url","label","link","date"}, ...](新しい記事から)"""
-    posts = json.loads(fetch(f"{RUCK_SITE}/wp-json/wp/v2/posts?search={quote('結果')}&per_page={RUCK_POSTS}&_fields=id,title,link,date,content"))
+    posts = ruck_wp.search_posts(fetch, RUCK_SITE, "結果", RUCK_POSTS, "id,title,link,date,content", "写真 丸岡RUCK")
     out = []
     for p in posts:
         content = (p.get("content") or {}).get("rendered", "")
@@ -48,15 +51,8 @@ def ruck_gallery(fetch):
         slugs = slugs[:RUCK_PER_POST]
         if not slugs:
             continue
-        media = json.loads(fetch(f"{RUCK_SITE}/wp-json/wp/v2/media?slug={','.join(slugs)}&per_page=50&_fields=slug,media_details"))
-        by_slug = {}
-        for m in media:
-            sizes = (m.get("media_details") or {}).get("sizes") or {}
-            # 横768pxほど(無ければ大きいもの・中くらいのもの)
-            for key in ("medium_large", "large", "medium"):
-                if sizes.get(key, {}).get("source_url"):
-                    by_slug[m.get("slug")] = sizes[key]["source_url"]
-                    break
+        # 横768pxほど(無ければ大きいもの・中くらいのもの)の画像のURL
+        by_slug = ruck_wp.media_urls(fetch, RUCK_SITE, slugs, "写真 丸岡RUCK")
         label = _title((p.get("title") or {}).get("rendered", ""))
         for s in slugs:
             if s in by_slug:

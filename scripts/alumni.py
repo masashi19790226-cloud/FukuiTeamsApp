@@ -3,7 +3,8 @@
 data/standings.json の "ALUMNI" に入れる。アプリは一面の特集に出す。
 
 - 丸岡RUCK : 公式サイト(WordPress)の「退団選手のお知らせ」「移籍選手のお知らせ」の記事から、以前の選手の名前・背番号・
-             お知らせの日付・移籍先を読み取る(記事は公開API /wp-json/wp/v2/posts で探す)。
+             お知らせの日付・移籍先を読み取る(記事は公開API /wp-json/wp/v2/posts で探す。
+             API で読めないときはサイト内検索の RSS で探す。ruck_wp.py)。
              その選手が今、女子Fリーグのほかのクラブにいるかを、各クラブの選手名簿(女子Fリーグ公式)で調べる。
              今季の得点は、女子Fリーグ公式の得点ランキング(standings.json の RAC の scorers。build_previews.py が作る)から。
 (ブローウィンズは、Bリーグ公式サイトが一時的に止まっているため、あとで加える)
@@ -17,6 +18,8 @@ import re
 from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
 
+import ruck_wp
+
 JST = timezone(timedelta(hours=9))
 
 RUCK_SITE = "https://ruck-fukui.com"
@@ -24,7 +27,7 @@ WFL_SITE = "https://w-fleague.jp"
 # これより前のお知らせの選手は入れない(古すぎる記事は名前の書き方がまちまちなため)
 SINCE_YEAR = 2019
 
-VERSION = 1
+VERSION = 2
 
 
 def _text(fragment: str) -> str:
@@ -49,7 +52,7 @@ def ruck_departures(fetch):
     """丸岡RUCK公式サイトの退団・移籍のお知らせから、以前の選手。[{"name","number","date","kind","dest","link"}, ...]"""
     found = {}
     for word, kind in (("退団", "退団"), ("移籍", "移籍")):
-        posts = json.loads(fetch(f"{RUCK_SITE}/wp-json/wp/v2/posts?search={quote(word)}&per_page=20&_fields=title,date,link,content"))
+        posts = ruck_wp.search_posts(fetch, RUCK_SITE, word, 20, "title,date,link,content", "あの選手は今 丸岡RUCK")
         for p in posts:
             title = _text((p.get("title") or {}).get("rendered", ""))
             date = (p.get("date") or "")[:10]
