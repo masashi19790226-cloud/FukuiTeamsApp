@@ -4381,5 +4381,39 @@
     "source": "川崎経済新聞",
     "image": "https://www.bing.com/th?id=ONUT.RFoqyHlEGgKI8F1YBlSr4g&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-22T14:32:38.290585+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14717277429720609806",
+    "team": "BLOWINDS",
+    "title": "【チームの起爆剤】フィジカルドライブ＆止まらないスリー！｜川島聖那｜福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DSdhrvNXRFEg&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1h5deQtQ57jsJTYlx3R5bT",
+    "published": "2026-10-22T16:08:10Z",
+    "detected_at": "2026-10-22T17:39:52.731067+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6421496660596431024",
+    "team": "BLOWINDS",
+    "title": "（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ大将の1日店長に！限定シール ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://digitalpr.jp/r/146531&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3Gi39vOFKMmkDozKe-p7B1",
+    "published": "2026-10-22T12:01:43Z",
+    "detected_at": "2026-10-22T17:39:52.731139+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:18403028322140973088",
+    "team": "BLOWINDS",
+    "title": "【写真】（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ大将の1日店長に！限定 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://mantan-web.jp/prtimes/article/20261022prt00m200000884a/photopage/001.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw367JOSwDItS3G8zHv2EUwk",
+    "published": "2026-10-22T09:53:49Z",
+    "detected_at": "2026-10-22T17:39:52.731170+00:00"
+  },
+  {
+    "id": "bing:https://mantan-web.jp/prtimes/article/20261022prt00m200000884a.html",
+    "team": "BLOWINDS",
+    "title": "（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ ...",
+    "link": "https://mantan-web.jp/prtimes/article/20261022prt00m200000884a.html",
+    "published": "2026-10-22T08:00:00+00:00",
+    "source": "MANTANWEB（まんたんウェブ）",
+    "image": "https://www.bing.com/th?id=ONUT.1cMYZ9SwSPfQAB4z-Fr9hw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-22T17:39:53.693732+00:00"
   }
 ]
