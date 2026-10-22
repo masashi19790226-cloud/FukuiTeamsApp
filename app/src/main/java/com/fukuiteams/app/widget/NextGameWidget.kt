@@ -9,6 +9,10 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.view.View
 import android.widget.RemoteViews
 import androidx.compose.ui.graphics.toArgb
@@ -18,6 +22,7 @@ import com.fukuiteams.app.data.AlertsResult
 import com.fukuiteams.app.data.GameResultsRepository
 import com.fukuiteams.app.data.GamesRepository
 import com.fukuiteams.app.data.InvitationAlertsRepository
+import com.fukuiteams.app.data.countdownLabel
 import com.fukuiteams.app.data.hasMatchingInvite
 import com.fukuiteams.app.data.isLikelyClosed
 import com.fukuiteams.app.data.isUpcoming
@@ -96,7 +101,19 @@ class NextGameWidget : AppWidgetProvider() {
                     views.setViewVisibility(row.invite, View.GONE)
                 } else {
                     val md = next.dateLabel.split("/").drop(1).joinToString("/")
-                    views.setTextViewText(row.date, "$md(${next.dayOfWeek}) ${next.timeLabel}")
+                    // 日付の右に「あと○日」(当日は「きょう試合」)を赤・少し小さめの文字で添える
+                    val dateText = SpannableStringBuilder("$md(${next.dayOfWeek}) ${next.timeLabel}")
+                    next.countdownLabel()?.let { label ->
+                        dateText.append("  ")
+                        val start = dateText.length
+                        dateText.append(label)
+                        dateText.setSpan(
+                            ForegroundColorSpan(Color.parseColor("#C8102E")),
+                            start, dateText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        dateText.setSpan(RelativeSizeSpan(0.8f), start, dateText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+                    views.setTextViewText(row.date, dateText)
                     views.setTextViewText(row.opponent, "vs ${next.opponent}・${next.venue}")
                     views.setViewVisibility(row.homeAway, View.VISIBLE)
                     views.setTextViewText(row.homeAway, if (next.isHome) "HOME" else "AWAY")

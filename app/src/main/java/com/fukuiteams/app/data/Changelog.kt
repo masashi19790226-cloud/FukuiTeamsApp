@@ -15,9 +15,10 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月22日",
-        title = "選手の写真の名前の表示",
+        title = "選手の写真の名前の表示・ウィジェットのあと何日",
         items = listOf(
-            "選手の写真の下の名前が途中で折り返して読みにくかったので、1行目に背番号、2行目に名前を1行で出すようにしました(長い名前は文字を小さくして収めます)"
+            "選手の写真の下の名前が途中で折り返して読みにくかったので、1行目に背番号、2行目に名前を1行で出すようにしました(長い名前は文字を小さくして収めます)",
+            "ホーム画面のウィジェット「次の試合」にも、日付の右に「あと○日」(当日は「きょう試合」)を赤い文字で出すようにしました"
         )
     ),
     ChangelogEntry(
