@@ -424,16 +424,6 @@
     "image": ""
   },
   {
-    "id": "official-news:https://ruck-fukui.com/archives/6361",
-    "team": "RAC",
-    "title": "【第10節】メットライフ生命日本女子Fリーグ2026-27 福井開催のお知らせ",
-    "link": "https://ruck-fukui.com/archives/6361",
-    "published": "2026-09-07T12:04:05+00:00",
-    "detected_at": "2026-09-07T12:04:05+00:00",
-    "source": "丸岡RUCK公式",
-    "image": ""
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -4315,5 +4305,63 @@
     "source": "デジタルPRプラットフォーム",
     "image": "https://www.bing.com/th?id=ONUT.NdLwFqyGzwXIywepUaNjwQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-22T06:38:26.730803+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8999218917957188827",
+    "team": "BLOWINDS",
+    "title": "（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ大将の1日店長に！限定シール ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://release.traicy.com/posts/202610221478191/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0Q8E1clE-VozaOLseu5nK2",
+    "published": "2026-10-22T08:16:35Z",
+    "detected_at": "2026-10-22T12:30:51.214037+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3619806480436876190",
+    "team": "BLOWINDS",
+    "title": "（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ大将の1日店長に！限定シール ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.okinawatimes.co.jp/articles/-/1950220&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0J98Sgh1TzqY4dqWl2aqu2",
+    "published": "2026-10-22T07:16:30Z",
+    "detected_at": "2026-10-22T12:30:51.214066+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2086149997955915710",
+    "team": "BLOWINDS",
+    "title": "（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ大将の1日店長に！限定シール ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.afpbb.com/articles/-/3658909&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw31BILxPIo5fpFAzj9j4FUC",
+    "published": "2026-10-22T07:08:57Z",
+    "detected_at": "2026-10-22T12:30:51.214077+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:18303580196222013614",
+    "team": "BLOWINDS",
+    "title": "（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ大将の1日店長に！限定シール ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.livedoor.com/pr_topics/detail/32629476/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1pcqzDpWZife5YyNGYQAFM",
+    "published": "2026-10-22T06:32:40Z",
+    "detected_at": "2026-10-22T12:30:51.214100+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1963625332088904061",
+    "team": "BLOWINDS",
+    "title": "\"  REVERBシャツ販売   12月20日はブローウィンズさんとコラボ  ×⚽️ コラボシャツを着て会場 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/ot_6ha/status/2113059116419850690&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3tZb_JFasVUNy6DGWm80Ue",
+    "published": "2026-10-22T07:03:29Z",
+    "detected_at": "2026-10-22T12:30:51.532081+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14874869394761432046",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【重要】 PHPの重大な脆弱性への対応に伴うサーバーのシステム ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2113055950185918490&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0UuwoYmCwo9iRs6HTd9Hsa",
+    "published": "2026-10-22T11:31:52Z",
+    "detected_at": "2026-10-22T12:30:51.873762+00:00"
+  },
+  {
+    "id": "bing:https://www.asahi.com/and/pressrelease/16986784",
+    "team": "BLOWINDS",
+    "title": "（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ ...",
+    "link": "https://www.asahi.com/and/pressrelease/16986784",
+    "published": "2026-10-21T23:00:00+00:00",
+    "source": "朝日新聞デジタル",
+    "image": "",
+    "detected_at": "2026-10-22T12:30:52.477224+00:00"
   }
 ]

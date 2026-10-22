@@ -1266,7 +1266,7 @@
       ],
       "photo_report": {
         "福井丸岡ラック": "ok",
-        "エスポラーダ北海道イルネーヴェ": "8人・得点表に8人",
+        "エスポラーダ北海道イルネーヴェ": "8人(前回の分)・得点表に8人",
         "バルドラール浦安ラス・ボニータス": "10人(前回の分)・得点表に10人",
         "立川アスレティックFCレディース": "10人(前回の分)・得点表に10人",
         "SWHレディース西宮": "13人(前回の分)・得点表に13人",
@@ -1388,7 +1388,7 @@
         }
       }
     },
-    "updated_at": "2026-10-22T06:39:23.784827+00:00"
+    "updated_at": "2026-10-22T12:35:02.847045+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3130,7 +3130,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-21T10:28:24.397541+00:00"
+    "updated_at": "2026-10-22T12:35:02.847045+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-10-22",
@@ -6081,7 +6081,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-22T06:39:23.784827+00:00"
+    "updated_at": "2026-10-22T12:35:02.847045+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -7185,18 +7185,460 @@
         }
       }
     },
-    "updated_at": "2026-10-22T06:39:23.784827+00:00"
+    "updated_at": "2026-10-22T12:35:02.847045+00:00"
   },
   "ALUMNI": {
     "date": "2026-10-22",
-    "v": 1,
-    "updated_at": "2026-10-21T15:33:04.180629+00:00",
-    "players": []
+    "v": 2,
+    "updated_at": "2026-10-22T12:35:02.847045+00:00",
+    "players": [
+      {
+        "team": "RAC",
+        "name": "池内 天紀",
+        "number": "10",
+        "left": "2025-04-10",
+        "kind": "移籍",
+        "dest": "バルドラール浦安ラス・ボニータス",
+        "link": "https://ruck-fukui.com/archives/5721",
+        "now": "バルドラール浦安ラス・ボニータス",
+        "now_number": "10",
+        "now_url": "https://w-fleague.jp/club/urayasu/",
+        "goals": 1
+      },
+      {
+        "team": "RAC",
+        "name": "横山凜花",
+        "number": "3",
+        "left": "2024-03-31",
+        "kind": "退団",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/5232",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null
+      },
+      {
+        "team": "RAC",
+        "name": "高尾純奈",
+        "number": "8",
+        "left": "2024-03-25",
+        "kind": "退団",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/5215",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null
+      },
+      {
+        "team": "RAC",
+        "name": "前田海羽",
+        "number": "14",
+        "left": "2024-03-25",
+        "kind": "退団",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/5215",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null
+      },
+      {
+        "team": "RAC",
+        "name": "山川 里佳子",
+        "number": "19",
+        "left": "2020-02-27",
+        "kind": "退団",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/2325",
+        "now": "アルコ神戸",
+        "now_number": "19",
+        "now_url": "https://w-fleague.jp/club/kobe/",
+        "goals": 2
+      },
+      {
+        "team": "RAC",
+        "name": "市原伶香",
+        "number": "4",
+        "left": "2019-03-20",
+        "kind": "退団",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/1701",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null
+      }
+    ]
   },
   "PHOTOS": {
     "date": "2026-10-22",
-    "v": 1,
-    "updated_at": "2026-10-21T15:33:04.180629+00:00",
-    "teams": {}
+    "v": 2,
+    "updated_at": "2026-10-22T12:35:02.847045+00:00",
+    "teams": {
+      "RAC": [
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-01-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-02-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-03-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-04-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-05-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-06-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-07-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-08-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-09-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-10-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-11-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260919-12-768x512.jpg",
+          "label": "第11節 結果",
+          "link": "https://ruck-fukui.com/archives/6438",
+          "date": "2026-09-22"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-01-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-02-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-03-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-04-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-05-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-06-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-07-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-08-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-09-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-10-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-11-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260912-12-768x512.jpg",
+          "label": "第10節 結果",
+          "link": "https://ruck-fukui.com/archives/6391",
+          "date": "2026-09-13"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-01-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-02-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-03-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-04-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-05-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-06-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-07-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-08-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-09-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-10-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-11-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/09/20260905-12-768x512.jpg",
+          "label": "第9節 結果",
+          "link": "https://ruck-fukui.com/archives/6358",
+          "date": "2026-09-06"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-01-768x512.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-02-768x512.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-04-768x513.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-05-768x512.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-06-768x513.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-07-768x512.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-08-768x513.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-09-768x512.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-10-768x513.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-12-768x513.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-13-768x512.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260823-14-768x512.jpg",
+          "label": "第8節 結果",
+          "link": "https://ruck-fukui.com/archives/6320",
+          "date": "2026-08-28"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-01-768x512.jpeg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-02-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-03-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-04-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-05-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-06-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-07-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-08-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-09-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-10-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-11-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        },
+        {
+          "url": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/08/20260802-12-768x512.jpg",
+          "label": "第7節 結果",
+          "link": "https://ruck-fukui.com/archives/6304",
+          "date": "2026-08-04"
+        }
+      ]
+    }
   }
 }
