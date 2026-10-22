@@ -16,7 +16,8 @@ import java.time.LocalDate
  * GitHub Actions(scripts/history.py)が作る data/history.json を読む。
  * - ユナイテッド  : 公式サイトの試合情報(2019年〜今季の全公式戦)
  * - ブルーサンダー: リーグH公式の星取表・試合ページ(2024-25〜今季)
- * - 丸岡RUCK・ブローウィンズは、まだ入っていない
+ * - 丸岡RUCK      : 女子Fリーグ公式の過去の記録(2017〜)と今季の試合一覧(得点者・観客数は無し)
+ * - ブローウィンズは、まだ入っていない
  */
 private const val HISTORY_JSON_URL =
     "https://raw.githubusercontent.com/masashi19790226-cloud/FukuiTeamsApp/main/data/history.json"
@@ -83,8 +84,53 @@ data class TeamHistoryData(
     val source: String,
     val sourceUrl: String,
     /** 古い順 */
-    val matches: List<HistoryMatch>
+    val matches: List<HistoryMatch>,
+    /** これまでの選手(出場の多い順。ユナイテッド・ブルーサンダー) */
+    val players: List<HistoryPlayer> = emptyList(),
+    /** 日本代表・代表候補の選出(新しい順。丸岡RUCK) */
+    val national: List<NationalSelection> = emptyList()
 )
+
+/** 日本代表・代表候補への選出1回分(チームの公式サイトのお知らせから) */
+data class NationalSelection(
+    /** 2025-03-31 */
+    val date: String,
+    /** お知らせの見出し */
+    val title: String,
+    /** 「日本代表」「日本代表候補」「U-18日本代表」 */
+    val kind: String,
+    /** 選ばれた選手の名前 */
+    val players: List<String>,
+    val link: String
+)
+
+/** これまでにチームでプレーした選手1人の通算の記録(scripts/history.py が試合ごとの記録から足し合わせる) */
+data class HistoryPlayer(
+    val name: String,
+    /** いちばん新しい試合の背番号・ポジション */
+    val number: String,
+    val position: String,
+    /** プレーしたシーズン(古い順) */
+    val seasons: List<String>,
+    /** 出場した試合(ユナイテッドは先発・途中出場。ブルーサンダーは試合のスコア表に名前のあった試合) */
+    val apps: Int,
+    /** 先発した試合(ユナイテッドだけ) */
+    val starts: Int,
+    val goals: Int,
+    /** 最初と最後の試合の日付(2019-03-24) */
+    val first: String,
+    val last: String,
+    /** いまもチームにいるか(今の選手名簿にいれば true、いなければ false、分からなければ null) */
+    val now: Boolean?
+) {
+    /** 「2019〜2022」(1シーズンだけなら「2019」) */
+    val seasonsLabel: String
+        get() = when {
+            seasons.isEmpty() -> ""
+            seasons.size == 1 -> seasons.first()
+            else -> "${seasons.first()}〜${seasons.last()}"
+        }
+}
 
 object HistoryRepository {
     var data by mutableStateOf<Map<Team, TeamHistoryData>>(emptyMap())
@@ -158,7 +204,38 @@ object HistoryRepository {
                 )
             }.sortedWith(compareBy({ it.date }, { it.time }))
             if (matches.isNotEmpty()) {
-                out[team] = TeamHistoryData(o.optString("source"), o.optString("source_url"), matches)
+                val pArr = o.optJSONArray("players")
+                val players = if (pArr == null) emptyList() else (0 until pArr.length()).mapNotNull { i ->
+                    val q = pArr.optJSONObject(i) ?: return@mapNotNull null
+                    val name = q.optString("name")
+                    if (name.isBlank()) return@mapNotNull null
+                    val sArr = q.optJSONArray("seasons")
+                    HistoryPlayer(
+                        name = name,
+                        number = q.optString("number"),
+                        position = q.optString("position"),
+                        seasons = sArr?.let { a -> (0 until a.length()).map { a.optString(it) }.filter { it.isNotBlank() } }.orEmpty(),
+                        apps = q.optInt("apps"),
+                        starts = q.optInt("starts"),
+                        goals = q.optInt("goals"),
+                        first = q.optString("first"),
+                        last = q.optString("last"),
+                        now = if (!q.has("now") || q.isNull("now")) null else q.optBoolean("now")
+                    )
+                }
+                val nArr = o.optJSONArray("national")
+                val national = if (nArr == null) emptyList() else (0 until nArr.length()).mapNotNull { i ->
+                    val q = nArr.optJSONObject(i) ?: return@mapNotNull null
+                    val names = q.optJSONArray("players")
+                    NationalSelection(
+                        date = q.optString("date"),
+                        title = q.optString("title"),
+                        kind = q.optString("kind"),
+                        players = names?.let { a -> (0 until a.length()).map { a.optString(it) }.filter { it.isNotBlank() } }.orEmpty(),
+                        link = q.optString("link")
+                    )
+                }
+                out[team] = TeamHistoryData(o.optString("source"), o.optString("source_url"), matches, players, national)
             }
         }
         return out
@@ -188,7 +265,7 @@ data class SeasonSummary(
     val season: String,
     /** そのシーズンの公式戦(エキシビジョンを除く) */
     val all: WinLoss,
-    /** リーグ戦だけ(北信越フットボールリーグ・リーグH) */
+    /** リーグ戦だけ(北信越フットボールリーグ・リーグH・女子Fリーグ) */
     val league: WinLoss?,
     val leagueName: String?,
     /** いちばん点を取った選手(同点は先に出た選手)と得点 */
@@ -218,6 +295,7 @@ fun seasonSummaries(team: Team, matches: List<HistoryMatch>): List<SeasonSummary
 private fun isLeague(team: Team, m: HistoryMatch): Boolean = when (team) {
     Team.UNITED -> m.competition.contains("北信越フットボールリーグ")
     Team.THUNDER -> m.competition == "リーグH"
+    Team.RAC -> m.competition == "女子Fリーグ"
     else -> false
 }
 

@@ -1,6 +1,11 @@
 package com.fukuiteams.app.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
@@ -20,22 +25,70 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.data.PhotoRef
+import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
+import com.fukuiteams.app.ui.theme.White
 
 /**
  * 候補の写真を順に試して、読めた1枚を出す(読めなければ次の候補へ。どれも読めなければ何も出さない)。
  * ニュースの画像が無い・読めないときに、そのチームの選手の写真を代わりに出すのに使う。
  */
+/** 選手の写真に名前をどう添えるか(記事の画像には付けない) */
+enum class PhotoNameLabel {
+    /** 付けない */
+    NONE,
+    /** 写真の下のほうに重ねる */
+    OVERLAY,
+    /** 写真の左に並べる(小さい写真のとき) */
+    BESIDE
+}
+
 @Composable
 fun FallbackPhoto(
     candidates: List<PhotoRef>,
     width: Dp,
     height: Dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    /** 選手の写真のとき、名前を添えるか(一面では必ず添える) */
+    nameLabel: PhotoNameLabel = PhotoNameLabel.NONE
 ) {
     val list = remember(candidates) { candidates.filter { it.url.isNotBlank() }.distinctBy { it.url } }
     var index by remember(list) { mutableStateOf(0) }
     val current = list.getOrNull(index) ?: return
+    val name = current.label.takeIf { it.isNotBlank() && nameLabel != PhotoNameLabel.NONE }
+    when {
+        name == null -> FallbackThumb(current, width, height, modifier) { index++ }
+        nameLabel == PhotoNameLabel.OVERLAY -> Box(modifier = modifier.size(width, height)) {
+            FallbackThumb(current, width, height, Modifier) { index++ }
+            Text(
+                name,
+                fontSize = 8.sp,
+                lineHeight = 10.sp,
+                color = White,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .background(Ink.copy(alpha = 0.6f))
+                    .padding(horizontal = 1.dp)
+            )
+        }
+        else -> Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(name, style = MaterialTheme.typography.labelSmall, color = InkSoft, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            FallbackThumb(current, width, height, Modifier) { index++ }
+        }
+    }
+}
+
+/** FallbackPhoto の写真1枚 */
+@Composable
+private fun FallbackThumb(current: PhotoRef, width: Dp, height: Dp, modifier: Modifier, onFailed: () -> Unit) {
     RemoteThumbnail(
         current.url,
         width = width,
@@ -44,7 +97,7 @@ fun FallbackPhoto(
         // 選手の写真(名前あり)は顔が切れないよう上をそろえ、記事の画像(名前なし)は中央を出す
         alignTop = current.label.isNotBlank(),
         zoomCaption = current.label.ifBlank { null },
-        onFailed = { index++ }
+        onFailed = onFailed
     )
 }
 

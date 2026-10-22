@@ -230,6 +230,16 @@ fun NotificationsScreen(
                 }
             }
 
+            // 過去の記録への入口(「チーム」のすぐ下)
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("過去の記録")
+                MenuLinkRow(
+                    title = "過去の記録",
+                    sub = "シーズンごとの成績・相手別の通算の対戦成績・過去の試合・過去の選手・チームの歩み",
+                    onClick = onOpenArchive
+                )
+            }
+
             Column {
                 SectionLabel("通知する内容", modifier = Modifier.padding(bottom = 6.dp))
                 Card(
@@ -307,16 +317,6 @@ fun NotificationsScreen(
                         onClick = onOpenBbsSettings
                     )
                 }
-            }
-
-            // 過去の記録への入口
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                SectionLabel("過去の記録")
-                MenuLinkRow(
-                    title = "過去の記録",
-                    sub = "シーズンごとの成績・相手別の通算の対戦成績・過去の試合・チームの歩み",
-                    onClick = onOpenArchive
-                )
             }
 
             // 4チームの公式サイトと公式SNS(X・インスタグラム)。SNSはチームごとに公式サイトの下に並べる

@@ -106,6 +106,10 @@ fun buildFeatureStories(
         out += localPlayers(team, birthdays)
         out += alumniStory(team, today)
         out += historyStory(team, today)
+        // 過去の記録(data/history.json)から
+        out += pastMatchStory(team, today)
+        out += legendStory(team, today)
+        out += nationalStory(team, today)
     }
     out += topNews(teams, news, today)
     out += newsDigest(teams, news, today)
@@ -122,13 +126,20 @@ fun buildFeatureStories(
     val onePerKind = out.filter { it.kicker != TOPIC_KICKER }.groupBy { it.kicker }.values.map { group ->
         group[(seed.absoluteValue + group.size) % group.size]
     }.sortedBy { ((it.kicker.hashCode() + seed * 7919).absoluteValue) % 1000 }
+    // 過去の話(過去の実績・あの選手は今・今日は何の日・あの日の一戦・歴代の選手・日本代表の歩み)は、毎日 PAST_SLOTS 本を必ず入れる。
+    // (ほかの記事だけで本数がいっぱいになると、読み込みが進むたびに過去の話が押し出されて、一瞬出て消えていたため)
+    val past = onePerKind.filter { it.kicker in PAST_KICKERS }.take(PAST_SLOTS)
+    val others = onePerKind.filterNot { it.kicker in PAST_KICKERS }
     val result = mutableListOf<FeatureStory>()
     var i = 0
     var j = 0
-    while (result.size < MAX_STORIES_PER_DAY && (i < onePerKind.size || j < topics.size)) {
-        if (i < onePerKind.size) result += onePerKind[i++]
-        if (result.size < MAX_STORIES_PER_DAY && j < topics.size) result += topics[j++]
+    val limit = MAX_STORIES_PER_DAY - past.size
+    while (result.size < limit && (i < others.size || j < topics.size)) {
+        if (i < others.size) result += others[i++]
+        if (result.size < limit && j < topics.size) result += topics[j++]
     }
+    // 過去の話は2本目・5本目あたりに入れる(先頭は今の話題)
+    past.forEachIndexed { k, story -> result.add(minOf(1 + k * 3, result.size), story) }
     return withFallbackPhotos(result, photoPool(players, birthdays), seed)
 }
 
@@ -213,7 +224,13 @@ private const val TOPIC_SLOTS = 2
 private const val BBS_MIN_POSTS = 5
 
 /** 一面の特集として1日に出す記事の最大本数 */
-private const val MAX_STORIES_PER_DAY = 5
+private const val MAX_STORIES_PER_DAY = 6
+
+/** 過去の話の記事の小見出し(毎日 PAST_SLOTS 本は必ず入れる) */
+private val PAST_KICKERS = setOf("過去の実績", "あの選手は今", "今日は何の日", "あの日の一戦", "歴代の選手", "日本代表の歩み")
+
+/** 一面の特集に必ず入れる過去の話の本数 */
+private const val PAST_SLOTS = 2
 
 // ---------- 次の試合までのカウントダウン ----------
 
@@ -387,6 +404,8 @@ private fun spotlight(
                     (p.minutesPerGame?.let { "(出場${it})" } ?: "") + "。$lastLine" +
                     (trend?.let { "$it。" } ?: ""),
                 photo = p.photo,
+                // 写真の選手の名前(一面の写真には必ず名前を出す)
+                photoCaption = head,
                 bigNumber = p.points,
                 bigUnit = "点"
             )
@@ -419,6 +438,8 @@ private fun spotlight(
             headline = if (team == Team.THUNDER) "$head、今季${p.goals}得点" else "$head、今季${p.goals}ゴール",
             body = body,
             photo = p.photo,
+            // 写真の選手の名前(一面の写真には必ず名前を出す)
+            photoCaption = head,
             bigNumber = "${p.goals}",
             bigUnit = "得点"
         )
@@ -563,6 +584,106 @@ private fun onThisDayFromHistory(team: Team, today: LocalDate): List<FeatureStor
     )
 }
 
+/**
+ * 「あの日の一戦」:過去のシーズンの、今ごろ(前後7日)の試合。無ければ過去の大勝から日替わりで1つ。
+ * 過去の記録(data/history.json)のうち、今季より前の試合だけを使う
+ */
+private fun pastMatchStory(team: Team, today: LocalDate): List<FeatureStory> {
+    val start = seasonStart(team, today)
+    val past = HistoryRepository.matchesFor(team).filter { m ->
+        val d = m.localDate ?: return@filter false
+        !m.isExhibition && d.isBefore(start)
+    }
+    if (past.isEmpty()) return emptyList()
+    val seed = today.toEpochDay().toInt() + team.ordinal * 31
+    // 今ごろの試合(年は違っても、月日が前後7日以内)
+    fun gap(m: HistoryMatch): Int {
+        val d = m.localDate ?: return 999
+        val a = d.withYear(today.year)
+        return kotlin.math.abs(java.time.temporal.ChronoUnit.DAYS.between(a, today).toInt())
+    }
+    val near = past.filter { gap(it) in 1..7 }
+    val bigWins = past.filter { it.myScore - it.opponentScore >= 3 }
+    val pool = near.ifEmpty { bigWins }.ifEmpty { past.filter { it.outcome == GameOutcome.WIN } }
+    if (pool.isEmpty()) return emptyList()
+    val m = pool[Math.floorMod(seed, pool.size)]
+    val years = today.year - (m.localDate?.year ?: today.year)
+    val verb = when (m.outcome) {
+        GameOutcome.WIN -> "に勝利"
+        GameOutcome.LOSE -> "に敗れた"
+        GameOutcome.DRAW -> "と引き分けた"
+    }
+    val where = when (m.homeAway) {
+        "H" -> "ホームで"
+        "A" -> "アウェイで"
+        else -> ""
+    }
+    val scorers = m.scorers.takeIf { it.isNotEmpty() }?.joinToString("・") { (n, g) -> if (g > 1) "$n(${g}点)" else n }
+    val lead = if (near.isNotEmpty()) "${years}年前の今ごろ" else "${m.season}シーズン"
+    return listOf(
+        FeatureStory(
+            kicker = "あの日の一戦",
+            team = team,
+            headline = "$lead、${m.opponent}$verb ${m.myScore}-${m.opponentScore}",
+            body = "${m.dateLabel}、${m.title.ifBlank { m.competition }}。$where${m.opponent}と対戦し、" +
+                "${m.myScore}-${m.opponentScore}" + (if (m.pk.isNotBlank()) "(PK${m.pk})" else "") + "。" +
+                (scorers?.let { "得点は$it。" } ?: "") +
+                (m.visitors?.let { "観客は${"%,d".format(it)}人。" } ?: "") +
+                "メニューの「過去の記録」で、ほかの試合も振り返れます。",
+            bigNumber = "${m.myScore}-${m.opponentScore}",
+            url = m.url.ifBlank { null }
+        )
+    )
+}
+
+/** 「歴代の選手」:これまでにプレーした選手(元選手を優先)を日替わりで1人。出場・得点の記録から */
+private fun legendStory(team: Team, today: LocalDate): List<FeatureStory> {
+    val players = HistoryRepository.data[team]?.players.orEmpty().filter { it.apps >= 10 || it.goals >= 5 }
+    if (players.isEmpty()) return emptyList()
+    val former = players.filter { it.now == false }
+    val pool = former.ifEmpty { players }
+    val p = pool[Math.floorMod(today.toEpochDay().toInt() * 13 + team.ordinal, pool.size)]
+    val head = (if (p.number.isNotBlank()) "#${p.number} " else "") + p.name
+    val record = if (team == Team.UNITED) "${p.apps}試合(先発${p.starts})に出場し${p.goals}得点" else "${p.apps}試合で${p.goals}得点"
+    val status = when (p.now) {
+        true -> "いまもチームでプレーしています。"
+        false -> "いまの選手名簿にはいない元選手です。"
+        null -> ""
+    }
+    return listOf(
+        FeatureStory(
+            kicker = "歴代の選手",
+            team = team,
+            headline = "$head、${p.seasonsLabel}で${p.goals}得点",
+            body = "${p.seasonsLabel}(${p.seasons.size}シーズン)に${team.shortName}で$record。$status" +
+                "メニューの「過去の記録」の「過去の選手」で、ほかの選手も見られます。",
+            bigNumber = "${p.goals}",
+            bigUnit = "得点"
+        )
+    )
+}
+
+/** 「日本代表の歩み」:日本代表・代表候補に選ばれたときのお知らせ(丸岡RUCK)を日替わりで1つ */
+private fun nationalStory(team: Team, today: LocalDate): List<FeatureStory> {
+    val list = HistoryRepository.data[team]?.national.orEmpty().filter { it.players.isNotEmpty() }
+    if (list.isEmpty()) return emptyList()
+    val n = list[Math.floorMod(today.toEpochDay().toInt() * 5 + team.ordinal, list.size)]
+    val year = n.date.take(4)
+    val names = n.players.joinToString("・")
+    return listOf(
+        FeatureStory(
+            kicker = "日本代表の歩み",
+            team = team,
+            headline = "${year}年、${names}が${n.kind}に",
+            body = "${n.date.replace("-", "/")}、${team.shortName}から${names}が${n.kind}に選ばれました(${n.title})。" +
+                "これまでに${list.size}回、代表・代表候補の選出がありました。押すと当時のお知らせが開きます。",
+            bigNumber = "${n.players.size}",
+            bigUnit = "人",
+            url = n.link.ifBlank { null }
+        )
+    )
+}
+
 // ---------- ニュース・招待 ----------
 
 /** 直近3日のトピック(ニュース)を新しい順に最大 TOPIC_SLOTS 本。同じ記事(見出しの頭が同じ)は1本にまとめる */
@@ -629,6 +750,8 @@ private fun teamLeaders(team: Team, players: Map<String, TeamPlayers>): List<Fea
                 (reb?.let { "リバウンドは${it.name}(平均${it.rebounds})、" } ?: "") +
                 (ast?.let { "アシストは${it.name}(平均${it.assists})がチーム1位。" } ?: ""),
             photo = pts.photo,
+            // 写真の選手の名前(一面の写真には必ず名前を出す)
+            photoCaption = pts.head(),
             bigNumber = pts.points,
             bigUnit = "点"
         )
@@ -651,6 +774,8 @@ private fun sharpshooter(team: Team, players: Map<String, TeamPlayers>): List<Fe
                 body = "今季の3ポイント成功率は${p.threePct}(${p.threesMade}/${p.threesAttempted})で、チーム1位(10本以上打った選手の中で)。" +
                     "外からの一撃に注目したい。",
                 photo = p.photo,
+                // 写真の選手の名前(一面の写真には必ず名前を出す)
+                photoCaption = p.head(),
                 bigNumber = p.threePct?.removeSuffix("%"),
                 bigUnit = "%"
             )
@@ -665,6 +790,8 @@ private fun sharpshooter(team: Team, players: Map<String, TeamPlayers>): List<Fe
                 body = "今季のフリースロー成功率は${p.freeThrowPct}(${p.freeThrowsMade}/${p.freeThrowsAttempted})でチーム1位(10本以上打った選手の中で)。" +
                     "接戦の終盤で頼りになる。",
                 photo = p.photo,
+                // 写真の選手の名前(一面の写真には必ず名前を出す)
+                photoCaption = p.head(),
                 bigNumber = p.freeThrowPct?.removeSuffix("%"),
                 bigUnit = "%"
             )
@@ -694,6 +821,8 @@ private fun lastGameHeroes(team: Team, players: Map<String, TeamPlayers>, games:
             body = "$dateText の${opp}戦で二桁得点を挙げたのは、" +
                 doubles.joinToString("、") { "${it.first.name}(${it.second.points}点)" } + "。",
             photo = doubles.first().first.photo,
+            // 写真の選手の名前(一面の写真には必ず名前を出す)
+            photoCaption = doubles.first().first.head(),
             bigNumber = "${doubles.size}",
             bigUnit = "人",
             gameId = gameId
@@ -709,6 +838,8 @@ private fun lastGameHeroes(team: Team, players: Map<String, TeamPlayers>, games:
                 body = "$dateText の${opp}戦、ベンチから出た${p.head()}が${g.minutes ?: "-"}の出場で${g.points}点" +
                     (g.fieldGoalsMade?.let { m -> g.fieldGoalsAttempted?.let { a -> "(FG $m/$a)" } } ?: "") + "。流れを変える働きを見せた。",
                 photo = p.photo,
+                // 写真の選手の名前(一面の写真には必ず名前を出す)
+                photoCaption = p.head(),
                 bigNumber = g.points,
                 bigUnit = "点",
                 gameId = gameId
@@ -729,7 +860,9 @@ private fun ironman(team: Team, players: Map<String, TeamPlayers>): List<Feature
             team = team,
             headline = "出場時間トップは${p.head()}",
             body = "1試合平均${p.minutesPerGame}の出場はチームで最長。その間に平均${p.points ?: "-"}点・${p.rebounds ?: "-"}リバウンド・${p.assists ?: "-"}アシストを記録している。",
-            photo = p.photo
+            photo = p.photo,
+            // 写真の選手の名前(一面の写真には必ず名前を出す)
+            photoCaption = p.head()
         )
     )
 }
@@ -864,6 +997,8 @@ private fun scorerRace(team: Team, standings: Map<String, LeagueStandings>): Lis
             headline = "得点王争い、トップは${leader.name}の${leader.goals}点",
             body = body,
             photo = ours.photo.ifBlank { leader.photo },
+            // 写真の選手の名前(一面の写真には必ず名前を出す)
+            photoCaption = if (ours.photo.isNotBlank()) ours.name else leader.name,
             bigNumber = "${leader.goals}",
             bigUnit = "得点"
         )
@@ -1037,6 +1172,8 @@ private fun birthdayMonth(teams: List<Team>, birthdays: List<PlayerBirthday>, to
             body = list.joinToString("、") { "${it.birthday.dayOfMonth}日 ${it.name}(${it.team?.let { t -> t.shortName } ?: ""})" } + "。",
             // これから誕生日を迎える選手(今月)の写真。もう全員過ぎていれば最初の選手
             photo = (list.firstOrNull { it.birthday.dayOfMonth >= today.dayOfMonth } ?: list.first()).photo,
+            // 写真の選手の名前(一面の写真には必ず名前を出す)
+            photoCaption = (list.firstOrNull { it.birthday.dayOfMonth >= today.dayOfMonth } ?: list.first()).label,
             bigNumber = "${list.size}",
             bigUnit = "人"
         )
@@ -1104,6 +1241,8 @@ private fun tallest(team: Team, birthdays: List<PlayerBirthday>): List<FeatureSt
                 "上位は" + top3.joinToString("、") { "${it.name}(${it.height}cm)" } + "。" +
                 "いちばん小柄なのは${low.name}選手(${low.height}cm)です。\n※公式サイトの選手紹介より",
             photo = top.photo,
+            // 写真の選手の名前(一面の写真には必ず名前を出す)
+            photoCaption = top.label,
             bigNumber = top.height,
             bigUnit = "cm"
         )
@@ -1123,6 +1262,8 @@ private fun localPlayers(team: Team, birthdays: List<PlayerBirthday>): List<Feat
             body = local.joinToString("、") { it.label } + "。" +
                 "出身地が分かる${withHome.size}人のうち${local.size}人が地元・福井の選手です。\n※公式サイトの選手紹介より",
             photo = local[Math.floorMod(LocalDate.now(JST).toEpochDay().toInt(), local.size)].photo,
+            // 写真の選手の名前(一面の写真には必ず名前を出す)
+            photoCaption = local[Math.floorMod(LocalDate.now(JST).toEpochDay().toInt(), local.size)].label,
             bigNumber = "${local.size}",
             bigUnit = "人"
         )

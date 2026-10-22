@@ -6,19 +6,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,8 +36,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.fukuiteams.app.data.Alumni
+import com.fukuiteams.app.data.AlumniPlayer
+import com.fukuiteams.app.data.DataRefresher
+import com.fukuiteams.app.data.HistoryPlayer
+import com.fukuiteams.app.data.NationalSelection
+import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.GameOutcome
 import com.fukuiteams.app.data.HistoryMatch
 import com.fukuiteams.app.data.HistoryRepository
@@ -47,6 +63,8 @@ import com.fukuiteams.app.ui.components.HomeAwayTag
 import com.fukuiteams.app.ui.components.MastheadTopBar
 import com.fukuiteams.app.ui.components.MenuLinkRow
 import com.fukuiteams.app.ui.components.NewsChip
+import com.fukuiteams.app.ui.components.ScrollJumpBottomPadding
+import com.fukuiteams.app.ui.components.ScrollJumpButtons
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.components.openExternalUrl
@@ -60,7 +78,20 @@ import com.fukuiteams.app.ui.theme.Paper
 private enum class ArchiveTab(val label: String) {
     SEASONS("シーズンごと"),
     OPPONENTS("相手別の対戦成績"),
-    MATCHES("過去の試合")
+    MATCHES("過去の試合"),
+    PLAYERS("過去の選手")
+}
+
+/** 「過去の選手」の絞り込み・並び順 */
+private enum class PlayerFilter(val label: String) {
+    FORMER("元選手"),
+    ALL("全選手")
+}
+
+private enum class PlayerSort(val label: String) {
+    APPS("出場の多い順"),
+    GOALS("得点の多い順"),
+    RECENT("最近まで在籍順")
 }
 
 /**
@@ -89,6 +120,22 @@ fun ArchiveScreen(
     var season by remember(team, matches) { mutableStateOf(seasons.firstOrNull()?.season) }
     // 「相手別」で開いている相手
     var openedOpponent by remember(team) { mutableStateOf<String?>(null) }
+    // 「過去の選手」の絞り込み・並び順
+    var playerFilter by remember { mutableStateOf(PlayerFilter.FORMER) }
+    var playerSort by remember { mutableStateOf(PlayerSort.APPS) }
+    // 丸岡RUCKの元選手(standings.json の「あの選手は今」)をまだ読んでいなければ読む
+    LaunchedEffect(Unit) { if (Alumni.players.isEmpty()) runCatching { StandingsRepository.fetch() } }
+
+    // 右下の「一番上へ」「一番下へ」ボタン用
+    val listState = rememberLazyListState()
+    // 画面を下に引っ張る・右上の更新ボタンで、アプリのすべての情報(過去の記録も)を読み直す(ほかのタブと同じ)
+    val pullToRefreshState = rememberPullToRefreshState()
+    if (pullToRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            DataRefresher.refreshAll(context)
+            pullToRefreshState.endRefresh()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -98,46 +145,65 @@ fun ArchiveScreen(
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
                     }
+                },
+                actions = {
+                    IconButton(onClick = { pullToRefreshState.startRefresh() }) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "更新")
+                    }
                 }
             )
         },
+        floatingActionButton = { ScrollJumpButtons(listState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
+        ) {
+        // チームの切り替えボタンは一番上に固定し、下にスクロールしても常に表示する(ほかのタブと同じ)
+        Column(modifier = Modifier.fillMaxSize()) {
+        TeamSelectorRow(
+            selectedTeam = team,
+            onSelect = { t ->
+                if (t != null) {
+                    team = t
+                    TeamSelection.select(t)
+                }
+            },
+            showAll = false,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
+        )
         LazyColumn(
-            modifier = Modifier.padding(padding).padding(horizontal = 16.dp),
+            state = listState,
+            modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
-                Column(modifier = Modifier.padding(top = 16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Column(modifier = Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Headline("過去の記録", fontSize = 22)
                     Text(
-                        "これまでのシーズンの成績・相手ごとの通算の対戦成績・過去の試合を振り返れます。",
+                        "これまでのシーズンの成績・相手ごとの通算の対戦成績・過去の試合・過去の選手を振り返れます。",
                         style = MaterialTheme.typography.bodySmall,
                         color = InkSoft
                     )
                     DoubleRule(modifier = Modifier.padding(top = 6.dp))
                 }
             }
-            item {
-                TeamSelectorRow(
-                    selectedTeam = team,
-                    onSelect = { t ->
-                        if (t != null) {
-                            team = t
-                            TeamSelection.select(t)
-                        }
-                    },
-                    showAll = false
-                )
-            }
 
             if (matches.isEmpty()) {
                 item { NoHistoryNote(team, HistoryRepository.loaded) }
             } else {
                 item {
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        ArchiveTab.values().forEach { t ->
-                            NewsChip(t.label, tab == t, modifier = Modifier.weight(1f), horizontalPadding = 4.dp) { tab = t }
+                    // 切り替えは2つずつ2段に並べる
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        ArchiveTab.values().toList().chunked(2).forEach { pair ->
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                pair.forEach { t ->
+                                    NewsChip(t.label, tab == t, modifier = Modifier.weight(1f), horizontalPadding = 4.dp) { tab = t }
+                                }
+                            }
                         }
                     }
                 }
@@ -176,6 +242,92 @@ fun ArchiveScreen(
                         val list = matches.filter { it.season == season }.sortedByDescending { it.date + it.time }
                         items(list, key = { "m-" + it.date + it.time + it.opponent + it.url }) { m ->
                             MatchRow(m) { openExternalUrl(context, m.url) }
+                        }
+                    }
+                    ArchiveTab.PLAYERS -> {
+                        // 日本代表・代表候補の選出(チームの公式サイトのお知らせから。いまは丸岡RUCKだけ見つかっている)
+                        val national = history?.national.orEmpty()
+                        item { SectionLabel("日本代表・代表候補の選出", modifier = Modifier.padding(top = 4.dp)) }
+                        if (national.isEmpty()) {
+                            item {
+                                Text(
+                                    when (team) {
+                                        Team.RAC -> "日本代表の選出のお知らせを読み込めませんでした(データの自動更新を待っている場合もあります)。"
+                                        Team.BLOWINDS -> "ブローウィンズは、Bリーグ公式サイトのメンテナンスが終わってから調べます。"
+                                        else -> "${team.shortName}の公式サイトのお知らせには、日本代表に選ばれたという記事は見つかりませんでした。"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = InkSoft
+                                )
+                            }
+                        } else {
+                            // 選手ごとの選出回数
+                            val counts = national.flatMap { it.players }.groupingBy { it }.eachCount()
+                                .entries.sortedByDescending { it.value }
+                            item {
+                                Text(
+                                    "公式サイトのお知らせ ${national.size}件から。選ばれた回数:" +
+                                        counts.joinToString("・") { "${it.key} ${it.value}回" },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Ink
+                                )
+                            }
+                            items(national, key = { "n-" + it.link }) { n ->
+                                NationalRow(n) { openExternalUrl(context, n.link) }
+                            }
+                        }
+                        if (team == Team.RAC) {
+                            item { SectionLabel("元選手(退団・移籍)", modifier = Modifier.padding(top = 4.dp)) }
+                            // 丸岡RUCKは、公式サイトの退団・移籍のお知らせからの元選手(「あの選手は今」と同じデータ)
+                            val alumni = Alumni.players.filter { it.team == Team.RAC }.sortedByDescending { it.left }
+                            item {
+                                Text(
+                                    if (alumni.isEmpty()) "元選手のデータを読み込めませんでした(データの自動更新を待っている場合もあります)。"
+                                    else "丸岡RUCK公式サイトの退団・移籍のお知らせ(2019年〜)に載っている元選手${alumni.size}人。いまのクラブは女子Fリーグ公式の選手名簿から調べています。押すとページが開きます。",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = InkSoft
+                                )
+                            }
+                            items(alumni, key = { "a-" + it.name + it.left }) { a ->
+                                AlumniCard(a) { openExternalUrl(context, a.nowUrl.ifBlank { a.link }) }
+                            }
+                        } else {
+                            val all = history?.players.orEmpty()
+                            val hasNow = all.any { it.now != null }
+                            val filtered = all.filter { playerFilter == PlayerFilter.ALL || !hasNow || it.now == false }
+                            val sorted = when (playerSort) {
+                                PlayerSort.APPS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.apps }.thenByDescending { it.goals })
+                                PlayerSort.GOALS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.goals }.thenByDescending { it.apps })
+                                PlayerSort.RECENT -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.last }.thenByDescending { it.apps })
+                            }
+                            item {
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    if (hasNow) {
+                                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            PlayerFilter.values().forEach { f ->
+                                                NewsChip(f.label, playerFilter == f, modifier = Modifier.weight(1f)) { playerFilter = f }
+                                            }
+                                        }
+                                    }
+                                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        PlayerSort.values().forEach { o ->
+                                            NewsChip(o.label, playerSort == o, modifier = Modifier.weight(1f), horizontalPadding = 2.dp, fontSize = 11.sp) { playerSort = o }
+                                        }
+                                    }
+                                    Text(
+                                        (if (team == Team.THUNDER)
+                                            "リーグH公式の試合ページのスコア表から数えています(2024-25シーズン〜)。「試合」はスコア表に名前のあった試合です。"
+                                        else
+                                            "ユナイテッド公式サイトの試合情報(2019年〜の公式戦)の先発・交代・得点から数えています。") +
+                                            (if (hasNow) "「元選手」はいまの選手名簿にいない選手です。" else "") +
+                                            "${sorted.size}人",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = InkSoft
+                                    )
+                                }
+                            }
+                            item { SectionLabel("これまでの選手", modifier = Modifier.padding(top = 4.dp)) }
+                            items(sorted, key = { "p-" + it.name }) { p -> HistoryPlayerCard(team, p) }
                         }
                     }
                 }
@@ -226,7 +378,14 @@ fun ArchiveScreen(
                     onClick = onOpenInvites
                 )
             }
-            item { Text(" ", modifier = Modifier.padding(bottom = 8.dp)) }
+            // 右下のボタンに最後の行が隠れないよう、下に余白を空ける
+            item { Spacer(modifier = Modifier.height(ScrollJumpBottomPadding)) }
+        }
+        }
+        PullToRefreshContainer(
+            state = pullToRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
         }
     }
 }
@@ -240,7 +399,6 @@ private fun NoHistoryNote(team: Team, loaded: Boolean) {
     val text = when {
         !loaded -> "読み込んでいます…"
         team == Team.BLOWINDS -> "ブローウィンズの過去の試合は、Bリーグ公式サイトのメンテナンスが終わってから加える予定です。"
-        team == Team.RAC -> "丸岡RUCKの過去の試合は、女子Fリーグ公式サイトの過去の記録から、これから加える予定です。"
         else -> "過去の試合の記録を読み込めませんでした。通信環境を確かめて、あとで開き直してください(データの自動更新を待っている場合もあります)。"
     }
     Text(
@@ -254,7 +412,7 @@ private fun NoHistoryNote(team: Team, loaded: Boolean) {
 /** 1シーズン分の成績 */
 @Composable
 private fun SeasonCard(team: Team, s: SeasonSummary) {
-    // そのシーズンにあった出来事(過去の実績)。ユナイテッドのシーズンは年、ブルーサンダーは始まった年で合わせる
+    // そのシーズンにあった出来事(過去の実績)。ユナイテッドのシーズンは年、ブルーサンダー・丸岡RUCKは始まった年で合わせる
     val startYear = s.season.take(4).toIntOrNull()
     val events = TEAM_HISTORY.filter { it.team == team && it.year == startYear }
     Column(
@@ -404,5 +562,104 @@ private fun MatchRow(m: HistoryMatch, onClick: () -> Unit) {
             m.visitors?.let { "観客 ${"%,d".format(it)}人" }
         ).joinToString("・")
         if (place.isNotBlank()) Text(place, style = MaterialTheme.typography.labelSmall, color = InkSoft)
+    }
+}
+
+/** これまでの選手1人(ユナイテッド・ブルーサンダー) */
+@Composable
+private fun HistoryPlayerCard(team: Team, p: HistoryPlayer) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, LineGray)
+            .background(Paper)
+            .padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(
+                (if (p.number.isNotBlank()) "#${p.number} " else "") + p.name,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = Ink
+            )
+            if (p.position.isNotBlank()) Text(p.position, style = MaterialTheme.typography.labelSmall, color = InkSoft)
+            when (p.now) {
+                true -> Text("在籍中", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = NewsRed)
+                false -> Text("元選手", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                null -> {}
+            }
+        }
+        val record = if (team == Team.UNITED)
+            "出場 ${p.apps}試合(先発${p.starts})・${p.goals}得点"
+        else
+            "${p.apps}試合・${p.goals}得点"
+        Text(record, style = MaterialTheme.typography.bodySmall, color = if (p.goals > 0) Ink else InkSoft)
+        Text(
+            "${p.seasonsLabel}(${p.seasons.size}シーズン)・最後の試合 ${p.last.replace("-", "/")}",
+            style = MaterialTheme.typography.labelSmall,
+            color = InkSoft
+        )
+    }
+}
+
+/** 丸岡RUCKの元選手1人(退団・移籍のお知らせと、いまのクラブ) */
+@Composable
+private fun AlumniCard(a: AlumniPlayer, onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, LineGray)
+            .background(Paper)
+            .clickable(onClick = onClick)
+            .padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Text(
+            (if (a.number.isNotBlank()) "元#${a.number} " else "") + a.name,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            color = Ink
+        )
+        Text(
+            "${a.left.replace("-", "/")} ${a.kind}" + (if (a.dest.isNotBlank()) "(移籍先:${a.dest})" else ""),
+            style = MaterialTheme.typography.bodySmall,
+            color = Ink
+        )
+        Text(
+            if (a.now.isNotBlank())
+                "いまは ${a.now}" + (if (a.nowNumber.isNotBlank()) "(#${a.nowNumber})" else "") +
+                    (a.goals?.let { "・今季${it}得点" } ?: "")
+            else "いまは女子Fリーグの選手名簿に載っていません",
+            style = MaterialTheme.typography.bodySmall,
+            color = if (a.now.isNotBlank()) NewsRed else InkSoft
+        )
+    }
+}
+
+/** 日本代表・代表候補への選出1回分。押すとお知らせのページが開く */
+@Composable
+private fun NationalRow(n: NationalSelection, onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, NewsRed)
+            .background(Paper)
+            .clickable(onClick = onClick)
+            .padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(n.date.replace("-", "/"), style = MaterialTheme.typography.labelSmall, color = InkSoft)
+            Text(n.kind, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = NewsRed)
+        }
+        Text(
+            n.players.joinToString("・").ifBlank { "(選手名はお知らせのページで)" },
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            color = Ink
+        )
+        Text(n.title, style = MaterialTheme.typography.labelSmall, color = InkSoft, maxLines = 2)
     }
 }

@@ -330,7 +330,9 @@ fun HomeScreen(
                         GamesRepository.games.filter { recordedWatchMethod(it.id, logPrefs) == WatchMethod.ON_SITE }.map { it.id }.toSet()
                     }
                     val buzzForFeature = bbsBuzz.takeIf { bbsSettings?.featureEnabled != false }
-                    val stories = remember(teams, autoResults, previews, players, standings, newsResult, invitationsResult, GamesRepository.games, birthdays, onSiteIds, buzzForFeature) {
+                    // 過去の記録(history.json)を読み終えたら、過去の話の記事も作り直す
+                    val historyData = com.fukuiteams.app.data.HistoryRepository.data
+                    val stories = remember(teams, autoResults, previews, players, standings, newsResult, invitationsResult, GamesRepository.games, birthdays, onSiteIds, buzzForFeature, historyData) {
                         buildFeatureStories(
                             teams = teams,
                             games = mainGames(),
@@ -673,7 +675,8 @@ private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
                 listOfNotNull(news.image.takeIf { it.isNotBlank() }?.let { PhotoRef(it, "") }) +
                     TeamPhotos.rotate(TeamPhotos.forTeam(team), news.id).take(6)
             }
-            FallbackPhoto(candidates, width = 48.dp, height = 48.dp)
+            // 選手の写真のときは、名前を写真の下のほうに重ねる
+            FallbackPhoto(candidates, width = 48.dp, height = 48.dp, nameLabel = com.fukuiteams.app.ui.components.PhotoNameLabel.OVERLAY)
         }
         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
             // 1行目:引用元(どこの記事か)を枠付きで目立たせ、その横にチーム名と日時
@@ -1118,7 +1121,8 @@ private fun TeamBrief(team: Team, autoResults: Map<String, RemoteGameResult>, on
             Text(team.shortLabelForFront(), style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
             // そのチームの選手の写真(日替わりで1人)
             val candidates = remember(team, TeamPhotos.own, TeamPhotos.scenes) { TeamPhotos.mixed(team, "brief-" + team.name).take(8) }
-            FallbackPhoto(candidates, width = 30.dp, height = 38.dp)
+            // 選手の写真のときは、名前を写真の左に添える(試合・イベントの写真には付けない)
+            FallbackPhoto(candidates, width = 30.dp, height = 38.dp, nameLabel = com.fukuiteams.app.ui.components.PhotoNameLabel.BESIDE)
         }
         if (latest != null) {
             val r = autoResults.getValue(latest.id)

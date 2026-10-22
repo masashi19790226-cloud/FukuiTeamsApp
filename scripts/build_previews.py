@@ -1116,7 +1116,13 @@ def main():
     # 過去の試合の記録(1日1回だけ作り直す。アプリの「過去の記録」で使う)。data/history.json に書き出す
     try:
         import history
-        hi = history.build(fetch, post_json, load_json(HISTORY_PATH, {}))
+        # 今の選手の名前(元選手かどうかの見分けに使う。誕生日のデータに4チームの選手名簿がある)
+        bd_all = STANDINGS.get("BIRTHDAYS") or load_json(STANDINGS_PATH, {}).get("BIRTHDAYS", {})
+        current = {}
+        for p in bd_all.get("players") or []:
+            if p.get("team") and p.get("name"):
+                current.setdefault(p["team"], []).append(p["name"])
+        hi = history.build(fetch, post_json, load_json(HISTORY_PATH, {}), current)
         if hi:
             with open(HISTORY_PATH, "w", encoding="utf-8") as f:
                 json.dump(hi, f, ensure_ascii=False, indent=1)
