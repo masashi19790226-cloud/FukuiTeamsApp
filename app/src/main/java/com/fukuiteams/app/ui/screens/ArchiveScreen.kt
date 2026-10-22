@@ -46,6 +46,7 @@ import com.fukuiteams.app.data.DataRefresher
 import com.fukuiteams.app.data.HistoryPlayer
 import com.fukuiteams.app.data.NationalSelection
 import com.fukuiteams.app.data.StandingsRepository
+import com.fukuiteams.app.data.TeamPhotos
 import com.fukuiteams.app.data.GameOutcome
 import com.fukuiteams.app.data.HistoryMatch
 import com.fukuiteams.app.data.HistoryRepository
@@ -60,6 +61,7 @@ import com.fukuiteams.app.model.shortName
 import com.fukuiteams.app.ui.components.DoubleRule
 import com.fukuiteams.app.ui.components.Headline
 import com.fukuiteams.app.ui.components.HomeAwayTag
+import com.fukuiteams.app.ui.components.RemoteThumbnail
 import com.fukuiteams.app.ui.components.MastheadTopBar
 import com.fukuiteams.app.ui.components.MenuLinkRow
 import com.fukuiteams.app.ui.components.NewsChip
@@ -125,6 +127,8 @@ fun ArchiveScreen(
     var playerSort by remember { mutableStateOf(ArchivePlayerSort.APPS) }
     // 丸岡RUCKの元選手(standings.json の「あの選手は今」)をまだ読んでいなければ読む
     LaunchedEffect(Unit) { if (Alumni.players.isEmpty()) runCatching { StandingsRepository.fetch() } }
+    // 選手の写真(「過去の選手」で、いまもチームにいる選手の写真を出す)
+    LaunchedEffect(Unit) { TeamPhotos.ensureLoaded() }
 
     // 右下の「一番上へ」「一番下へ」ボタン用
     val listState = rememberLazyListState()
@@ -568,12 +572,23 @@ private fun MatchRow(m: HistoryMatch, onClick: () -> Unit) {
 /** これまでの選手1人(ユナイテッド・ブルーサンダー) */
 @Composable
 private fun HistoryPlayerCard(team: Team, p: HistoryPlayer) {
-    Column(
+    // 写真:いまのチームの選手の写真(公式サイトの選手紹介など)に名前が同じ選手がいれば出す。
+    // 元選手の写真は、ユナイテッド公式サイトには残っていない(選手のページが消えている)ため出せない
+    val photo = remember(team, p.name, TeamPhotos.own) { TeamPhotos.findByName(TeamPhotos.forTeam(team), p.name) }
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, LineGray)
             .background(Paper)
             .padding(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+    if (photo != null) {
+        RemoteThumbnail(photo.url, width = 44.dp, height = 55.dp, alignTop = true, zoomCaption = photo.label)
+    }
+    Column(
+        modifier = Modifier.weight(1f),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -602,18 +617,28 @@ private fun HistoryPlayerCard(team: Team, p: HistoryPlayer) {
             color = InkSoft
         )
     }
+    }
 }
 
 /** 丸岡RUCKの元選手1人(退団・移籍のお知らせと、いまのクラブ) */
 @Composable
 private fun AlumniCard(a: AlumniPlayer, onClick: () -> Unit) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, LineGray)
             .background(Paper)
             .clickable(onClick = onClick)
             .padding(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+    // 退団・移籍のお知らせに載っている写真(あれば)
+    if (a.photo.isNotBlank()) {
+        RemoteThumbnail(a.photo, width = 52.dp, height = 52.dp, alignTop = true, zoomCaption = a.name)
+    }
+    Column(
+        modifier = Modifier.weight(1f),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Text(
@@ -635,6 +660,7 @@ private fun AlumniCard(a: AlumniPlayer, onClick: () -> Unit) {
             style = MaterialTheme.typography.bodySmall,
             color = if (a.now.isNotBlank()) NewsRed else InkSoft
         )
+    }
     }
 }
 

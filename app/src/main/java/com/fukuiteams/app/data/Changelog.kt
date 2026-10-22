@@ -14,6 +14,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月23日",
+        title = "過去の選手の写真",
+        items = listOf(
+            "「過去の記録」の「過去の選手」に写真を出すようにしました。丸岡RUCKの元選手は、退団・移籍のお知らせに載っている写真を出します。ユナイテッド・ブルーサンダーは、いまもチームにいる選手の写真を出します(元選手の写真は公式サイトに残っていないため出せません)",
+            "一面の特集「あの選手は今」も、お知らせにその選手の写真があれば、その写真を名前付きで出すようにしました"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月22日",
         title = "ブローウィンズの相手の注目選手・アプリを作る仕組みの更新",
         items = listOf(

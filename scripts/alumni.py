@@ -27,7 +27,7 @@ WFL_SITE = "https://w-fleague.jp"
 # これより前のお知らせの選手は入れない(古すぎる記事は名前の書き方がまちまちなため)
 SINCE_YEAR = 2019
 
-VERSION = 2
+VERSION = 3
 
 
 def _text(fragment: str) -> str:
@@ -48,6 +48,28 @@ def _key(name: str) -> str:
 NAME_RE = re.compile(r"(?:No\.?\s*(\d{1,2})|(\d{1,2})\s*番)\s*([一-龥ぁ-んァ-ヶー々]{2,8}?)\s*選手")
 
 
+def post_photos(html: str):
+    """お知らせの本文の写真(選手の写真)のURL。絵文字の画像は除く。横300pxほどの小さい画像があればそれを使う"""
+    out = []
+    for tag in re.findall(r"<img\b[^>]*>", html or ""):
+        if "wp-smiley" in tag or "s.w.org" in tag:
+            continue
+        src = re.search(r"\bsrc=[\"']([^\"']+)[\"']", tag)
+        if not src:
+            continue
+        url = htmllib.unescape(src.group(1))
+        ss = re.search(r"\bsrcset=[\"']([^\"']+)[\"']", tag)
+        if ss:
+            for part in ss.group(1).split(","):
+                bits = part.strip().split()
+                if len(bits) == 2 and bits[1] == "300w":
+                    url = htmllib.unescape(bits[0])
+                    break
+        if url not in out:
+            out.append(url)
+    return out
+
+
 def ruck_departures(fetch):
     """丸岡RUCK公式サイトの退団・移籍のお知らせから、以前の選手。[{"name","number","date","kind","dest","link"}, ...]"""
     found = {}
@@ -66,12 +88,17 @@ def ruck_departures(fetch):
                 dest = dm.group(1).strip("。、")
             # 本文の前の方(お知らせの文)だけから名前を読む(後ろの選手のコメントには、ほかの選手の名前が出てくることがある)
             head = body[:300]
-            for num1, num2, name in NAME_RE.findall(head):
+            names = NAME_RE.findall(head)
+            # 選手の写真:お知らせの写真の数と選手の数が同じなら順に、選手が1人なら最初の写真を、その選手の写真にする
+            photos = post_photos((p.get("content") or {}).get("rendered", ""))
+            for i, (num1, num2, name) in enumerate(names):
                 num = num1 or num2
                 k = _key(name)
                 if k in found:
                     continue
-                found[k] = {"name": name, "number": num, "date": date, "kind": kind, "dest": dest, "link": p.get("link", "")}
+                photo = photos[i] if len(photos) == len(names) else (photos[0] if len(names) == 1 and photos else "")
+                found[k] = {"name": name, "number": num, "date": date, "kind": kind, "dest": dest, "link": p.get("link", ""),
+                            "photo": photo}
     out = sorted(found.values(), key=lambda x: x["date"], reverse=True)
     print(f"[あの選手は今] 丸岡RUCK: 以前の選手 {len(out)}人")
     return out
@@ -132,6 +159,8 @@ def build(fetch, old, ruck_scorers=None, current_ruck_names=()):
                 # 名前は女子Fリーグの名簿の書き方(姓と名の間に空白)があればそれを使う
                 "team": "RAC", "name": r["name"] if r else d["name"], "number": d["number"], "left": d["date"], "kind": d["kind"],
                 "dest": d["dest"], "link": d["link"],
+                # 退団・移籍のお知らせに載っている、その選手の写真(分からなければ空)
+                "photo": d.get("photo", ""),
                 # 今の所属(女子Fリーグのクラブにいれば、そのクラブ)
                 "now": r["club"] if r else "", "now_number": r["number"] if r else "", "now_url": r["url"] if r else "",
                 # 今季の得点(女子Fリーグの得点ランキングに載っていれば)

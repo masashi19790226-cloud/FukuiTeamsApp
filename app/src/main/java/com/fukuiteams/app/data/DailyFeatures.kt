@@ -1048,6 +1048,12 @@ private fun alumniStory(team: Team, today: LocalDate): List<FeatureStory> {
             )
         )
     }
+    // 退団・移籍のお知らせにその選手の写真があれば、それを使う(名前を添える)
+    if (p.photo.isNotBlank()) {
+        return story.map {
+            it.copy(photo = p.photo, photoCaption = head, photoAlternates = scenes.take(MAX_PHOTO_ALTERNATES).map { s -> s.url to s.label })
+        }
+    }
     val first = scenes.firstOrNull() ?: return story
     return story.map {
         it.copy(photo = first.url, photoCaption = first.label, photoAlternates = scenes.drop(1).take(MAX_PHOTO_ALTERNATES).map { s -> s.url to s.label })

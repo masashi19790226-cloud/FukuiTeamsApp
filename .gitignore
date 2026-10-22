@@ -12,3 +12,7 @@ local.properties
 # 署名鍵はリポジトリに入れない(GitHub Secret で管理)
 *.jks
 *.keystore
+
+# 古いバックアップと、Pythonが自動で作る一時ファイルはリポジトリに入れない(2026年10月)
+*.bak
+__pycache__/
