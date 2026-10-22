@@ -59,6 +59,8 @@ fun AppNavHost(initialRoute: String? = null) {
             Routes.NOTIFICATIONS, Routes.CHANGELOG, Routes.HOW_TO_USE -> com.fukuiteams.app.ui.theme.SkinMode.STANDARD
             else -> null
         }
+        // 試合・選手は1チームだけを表示する画面(「選んだチームに合わせる」のとき、表示しているチームの色にする)
+        com.fukuiteams.app.ui.theme.AppSkin.singleTeamScreen = currentRoute == Routes.GAME_DETAIL || currentRoute == Routes.PLAYERS
     }
 
     LaunchedEffect(initialRoute) {

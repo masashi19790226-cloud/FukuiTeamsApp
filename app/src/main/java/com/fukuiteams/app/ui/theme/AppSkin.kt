@@ -12,7 +12,8 @@ import com.fukuiteams.app.model.Team
 /**
  * 着せ替え(アプリ全体の色)。メニューの「着せ替え」で選ぶ。
  * - 標準     : これまでどおりの新聞風(生成りの紙・墨・赤)
- * - 自動     : 画面の上のチームのボタンで選んだチームの色に合わせて変わる(「すべて」のときは標準)
+ * - 自動     : 画面の上のチームのボタンで選んだチームの色に合わせて変わる(「すべて」のときは標準)。
+ *              試合・選手のタブは「すべて」が無く、いつもどれか1チームを表示するので、表示しているチームの色にする
  * - 各チーム : そのチームの色で固定
  * 選んだものはスマホに保存し、次にアプリを開いたときも同じ着せ替えで表示する。
  * ただし、掲示板の画面はブローウィンズの色、メニュー(とそこから開く使い方・更新履歴)は標準で固定する(screenOverride)。
@@ -71,6 +72,10 @@ object AppSkin {
 
     /** 画面ごとに色を固定するとき(掲示板=ブローウィンズ、メニュー=標準)。null なら選んだ着せ替えのまま。NavGraph で決める */
     var screenOverride by mutableStateOf<SkinMode?>(null)
+
+    /** いまの画面が1チームだけを表示する画面(試合・選手)か。NavGraph で決める。
+     *  このときの「選んだチームに合わせる」は、一面で「すべて」を選んでいても、その画面で表示しているチームの色にする */
+    var singleTeamScreen by mutableStateOf(false)
     private var loaded = false
 
     fun load(context: Context) {
@@ -89,7 +94,7 @@ object AppSkin {
     val team: Team?
         get() = when (val m = screenOverride ?: mode) {
             SkinMode.STANDARD -> null
-            SkinMode.AUTO -> TeamSelection.current
+            SkinMode.AUTO -> if (singleTeamScreen) TeamSelection.teamForSingle() else TeamSelection.current
             else -> m.team
         }
 

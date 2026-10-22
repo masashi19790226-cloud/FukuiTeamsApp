@@ -32,6 +32,6 @@ val AwayColor: Color get() = AppSkin.palette.away
 // チームカラー(ワイヤーフレームで確定した実際のチームカラーに準拠)。着せ替えでは変わらない
 val TeamBlowinds = Color(0xFF0F3460) // 福井ブローウィンズ:濃紺
 val TeamUnited = Color(0xFF2541B2)   // 福井ユナイテッド:鮮やかな青
-val TeamRac = Color(0xFFC23A1F)      // 福井丸岡ラック:赤とオレンジの中間色(濃いめ)
+val TeamRac = Color(0xFFC42E22)      // 福井丸岡ラック:赤とオレンジの中間色(濃いめ・赤寄り。2026年10月に赤みを強くした。以前は #C23A1F)
 // 福井永平寺ブルーサンダー(ハンドボール):空色寄りの青(ブローウィンズの濃紺・ユナイテッドの青と見分けられる色)
 val TeamThunder = Color(0xFF0089C8)
