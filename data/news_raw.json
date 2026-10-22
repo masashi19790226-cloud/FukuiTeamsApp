@@ -4415,5 +4415,37 @@
     "source": "MANTANWEB（まんたんウェブ）",
     "image": "https://www.bing.com/th?id=ONUT.1cMYZ9SwSPfQAB4z-Fr9hw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-22T17:39:53.693732+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1172523481843241500",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【お知らせ】 サーバーのシステムメンテナンスに伴い、一時停止 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2113224662339731578&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw16JHXAxJ6Rt1uCiBYBTJSP",
+    "published": "2026-10-22T15:34:37Z",
+    "detected_at": "2026-10-22T20:50:52.022379+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14196346303883373811",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 - X",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2113231395812483577&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw203Fle5A6pdpsE07N2_B66",
+    "published": "2026-10-22T15:34:37Z",
+    "detected_at": "2026-10-22T20:50:52.022406+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9582101493923735317",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【 10/25 AS京都戦 】 全国地域サッカーチャンピオンズリーグ ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2113235166315622791&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1hDYn7N3vIUp3kthuU8Nyn",
+    "published": "2026-10-22T14:25:53Z",
+    "detected_at": "2026-10-22T20:50:52.022433+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7864620871201958242",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"    地域活動     #中山和紀 選手と #加納大 選手が参加し",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2113204126826041841&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw35f4ktWybt5VDdUYVi-e7M",
+    "published": "2026-10-22T13:49:03Z",
+    "detected_at": "2026-10-22T20:50:52.022455+00:00"
   }
 ]
