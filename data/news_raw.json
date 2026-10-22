@@ -4305,5 +4305,15 @@
     "source": "Yahoo!ニュース",
     "image": "",
     "detected_at": "2026-10-21T19:40:58.458156+00:00"
+  },
+  {
+    "id": "bing:https://digitalpr.jp/r/146531",
+    "team": "BLOWINDS",
+    "title": "（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ ...",
+    "link": "https://digitalpr.jp/r/146531",
+    "published": "2026-10-21T17:00:00+00:00",
+    "source": "デジタルPRプラットフォーム",
+    "image": "https://www.bing.com/th?id=ONUT.NdLwFqyGzwXIywepUaNjwQ&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-22T06:38:26.730803+00:00"
   }
 ]
