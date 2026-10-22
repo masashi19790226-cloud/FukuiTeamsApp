@@ -15,6 +15,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月22日",
+        title = "ブローウィンズの相手の注目選手・アプリを作る仕組みの更新",
+        items = listOf(
+            "Bリーグ公式サイトがメンテナンスなどで読めないとき、一面の「相手の注目選手」が空になっていたので、前回取れていた相手の選手の成績(平均得点の上位3人)を出すようにしました",
+            "アプリを作る仕組み(GitHub Actions)の部品を新しい版にしました。GitHubのActionsの画面からダウンロードすると、ZIPではなくAPK(fukuispo-v版.apk)がそのまま落ちてくるようになりました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月22日",
         title = "過去の記録の充実(丸岡RUCK・過去の選手・日本代表)・一面の過去の話と選手名",
         items = listOf(
             "「過去の記録」に丸岡RUCKを加えました。女子Fリーグ公式の過去の記録から、2017年〜今季の女子Fリーグの試合(レギュラーシーズン・ファイナルシーズン)のスコア・会場を見られます。シーズンごとの成績・相手別の通算の対戦成績も出ます(得点者・観客数は公式の過去の記録に無いため出ません)",

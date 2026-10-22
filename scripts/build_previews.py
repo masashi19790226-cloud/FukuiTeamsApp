@@ -192,6 +192,50 @@ def bleague_club(team_id: str):
     return info
 
 
+def blowinds_opp_fallback(next_game, preview, why):
+    """Bリーグ公式の相手クラブのページを読めなかったとき(メンテナンス中など)に、相手の欄を空で上書きしないようにする。
+    1. 同じ試合について前回作った展望(previews.json)の相手のデータを残す
+    2. それも無ければ、前回取れていた相手の全選手の成績(players.json の BLOWINDS_OPP)から、平均得点の上位3人を「注目選手」にする"""
+    gid = next_game["id"]
+    old = load_json(PREVIEWS_PATH, {}).get(gid) or {}
+    old_opp = old.get("opp") or {}
+    if old.get("key_players") or old_opp.get("record"):
+        for k in ("record", "rank", "form"):
+            if old_opp.get(k):
+                preview["opp"][k] = old_opp[k]
+        for k in ("key_players", "players_note", "opp_link", "opp_team_id"):
+            if old.get(k):
+                preview[k] = old[k]
+        print(f"[INFO] Bリーグ: {why}ため、{next_game['opponent']}の欄は前回の展望の内容を残します")
+        return
+    opp_players = load_json(PLAYERS_PATH, {}).get("BLOWINDS_OPP") or {}
+    if opp_players.get("game_id") != gid and opp_players.get("team_name") != next_game["opponent"]:
+        return
+    rows = [p for p in opp_players.get("players") or [] if p.get("ppg")]
+    rows.sort(key=lambda p: -(float(p["ppg"]) if re.fullmatch(r"[\d.]+", p["ppg"]) else -1))
+    top = rows[:3]
+    if not top:
+        return
+    preview["key_players"] = [
+        {"number": p.get("number", ""), "name": p.get("name", ""), "position": p.get("position", ""),
+         "stat": f"平均{p['ppg']}点" + (f"・{p['rpg']}リバウンド" if p.get("rpg") else "")}
+        for p in top
+    ]
+    when = ""
+    try:
+        when = datetime.fromisoformat(opp_players.get("updated_at", "")).astimezone(JST).strftime("%-m/%-d")
+    except ValueError:
+        pass
+    preview["players_note"] = (f"今季{top[0].get('games')}試合の成績から" if top[0].get("games") else "") + \
+        f"(Bリーグ公式を読めないため、{when + '時点の' if when else '前回取れた'}選手一覧から)"
+    if opp_players.get("source_url"):
+        preview["opp_link"] = opp_players["source_url"]
+        tm = re.search(r"TeamID=(\d+)", opp_players["source_url"])
+        if tm:
+            preview["opp_team_id"] = tm.group(1)
+    print(f"[INFO] Bリーグ: {why}ため、{next_game['opponent']}の注目選手は前回取れた選手一覧から作りました")
+
+
 def blowinds_extra(next_game, preview):
     start = SEASON_START["BLOWINDS"]
     try:
@@ -214,11 +258,17 @@ def blowinds_extra(next_game, preview):
     opp_id = find_bleague_team_id(next_game["opponent"])
     if not opp_id:
         print(f"[WARN] Bリーグ: 「{next_game['opponent']}」のクラブが見つかりません")
+        blowinds_opp_fallback(next_game, preview, "相手のクラブが見つからなかった")
         return
     try:
         opp = bleague_club(opp_id)
     except Exception as e:
         print(f"[WARN] Bリーグ 相手クラブページ取得に失敗 {e}")
+        blowinds_opp_fallback(next_game, preview, "相手クラブのページを読めなかった")
+        return
+    if not opp.get("record") and not opp.get("leaders"):
+        # ページは返ってきたが中身が無い(メンテナンス中の画面など)
+        blowinds_opp_fallback(next_game, preview, "相手クラブのページに成績が無かった")
         return
     preview["opp_link"] = opp["url"]
     preview["opp_team_id"] = opp_id  # 相手の全選手の成績(players.json)を取りに行くのに使う
@@ -633,6 +683,11 @@ def build_players(previews):
                 result["BLOWINDS_OPP"] = opp
         except Exception as e:
             print(f"[WARN] 選手: 対戦相手({p['opp']['label']})の取得に失敗しました {e!r}")
+    if "BLOWINDS_OPP" not in result and p:
+        # 相手を読めなかったとき、同じ試合の相手の分が前回あれば残す(アプリの選手タブ・相手の注目選手に使う)
+        old_opp = load_json(PLAYERS_PATH, {}).get("BLOWINDS_OPP") or {}
+        if old_opp.get("game_id") == p.get("game_id") or old_opp.get("team_name") == (p.get("opp") or {}).get("label"):
+            result["BLOWINDS_OPP"] = old_opp
     return result
 
 
