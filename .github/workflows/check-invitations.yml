@@ -18,13 +18,15 @@ concurrency:
 
 jobs:
   check-alerts:
-    runs-on: ubuntu-latest
+    # ubuntu-latest は Ubuntu 26 に切り替わっていくため、急に動きが変わらないよう版を固定する(2026年10月)
+    runs-on: ubuntu-24.04
     steps:
+      # 部品(actions)は Node.js 24 で動く版を使う(Node.js 20 の版は非推奨になったため。2026年10月)
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 

@@ -20,19 +20,22 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # ubuntu-latest は Ubuntu 26 に切り替わっていくため、急にビルドが変わらないよう版を固定する(2026年10月)
+    runs-on: ubuntu-24.04
     steps:
+      # 部品(actions)は Node.js 24 で動く版を使う(Node.js 20 の版は非推奨になったため。2026年10月)
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        # v6 は利用規約が変わった(キャッシュ機能が非公開の部品になった)ため、Node.js 24 で動く v5 を使う
+        uses: gradle/actions/setup-gradle@v5
         with:
           gradle-version: 8.7
 
@@ -66,11 +69,12 @@ jobs:
           echo "name=${NAME}" >> "$GITHUB_OUTPUT"
           echo "version=${APP_VERSION}" >> "$GITHUB_OUTPUT"
 
+      # APK を ZIP に固めずそのまま置く(Actions の画面からダウンロードすると fukuispo-v版.apk がそのまま落ちてくる)
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: ${{ steps.apkname.outputs.name }}
           path: ${{ steps.apkname.outputs.name }}.apk
+          archive: false
 
       # ここから下は「Run workflow」で公開にチェックを入れたときだけ動く
       - name: Publish to GitHub Releases
