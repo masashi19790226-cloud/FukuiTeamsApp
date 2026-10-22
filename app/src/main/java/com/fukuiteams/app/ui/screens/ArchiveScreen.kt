@@ -83,12 +83,12 @@ private enum class ArchiveTab(val label: String) {
 }
 
 /** 「過去の選手」の絞り込み・並び順 */
-private enum class PlayerFilter(val label: String) {
+private enum class ArchivePlayerFilter(val label: String) {
     FORMER("元選手"),
     ALL("全選手")
 }
 
-private enum class PlayerSort(val label: String) {
+private enum class ArchivePlayerSort(val label: String) {
     APPS("出場の多い順"),
     GOALS("得点の多い順"),
     RECENT("最近まで在籍順")
@@ -121,8 +121,8 @@ fun ArchiveScreen(
     // 「相手別」で開いている相手
     var openedOpponent by remember(team) { mutableStateOf<String?>(null) }
     // 「過去の選手」の絞り込み・並び順
-    var playerFilter by remember { mutableStateOf(PlayerFilter.FORMER) }
-    var playerSort by remember { mutableStateOf(PlayerSort.APPS) }
+    var playerFilter by remember { mutableStateOf(ArchivePlayerFilter.FORMER) }
+    var playerSort by remember { mutableStateOf(ArchivePlayerSort.APPS) }
     // 丸岡RUCKの元選手(standings.json の「あの選手は今」)をまだ読んでいなければ読む
     LaunchedEffect(Unit) { if (Alumni.players.isEmpty()) runCatching { StandingsRepository.fetch() } }
 
@@ -294,23 +294,23 @@ fun ArchiveScreen(
                         } else {
                             val all = history?.players.orEmpty()
                             val hasNow = all.any { it.now != null }
-                            val filtered = all.filter { playerFilter == PlayerFilter.ALL || !hasNow || it.now == false }
+                            val filtered = all.filter { playerFilter == ArchivePlayerFilter.ALL || !hasNow || it.now == false }
                             val sorted = when (playerSort) {
-                                PlayerSort.APPS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.apps }.thenByDescending { it.goals })
-                                PlayerSort.GOALS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.goals }.thenByDescending { it.apps })
-                                PlayerSort.RECENT -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.last }.thenByDescending { it.apps })
+                                ArchivePlayerSort.APPS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.apps }.thenByDescending { it.goals })
+                                ArchivePlayerSort.GOALS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.goals }.thenByDescending { it.apps })
+                                ArchivePlayerSort.RECENT -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.last }.thenByDescending { it.apps })
                             }
                             item {
                                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                     if (hasNow) {
                                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                            PlayerFilter.values().forEach { f ->
+                                            ArchivePlayerFilter.values().forEach { f ->
                                                 NewsChip(f.label, playerFilter == f, modifier = Modifier.weight(1f)) { playerFilter = f }
                                             }
                                         }
                                     }
                                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                        PlayerSort.values().forEach { o ->
+                                        ArchivePlayerSort.values().forEach { o ->
                                             NewsChip(o.label, playerSort == o, modifier = Modifier.weight(1f), horizontalPadding = 2.dp, fontSize = 11.sp) { playerSort = o }
                                         }
                                     }
