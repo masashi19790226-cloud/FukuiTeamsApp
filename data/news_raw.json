@@ -4553,5 +4553,37 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.YxIcJq8Q86saNlsQ2hTm7A&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-23T12:23:23.277748+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10025320170127009088",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 | ・ ⁡ 【 #Uniteファンディング 】 11/13(金)からはじまる全国地域SCL ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/DezCb-UKWyG/&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1UZn9do8SVd2Na_G8XpJQB",
+    "published": "2026-10-23T13:10:06Z",
+    "detected_at": "2026-10-23T14:28:48.356245+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4937923720869341999",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 | ・ ⁡ 【 #Uniteファンディング 】 11/13(金)からはじまる全国地域SCL ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/De1gj5QKKHJ/&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3C1bvCmmG1cQiffg-r7pMI",
+    "published": "2026-10-23T12:06:28Z",
+    "detected_at": "2026-10-23T14:28:48.356286+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4309482653860344538",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"    地域貢献活動     坂井町の坂井松涛こども園に",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2113488084021166354&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2mo7m-eUXyCMFc2Qid0pcj",
+    "published": "2026-10-23T08:02:53Z",
+    "detected_at": "2026-10-23T14:28:48.356308+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15498618195750969470",
+    "team": "UNITED",
+    "title": "月間スケジュール | トップチーム | 福井ユナイテッドFCオフィシャルサイト ｜ FUKUI UNITED FC",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://fukuiunited.co.jp/team/schedule.php%3Fs%3D1161-03-01%26category%3Dgame&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0aC5nD7hynGS-ad5LcJ7f9",
+    "published": "2026-10-22T22:17:33Z",
+    "detected_at": "2026-10-23T14:28:48.356334+00:00"
   }
 ]
