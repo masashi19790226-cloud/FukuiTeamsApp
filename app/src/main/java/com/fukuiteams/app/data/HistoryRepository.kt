@@ -90,8 +90,13 @@ data class TeamHistoryData(
     /** 日本代表・代表候補の選出(新しい順。丸岡RUCK) */
     val national: List<NationalSelection> = emptyList(),
     /** 公式のシーズンごとの成績(新しい順。ブローウィンズ。Bリーグ公式のクラブページから) */
-    val officialSeasons: List<OfficialSeason> = emptyList()
+    val officialSeasons: List<OfficialSeason> = emptyList(),
+    /** リーグの表彰(新しい順。丸岡RUCK:女子Fリーグ公式の過去の記録から) */
+    val awards: List<SeasonAward> = emptyList()
 )
+
+/** リーグの表彰1件(「2023-24」「ベストファイブ」「池内 天紀」「初受賞」) */
+data class SeasonAward(val season: String, val award: String, val name: String, val note: String)
 
 /** 公式のシーズンごとの成績1行(ブローウィンズ。Bリーグ公式のクラブページの表) */
 data class OfficialSeason(
@@ -118,7 +123,9 @@ data class NationalSelection(
     val players: List<String>,
     val link: String,
     /** お知らせに載っている選手の写真(名前 → URL。分かった選手だけ) */
-    val photos: Map<String, String> = emptyMap()
+    val photos: Map<String, String> = emptyMap(),
+    /** お知らせの一番上の画像(アイキャッチ。選ばれた選手の写真が並んだ画像のことが多い)。無ければ "" */
+    val image: String = ""
 )
 
 /** これまでにチームでプレーした選手1人の通算の記録(scripts/history.py が試合ごとの記録から足し合わせる) */
@@ -138,7 +145,13 @@ data class HistoryPlayer(
     val first: String,
     val last: String,
     /** いまもチームにいるか(今の選手名簿にいれば true、いなければ false、分からなければ null) */
-    val now: Boolean?
+    val now: Boolean?,
+    /** 選手の写真(ブローウィンズ:Bリーグ公式の、福井にいたシーズンの写真。無ければ今のクラブの写真)。無ければ "" */
+    val photo: String = "",
+    /** 元選手のいまのクラブ(ブローウィンズ:Bリーグ公式の選手ページから)。Bリーグのクラブにいなければ "" */
+    val nowTeam: String = "",
+    /** いまのクラブを調べたか(調べて "" なら、Bリーグのクラブには所属していない) */
+    val nowChecked: Boolean = false
 ) {
     /** 「2019〜2022」(1シーズンだけなら「2019」) */
     val seasonsLabel: String
@@ -204,7 +217,8 @@ object HistoryRepository {
                     season = m.optString("season"),
                     competition = m.optString("comp"),
                     title = m.optString("title"),
-                    opponent = opp,
+                    // 「&#039;05加茂FC」のような文字の書き方を、ふつうの文字に戻す
+                    opponent = opp.replace("&#039;", "'").replace("&amp;", "&"),
                     venue = m.optString("venue"),
                     homeAway = m.optString("ha", "N"),
                     myScore = m.optInt("my"),
@@ -237,7 +251,10 @@ object HistoryRepository {
                         goals = q.optInt("goals"),
                         first = q.optString("first"),
                         last = q.optString("last"),
-                        now = if (!q.has("now") || q.isNull("now")) null else q.optBoolean("now")
+                        now = if (!q.has("now") || q.isNull("now")) null else q.optBoolean("now"),
+                        photo = q.optString("photo"),
+                        nowTeam = q.optString("now_team"),
+                        nowChecked = q.optString("now_checked").isNotBlank()
                     )
                 }
                 val nArr = o.optJSONArray("national")
@@ -251,7 +268,8 @@ object HistoryRepository {
                         players = names?.let { a -> (0 until a.length()).map { a.optString(it) }.filter { it.isNotBlank() } }.orEmpty(),
                         link = q.optString("link"),
                         photos = q.optJSONObject("photos")?.let { ph -> ph.keys().asSequence().associateWith { k -> ph.optString(k) } }
-                            ?.filterValues { it.isNotBlank() }.orEmpty()
+                            ?.filterValues { it.isNotBlank() }.orEmpty(),
+                        image = q.optString("image")
                     )
                 }
                 val sArr = o.optJSONArray("seasons")
@@ -268,7 +286,13 @@ object HistoryRepository {
                         oppg = q.optString("oppg")
                     )
                 }
-                out[team] = TeamHistoryData(o.optString("source"), o.optString("source_url"), matches, players, national, officialSeasons)
+                val aArr = o.optJSONArray("awards")
+                val awards = if (aArr == null) emptyList() else (0 until aArr.length()).mapNotNull { i ->
+                    val q = aArr.optJSONObject(i) ?: return@mapNotNull null
+                    if (q.optString("name").isBlank()) return@mapNotNull null
+                    SeasonAward(q.optString("season"), q.optString("award"), q.optString("name"), q.optString("note"))
+                }
+                out[team] = TeamHistoryData(o.optString("source"), o.optString("source_url"), matches, players, national, officialSeasons, awards)
             }
         }
         return out
@@ -339,7 +363,9 @@ data class OpponentRecord(
     val opponent: String,
     val record: WinLoss,
     /** その相手との試合(新しい順) */
-    val matches: List<HistoryMatch>
+    val matches: List<HistoryMatch>,
+    /** 以前のチーム名など、同じ相手のほかの表記(新しい順。チーム名が変わったクラブ) */
+    val otherNames: List<String> = emptyList()
 )
 
 /** 相手チームごとの通算成績(対戦の多い順。エキシビジョンは除く)。表記ゆれの相手はまとめる */
@@ -349,17 +375,44 @@ fun opponentRecords(matches: List<HistoryMatch>): List<OpponentRecord> {
         val g = groups.firstOrNull { sameOpponentLoose(it.first().opponent, m.opponent) }
         if (g != null) g += m else groups += mutableListOf(m)
     }
-    return groups.map { OpponentRecord(it.first().opponent, it.winLoss(), it) }
+    return groups.map { g ->
+        val name = g.first().opponent
+        // 書き方が少し違うだけ(「FC.マツセロナ」と「FCマツセロナ」など)のものは出さない
+        val others = g.map { it.opponent }.distinct().filter { rawNameKey(it) != rawNameKey(name) }
+        OpponentRecord(name, g.winLoss(), g, others)
+    }
         .sortedWith(compareByDescending<OpponentRecord> { it.record.games }.thenByDescending { it.matches.first().date })
 }
 
 /** 相手チーム名を比べるための形(空白・かっこ・「FC」の有無、全角・半角の違いをそろえる) */
-private fun nameKey(name: String): String =
-    java.text.Normalizer.normalize(name, java.text.Normalizer.Form.NFKC)
+private fun rawNameKey(name: String): String =
+    java.text.Normalizer.normalize(name.replace("&#039;", "'").replace("&amp;", "&"), java.text.Normalizer.Form.NFKC)
         .replace(Regex("[(（][^)）]*[)）]"), "")
         .replace(Regex("[\\s・･.]"), "")
         .replace(Regex("^FC|FC$"), "")
         .lowercase()
+
+/**
+ * チーム名が変わった・表記が違うだけの同じクラブ(先頭の名前にそろえて同じ相手として数える)。
+ * 例:さいたまサイコロ → さいたまSAICOLO、アルコイリス神戸 → アルコ神戸、ユニアオレディース → アスレジーナユニアオあいち一宮、
+ * 府中アスレティックFCプリメイラ → 府中アスレティックFCレディース → 立川・府中アスレティックFCレディース → 立川アスレティックFCレディース
+ */
+private val OPPONENT_ALIASES: List<List<String>> = listOf(
+    listOf("さいたまSAICOLO", "さいたまサイコロ"),
+    listOf("アルコ神戸", "アルコイリス神戸"),
+    listOf("アスレジーナユニアオあいち一宮", "ユニアオレディース"),
+    listOf(
+        "立川アスレティックFCレディース", "立川・府中アスレティックFCレディース",
+        "府中アスレティックFCレディース", "府中アスレティックFCプリメイラ"
+    ),
+    listOf("JAPANサッカーカレッジ", "JAPAN.S.C.", "JAPAN.S.C")
+)
+private val OPPONENT_ALIAS_KEYS: Map<String, String> = OPPONENT_ALIASES.flatMap { group ->
+    val canonical = rawNameKey(group.first())
+    group.map { rawNameKey(it) to canonical }
+}.toMap()
+
+private fun nameKey(name: String): String = rawNameKey(name).let { OPPONENT_ALIAS_KEYS[it] ?: it }
 
 /**
  * 同じ相手か(表記ゆれにやや広く対応する)。

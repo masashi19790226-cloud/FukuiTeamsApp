@@ -193,6 +193,10 @@ def thunder_matches(fetch, old_matches):
         label = f"{s}-{(s + 1) % 100:02d}"
         for link in links:
             code = link["code"]
+            old_m = by_code.get(code)
+            # 前回の分の選手の一覧に選手ページの番号(5つ目)が無ければ、試合ページを読み直す(読める数の範囲で)
+            if old_m and old_m.get("roster") and len(old_m["roster"][0]) < 5 and read < THUNDER_MAX_PAGES:
+                by_code.pop(code)
             if code in by_code:
                 m = dict(by_code[code])
                 # 星取表の点数が直っていれば合わせる
@@ -214,7 +218,8 @@ def thunder_matches(fetch, old_matches):
                 continue
             top3 = sorted([p for p in g.get("players") or [] if p.get("goals")], key=lambda p: -p["goals"])[:3]
             # 試合のスコア表に載った選手(過去の選手の一覧に使う。[名前, 背番号, ポジション, 得点])
-            roster = [[p["name"], p.get("number", ""), p.get("position", ""), p.get("goals", 0)] for p in g.get("players") or []]
+            roster = [[p["name"], p.get("number", ""), p.get("position", ""), p.get("goals", 0), p.get("pid", "")]
+                      for p in g.get("players") or []]
             out.append({
                 "code": code,
                 "date": g["date"],
@@ -311,6 +316,102 @@ def _ruck_match(m, season, stage):
     }
 
 
+def _wfl_season(y: int) -> str:
+    """女子Fリーグの過去の記録の年 → シーズンの呼び方(2019年までは「2019」、2020年からは「2020-21」)"""
+    return str(y) if y <= 2019 else f"{y}-{(y + 1) % 100:02d}"
+
+
+def ruck_archive_extras(fetch, old=None):
+    """女子Fリーグ公式の過去の記録から、丸岡RUCKの選手の得点(ゴールランキング)と、リーグの表彰。
+    - 得点:/archive/<年>/score.html が読み込む部品の大会番号(tid)ごとに /modules/php/FlArchiveGoalRanking.php?tid=&rn=500
+      (1点以上の選手。出場はその選手の出場試合数)。年のページの部品の番号はシーズンの区切り(レギュラー・上位/下位)ごと。
+      次の年のページに前の年の部品が載っていることがあるので、同じ番号は最初の年だけで数える
+    - 表彰:/archive/<年>/ の「最優秀選手賞」「得点王」「ベストファイブ」などのうち、丸岡の選手
+    終わった年は前回の分を使い、いちばん新しい年だけ読み直す。返り値 {"years": {年: {"season","scorers":[…],"awards":[…]}}}"""
+    old_years = {int(k): v for k, v in ((old or {}).get("years") or {}).items()}
+    top = fetch(f"{WFL_SITE}/archive/")
+    years = sorted({int(y) for y in re.findall(r"href=[\"'](?:https?://w-fleague\.jp)?/archive/(\d{4})/", top)})
+    out, used_tids = {}, set()
+    for y in years:
+        season = _wfl_season(y)
+        if y in old_years and y != years[-1]:
+            out[y] = old_years[y]
+            used_tids.update(old_years[y].get("tids") or [])
+            continue
+        ref = {"Referer": f"{WFL_SITE}/archive/{y}/goalrank.html", "X-Requested-With": "XMLHttpRequest"}
+        entry = {"season": season, "scorers": [], "awards": [], "tids": []}
+        try:
+            page = fetch(f"{WFL_SITE}/archive/{y}/score.html?t=0")
+            tids = []
+            for t in re.findall(r"url:\s*[\"']/modules/php/[\w.]+\.php[\"'][^;]*?data:\s*[\"'][^\"']*?tid=(\d+)", page, flags=re.S):
+                if t not in tids and t not in used_tids:
+                    tids.append(t)
+            by_name = {}
+            for tid in tids:
+                html = fetch(f"{WFL_SITE}/modules/php/FlArchiveGoalRanking.php?tid={tid}&rn=500", ref)
+                for tr in re.findall(r"<tr>(.*?)</tr>", html, flags=re.S):
+                    tds = re.findall(r"<td\b[^>]*>(.*?)</td>", tr, flags=re.S)
+                    if len(tds) < 8 or RUCK_WORD not in tds[2]:
+                        continue
+                    name = re.sub(r"[\s\u3000]+", " ", _wfl_text(tds[1])).strip()
+                    nums = [_int(_wfl_text(x)) or 0 for x in tds[3:8]]
+                    r = by_name.setdefault(name_key(name), {"name": name, "goals": 0, "apps": 0, "shots": 0})
+                    r["goals"] += nums[0]
+                    r["shots"] += nums[3]
+                    r["apps"] += nums[4]
+            entry["scorers"] = sorted(by_name.values(), key=lambda r: (-r["goals"], -r["apps"]))
+            entry["tids"] = tids
+            used_tids.update(tids)
+        except Exception as e:
+            print(f"[WARN] 過去の記録: 丸岡RUCK {season} のゴールランキングの取得に失敗 {e!r}")
+            if y in old_years:
+                entry = old_years[y]
+        try:
+            prize_page = fetch(f"{WFL_SITE}/archive/{y}/")
+            for sec in prize_page.split('id="Prize"')[1:]:
+                h3 = re.search(r"<h3[^>]*>(.*?)</h3>", sec, flags=re.S)
+                if not h3:
+                    continue
+                award = _wfl_text(h3.group(1))
+                for dl in re.findall(r"<dl>(.*?)</dl>", sec, flags=re.S):
+                    team = re.search(r"<dd>(.*?)</dd>", dl, flags=re.S)
+                    who = re.search(r"<dt>\s*<p>(.*?)</p>", dl, flags=re.S)
+                    note = re.findall(r"<p>([^<]*)</p>", dl)
+                    if team and who and RUCK_WORD in _wfl_text(team.group(1)):
+                        entry["awards"].append({"award": award,
+                                                "name": re.sub(r"[\s\u3000]+", " ", _wfl_text(who.group(1))).strip(),
+                                                "note": note[-1].strip() if len(note) >= 2 and re.search(r"受賞|回目", note[-1]) else ""})
+        except Exception as e:
+            print(f"[WARN] 過去の記録: 丸岡RUCK {season} の表彰の取得に失敗 {e!r}")
+            if y in old_years:
+                entry["awards"] = old_years[y].get("awards") or []
+        out[y] = entry
+    n_sc = sum(len(v.get("scorers") or []) for v in out.values())
+    n_aw = sum(len(v.get("awards") or []) for v in out.values())
+    print(f"[過去の記録] 丸岡RUCK: ゴールランキング {n_sc}人分・表彰 {n_aw}件({len(out)}シーズン)")
+    return {"years": {str(k): v for k, v in out.items()}}
+
+
+def ruck_players(extras, current_keys):
+    """ゴールランキング(1点以上の選手)から、丸岡RUCKのこれまでの選手(得点の多い順)。出場は得点したシーズンの分だけ"""
+    book = {}
+    for y in sorted(int(k) for k in (extras.get("years") or {})):
+        v = extras["years"][str(y)]
+        for r in v.get("scorers") or []:
+            k = name_key(r["name"])
+            p = book.setdefault(k, {"name": r["name"], "number": "", "position": "", "seasons": [], "apps": 0,
+                                    "starts": 0, "goals": 0, "first": "", "last": ""})
+            if v["season"] not in p["seasons"]:
+                p["seasons"].append(v["season"])
+            p["apps"] += r.get("apps") or 0
+            p["goals"] += r.get("goals") or 0
+    players = list(book.values())
+    for p in players:
+        p["now"] = (name_key(p["name"]) in current_keys) if current_keys else None
+    players.sort(key=lambda p: (-p["goals"], -p["apps"], p["name"]))
+    return players
+
+
 def ruck_matches(fetch, old_matches):
     """丸岡RUCKの試合(過去のシーズン+今季)。返り値は試合のリスト(古い順)"""
     old_by_year = {}
@@ -390,10 +491,55 @@ def ruck_matches(fetch, old_matches):
 
 def thunder_players(matches, current_keys):
     book = PlayerBook()
+    pids = {}
     for m in sorted(matches, key=lambda x: (x["date"], x.get("time", ""))):
-        for name, number, position, goals in m.get("roster") or []:
+        for row in m.get("roster") or []:
+            name, number, position, goals = row[:4]
             book.add(name, number, position, m.get("season"), m["date"], True, False, goals)
-    return book.result(current_keys)
+            if len(row) >= 5 and row[4]:
+                pids[name_key(name)] = row[4]
+    players = book.result(current_keys)
+    for p in players:
+        p["pid"] = pids.get(name_key(p["name"]), "")
+    return players
+
+
+def thunder_players_now(fetch, players, old_players=None, recheck_days=7):
+    """ブルーサンダーの元選手の「あの選手は今」と写真:リーグH公式の選手ページ(/player/番号/)。
+    見出し「高光 凌（大崎オーソル埼玉） - …」のかっこの中が今のチーム、写真は /files/<年>/player/<チーム>/p<番号>.jpg。
+    一度調べた選手は recheck_days 日たつまで前回の分を使う"""
+    old = {p.get("pid"): p for p in old_players or [] if p.get("pid")}
+    today = datetime.now(JST).date()
+    fetched = 0
+    for p in players:
+        pid = p.get("pid")
+        if not pid or p.get("now") is not False:
+            continue
+        o = old.get(pid) or {}
+        try:
+            fresh = (today - datetime.fromisoformat(o.get("now_checked", "")).date()).days < recheck_days
+        except ValueError:
+            fresh = False
+        if fresh:
+            for k in ("now_team", "now_checked", "photo"):
+                if k in o:
+                    p[k] = o[k]
+            continue
+        try:
+            page = fetch(f"{leagueh.LEAGUEH}/player/{pid}/")
+            fetched += 1
+        except Exception as e:
+            print(f"[WARN] 過去の記録: ブルーサンダーの元選手の選手ページを読めませんでした {p.get('name')} {e!r}")
+            continue
+        t = re.search(r"<title>([^<]*)</title>", page)
+        team = re.search(r"[（(]([^（）()]+)[）)]\s*-", t.group(1)) if t else None
+        p["now_team"] = htmllib.unescape(team.group(1)).strip() if team else ""
+        p["now_checked"] = today.isoformat()
+        ph = re.search(rf"src=[\"'](/files/[^\"']*/player/[^\"']*p{pid}\.(?:jpe?g|png))[\"']", page)
+        if ph:
+            p["photo"] = leagueh.LEAGUEH + ph.group(1)
+    print(f"[過去の記録] ブルーサンダー: 元選手のいまのチームを{fetched}人分調べました")
+    return players
 
 
 # ---------- 日本代表の選出(丸岡RUCK) ----------
@@ -408,9 +554,29 @@ NATIONAL_NO_NAME = re.compile(r"No\.?\s*\d{1,2}\s*(?:FP|GK)?\s*#?\s*([一-龥々
 NATIONAL_NAME = re.compile(r"(?<![一-龥々])([一-龥々]{3,6})\s*選手")
 
 
-def national_selections(fetch, max_pages=10):
+def post_eyecatch(fetch, link: str) -> str:
+    """お知らせのページの一番上の画像(アイキャッチ。<img class="… wp-post-image" srcset="…768w …">)の、横768pxほどのURL。
+    RSS の本文には入っていないので、ページを読む。選手の写真が並んだ画像のことが多い。無ければ空の文字"""
+    page = fetch(link)
+    m = re.search(r"<img\b[^>]*\bwp-post-image\b[^>]*>", page)
+    if not m:
+        return ""
+    tag = m.group(0)
+    widths = {}
+    ss = re.search(r"\bsrcset=[\"']([^\"']+)[\"']", tag)
+    for part in (ss.group(1).split(",") if ss else []):
+        bits = part.strip().split()
+        if len(bits) == 2 and bits[1].endswith("w") and bits[1][:-1].isdigit():
+            widths[int(bits[1][:-1])] = htmllib.unescape(bits[0])
+    src = re.search(r"\bsrc=[\"']([^\"']+)[\"']", tag)
+    return widths.get(768) or widths.get(1024) or (htmllib.unescape(src.group(1)) if src else "")
+
+
+def national_selections(fetch, max_pages=10, old=None):
     """丸岡RUCK公式サイトの「代表」のお知らせ(サイト内検索のRSS。古い記事まで)から、日本代表・代表候補に選ばれた選手。
-    [{"date","title","kind","players":[名前...],"link"}, ...](新しい順)"""
+    [{"date","title","kind","players":[名前...],"link","photos":{名前:写真},"image":アイキャッチ}, ...](新しい順)
+    old: 前回の分(アイキャッチは一度読んだお知らせは前回の分を使う)"""
+    old_image = {o.get("link"): o.get("image") for o in (old or []) if o.get("image")}
     import xml.etree.ElementTree as ET
     from email.utils import parsedate_to_datetime
     from urllib.parse import quote
@@ -464,7 +630,15 @@ def national_selections(fetch, max_pages=10):
                 if url not in imgs:
                     imgs.append(url)
             photos = dict(zip(names, imgs)) if names and len(imgs) == len(names) else {}
-            out.append({"date": date, "title": title, "kind": kind, "players": names, "link": link, "photos": photos})
+            # お知らせの一番上の画像(アイキャッチ)。本文に写真が無いお知らせでも、ここに選手の写真があることが多い
+            image = old_image.get(link, "")
+            if not image and link:
+                try:
+                    image = post_eyecatch(fetch, link)
+                except Exception as e:
+                    print(f"[WARN] 過去の記録: 代表選出のお知らせの画像を読めませんでした {link} {e!r}")
+            out.append({"date": date, "title": title, "kind": kind, "players": names, "link": link, "photos": photos,
+                        "image": image})
     out.sort(key=lambda x: x["date"], reverse=True)
     print(f"[過去の記録] 丸岡RUCK: 代表選出のお知らせ {len(out)}件")
     return out
@@ -593,6 +767,251 @@ def blowinds_matches(fetch, prev_matches=None):
     return out
 
 
+# 試合ごとの選手の成績(ボックススコア)を1回の自動更新で読む試合の数(1ページ約1MBと大きいので分けて読む。
+# 残りは pending にして同じ日のうちに続きを読む。終わった試合は一度読めば前回の分を使う)
+BOX_PER_RUN = 60
+# 試合のページには選手の成績が JSON で入っている("HomeBoxscores":[…], "AwayBoxscores":[…])。
+# PeriodCategory 18 が試合全体の合計(1〜4 が各クォーター、15・16 が前半・後半)
+BOX_TOTAL = 18
+
+
+def _json_array_after(page: str, key: str):
+    """ページの中の "key":[ … ] の配列を読む(無ければ [])"""
+    i = page.find(f'"{key}":[')
+    if i < 0:
+        return []
+    arr, _ = json.JSONDecoder().raw_decode(page, page.index("[", i))
+    return arr if isinstance(arr, list) else []
+
+
+def _json_object_after(page: str, key: str):
+    """ページの中の "key":{ … } のオブジェクトを読む(無ければ {})"""
+    i = page.find(f'"{key}":{{')
+    if i < 0:
+        return {}
+    obj, _ = json.JSONDecoder().raw_decode(page, page.index("{", i))
+    return obj if isinstance(obj, dict) else {}
+
+
+def bleague_box(fetch, game_url: str, team_id: str = BLOWINDS_TEAM_ID):
+    """試合のページから、(そのチームの選手ごとの成績 [[PlayerID, 名前, 背番号, 得点, 先発か, 出場したか], …],
+    試合の情報 {"opp": 相手の正式名, "venue": 会場, "visitors": 観客数})。
+    試合の情報はページの "Game":{…}(HomeTeamNameJ・AwayTeamNameJ・StadiumNameJ・Attendance)から"""
+    page = fetch(game_url.replace("&tab=2", "&tab=4"))
+    info = {}
+    g = _json_object_after(page, "Game")
+    if g:
+        is_home = str(g.get("HomeTeamID")) == str(team_id)
+        opp = (g.get("AwayTeamNameJ") if is_home else g.get("HomeTeamNameJ")) or ""
+        if opp.strip():
+            info["opp"] = opp.strip()
+        if (g.get("StadiumNameJ") or "").strip():
+            info["venue"] = g["StadiumNameJ"].strip()
+        if isinstance(g.get("Attendance"), int) and g["Attendance"] > 0:
+            info["visitors"] = g["Attendance"]
+    rows = []
+    for r in _json_array_after(page, "HomeBoxscores") + _json_array_after(page, "AwayBoxscores"):
+        if str(r.get("TeamID")) != str(team_id) or r.get("PeriodCategory") != BOX_TOTAL:
+            continue
+        pt = str(r.get("PlayTime") or "")
+        played = bool(re.search(r"[1-9]", pt)) or (r.get("Point") or 0) > 0
+        rows.append([str(r.get("PlayerID") or ""), (r.get("PlayerNameJ") or "").strip(), str(r.get("PlayerNo") or ""),
+                     int(r.get("Point") or 0), bool(r.get("StartingFlg")), played])
+    return rows, info
+
+
+def blowinds_boxes(fetch, matches, prev_matches):
+    """各試合に選手の成績(box)を付ける。前回読んだ試合はその分を使い、新しく読むのは BOX_PER_RUN 試合まで。
+    まだ読めていない試合が残れば True(続きは次の更新で)"""
+    # 前回読んだ試合の分(選手の成績と、相手の正式名・会場・観客数)
+    prev_box = {m.get("url"): m for m in prev_matches or [] if m.get("box")}
+    fetched, left = 0, 0
+    for m in matches:
+        if m.get("box"):
+            continue
+        prev = prev_box.get(m.get("url"))
+        if prev:
+            for k in ("box", "opp", "opp_short", "venue", "visitors"):
+                if prev.get(k) is not None:
+                    m[k] = prev[k]
+            continue
+        if fetched >= BOX_PER_RUN:
+            left += 1
+            continue
+        try:
+            box, info = bleague_box(fetch, m["url"])
+            fetched += 1
+        except Exception as e:
+            print(f"[WARN] 過去の記録: ブローウィンズの試合の選手の成績を読めませんでした {m.get('date')} {e!r}")
+            continue
+        if box:
+            m["box"] = box
+            # 相手は日程の一覧では「信州」のような略称なので、試合のページの正式名にする(略称は opp_short に残す)
+            if info.get("opp"):
+                m["opp_short"] = m.get("opp", "")
+                m["opp"] = info["opp"]
+            if info.get("venue"):
+                m["venue"] = info["venue"]
+            if info.get("visitors"):
+                m["visitors"] = info["visitors"]
+    print(f"[過去の記録] ブローウィンズ: 選手の成績を{fetched}試合分読みました(残り{left}試合)")
+    return left > 0
+
+
+def _url_exists(url: str) -> bool:
+    """画像が置いてあるか(HEAD で確かめる)"""
+    import urllib.request
+    try:
+        req = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as res:
+            return 200 <= res.status < 300
+    except Exception:
+        return False
+
+
+def blowinds_players(matches, current_keys, old_players=None):
+    """試合ごとの選手の成績から、これまでの選手(出場の多い順)。得点は goals に入れる。
+    写真はBリーグ公式の選手の画像(files/user/roster/2891/<シーズン>/<PlayerID>_03.png)。
+    福井にいた新しいシーズンから順に、画像が置いてあるものを使う(前回見つけた写真はそのまま使う)"""
+    # 前回見つけた福井在籍時の写真(今のクラブの写真で補ったもの photo_now は、移籍もあるので毎回調べ直す)
+    old_photo = {p.get("pid"): p.get("photo") for p in old_players or []
+                 if p.get("pid") and p.get("photo") and not p.get("photo_now")}
+    book = PlayerBook()
+    pids = {}
+    for m in sorted(matches, key=lambda x: (x["date"], x.get("time", ""))):
+        for pid, name, number, points, started, played in m.get("box") or []:
+            if not played:
+                continue
+            book.add(name, number, "", m.get("season"), m["date"], True, started, points)
+            if pid:
+                pids[name_key(name)] = pid
+    players = book.result(current_keys)
+    checked = 0
+    for p in players:
+        pid = pids.get(name_key(p["name"]), "")
+        p["pid"] = pid
+        if not pid:
+            continue
+        if pid in old_photo:
+            p["photo"] = old_photo[pid]
+            continue
+        p["photo"] = ""
+        for season in reversed(p["seasons"]):
+            url = f"https://bleague.bl.kuroco-img.app/files/user/roster/{BLOWINDS_TEAM_ID}/{season}/{pid}_03.png"
+            checked += 1
+            if _url_exists(url):
+                p["photo"] = url
+                break
+    print(f"[過去の記録] ブローウィンズ: 選手{len(players)}人(写真の有無を{checked}件確かめました)")
+    return players
+
+
+def _current_season_label(today=None) -> str:
+    """いまのBリーグのシーズン(7月から次のシーズン)「2026-27」"""
+    d = today or datetime.now(JST).date()
+    y = d.year if d.month >= 7 else d.year - 1
+    return f"{y}-{(y + 1) % 100:02d}"
+
+
+def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
+    """元選手の「あの選手は今」:Bリーグ公式の選手ページの道順(パンくず)にある今のクラブ。
+    「クラブ > 横浜エクセレンス > 名前」なら横浜エクセレンス、「選手 > 名前」ならBリーグのクラブにはいない。
+    一度調べた選手は recheck_days 日たつまで前回の分を使う。
+    福井にいたときの写真が無い選手は、今のクラブの写真(files/user/roster/<TeamID>/<今のシーズン>/<PlayerID>_03.png)を使う"""
+    old = {p.get("pid"): p for p in old_players or [] if p.get("pid")}
+    today = datetime.now(JST).date()
+    season_now = _current_season_label(today)
+    fetched = 0
+    for p in players:
+        pid = p.get("pid")
+        if not pid or p.get("now") is not False:
+            continue
+        o = old.get(pid) or {}
+        try:
+            fresh = (today - datetime.fromisoformat(o.get("now_checked", "")).date()).days < recheck_days
+        except ValueError:
+            fresh = False
+        if fresh:
+            for k in ("now_team", "now_team_id", "now_checked"):
+                if k in o:
+                    p[k] = o[k]
+        else:
+            try:
+                page = fetch(f"{BLEAGUE}/roster_detail/?PlayerID={pid}")
+                fetched += 1
+            except Exception as e:
+                print(f"[WARN] 過去の記録: ブローウィンズの元選手の選手ページを読めませんでした {p.get('name')} {e!r}")
+                continue
+            m = re.search(r'club_detail/\?TeamID=(\d+)" itemprop="item"><span itemprop="name">([^<]*)<', page)
+            p["now_team"] = htmllib.unescape(m.group(2)).strip() if m else ""
+            p["now_team_id"] = m.group(1) if m else ""
+            p["now_checked"] = today.isoformat()
+        if not p.get("photo") and p.get("now_team_id") and p["now_team_id"] != BLOWINDS_TEAM_ID:
+            url = f"https://bleague.bl.kuroco-img.app/files/user/roster/{p['now_team_id']}/{season_now}/{pid}_03.png"
+            if _url_exists(url):
+                p["photo"] = url
+                p["photo_now"] = True
+    print(f"[過去の記録] ブローウィンズ: 元選手のいまのクラブを{fetched}人分調べました")
+    return players
+
+
+BLOWINDS_CLUB_SITE = "https://www.fukuiblowinds.com"
+# 「#10 ヒシグバータル・オーギル 選手 モンゴル代表選出のお知らせ」
+BW_NATIONAL_TITLE = re.compile(r"^(?:#\d+\s*)?(.+?)\s*選手\s*(.*?代表(?:候補)?)\s*(?:メンバー)?\s*選出")
+
+
+def blowinds_national(fetch, old=None, start=(2023, 7)):
+    """ブローウィンズ公式サイトのお知らせ(トップチーム)を月ごとに見て、「〇〇代表選出」のお知らせを集める。
+    月ごとの一覧(/news/?year=&month=&contents_type=32)は1ページにその月の分がすべて載る。
+    終わった月は前回の分を使い、今月と先月だけ読み直す。写真はお知らせの本文の最初の画像"""
+    old = old or {}
+    old_items = {o.get("link"): o for o in old.get("items") or []}
+    scanned = set(old.get("months") or [])
+    today = datetime.now(JST).date()
+    months = []
+    y, mth = start
+    while (y, mth) <= (today.year, today.month):
+        months.append(f"{y}-{mth:02d}")
+        y, mth = (y + 1, 1) if mth == 12 else (y, mth + 1)
+    recent = set(months[-2:])
+    found = dict(old_items)
+    for ym in months:
+        if ym in scanned and ym not in recent:
+            continue
+        yy, mm = ym.split("-")
+        try:
+            page = fetch(f"{BLOWINDS_CLUB_SITE}/news/?year={int(yy)}&month={int(mm)}&contents_type=32")
+        except Exception as e:
+            print(f"[WARN] 過去の記録: ブローウィンズのお知らせ {ym} を読めませんでした {e!r}")
+            continue
+        scanned.add(ym)
+        for link, text in re.findall(r'href="(https://www\.fukuiblowinds\.com/news/detail/id=\d+)"[^>]*>(.*?)</a>', page, flags=re.S):
+            t = _wfl_text(text)
+            dm = re.match(r"(\d{4})/(\d{2})/(\d{2})\s+(.*)", t)
+            if not dm or link in found:
+                continue
+            title = re.sub(r"\s+[A-Z]+$", "", dm.group(4)).strip()  # 末尾の「TOPTEAM」などの分類を除く
+            nm = BW_NATIONAL_TITLE.search(title)
+            if not nm or "代表付" in title or "代表取締" in title:
+                continue
+            item = {"date": f"{dm.group(1)}-{dm.group(2)}-{dm.group(3)}", "title": title, "kind": nm.group(2).strip(),
+                    "players": [nm.group(1).strip()], "link": link, "photos": {}, "image": ""}
+            try:
+                art = fetch(link)
+                # お知らせの本文(<main>の中)の最初の画像。ヘッダーのロゴなどを拾わないよう <main> の中だけを見る
+                mi = art.find("<main")
+                body = art[mi:art.find("</main>", mi)] if mi >= 0 else ""
+                im = re.search(r'<img\b[^>]*\bsrc="([^"]*/files/user/(?!common/)[^"]+\.(?:jpe?g|png))"', body)
+                if im:
+                    item["image"] = htmllib.unescape(im.group(1))
+            except Exception as e:
+                print(f"[WARN] 過去の記録: ブローウィンズの代表選出のお知らせを読めませんでした {link} {e!r}")
+            found[link] = item
+    items = sorted(found.values(), key=lambda x: x["date"], reverse=True)
+    print(f"[過去の記録] ブローウィンズ: 代表選出のお知らせ {len(items)}件")
+    return {"items": items, "months": sorted(scanned)}
+
+
 def build(fetch, post_json, old, current=None):
     """過去の記録のデータを作る。old は前回の分(無ければ {})。今日すでに作り終えていれば None(書き直さない)。
     current: チーム → 今の選手の名前のリスト(元選手かどうかの見分けに使う。standings.json の誕生日のデータから)"""
@@ -618,6 +1037,10 @@ def build(fetch, post_json, old, current=None):
         pending = pending or pend
         if got:
             players = thunder_players(got, cur_keys.get("THUNDER"))
+            try:
+                players = thunder_players_now(fetch, players, (old_teams.get("THUNDER") or {}).get("players"))
+            except Exception as e:
+                print(f"[WARN] 過去の記録: ブルーサンダーの元選手のいまのチームの取得に失敗 {e!r}")
             teams["THUNDER"] = {"source": "リーグH公式の星取表・試合ページ", "source_url": leagueh.MATRIX_URL, "matches": got,
                                 "players": players}
             print(f"[過去の記録] ブルーサンダー: 選手{len(players)}人")
@@ -630,8 +1053,23 @@ def build(fetch, post_json, old, current=None):
             teams["RAC"] = {"source": "女子Fリーグ公式の過去の記録・試合一覧", "source_url": f"{WFL_SITE}/archive/", "matches": got}
     except Exception as e:
         print(f"[WARN] 過去の記録: 丸岡RUCKの取得に失敗。前回の分を使います {e!r}")
+    # 丸岡RUCKの選手の得点(ゴールランキング)とリーグの表彰
     try:
-        nat = national_selections(fetch) or (old_teams.get("RAC") or {}).get("national")
+        extras = ruck_archive_extras(fetch, (old_teams.get("RAC") or {}).get("extras"))
+        if "RAC" in teams:
+            teams["RAC"]["extras"] = extras
+            teams["RAC"]["players"] = ruck_players(extras, cur_keys.get("RAC"))
+            teams["RAC"]["awards"] = [dict(a, season=v["season"]) for k, v in sorted(extras["years"].items(), reverse=True)
+                                      for a in v.get("awards") or []]
+    except Exception as e:
+        print(f"[WARN] 過去の記録: 丸岡RUCKのゴールランキング・表彰の取得に失敗。前回の分を使います {e!r}")
+        if "RAC" in teams:
+            for k in ("extras", "players", "awards"):
+                if (old_teams.get("RAC") or {}).get(k):
+                    teams["RAC"][k] = old_teams["RAC"][k]
+    try:
+        old_nat = (old_teams.get("RAC") or {}).get("national")
+        nat = national_selections(fetch, old=old_nat) or old_nat
         if nat and "RAC" in teams:
             teams["RAC"]["national"] = nat
     except Exception as e:
@@ -642,14 +1080,30 @@ def build(fetch, post_json, old, current=None):
         seasons = blowinds_seasons(fetch) or seasons
     except Exception as e:
         print(f"[WARN] 過去の記録: ブローウィンズのシーズンごとの成績の取得に失敗。前回の分を使います {e!r}")
-    bw_matches = old_bw.get("matches") or []
+    old_bw_matches = old_bw.get("matches") or []
+    bw_matches = old_bw_matches
     try:
-        bw_matches = blowinds_matches(fetch, bw_matches) or bw_matches
+        bw_matches = blowinds_matches(fetch, old_bw_matches) or old_bw_matches
     except Exception as e:
         print(f"[WARN] 過去の記録: ブローウィンズの過去の試合の取得に失敗。前回の分を使います {e!r}")
+    # これまでの選手(試合ごとの選手の成績から)
+    bw_players = old_bw.get("players") or []
+    try:
+        pending = blowinds_boxes(fetch, bw_matches, old_bw_matches) or pending
+        bw_players = blowinds_players(bw_matches, cur_keys.get("BLOWINDS"), bw_players) or bw_players
+        bw_players = blowinds_players_now(fetch, bw_players, old_bw.get("players"))
+    except Exception as e:
+        print(f"[WARN] 過去の記録: ブローウィンズの選手の取得に失敗。前回の分を使います {e!r}")
+    # 代表選出(ブローウィンズ公式サイトのお知らせから)
+    bw_nat = {"items": old_bw.get("national") or [], "months": (old_bw.get("national_scan") or {}).get("months") or []}
+    try:
+        bw_nat = blowinds_national(fetch, bw_nat)
+    except Exception as e:
+        print(f"[WARN] 過去の記録: ブローウィンズの代表選出の取得に失敗。前回の分を使います {e!r}")
     if seasons or bw_matches:
         teams["BLOWINDS"] = {"source": "Bリーグ公式の日程・結果・クラブページ", "source_url": f"{BLEAGUE}/club_detail/?TeamID={BLOWINDS_TEAM_ID}",
-                             "matches": bw_matches, "seasons": seasons}
+                             "matches": bw_matches, "seasons": seasons, "players": bw_players,
+                             "national": bw_nat.get("items") or [], "national_scan": {"months": bw_nat.get("months") or []}}
     # 取れなかったチームは前回の分を残す(版を上げて作り直したときも消さない)
     for key, val in old_teams.items():
         if key not in teams and val:

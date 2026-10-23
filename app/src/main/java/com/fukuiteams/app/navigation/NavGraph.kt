@@ -74,7 +74,7 @@ fun AppNavHost(initialRoute: String? = null) {
         }
     }
 
-    // 下のメニューの画面(一面・試合・選手・トピック・掲示板・記録・メニュー)へ切り替える。戻るボタンで一面に戻る
+    // 下のメニューの画面(一面・試合・選手・記録・トピック・掲示板・メニュー)へ切り替える。戻るボタンで一面に戻る
     fun navigateTab(route: String) {
         if (route != currentRoute) {
             navController.navigate(route) {

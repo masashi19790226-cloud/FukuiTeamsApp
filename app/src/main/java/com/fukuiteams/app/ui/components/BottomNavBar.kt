@@ -54,10 +54,10 @@ val bottomNavItems = listOf(
     NavItem(Routes.HOME, "一面", Icons.Filled.Home),
     NavItem(Routes.GAME_DETAIL, "試合", Icons.Filled.Stadium),
     NavItem(Routes.PLAYERS, "選手", Icons.Filled.BarChart),
-    NavItem(Routes.RADAR, "トピック", Icons.Filled.Article),
-    NavItem(Routes.BBS, "掲示板", Icons.Filled.Forum),
     // 過去の記録(シーズンごとの成績・相手別の対戦成績・過去の試合・過去の選手)
     NavItem(Routes.ARCHIVE, "記録", Icons.Filled.History),
+    NavItem(Routes.RADAR, "トピック", Icons.Filled.Article),
+    NavItem(Routes.BBS, "掲示板", Icons.Filled.Forum),
     NavItem(Routes.NOTIFICATIONS, "メニュー", Icons.Filled.Menu)
 )
 

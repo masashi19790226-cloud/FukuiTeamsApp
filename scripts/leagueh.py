@@ -142,11 +142,14 @@ def game_players(page: str, slug: str = TEAM_SLUG):
             name = re.sub(r"\s+", " ", cells[2]).strip()
             if not name:
                 continue
+            # 選手ページへのリンク(<a href="/player/31002/">)の番号。過去の選手の写真・いまのチームを調べるのに使う
+            pid = re.search(r"/player/(\d+)", tds[2])
             v = [(_int(c) or 0) for c in cells[3:11]]
             out.append({
                 "name": name, "number": cells[1], "position": cells[0],
                 "goals": v[0] + v[4], "shots": v[1] + v[5],
                 "saves": v[2] + v[6], "save_total": v[3] + v[7],
+                "pid": pid.group(1) if pid else "",
             })
         return out
     return []

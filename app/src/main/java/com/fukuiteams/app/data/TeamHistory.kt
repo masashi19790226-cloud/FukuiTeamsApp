@@ -7,8 +7,8 @@ import com.fukuiteams.app.model.Team
  * 公式・公的な資料で確かめられたものだけを、出典のURLと一緒に手で入れている。
  * - 丸岡RUCK      : JFA 全日本女子フットサル選手権大会の歴代優勝チーム一覧・チーム紹介、Wikipedia
  * - ユナイテッド  : Wikipedia(福井ユナイテッドFC)
- * - ブローウィンズ: Wikipedia(福井ブローウィンズ)
- * - ブルーサンダー: Wikipedia(福井永平寺ブルーサンダー)
+ * - ブローウィンズ: Wikipedia(福井ブローウィンズ)、Bリーグ公式のクラブページ(シーズンごとの成績)
+ * - ブルーサンダー: Wikipedia(福井永平寺ブルーサンダー)、リーグH公式の星取表
  * 新しい実績を足すときは、出典を確かめてからここに書き足す。
  */
 data class HistoryItem(
@@ -29,6 +29,8 @@ private const val JFA_WF_TEAM_2026 = "https://www.jfa.jp/match/womens_futsal_202
 private const val WIKI_RUCK = "https://ja.wikipedia.org/wiki/%E7%A6%8F%E4%BA%95%E4%B8%B8%E5%B2%A1RUCK"
 private const val WIKI_UNITED = "https://ja.wikipedia.org/wiki/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89FC"
 private const val WIKI_BLOWINDS = "https://ja.wikipedia.org/wiki/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA"
+private const val BLEAGUE_CLUB_BLOWINDS = "https://www.bleague.jp/club_detail/?TeamID=2891"
+private const val LEAGUEH_MATRIX = "https://leagueh.jp/rankings/matrix/"
 private const val WIKI_THUNDER = "https://ja.wikipedia.org/wiki/%E7%A6%8F%E4%BA%95%E6%B0%B8%E5%B9%B3%E5%AF%BA%E3%83%96%E3%83%AB%E3%83%BC%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC"
 
 val TEAM_HISTORY: List<HistoryItem> = listOf(
@@ -54,9 +56,14 @@ val TEAM_HISTORY: List<HistoryItem> = listOf(
     // ---------- ブローウィンズ ----------
     HistoryItem(Team.BLOWINDS, 2022, "チーム名「福井ブローウィンズ」が決まる", "2022年11月25日にチーム名が「福井ブローウィンズ」に決まりました。運営会社の福井バスケットボール株式会社は同じ年の5月に設立されています。", "Wikipedia", WIKI_BLOWINDS),
     HistoryItem(Team.BLOWINDS, 2023, "Bリーグ(B3)への入会が決まる", "2023年4月の最終審査に通り、4月20日にB3リーグへの入会が決まりました。初代ヘッドコーチは伊佐勉さんです。", "Wikipedia", WIKI_BLOWINDS),
+    HistoryItem(Team.BLOWINDS, 2023, "B3初年度はレギュラーシーズン46勝4敗", "Bリーグ1年目の2023-24シーズンは、B3レギュラーシーズンを46勝4敗で終え、B3プレーオフも6戦全勝。次のシーズンからB2で戦いました。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS),
+    HistoryItem(Team.BLOWINDS, 2024, "B2初年度は32勝28敗でプレーオフへ", "2024-25シーズンはB2で32勝28敗。B2プレーオフに進みました(0勝2敗)。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS),
+    HistoryItem(Team.BLOWINDS, 2025, "B2で35勝、2年続けてプレーオフへ", "2025-26シーズンはB2で35勝25敗。2年続けてB2プレーオフに進み、1勝しました(1勝2敗)。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS),
+    HistoryItem(Team.BLOWINDS, 2026, "新しいリーグ「B.ONE」で戦う", "Bリーグの新しい仕組みが始まった2026-27シーズンは、B.ONEで戦っています。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS),
 
     // ---------- ブルーサンダー ----------
     HistoryItem(Team.THUNDER, 1992, "前身の北陸電力ブルーサンダーがリーグに参戦", "前身の北陸電力ブルーサンダーは1992年からリーグで戦いました。チームのスローガン「不撓不屈」は今のチームにも受け継がれています。", "Wikipedia", WIKI_THUNDER),
     HistoryItem(Team.THUNDER, 2022, "新しいプロリーグへの参入が決まる", "2022年10月21日、2024年に始まる新しいプロリーグ(今のリーグH)への参入が決まりました。", "Wikipedia", WIKI_THUNDER),
+    HistoryItem(Team.THUNDER, 2024, "リーグHの初年度を戦う", "2024年9月に始まった新しいリーグ「リーグH」の最初のシーズン(2024-25)に参加しました。", "リーグH公式 星取表", LEAGUEH_MATRIX),
     HistoryItem(Team.THUNDER, 2023, "福井永平寺ブルーサンダーが発足", "2023年4月25日に福井市で発足式を行い、地元の企業約50社の支えで新しいチームが動き出しました。前身の北陸電力ブルーサンダーは同じ年の3月に活動を終えています。", "Wikipedia", WIKI_THUNDER)
 )

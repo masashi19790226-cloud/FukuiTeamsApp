@@ -639,13 +639,21 @@ private fun pastMatchStory(team: Team, today: LocalDate): List<FeatureStory> {
 
 /** 「歴代の選手」:これまでにプレーした選手(元選手を優先)を日替わりで1人。出場・得点の記録から */
 private fun legendStory(team: Team, today: LocalDate): List<FeatureStory> {
-    val players = HistoryRepository.data[team]?.players.orEmpty().filter { it.apps >= 10 || it.goals >= 5 }
+    // バスケットボール(ブローウィンズ)は得点が多いので、10試合以上出た選手だけ
+    val players = HistoryRepository.data[team]?.players.orEmpty()
+        .filter { it.apps >= 10 || (team != Team.BLOWINDS && it.goals >= 5) }
     if (players.isEmpty()) return emptyList()
     val former = players.filter { it.now == false }
     val pool = former.ifEmpty { players }
     val p = pool[Math.floorMod(today.toEpochDay().toInt() * 13 + team.ordinal, pool.size)]
     val head = (if (p.number.isNotBlank()) "#${p.number} " else "") + p.name
-    val record = if (team == Team.UNITED) "${p.apps}試合(先発${p.starts})に出場し${p.goals}得点" else "${p.apps}試合で${p.goals}得点"
+    val record = if (team == Team.UNITED || team == Team.BLOWINDS) "${p.apps}試合(先発${p.starts})に出場し${p.goals}得点" else "${p.apps}試合で${p.goals}得点"
+    // 写真:いまのチームの選手の写真 → 過去の記録の写真(ブローウィンズ)。名前を添える
+    val key = p.name.replace(Regex("[\\s　]"), "")
+    val photo = TeamPhotos.findByName(TeamPhotos.forTeam(team), p.name)?.url
+        ?: p.photo.takeIf { it.isNotBlank() }
+        // 丸岡RUCKの元選手は「あの選手は今」の写真
+        ?: Alumni.players.firstOrNull { it.team == team && it.photo.isNotBlank() && it.name.replace(Regex("[\\s　]"), "") == key }?.photo
     val status = when (p.now) {
         true -> "いまもチームでプレーしています。"
         false -> "いまの選手名簿にはいない元選手です。"
@@ -653,6 +661,8 @@ private fun legendStory(team: Team, today: LocalDate): List<FeatureStory> {
     }
     return listOf(
         FeatureStory(
+            photo = photo.orEmpty(),
+            photoCaption = photo?.let { p.name },
             kicker = "歴代の選手",
             team = team,
             headline = "$head、${p.seasonsLabel}で${p.goals}得点",
@@ -671,13 +681,13 @@ private fun nationalStory(team: Team, today: LocalDate): List<FeatureStory> {
     val n = list[Math.floorMod(today.toEpochDay().toInt() * 5 + team.ordinal, list.size)]
     val year = n.date.take(4)
     val names = n.players.joinToString("・")
-    // 写真:お知らせの写真 → 元選手の写真 → いまの選手の写真(名前で探す)。名前を添える
-    val photo = n.players.firstNotNullOfOrNull { name -> nationalPhoto(team, n, name)?.let { it to name } }
+    // 写真:記事の中の画像を最優先(本文の選手の写真 → お知らせの一番上の画像)。無いときだけ元選手・いまの選手の写真。名前を添える
+    val photo = nationalPhotos(team, n).first.firstOrNull()?.let { it.url to it.label }
     return listOf(
         FeatureStory(
             photo = photo?.first.orEmpty(),
             photoCaption = photo?.second,
-            kicker = "日本代表の歩み",
+            kicker = if (n.kind.contains("日本")) "日本代表の歩み" else "代表選出の歩み",
             team = team,
             headline = "${year}年、${names}が${n.kind}に",
             body = "${n.date.replace("-", "/")}、${team.shortName}から${names}が${n.kind}に選ばれました(${n.title})。" +
@@ -690,19 +700,31 @@ private fun nationalStory(team: Team, today: LocalDate): List<FeatureStory> {
 }
 
 /**
- * 日本代表に選ばれた選手の写真。無ければ null。
- * そのお知らせの写真 → 元選手の写真(あの選手は今) → いまの選手の写真 → ほかの代表選出のお知らせの写真(新しいお知らせから)の順に探す
- * (お知らせに写真が無いことも多いので、同じ選手のほかの写真で補う。元選手の写真があればそれを優先する)
+ * 日本代表に選ばれた選手の写真(1人分)。無ければ null。
+ * そのお知らせの写真を最優先し、無いときだけ 元選手の写真(あの選手は今) → いまの選手の写真 で補う。
+ * ほかの代表選出のお知らせの写真は、同じ写真の使い回しになるので使わない
  */
 fun nationalPhoto(team: Team, n: NationalSelection, name: String): String? {
     n.photos[name]?.takeIf { it.isNotBlank() }?.let { return it }
     val key = name.replace(Regex("[\\s　]"), "")
     Alumni.players.firstOrNull { it.team == team && it.name.replace(Regex("[\\s　]"), "") == key && it.photo.isNotBlank() }
         ?.let { return it.photo }
-    TeamPhotos.findByName(TeamPhotos.forTeam(team), name)?.url?.takeIf { it.isNotBlank() }?.let { return it }
-    return HistoryRepository.data[team]?.national.orEmpty()
-        .sortedByDescending { it.date }
-        .firstNotNullOfOrNull { other -> other.photos[name]?.takeIf { it.isNotBlank() } }
+    return TeamPhotos.findByName(TeamPhotos.forTeam(team), name)?.url?.takeIf { it.isNotBlank() }
+}
+
+/**
+ * 代表選出のお知らせ1件に出す写真(名前付き)。記事の中の画像を最優先する:
+ * 1. 本文に選ばれた選手全員の写真があれば、1人ずつ
+ * 2. 無ければ、お知らせの一番上の画像(アイキャッチ。選手の写真が並んだ画像)を1枚、選手全員の名前を付けて
+ * 3. それも無いときだけ、1人ずつ 元選手の写真 → いまの選手の写真 で補う
+ * 返り値の articleImage は、2 のとき true(横長の画像なので、出す側で大きさを変える)
+ */
+fun nationalPhotos(team: Team, n: NationalSelection): Pair<List<PhotoRef>, Boolean> {
+    if (n.players.isNotEmpty() && n.players.all { !n.photos[it].isNullOrBlank() }) {
+        return n.players.map { PhotoRef(n.photos.getValue(it), it) } to false
+    }
+    if (n.image.isNotBlank()) return listOf(PhotoRef(n.image, n.players.joinToString("・"))) to true
+    return n.players.mapNotNull { name -> nationalPhoto(team, n, name)?.let { PhotoRef(it, name) } } to false
 }
 
 // ---------- ニュース・招待 ----------
