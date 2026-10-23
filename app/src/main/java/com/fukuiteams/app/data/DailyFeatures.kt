@@ -603,7 +603,8 @@ private fun pastMatchStory(team: Team, today: LocalDate): List<FeatureStory> {
         return kotlin.math.abs(java.time.temporal.ChronoUnit.DAYS.between(a, today).toInt())
     }
     val near = past.filter { gap(it) in 1..7 }
-    val bigWins = past.filter { it.myScore - it.opponentScore >= 3 }
+    // 大勝:バスケットボール(ブローウィンズ)は15点差以上、ほかは3点差以上
+    val bigWins = past.filter { it.myScore - it.opponentScore >= (if (team == Team.BLOWINDS) 15 else 3) }
     val pool = near.ifEmpty { bigWins }.ifEmpty { past.filter { it.outcome == GameOutcome.WIN } }
     if (pool.isEmpty()) return emptyList()
     val m = pool[Math.floorMod(seed, pool.size)]
@@ -688,13 +689,20 @@ private fun nationalStory(team: Team, today: LocalDate): List<FeatureStory> {
     )
 }
 
-/** 日本代表に選ばれた選手の写真(お知らせの写真 → 元選手の写真 → いまの選手の写真)。無ければ null */
+/**
+ * 日本代表に選ばれた選手の写真。無ければ null。
+ * そのお知らせの写真 → 元選手の写真(あの選手は今) → いまの選手の写真 → ほかの代表選出のお知らせの写真(新しいお知らせから)の順に探す
+ * (お知らせに写真が無いことも多いので、同じ選手のほかの写真で補う。元選手の写真があればそれを優先する)
+ */
 fun nationalPhoto(team: Team, n: NationalSelection, name: String): String? {
     n.photos[name]?.takeIf { it.isNotBlank() }?.let { return it }
     val key = name.replace(Regex("[\\s　]"), "")
     Alumni.players.firstOrNull { it.team == team && it.name.replace(Regex("[\\s　]"), "") == key && it.photo.isNotBlank() }
         ?.let { return it.photo }
-    return TeamPhotos.findByName(TeamPhotos.forTeam(team), name)?.url
+    TeamPhotos.findByName(TeamPhotos.forTeam(team), name)?.url?.takeIf { it.isNotBlank() }?.let { return it }
+    return HistoryRepository.data[team]?.national.orEmpty()
+        .sortedByDescending { it.date }
+        .firstNotNullOfOrNull { other -> other.photos[name]?.takeIf { it.isNotBlank() } }
 }
 
 // ---------- ニュース・招待 ----------

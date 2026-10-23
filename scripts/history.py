@@ -15,6 +15,7 @@ build_previews.py から1日1回だけ呼び、data/history.json に書き出す
 読めなかったチームは前回の分を残す。
 """
 
+import json
 import re
 from datetime import datetime, timedelta, timezone
 
@@ -26,7 +27,7 @@ import standings
 JST = timezone(timedelta(hours=9))
 
 # データの形の版。変えたときに上げると、その日のうちに作り直す
-VERSION = 4
+VERSION = 5
 
 UNITED_SITE = "https://fukuiunited.co.jp"
 UNITED_ASYNC = UNITED_SITE + "/system/async/async.php"
@@ -436,6 +437,8 @@ def national_selections(fetch, max_pages=10):
                 for n in rx.findall(text):
                     if not NAME_BAD.search(n) and n not in names:
                         names.append(n)
+            if not names:
+                continue  # 選手の名前が無いお知らせ(代表チームとの試合の結果など)は選出ではないので入れない
             try:
                 date = parsedate_to_datetime(it.findtext("pubDate") or "").astimezone(JST).strftime("%Y-%m-%d")
             except (TypeError, ValueError):
@@ -495,6 +498,101 @@ def blowinds_seasons(fetch):
     raise ValueError("クラブページにシーズンごとの成績の表が見つかりません")
 
 
+# Bリーグ公式の日程・結果のページ(シーズン → [(リーグのタブ, 大会の番号, アプリに出す大会名)])。
+# タブは 1=B1(B.PREMIER) 2=B2(2026-27からB.ONE) 3=B3(2026-27からB.NEXT)。大会の番号はページの「大会」の選択肢の値
+BLOWINDS_SCHEDULE = [
+    ("2026-27", "2026", [("2", "7", "B.ONE リーグ戦")]),
+    ("2025-26", "2025", [("2", "7", "B2 リーグ戦"), ("2", "8", "B2 プレーオフ")]),
+    ("2024-25", "2024", [("2", "7", "B2 リーグ戦"), ("2", "8", "B2 プレーオフ")]),
+    ("2023-24", "2023", [("3", "15", "B3 リーグ戦"), ("3", "32", "B3 プレーオフ")]),
+]
+BL_ITEM = re.compile(r'<span class="title">([^<]*)</span>|<li class="list-item" id="(\d+)"[^>]*>(.*?)</li>', re.S)
+
+
+def bleague_schedule_items(html: str):
+    """日程・結果のページ(または追加読み込みのJSONの部品)から、試合ごとの (日付, 試合の番号, 中身のHTML)。
+    日付は「2024.10.05(土)」の見出しで、そのあとの試合に付く。
+    プレーオフは見出しが大会名(「りそなグループ B2 PLAYOFFS 2024-25」)で日付が無いので ""(試合の中の「05/04 (日)」を使う)"""
+    date = ""
+    for m in BL_ITEM.finditer(html):
+        if m.group(2) is None:
+            d = re.search(r"(\d{4})\.(\d{2})\.(\d{2})", m.group(1))
+            date = f"{d.group(1)}-{d.group(2)}-{d.group(3)}" if d else ""
+        else:
+            yield date, m.group(2), m.group(3)
+
+
+def bleague_game(date: str, key: str, item: str, start_year: int, my_name: str = "福井"):
+    """試合1つ分のHTMLから、アプリの過去の試合の形。終わっていない試合・福井の試合でないもの・日付が分からないものは None。
+    start_year: シーズンが始まった年(試合の中の「05/04」の年を決めるのに使う。7月より前なら次の年)"""
+    if "FINAL" not in item:
+        return None
+    names = [_wfl_text(x) for x in re.findall(r'<span class="team-name">(.*?)</span>', item, flags=re.S)]
+    home = re.search(r'home-score[^"]*"[^>]*>\s*<span>\s*(\d+)', item)
+    away = re.search(r'away-score[^"]*"[^>]*>\s*<span>\s*(\d+)', item)
+    if len(names) < 2 or not home or not away or my_name not in names[:2]:
+        return None
+    is_home = names[0] == my_name
+    info = re.findall(r'<div class="info-arena">(.*?)</div>', item, flags=re.S)
+    spans = [_wfl_text(x) for x in re.findall(r"<span[^>]*>(.*?)</span>", info[0], flags=re.S)] if info else []
+    rnd = next((x for x in spans if re.fullmatch(r"第\d+節|.*(QF|SF|FINAL|ファイナル|セミ|クォーター).*", x)), "")
+    venue = next((x for x in spans if "|" in x), "")
+    venue = venue.split("|")[-1].strip() if venue else ""
+    tm = next((x for x in spans if re.fullmatch(r"\d{1,2}:\d{2}", x)), "")
+    md = next((re.match(r"(\d{1,2})/(\d{1,2})", x) for x in spans if re.match(r"\d{1,2}/\d{1,2}\b", x)), None)
+    if md:
+        mon, day = int(md.group(1)), int(md.group(2))
+        date = f"{start_year if mon >= 7 else start_year + 1}-{mon:02d}-{day:02d}"
+    if not date:
+        return None
+    hs, as_ = int(home.group(1)), int(away.group(1))
+    return {"date": date, "time": tm, "opp": names[1] if is_home else names[0], "venue": venue,
+            "ha": "H" if is_home else "A", "my": hs if is_home else as_, "their": as_ if is_home else hs, "pk": "",
+            "visitors": None, "scorers": [], "round": rnd,
+            "url": f"{BLEAGUE}/game_detail/?ScheduleKey={key}&tab=2"}
+
+
+def blowinds_matches(fetch, prev_matches=None):
+    """Bリーグ公式の日程・結果のページから、ブローウィンズの過去の試合(古い順)。
+    1ページ20試合で、続きは同じページに data_format=json&index=20, 40… を付けて読む(ページの「もっと見る」と同じ)。
+    終わったシーズンは前回の分があればそれを使い、今のシーズン(一番上)だけ毎回読み直す"""
+    prev_by_season = {}
+    for m in prev_matches or []:
+        prev_by_season.setdefault(m.get("season"), []).append(m)
+    out = []
+    for i, (season, year, events) in enumerate(BLOWINDS_SCHEDULE):
+        if i > 0 and prev_by_season.get(season):
+            out += prev_by_season[season]
+            continue
+        got = {}
+        # プレーオフを先に読む(リーグ戦の一覧にもプレーオフの試合が混ざるので、先に読んだ大会名を使う)
+        for tab, event, comp in reversed(events):
+            q = f"year={year}&mon=all&day=&event={event}&club={BLOWINDS_TEAM_ID}&tab={tab}&ha=&fb="
+            pages = [fetch(f"{BLEAGUE}/schedule/?{q}")]
+            index = "20"
+            for _ in range(15):  # 1シーズン最大300試合分まで
+                try:
+                    j = json.loads(fetch(f"{BLEAGUE}/schedule/?data_format=json&{q}&index={index}"))
+                except Exception:
+                    break
+                pages.append("".join(j.get("topics") or []))
+                index = j.get("index")
+                if not index:
+                    break
+            for page in pages:
+                for date, key, item in bleague_schedule_items(page):
+                    g = bleague_game(date, key, item, int(year))
+                    if g and key not in got:
+                        g["season"] = season
+                        g["comp"] = comp
+                        g["title"] = f"{comp} {season}" + (f" {g['round']}" if g["round"] else "")
+                        got[key] = g
+        print(f"[過去の記録] ブローウィンズ {season}: {len(got)}試合")
+        out += list(got.values())
+    out.sort(key=lambda m: (m["date"], m.get("time") or ""))
+    return out
+
+
 def build(fetch, post_json, old, current=None):
     """過去の記録のデータを作る。old は前回の分(無ければ {})。今日すでに作り終えていれば None(書き直さない)。
     current: チーム → 今の選手の名前のリスト(元選手かどうかの見分けに使う。standings.json の誕生日のデータから)"""
@@ -538,15 +636,24 @@ def build(fetch, post_json, old, current=None):
             teams["RAC"]["national"] = nat
     except Exception as e:
         print(f"[WARN] 過去の記録: 丸岡RUCKの取得に失敗。前回の分を使います {e!r}")
+    old_bw = old_teams.get("BLOWINDS") or {}
+    seasons = old_bw.get("seasons") or []
     try:
-        seasons = blowinds_seasons(fetch)
-        if seasons:
-            prev = teams.get("BLOWINDS") or {}
-            teams["BLOWINDS"] = {**prev, "source": "Bリーグ公式のクラブページ", "source_url": f"{BLEAGUE}/club_detail/?TeamID={BLOWINDS_TEAM_ID}",
-                                 "matches": prev.get("matches") or [], "seasons": seasons}
+        seasons = blowinds_seasons(fetch) or seasons
     except Exception as e:
         print(f"[WARN] 過去の記録: ブローウィンズのシーズンごとの成績の取得に失敗。前回の分を使います {e!r}")
-        if "BLOWINDS" not in teams and (old_teams.get("BLOWINDS") or {}).get("seasons"):
-            teams["BLOWINDS"] = old_teams["BLOWINDS"]
+    bw_matches = old_bw.get("matches") or []
+    try:
+        bw_matches = blowinds_matches(fetch, bw_matches) or bw_matches
+    except Exception as e:
+        print(f"[WARN] 過去の記録: ブローウィンズの過去の試合の取得に失敗。前回の分を使います {e!r}")
+    if seasons or bw_matches:
+        teams["BLOWINDS"] = {"source": "Bリーグ公式の日程・結果・クラブページ", "source_url": f"{BLEAGUE}/club_detail/?TeamID={BLOWINDS_TEAM_ID}",
+                             "matches": bw_matches, "seasons": seasons}
+    # 取れなかったチームは前回の分を残す(版を上げて作り直したときも消さない)
+    for key, val in old_teams.items():
+        if key not in teams and val:
+            print(f"[過去の記録] {key}: 今回は取れなかったので前回の分を使います")
+            teams[key] = val
     return {"date": today, "v": VERSION, "pending": pending,
             "updated_at": datetime.now(timezone.utc).isoformat(), "teams": teams}

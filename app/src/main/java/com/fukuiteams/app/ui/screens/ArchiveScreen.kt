@@ -230,7 +230,10 @@ fun ArchiveScreen(
                 }
                 when (tab) {
                     ArchiveTab.SEASONS -> {
-                        items(seasons, key = { "s-" + it.season }) { s -> SeasonCard(team, s) }
+                        items(seasons, key = { "s-" + it.season }) { s ->
+                            // ブローウィンズは、Bリーグ公式のシーズンごとの成績(平均得点・平均失点)も一緒に出す
+                            SeasonCard(team, s, officialSeasons.filter { it.season == s.season })
+                        }
                     }
                     ArchiveTab.OPPONENTS -> {
                         item {
@@ -419,7 +422,7 @@ private fun seasonLabel(season: String): String = "${season}シーズン"
 private fun NoHistoryNote(team: Team, loaded: Boolean) {
     val text = when {
         !loaded -> "読み込んでいます…"
-        team == Team.BLOWINDS -> "ブローウィンズの過去の記録を読み込めませんでした(データの自動更新を待っている場合もあります)。"
+        team == Team.BLOWINDS -> "ブローウィンズの過去の記録を読み込めませんでした。画面を下に引っ張って読み直すか、データの自動更新を待ってください。"
         else -> "過去の試合の記録を読み込めませんでした。通信環境を確かめて、あとで開き直してください(データの自動更新を待っている場合もあります)。"
     }
     Text(
@@ -467,7 +470,7 @@ private fun OfficialSeasonCard(team: Team, season: String, rows: List<com.fukuit
 
 /** 1シーズン分の成績 */
 @Composable
-private fun SeasonCard(team: Team, s: SeasonSummary) {
+private fun SeasonCard(team: Team, s: SeasonSummary, official: List<com.fukuiteams.app.data.OfficialSeason> = emptyList()) {
     // そのシーズンにあった出来事(過去の実績)。ユナイテッドのシーズンは年、ブルーサンダー・丸岡RUCKは始まった年で合わせる
     val startYear = s.season.take(4).toIntOrNull()
     val events = TEAM_HISTORY.filter { it.team == team && it.year == startYear }
@@ -505,6 +508,15 @@ private fun SeasonCard(team: Team, s: SeasonSummary) {
         }
         s.averageHomeVisitors?.let {
             Text("ホームの観客数の平均  ${"%,d".format(it)}人", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        }
+        // 公式の成績(ブローウィンズ。Bリーグ公式のクラブページの表)
+        official.forEach { r ->
+            Text(
+                "公式記録 ${r.comp}  ${r.win}勝${r.lose}敗" +
+                    (if (r.ppg.isNotBlank() && r.oppg.isNotBlank()) "・平均得点 ${r.ppg}・平均失点 ${r.oppg}" else ""),
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
         }
         events.forEach { e ->
             Text("★ ${e.title}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = NewsRed)

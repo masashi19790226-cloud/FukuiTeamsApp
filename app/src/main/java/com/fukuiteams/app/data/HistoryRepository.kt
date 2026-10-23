@@ -329,6 +329,8 @@ private fun isLeague(team: Team, m: HistoryMatch): Boolean = when (team) {
     Team.UNITED -> m.competition.contains("北信越フットボールリーグ")
     Team.THUNDER -> m.competition == "リーグH"
     Team.RAC -> m.competition == "女子Fリーグ"
+    // ブローウィンズは「B2 リーグ戦」「B.ONE リーグ戦」など(プレーオフは除く)
+    Team.BLOWINDS -> m.competition.endsWith("リーグ戦")
     else -> false
 }
 
