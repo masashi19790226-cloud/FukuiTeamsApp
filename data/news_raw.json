@@ -4601,5 +4601,47 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/ko___kona/status/2113421614830473295&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3ojl8BG8LinjkE6Y7fTTUB",
     "published": "2026-10-23T11:43:18Z",
     "detected_at": "2026-10-23T15:20:33.077725+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17257886385635769087",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 على X: \"                           #ガラクタチャンネル 今シーズン ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2113567405192441919%3Flang%3Dar-x-fm&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw0VfVg40oqlZopkFi74bIUI",
+    "published": "2026-10-23T12:03:11Z",
+    "detected_at": "2026-10-23T18:45:10.571024+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9497157639581358019",
+    "team": "BLOWINDS",
+    "title": "\"BLUE RUCK PROJECT   12月20日のホームゲームはバスケットチームの福井ブローウィンズ ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/ko___kona/status/2113421614830473295&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3ojl8BG8LinjkE6Y7fTTUB",
+    "published": "2026-10-23T11:43:18Z",
+    "detected_at": "2026-10-23T18:45:10.571052+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5484268849662142238",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                           #ガラクタチャンネル 今シーズン変則 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/ruck_pr/status/2113567405192441919&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3cyzdHkYaPe1fzptmdxvkI",
+    "published": "2026-10-23T11:23:57Z",
+    "detected_at": "2026-10-23T18:45:10.571066+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14149985686648236238",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 - X",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2113586230042787939&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2Sb_sh267CFDl87Us2NGsg",
+    "published": "2026-10-23T16:06:16Z",
+    "detected_at": "2026-10-23T18:45:10.835115+00:00"
+  },
+  {
+    "id": "bing:https://basketballking.jp/news/japan/20260924/634260.html",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズが内藤英真とのプロ契約を発表…練習生 ...",
+    "link": "https://basketballking.jp/news/japan/20260924/634260.html",
+    "published": "2026-09-24T00:57:00+00:00",
+    "source": "バスケットボールキング",
+    "image": "",
+    "detected_at": "2026-10-23T18:45:11.597613+00:00"
   }
 ]
