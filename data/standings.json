@@ -1266,17 +1266,17 @@
       ],
       "photo_report": {
         "福井丸岡ラック": "ok",
-        "エスポラーダ北海道イルネーヴェ": "8人(前回の分)・得点表に8人",
-        "バルドラール浦安ラス・ボニータス": "10人(前回の分)・得点表に10人",
-        "立川アスレティックFCレディース": "10人(前回の分)・得点表に10人",
-        "SWHレディース西宮": "13人(前回の分)・得点表に13人",
-        "アルコ神戸": "12人(前回の分)・得点表に12人",
-        "ミネルバ宇部": "5人(前回の分)・得点表に5人",
-        "フウガドールすみだレディース": "18人(前回の分)・得点表に10人"
+        "エスポラーダ北海道イルネーヴェ": "8人・得点表に8人",
+        "バルドラール浦安ラス・ボニータス": "10人・得点表に10人",
+        "立川アスレティックFCレディース": "10人・得点表に10人",
+        "SWHレディース西宮": "13人・得点表に13人",
+        "アルコ神戸": "12人・得点表に12人",
+        "ミネルバ宇部": "5人・得点表に5人",
+        "フウガドールすみだレディース": "18人・得点表に10人"
       },
       "club_photo_cache": {
         "エスポラーダ北海道イルネーヴェ": {
-          "date": "2026-10-23",
+          "date": "2026-10-24",
           "photos": {
             "伊藤沙莉": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/d942d9d60f6954af06f23785cd842a48.jpg",
             "大西恋花": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/84dac01f4466b8da3fd82359eefb2263-1.jpg",
@@ -1289,7 +1289,7 @@
           }
         },
         "バルドラール浦安ラス・ボニータス": {
-          "date": "2026-10-23",
+          "date": "2026-10-24",
           "photos": {
             "塚本夏希": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/TSUKAMOTO_Natsuki.jpg",
             "中村美月": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/NAKAMURA_Mizuki.jpg",
@@ -1304,7 +1304,7 @@
           }
         },
         "立川アスレティックFCレディース": {
-          "date": "2026-10-23",
+          "date": "2026-10-24",
           "photos": {
             "平井成美": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg",
             "尾田緩奈": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
@@ -1319,7 +1319,7 @@
           }
         },
         "SWHレディース西宮": {
-          "date": "2026-10-23",
+          "date": "2026-10-24",
           "photos": {
             "尾川奈穂": "https://www.swh2003.com/img/202627-14.jpg",
             "江川涼": "https://www.swh2003.com/img/202627-9.jpg",
@@ -1337,7 +1337,7 @@
           }
         },
         "アルコ神戸": {
-          "date": "2026-10-23",
+          "date": "2026-10-24",
           "photos": {
             "鈴木心菜": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02914-768x512.jpg",
             "高橋京花": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02934-2-768x512.jpg",
@@ -1354,7 +1354,7 @@
           }
         },
         "ミネルバ宇部": {
-          "date": "2026-10-23",
+          "date": "2026-10-24",
           "photos": {
             "浜田莉那": "https://www.minerva-ube.jp/image/2026_minervaube_20.png",
             "田中夢": "https://www.minerva-ube.jp/image/2026_minervaube_19.png",
@@ -1364,7 +1364,7 @@
           }
         },
         "フウガドールすみだレディース": {
-          "date": "2026-10-23",
+          "date": "2026-10-24",
           "photos": {
             "蔀萌香": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1340x2010_v-frms_webp_f83c1416-bd26-4caa-87cb-cc5c6d1fd86f.jpg",
             "庄子彩": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_9482903a-6bac-46fc-a156-a4421cceb0ef.jpg",
@@ -1388,7 +1388,7 @@
         }
       }
     },
-    "updated_at": "2026-10-23T14:31:28.542215+00:00"
+    "updated_at": "2026-10-23T15:33:59.606856+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3130,13 +3130,13 @@
         }
       ]
     },
-    "updated_at": "2026-10-23T14:31:28.542215+00:00"
+    "updated_at": "2026-10-23T15:33:59.606856+00:00"
   },
   "BIRTHDAYS": {
-    "date": "2026-10-23",
+    "date": "2026-10-24",
     "v": 7,
     "manual": "d8535a448782",
-    "updated_at": "2026-10-22T17:47:56.669382+00:00",
+    "updated_at": "2026-10-23T15:33:59.606856+00:00",
     "players": [
       {
         "team": "UNITED",
@@ -4400,36 +4400,6 @@
       }
     ],
     "cache": {
-      "blowinds:8571": {
-        "team": "BLOWINDS",
-        "name": "田渡 修人",
-        "reading": "Shuto Tawatari",
-        "number": "73",
-        "photo": "https://www.fukuiblowinds.com/v=1790296882/files/user/common/73_Tawatari_2026-27_HP.jpg",
-        "birthday": "1990-01-06",
-        "height": "185",
-        "weight": "79",
-        "hometown": "東京都",
-        "school": "筑波大学",
-        "position": "",
-        "high_school": "京北高等学校(現・東洋大学京北高等学校)",
-        "_key": "blowinds:8571"
-      },
-      "blowinds:51000115": {
-        "team": "BLOWINDS",
-        "name": "川島 聖那",
-        "reading": "Sena Kawashima",
-        "number": "13",
-        "photo": "https://www.fukuiblowinds.com/v=1790296532/files/user/common/13_Kawashima_2026-27_HP.jpg",
-        "birthday": "2000-03-14",
-        "height": "187",
-        "weight": "85",
-        "hometown": "福岡県",
-        "school": "法政大学",
-        "position": "",
-        "high_school": "福岡大学付属大濠高等学校",
-        "_key": "blowinds:51000115"
-      },
       "blowinds:8736": {
         "team": "BLOWINDS",
         "name": "藤永 佳昭",
@@ -4443,22 +4413,7 @@
         "school": "東海大学",
         "position": "",
         "high_school": "北陸高等学校",
-        "_key": "blowinds:8736"
-      },
-      "blowinds:10844": {
-        "team": "BLOWINDS",
-        "name": "満田 丈太郎",
-        "reading": "Jotaro Mitsuda",
-        "number": "21",
-        "photo": "https://www.fukuiblowinds.com/v=1790296812/files/user/common/21_Mitsuda_2026-27_HP.jpg",
-        "birthday": "1994-04-18",
-        "height": "188",
-        "weight": "78",
-        "hometown": "神奈川県",
-        "school": "筑波大学",
-        "position": "",
-        "high_school": "北陸高等学校",
-        "_key": "blowinds:10844"
+        "checked": "2026-10-24"
       },
       "blowinds:51000439": {
         "team": "BLOWINDS",
@@ -4473,7 +4428,7 @@
         "school": "大東文化大学",
         "position": "",
         "high_school": "北陸学院高等学校",
-        "_key": "blowinds:51000439"
+        "checked": "2026-10-24"
       },
       "blowinds:8839": {
         "team": "BLOWINDS",
@@ -4488,7 +4443,7 @@
         "school": "",
         "position": "",
         "high_school": "",
-        "_key": "blowinds:8839"
+        "checked": "2026-10-24"
       },
       "blowinds:51000579": {
         "team": "BLOWINDS",
@@ -4503,82 +4458,7 @@
         "school": "京都産業大学",
         "position": "",
         "high_school": "明徳義塾高等学校",
-        "_key": "blowinds:51000579"
-      },
-      "blowinds:51000668": {
-        "team": "BLOWINDS",
-        "name": "デヴィン・ウィリアムズ",
-        "reading": "Devin Williams",
-        "number": "41",
-        "photo": "https://www.fukuiblowinds.com/v=1790296847/files/user/common/41_WilliamsTawatari_2026-27_HP.jpg",
-        "birthday": "1994-05-31",
-        "height": "206",
-        "weight": "116",
-        "hometown": "アメリカ合衆国",
-        "school": "ウェストバージニア大学",
-        "position": "",
-        "high_school": "Withrow high school",
-        "_key": "blowinds:51000668"
-      },
-      "blowinds:40142": {
-        "team": "BLOWINDS",
-        "name": "高橋 育実",
-        "reading": "Ikumi Takahashi",
-        "number": "93",
-        "photo": "https://www.fukuiblowinds.com/v=1790296914/files/user/common/93_Takahashi_2026-27_HP.jpg",
-        "birthday": "1998-06-10",
-        "height": "186",
-        "weight": "84",
-        "hometown": "大阪府",
-        "school": "天理大学",
-        "position": "",
-        "high_school": "桜宮高等学校",
-        "_key": "blowinds:40142"
-      },
-      "blowinds:30468": {
-        "team": "BLOWINDS",
-        "name": "西野 曜",
-        "reading": "Yo Nishino",
-        "number": "12",
-        "photo": "https://www.fukuiblowinds.com/v=1790296426/files/user/common/12_Nishino_2026-27_HP.jpg",
-        "birthday": "1998-07-27",
-        "height": "199",
-        "weight": "94",
-        "hometown": "大阪府",
-        "school": "専修大学",
-        "position": "",
-        "high_school": "近畿大学附属高等学校",
-        "_key": "blowinds:30468"
-      },
-      "blowinds:5100000040": {
-        "team": "BLOWINDS",
-        "name": "常田 耕平",
-        "reading": "Kohei Tsuneta",
-        "number": "17",
-        "photo": "https://www.fukuiblowinds.com/v=1790296771/files/user/common/17_Tsuneta_2026-27_HP.jpg",
-        "birthday": "1999-11-06",
-        "height": "186",
-        "weight": "85",
-        "hometown": "愛知県",
-        "school": "明治大学",
-        "position": "",
-        "high_school": "正智深谷高等学校",
-        "_key": "blowinds:5100000040"
-      },
-      "blowinds:51000494": {
-        "team": "BLOWINDS",
-        "name": "ドゥシャン・リスティッチ",
-        "reading": "",
-        "number": "14",
-        "photo": "https://www.fukuiblowinds.com/v=1790296621/files/user/common/14_Dusan_2026-27_HP.jpg",
-        "birthday": "1995-11-27",
-        "height": "212",
-        "weight": "114",
-        "hometown": "セルビア",
-        "school": "アリゾナ大学",
-        "position": "",
-        "high_school": "Sunrise Christian Academy",
-        "_key": "blowinds:51000494"
+        "checked": "2026-10-24"
       },
       "blowinds:51000471": {
         "team": "BLOWINDS",
@@ -4593,7 +4473,52 @@
         "school": "IMGアカデミー",
         "position": "",
         "high_school": "",
-        "_key": "blowinds:51000471"
+        "checked": "2026-10-24"
+      },
+      "blowinds:30468": {
+        "team": "BLOWINDS",
+        "name": "西野 曜",
+        "reading": "Yo Nishino",
+        "number": "12",
+        "photo": "https://www.fukuiblowinds.com/v=1790296426/files/user/common/12_Nishino_2026-27_HP.jpg",
+        "birthday": "1998-07-27",
+        "height": "199",
+        "weight": "94",
+        "hometown": "大阪府",
+        "school": "専修大学",
+        "position": "",
+        "high_school": "近畿大学附属高等学校",
+        "checked": "2026-10-24"
+      },
+      "blowinds:51000115": {
+        "team": "BLOWINDS",
+        "name": "川島 聖那",
+        "reading": "Sena Kawashima",
+        "number": "13",
+        "photo": "https://www.fukuiblowinds.com/v=1790296532/files/user/common/13_Kawashima_2026-27_HP.jpg",
+        "birthday": "2000-03-14",
+        "height": "187",
+        "weight": "85",
+        "hometown": "福岡県",
+        "school": "法政大学",
+        "position": "",
+        "high_school": "福岡大学付属大濠高等学校",
+        "checked": "2026-10-24"
+      },
+      "blowinds:51000494": {
+        "team": "BLOWINDS",
+        "name": "ドゥシャン・リスティッチ",
+        "reading": "",
+        "number": "14",
+        "photo": "https://www.fukuiblowinds.com/v=1790296621/files/user/common/14_Dusan_2026-27_HP.jpg",
+        "birthday": "1995-11-27",
+        "height": "212",
+        "weight": "114",
+        "hometown": "セルビア",
+        "school": "アリゾナ大学",
+        "position": "",
+        "high_school": "Sunrise Christian Academy",
+        "checked": "2026-10-24"
       },
       "blowinds:51000417": {
         "team": "BLOWINDS",
@@ -4608,7 +4533,82 @@
         "school": "ミシガン大学",
         "position": "",
         "high_school": "The First Academy(ザ ファースト アカデミ",
-        "_key": "blowinds:51000417"
+        "checked": "2026-10-24"
+      },
+      "blowinds:5100000040": {
+        "team": "BLOWINDS",
+        "name": "常田 耕平",
+        "reading": "Kohei Tsuneta",
+        "number": "17",
+        "photo": "https://www.fukuiblowinds.com/v=1790296771/files/user/common/17_Tsuneta_2026-27_HP.jpg",
+        "birthday": "1999-11-06",
+        "height": "186",
+        "weight": "85",
+        "hometown": "愛知県",
+        "school": "明治大学",
+        "position": "",
+        "high_school": "正智深谷高等学校",
+        "checked": "2026-10-24"
+      },
+      "blowinds:10844": {
+        "team": "BLOWINDS",
+        "name": "満田 丈太郎",
+        "reading": "Jotaro Mitsuda",
+        "number": "21",
+        "photo": "https://www.fukuiblowinds.com/v=1790296812/files/user/common/21_Mitsuda_2026-27_HP.jpg",
+        "birthday": "1994-04-18",
+        "height": "188",
+        "weight": "78",
+        "hometown": "神奈川県",
+        "school": "筑波大学",
+        "position": "",
+        "high_school": "",
+        "checked": "2026-10-24"
+      },
+      "blowinds:51000668": {
+        "team": "BLOWINDS",
+        "name": "デヴィン・ウィリアムズ",
+        "reading": "Devin Williams",
+        "number": "41",
+        "photo": "https://www.fukuiblowinds.com/v=1790296847/files/user/common/41_WilliamsTawatari_2026-27_HP.jpg",
+        "birthday": "1994-05-31",
+        "height": "206",
+        "weight": "116",
+        "hometown": "アメリカ合衆国",
+        "school": "ウェストバージニア大学",
+        "position": "",
+        "high_school": "Withrow high school",
+        "checked": "2026-10-24"
+      },
+      "blowinds:8571": {
+        "team": "BLOWINDS",
+        "name": "田渡 修人",
+        "reading": "Shuto Tawatari",
+        "number": "73",
+        "photo": "https://www.fukuiblowinds.com/v=1790296882/files/user/common/73_Tawatari_2026-27_HP.jpg",
+        "birthday": "1990-01-06",
+        "height": "185",
+        "weight": "79",
+        "hometown": "東京都",
+        "school": "筑波大学",
+        "position": "",
+        "high_school": "京北高等学校(現・東洋大学京北高等学校)",
+        "checked": "2026-10-24"
+      },
+      "blowinds:40142": {
+        "team": "BLOWINDS",
+        "name": "高橋 育実",
+        "reading": "Ikumi Takahashi",
+        "number": "93",
+        "photo": "https://www.fukuiblowinds.com/v=1790296914/files/user/common/93_Takahashi_2026-27_HP.jpg",
+        "birthday": "1998-06-10",
+        "height": "186",
+        "weight": "84",
+        "hometown": "大阪府",
+        "school": "天理大学",
+        "position": "",
+        "high_school": "桜宮高等学校",
+        "checked": "2026-10-24"
       },
       "united:82": {
         "team": "UNITED",
@@ -6081,7 +6081,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-23T14:31:28.542215+00:00"
+    "updated_at": "2026-10-23T15:33:59.606856+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -7185,12 +7185,12 @@
         }
       }
     },
-    "updated_at": "2026-10-23T14:31:28.542215+00:00"
+    "updated_at": "2026-10-23T15:33:59.606856+00:00"
   },
   "ALUMNI": {
-    "date": "2026-10-23",
+    "date": "2026-10-24",
     "v": 4,
-    "updated_at": "2026-10-23T12:01:39.158929+00:00",
+    "updated_at": "2026-10-23T15:33:59.606856+00:00",
     "players": [
       {
         "team": "RAC",
@@ -7200,7 +7200,7 @@
         "kind": "移籍",
         "dest": "バルドラール浦安ラス・ボニータス",
         "link": "https://ruck-fukui.com/archives/5721",
-        "photo": "",
+        "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/IKEUCHI_Aki.jpg",
         "now": "バルドラール浦安ラス・ボニータス",
         "now_number": "10",
         "now_url": "https://w-fleague.jp/club/urayasu/",
@@ -7256,11 +7256,25 @@
         "kind": "退団",
         "dest": "",
         "link": "https://ruck-fukui.com/archives/2325",
-        "photo": "",
+        "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02880-768x512.jpg",
         "now": "アルコ神戸",
         "now_number": "19",
         "now_url": "https://w-fleague.jp/club/kobe/",
         "goals": 2
+      },
+      {
+        "team": "RAC",
+        "name": "鵜飼真也子",
+        "number": "16",
+        "left": "2019-07-03",
+        "kind": "引退",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/1997",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2019/07/301803037099294720_n-300x200.jpg",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null
       },
       {
         "team": "RAC",
@@ -7275,13 +7289,102 @@
         "now_number": "",
         "now_url": "",
         "goals": null
+      },
+      {
+        "team": "RAC",
+        "name": "小林心",
+        "number": "11",
+        "left": "2018-05-01",
+        "kind": "退団",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/727",
+        "photo": "https://ruck-fukui.com/wp/wp-content/uploads/2017/08/ff5293079ee11c568f99dee07b9561a0-768x960.jpg",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null
+      },
+      {
+        "team": "RAC",
+        "name": "宮本夏奈",
+        "number": "",
+        "left": "",
+        "kind": "元選手",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/5577",
+        "photo": "",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null,
+        "note": "2024年に日本代表候補に選ばれた元選手"
+      },
+      {
+        "team": "RAC",
+        "name": "北川夏奈",
+        "number": "",
+        "left": "",
+        "kind": "元選手",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/4283",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2022/11/9-300x200.jpg",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null,
+        "note": "2022年に日本代表候補に選ばれた元選手"
+      },
+      {
+        "team": "RAC",
+        "name": "井端真梨奈",
+        "number": "",
+        "left": "",
+        "kind": "元選手",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/3995",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2022/08/LINE_ALBUM_220624_19-300x200.jpg",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null,
+        "note": "2022年に日本代表候補に選ばれた元選手"
+      },
+      {
+        "team": "RAC",
+        "name": "高尾 茜利",
+        "number": "",
+        "left": "",
+        "kind": "元選手",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/3228",
+        "photo": "https://www.swh2003.com/img/202627-13.jpg",
+        "now": "SWHレディース西宮",
+        "now_number": "13",
+        "now_url": "https://w-fleague.jp/club/nishinomiya/",
+        "goals": 6,
+        "note": "2021年に日本代表候補に選ばれた元選手"
+      },
+      {
+        "team": "RAC",
+        "name": "北嶋笑",
+        "number": "",
+        "left": "",
+        "kind": "元選手",
+        "dest": "",
+        "link": "https://ruck-fukui.com/archives/2696",
+        "photo": "",
+        "now": "",
+        "now_number": "",
+        "now_url": "",
+        "goals": null,
+        "note": "2021年に日本代表候補に選ばれた元選手"
       }
     ]
   },
   "PHOTOS": {
-    "date": "2026-10-23",
+    "date": "2026-10-24",
     "v": 2,
-    "updated_at": "2026-10-22T17:47:56.669382+00:00",
+    "updated_at": "2026-10-23T15:33:59.606856+00:00",
     "teams": {
       "RAC": [
         {
