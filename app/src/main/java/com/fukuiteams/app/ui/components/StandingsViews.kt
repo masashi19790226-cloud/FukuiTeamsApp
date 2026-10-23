@@ -67,7 +67,7 @@ private fun bleagueSummary(b: BleagueStandings): String {
     val own = b.own ?: return "順位表を読み取れませんでした"
     val me = b.me ?: return own.label
     val gap = if (me.rank == 1) "首位" else "首位とゲーム差${me.gamesBehind.ifBlank { "0" }}"
-    return "${own.label} ${me.rank}位・${me.win}勝${me.lose}敗・$gap" +
+    return "${own.label} ${me.rank}位・${me.win}勝${me.lose}敗(${com.fukuiteams.app.data.winRateLabel(me.win, me.win + me.lose)})・$gap" +
         (me.streakLabel.takeIf { it.isNotBlank() }?.let { "・$it" } ?: "")
 }
 
@@ -82,7 +82,8 @@ private fun leagueSummary(st: LeagueStandings, team: Team): String {
         ?: return "順位表を読み取れませんでした"
     val me = part.rows.firstOrNull { it.team.contains(word) } ?: return part.label
     return "${part.label} ${me.rank}位・勝点${me.points}" +
-        (if (me.win != null && me.lose != null) "・${me.win}勝${me.lose}敗" + (if ((me.draw ?: 0) > 0) "${me.draw}分" else "") else "")
+        (if (me.win != null && me.lose != null) "・${me.win}勝${me.lose}敗" + (if ((me.draw ?: 0) > 0) "${me.draw}分" else "") +
+            "(${com.fukuiteams.app.data.winRateLabel(me.win, me.win + me.lose + (me.draw ?: 0))})" else "")
 }
 
 /** 「10月17日(土) 21:15 時点の数字」の1行(選手タブの AsOfLine と同じ書き方) */

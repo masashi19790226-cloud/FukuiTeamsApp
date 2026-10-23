@@ -182,7 +182,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
     Scaffold(
         topBar = {
             MastheadTopBar(
-                section = "選手の数字",
+                section = "選手",
                 edition = "${selectedTeam.displayName}版",
                 // 戻り先があるときだけ左上に戻るボタンを出す(下のメニューのタブとして開いたときは出さない)
                 navigationIcon = {
@@ -233,6 +233,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 JumpLink("▼ 全選手", Modifier.weight(0.8f)) { jumpTo(marks.all) }
             }
             JumpLink("▼ 相手:${nextGame?.opponent ?: "次の対戦相手"}", Modifier.weight(if (selectedTeam != Team.BLOWINDS) 1.2f else 1f)) { jumpTo(marks.opp) }
+            JumpLink("▼ 過去", Modifier.weight(0.7f)) { jumpTo(marks.past) }
         }
         Column(
             modifier = Modifier
@@ -269,22 +270,10 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             val roster = teamPlayers[selectedTeam.name]
             val myPlayers = preview?.myKeyPlayers ?: emptyList()
             if (roster != null && roster.players.isNotEmpty()) {
-                // チーム全体の今季の数字(Bリーグ公式のクラブ成績)。次の対戦相手の分も取れていれば並べて比べる
-                if (roster.teamStats.isNotEmpty()) {
-                    val opp = teamPlayers[BLOWINDS_OPP_KEY]?.takeIf { r ->
-                        r.teamStats.isNotEmpty() && (r.gameId.isBlank() || r.gameId == preview?.gameId)
-                    }
-                    SectionLabel("チームの数字(今季)", modifier = Modifier.onGloballyPositioned { marks.own = it })
-                    TeamStatsSection(
-                        mine = roster,
-                        mineName = selectedTeam.shortLabel(),
-                        opp = opp,
-                        oppName = opp?.teamName?.ifBlank { null } ?: nextGame?.opponent ?: "相手"
-                    )
-                }
+                // チーム全体の今季の数字(Bリーグ公式のクラブ成績)は「チーム」タブに移した
                 SectionLabel(
                     "${selectedTeam.displayName}の選手",
-                    modifier = if (roster.teamStats.isEmpty()) Modifier.onGloballyPositioned { marks.own = it } else Modifier
+                    modifier = Modifier.onGloballyPositioned { marks.own = it }
                 )
                 RosterSection(roster, sortKey, profileOf = { name -> profiles[profileKey(selectedTeam, name)] }) { sortKey = it }
             } else if (myPlayers.isNotEmpty()) {
@@ -419,6 +408,12 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             preview?.oppLink?.let { link ->
                 LinkText("相手チームの情報を見る ›") { openPlayersUrl(context, link) }
             }
+            // 過去の選手(代表選出・元選手・表彰・これまでの選手。以前は「記録」タブにあったもの)
+            ThinRule(modifier = Modifier.padding(vertical = 4.dp))
+            Box(modifier = Modifier.onGloballyPositioned { marks.past = it }) {
+                SectionLabel("${selectedTeam.displayName}の過去の選手")
+            }
+            PastPlayersSection(selectedTeam)
             Text(
                 "選手の数字はGitHubの自動更新(約20分おき)で" +
                     when (selectedTeam) {
@@ -793,6 +788,8 @@ private class JumpMarks {
     var opp: LayoutCoordinates? = null
     // 丸岡RUCK・ユナイテッドの「全選手」
     var all: LayoutCoordinates? = null
+    // 過去の選手(以前は「記録」タブにあったもの)
+    var past: LayoutCoordinates? = null
 }
 
 /** 上に固定する「自チーム」「相手」へ飛ぶリンク。 */
@@ -876,7 +873,7 @@ private fun birthdayText(p: PlayerBirthday, today: java.time.LocalDate): String 
  * 順位が上のほうを太字・チームカラーにする。相手のデータが無いときは自チームだけ。
  */
 @Composable
-private fun TeamStatsSection(mine: TeamPlayers, mineName: String, opp: TeamPlayers?, oppName: String) {
+internal fun TeamStatsSection(mine: TeamPlayers, mineName: String, opp: TeamPlayers?, oppName: String) {
     val oppByKey = opp?.teamStats?.associateBy { it.key }.orEmpty()
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Column(modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper)) {

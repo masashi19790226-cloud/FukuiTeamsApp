@@ -12,7 +12,7 @@ import java.net.URL
 import java.time.LocalDate
 
 /**
- * 過去の試合の記録(下のメニューの「記録」・一面の「○年前の今日」・次の相手との通算の対戦成績で使う)。
+ * 過去の試合の記録(下のメニューの「チーム」「選手」・一面の「○年前の今日」・次の相手との通算の対戦成績で使う)。
  * GitHub Actions(scripts/history.py)が作る data/history.json を読む。
  * - ユナイテッド  : 公式サイトの試合情報(2019年〜今季の全公式戦)
  * - ブルーサンダー: リーグH公式の星取表・試合ページ(2024-25〜今季)
@@ -92,7 +92,51 @@ data class TeamHistoryData(
     /** 公式のシーズンごとの成績(新しい順。ブローウィンズ。Bリーグ公式のクラブページから) */
     val officialSeasons: List<OfficialSeason> = emptyList(),
     /** リーグの表彰(新しい順。丸岡RUCK:女子Fリーグ公式の過去の記録から) */
-    val awards: List<SeasonAward> = emptyList()
+    val awards: List<SeasonAward> = emptyList(),
+    /** 選手の記録が試合ごとの出場選手から数えたものか(丸岡RUCK。false ならゴールランキングからで、出場試合数は正しくない) */
+    val playersFromLineup: Boolean = false
+)
+
+/** 選手の細かい成績(通算と、シーズンごと。古い順) */
+data class PlayerStats(val total: StatLine, val seasons: List<StatLine>)
+
+/**
+ * 細かい成績の合計(ブローウィンズ。選手タブと同じ項目)。平均・成功率は表示のときに計算する。
+ * sec は出場時間の合計(秒)
+ */
+data class StatLine(
+    val season: String,
+    val games: Int, val points: Int, val sec: Int,
+    val p2m: Int, val p2a: Int, val p3m: Int, val p3a: Int, val ftm: Int, val fta: Int,
+    val reb: Int, val ast: Int, val stl: Int, val blk: Int, val to: Int, val eff: Int
+) {
+    private fun per(v: Int) = if (games > 0) v.toDouble() / games else 0.0
+    val ppg get() = per(points)
+    val rpg get() = per(reb)
+    val apg get() = per(ast)
+    val spg get() = per(stl)
+    val bpg get() = per(blk)
+    val effPerGame get() = per(eff)
+    /** 平均出場時間(分) */
+    val minutes get() = if (games > 0) sec / 60.0 / games else 0.0
+    val fgm get() = p2m + p3m
+    val fga get() = p2a + p3a
+}
+
+private fun pct(m: Int, a: Int) = if (a > 0) "%.1f%%(%d/%d)".format(m * 100.0 / a, m, a) else "-"
+
+/** 成功率の表示「45.0%(18/40)」 */
+fun StatLine.fgLabel() = pct(fgm, fga)
+fun StatLine.p3Label() = pct(p3m, p3a)
+fun StatLine.ftLabel() = pct(ftm, fta)
+
+internal fun statLine(o: org.json.JSONObject?, season: String): StatLine = StatLine(
+    season = season,
+    games = o?.optInt("g") ?: 0, points = o?.optInt("pts") ?: 0, sec = o?.optInt("sec") ?: 0,
+    p2m = o?.optInt("p2m") ?: 0, p2a = o?.optInt("p2a") ?: 0, p3m = o?.optInt("p3m") ?: 0, p3a = o?.optInt("p3a") ?: 0,
+    ftm = o?.optInt("ftm") ?: 0, fta = o?.optInt("fta") ?: 0,
+    reb = o?.optInt("reb") ?: 0, ast = o?.optInt("ast") ?: 0, stl = o?.optInt("stl") ?: 0,
+    blk = o?.optInt("blk") ?: 0, to = o?.optInt("to") ?: 0, eff = o?.optInt("eff") ?: 0
 )
 
 /** リーグの表彰1件(「2023-24」「ベストファイブ」「池内 天紀」「初受賞」) */
@@ -151,7 +195,13 @@ data class HistoryPlayer(
     /** 元選手のいまのクラブ(ブローウィンズ:Bリーグ公式の選手ページから)。Bリーグのクラブにいなければ "" */
     val nowTeam: String = "",
     /** いまのクラブを調べたか(調べて "" なら、Bリーグのクラブには所属していない) */
-    val nowChecked: Boolean = false
+    val nowChecked: Boolean = false,
+    /** 結婚などで変わる前の名前(丸岡RUCK) */
+    val former: List<String> = emptyList(),
+    /** シュート数の合計(丸岡RUCK:試合ごとの記録から)。分からなければ null */
+    val shots: Int? = null,
+    /** 細かい成績(ブローウィンズ:試合ごとのボックススコアの合計)。無ければ null */
+    val stats: PlayerStats? = null
 ) {
     /** 「2019〜2022」(1シーズンだけなら「2019」) */
     val seasonsLabel: String
@@ -254,7 +304,18 @@ object HistoryRepository {
                         now = if (!q.has("now") || q.isNull("now")) null else q.optBoolean("now"),
                         photo = q.optString("photo"),
                         nowTeam = q.optString("now_team"),
-                        nowChecked = q.optString("now_checked").isNotBlank()
+                        nowChecked = q.optString("now_checked").isNotBlank(),
+                        shots = if (q.has("shots")) q.optInt("shots") else null,
+                        former = q.optJSONArray("former")?.let { a -> (0 until a.length()).map { a.optString(it) }.filter { it.isNotBlank() } }.orEmpty(),
+                        stats = q.optJSONObject("stats")?.let { st ->
+                            val sArr2 = st.optJSONArray("seasons")
+                            PlayerStats(
+                                total = statLine(st.optJSONObject("total"), ""),
+                                seasons = if (sArr2 == null) emptyList() else (0 until sArr2.length()).mapNotNull { k ->
+                                    sArr2.optJSONObject(k)?.let { statLine(it, it.optString("season")) }
+                                }
+                            )
+                        }
                     )
                 }
                 val nArr = o.optJSONArray("national")
@@ -292,7 +353,10 @@ object HistoryRepository {
                     if (q.optString("name").isBlank()) return@mapNotNull null
                     SeasonAward(q.optString("season"), q.optString("award"), q.optString("name"), q.optString("note"))
                 }
-                out[team] = TeamHistoryData(o.optString("source"), o.optString("source_url"), matches, players, national, officialSeasons, awards)
+                out[team] = TeamHistoryData(
+                    o.optString("source"), o.optString("source_url"), matches, players, national, officialSeasons, awards,
+                    playersFromLineup = o.optString("players_from") == "lineup"
+                )
             }
         }
         return out
@@ -307,7 +371,14 @@ data class WinLoss(val win: Int, val lose: Int, val draw: Int, val scored: Int, 
 
     /** 「5勝2敗1分」(引き分けが無ければ「5勝2敗」) */
     val label: String get() = "${win}勝${lose}敗" + (if (draw > 0) "${draw}分" else "")
+
+    /** 「勝率 71%」(勝利数÷試合数×100。引き分けも試合数に含める。試合の成績カードと同じ計算) */
+    val rateLabel: String get() = winRateLabel(win, games)
 }
+
+/** 勝率の表示「勝率 71%」(勝利数÷試合数×100 を四捨五入。試合が無ければ「勝率 -」) */
+fun winRateLabel(win: Int, games: Int): String =
+    if (games <= 0) "勝率 -" else "勝率 ${Math.round(win * 100.0 / games)}%"
 
 fun List<HistoryMatch>.winLoss(): WinLoss = WinLoss(
     win = count { it.outcome == GameOutcome.WIN },

@@ -39,6 +39,7 @@ def wfleague_matches(page: str):
         left = re.search(r'class="leftTeam".*?title="([^"]+)"', dd, flags=re.S)
         right = re.search(r'class="rightTeam".*?title="([^"]+)"', dd, flags=re.S)
         score = re.search(r'class="score".*?<span>(.*?)</span>', dd, flags=re.S)
+        gid = re.search(r"gid=(\d+)", dd)
         if not (left and right and score):
             continue
         date = f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
@@ -48,6 +49,8 @@ def wfleague_matches(page: str):
             "date": date, "time": m.group(4), "venue": m.group(5).strip(),
             "home": left.group(1), "away": right.group(1),
             "hs": int(sm.group(1)) if sm else None, "as": int(sm.group(2)) if sm else None,
+            # 試合ごとの記録のページ(/score/result.html?gid=)の番号。無ければ空
+            "gid": gid.group(1) if gid else "",
         }
     return sorted(found.values(), key=lambda x: (x["date"], x["time"]))
 

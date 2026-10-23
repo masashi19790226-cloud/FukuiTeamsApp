@@ -53,9 +53,10 @@ data class NavItem(val route: String, val label: String, val icon: androidx.comp
 val bottomNavItems = listOf(
     NavItem(Routes.HOME, "一面", Icons.Filled.Home),
     NavItem(Routes.GAME_DETAIL, "試合", Icons.Filled.Stadium),
+    // チーム:今季のチームの数字と、シーズンごとの成績・相手別の対戦成績・過去の試合・チームの歩み
+    NavItem(Routes.ARCHIVE, "チーム", Icons.Filled.History),
+    // 選手:今季の選手・次の相手の選手と、過去の選手(代表選出・元選手・表彰)
     NavItem(Routes.PLAYERS, "選手", Icons.Filled.BarChart),
-    // 過去の記録(シーズンごとの成績・相手別の対戦成績・過去の試合・過去の選手)
-    NavItem(Routes.ARCHIVE, "記録", Icons.Filled.History),
     NavItem(Routes.RADAR, "トピック", Icons.Filled.Article),
     NavItem(Routes.BBS, "掲示板", Icons.Filled.Forum),
     NavItem(Routes.NOTIFICATIONS, "メニュー", Icons.Filled.Menu)

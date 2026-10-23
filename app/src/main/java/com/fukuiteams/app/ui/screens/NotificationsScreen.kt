@@ -157,7 +157,7 @@ fun NotificationsScreen(
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Headline("メニュー", fontSize = 22)
                 Text(
-                    "公式サイト・SNS、通知の設定、掲示板、着せ替え、表示の大きさ、使い方、更新履歴などがあります。過去の記録は下のメニューの「記録」から開きます。",
+                    "公式サイト・SNS、通知の設定、掲示板、着せ替え、表示の大きさ、使い方、更新履歴などがあります。チームの記録は下のメニューの「チーム」、過去の選手は「選手」から開きます。",
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
@@ -378,7 +378,7 @@ fun NotificationsScreen(
                 )
             }
 
-            // 使い方への入口(選手の数字は下のメニューの「選手」から開くので、ここには置かない)
+            // 使い方への入口(選手の数字は下のメニューの「チーム」から開くので、ここには置かない)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SectionLabel("使い方")
                 MenuLinkRow(

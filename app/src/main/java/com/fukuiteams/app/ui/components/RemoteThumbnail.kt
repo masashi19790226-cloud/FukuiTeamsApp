@@ -250,6 +250,8 @@ private suspend fun loadLargeImage(url: String): ImageBitmap? = withContext(Disp
  * backgroundColor:写真の透明な部分の後ろに見える色。framed:false なら枠線を付けない
  * highRes:true なら細かい画像を読む(一面の特集など、大きく出すとき)
  * onFailed:読み込めなかったときに呼ぶ(代わりの写真に切り替えるときに使う)
+ * naturalAspect:true なら(fillWidth と一緒に使う)、写真を切り取らずに縦横比のまま幅いっぱいに出す。
+ *   縦長の写真は横長の枠(横:縦 = 6:5)に収め、左右に地の色を出す(顔が切れないように)
  */
 @Composable
 fun RemoteThumbnail(
@@ -265,7 +267,8 @@ fun RemoteThumbnail(
     backgroundColor: Color = DividerGray,
     framed: Boolean = true,
     highRes: Boolean = false,
-    onFailed: (() -> Unit)? = null
+    onFailed: (() -> Unit)? = null,
+    naturalAspect: Boolean = false
 ) {
     if (url.isBlank()) return
     val key = cacheKey(url, highRes)
@@ -294,7 +297,12 @@ fun RemoteThumbnail(
     }
     val img = trimmed ?: loaded
     var zoomed by remember(url) { mutableStateOf(false) }
-    val sizeModifier = if (fillWidth) Modifier.fillMaxWidth().height(height) else Modifier.size(width, height)
+    val ratio = if (img.height > 0) img.width.toFloat() / img.height else 1f
+    val sizeModifier = when {
+        fillWidth && naturalAspect -> Modifier.fillMaxWidth().aspectRatio(ratio.coerceIn(1.2f, 5f))
+        fillWidth -> Modifier.fillMaxWidth().height(height)
+        else -> Modifier.size(width, height)
+    }
     Box(
         modifier = modifier
             .then(sizeModifier)
@@ -306,8 +314,8 @@ fun RemoteThumbnail(
             bitmap = img,
             contentDescription = null,
             modifier = sizeModifier,
-            contentScale = ContentScale.Crop,
-            alignment = if (alignTop) Alignment.TopCenter else Alignment.Center
+            contentScale = if (naturalAspect) ContentScale.Fit else ContentScale.Crop,
+            alignment = if (alignTop && !naturalAspect) Alignment.TopCenter else Alignment.Center
         )
     }
     if (zoomed && zoomCaption != null) {

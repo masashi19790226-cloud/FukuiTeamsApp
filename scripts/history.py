@@ -22,6 +22,7 @@ from datetime import datetime, timedelta, timezone
 import html as htmllib
 
 import leagueh
+import name_changes
 import standings
 
 JST = timezone(timedelta(hours=9))
@@ -60,16 +61,22 @@ def name_key(name: str) -> str:
 class PlayerBook:
     """試合ごとの出場・得点を足し合わせて、選手ごとの通算の記録にする"""
 
-    def __init__(self):
+    def __init__(self, team=None):
         self.p = {}
+        # チーム(結婚などで名字が変わった選手を今の名前にまとめるのに使う。name_changes.py)
+        self.team = team
 
     def add(self, name, number, position, season, date, played, started, goals):
         name = (name or "").strip()
         if not name or name in ("???",):
             return
+        if self.team:
+            name = name_changes.current_name(self.team, name)
         k = name_key(name)
         r = self.p.setdefault(k, {"name": name, "number": "", "position": "", "seasons": [],
                                   "apps": 0, "starts": 0, "goals": 0, "first": date, "last": date})
+        if self.team and "former" not in r:
+            r["former"] = name_changes.former_names(self.team, name)
         # 背番号・ポジションは新しい試合のものを残す(古い試合から順に足す)
         if number:
             r["number"] = str(number)
@@ -392,15 +399,141 @@ def ruck_archive_extras(fetch, old=None):
     return {"years": {str(k): v for k, v in out.items()}}
 
 
+# 丸岡RUCKの試合ごとの記録(出場選手・シュート・得点・観客数)を1回の自動更新で読む試合の数(残りは次の更新で)
+RUCK_LINEUP_PER_RUN = 60
+
+
+def _cells(tr: str):
+    return [_wfl_text(x) for x in re.findall(r"<td\b[^>]*>(.*?)</td>", tr, flags=re.S)]
+
+
+def wfl_game_lineup(main_html: str, word: str = RUCK_WORD):
+    """女子Fリーグ公式の試合ごとの記録(/modules/php/FlRecordMain.php?gid=)から、そのチームの出場選手。
+    [[名前, 背番号, ポジション, 出場("S"=先発 ◯ / "B"=途中出場 △ / ""=出場なし), シュート数, 得点], …]
+    メンバー表は「チーム名 メンバー」の見出しのあとにあり、左のチームは表が2つ(列の並びが逆のものと Pos から始まるもの)あるので、
+    Pos から始まる表を使う。得点は「得点」の欄(左のチームは Lname、右のチームは Rname)の名前を数える"""
+    strongs = [(m.start(), m.group(1)) for m in re.finditer(r"<strong>([^<]*?)\s*メンバー\s*</strong>", main_html)]
+    mine = [i for i, (_, t) in enumerate(strongs) if word in t]
+    if not mine:
+        return []
+    k = mine[0]
+    start = strongs[k][0]
+    end = strongs[k + 1][0] if k + 1 < len(strongs) else main_html.find('<div id="Result"')
+    if end < 0:
+        end = len(main_html)
+    left_side = k == 0
+    rows = []
+    for table in re.findall(r"<table\b.*?</table>", main_html[start:end], flags=re.S):
+        trs = re.findall(r"<tr\b[^>]*>(.*?)</tr>", table, flags=re.S)
+        if not trs or not _cells(trs[0]) or _cells(trs[0])[0] != "Pos":
+            continue
+        for tr in trs[2:]:
+            c = _cells(tr)
+            if len(c) < 6 or c[0] not in ("FP", "GK"):
+                continue
+            name = re.sub(r"\(C\)|（C）", "", c[3])
+            name = re.sub(r"[\s\u3000]+", " ", name).strip()
+            app = "S" if "◯" in c[2] or "○" in c[2] else ("B" if "△" in c[2] else "")
+            shots = (_int(c[4]) or 0) + (_int(c[5]) or 0)
+            rows.append([name, c[1], c[0], app, shots, 0])
+        break
+    # 得点(結果の表の「得点」の行だけ。「警告/退場」などの行は入れない。表は行ごとに見出し(th)が変わる)
+    res = main_html[main_html.find('<div id="Result"'):] if '<div id="Result"' in main_html else ""
+    first_table = re.search(r"<table\b.*?</table>", res, flags=re.S)
+    cls = "Lname" if left_side else "Rname"
+    by_key = {name_key(r[0]): r for r in rows}
+    goal_names = []
+    current = ""
+    for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", first_table.group(0) if first_table else "", flags=re.S):
+        th = re.search(r"<th\b[^>]*>(.*?)</th>", tr, flags=re.S)
+        if th:
+            current = _wfl_text(th.group(1))
+        if current != "得点":
+            continue
+        goal_names += re.findall(rf'<td class="{cls}">(.*?)</td>', tr, flags=re.S)
+    for nm in goal_names:
+        t = _wfl_text(nm)
+        if not t or "OG" in t.upper() or "オウン" in t:
+            continue
+        t = re.sub(r"[（(].*?[）)]", "", t)
+        r = by_key.get(name_key(t))
+        if r:
+            r[5] += 1
+    return rows
+
+
+def ruck_lineups(fetch, matches, prev_matches):
+    """丸岡RUCKの各試合に、出場選手(lineup)・観客数(visitors)・得点者(scorers)を付ける。
+    一度読んだ試合は前回の分を使い、新しく読むのは RUCK_LINEUP_PER_RUN 試合まで。読み残しがあれば True"""
+    prev = {m.get("url"): m for m in prev_matches or [] if m.get("lineup") is not None}
+    fetched, left = 0, 0
+    for m in matches:
+        url = m.get("url") or ""
+        gm = re.search(r"gid=(\d+)", url)
+        if not gm:
+            continue
+        p = prev.get(url)
+        if p:
+            for k in ("lineup", "visitors", "scorers"):
+                if p.get(k) is not None:
+                    m[k] = p[k]
+            continue
+        if fetched >= RUCK_LINEUP_PER_RUN:
+            left += 1
+            continue
+        gid = gm.group(1)
+        ref = {"Referer": url, "X-Requested-With": "XMLHttpRequest"}
+        try:
+            main_html = fetch(f"{WFL_SITE}/modules/php/FlRecordMain.php?gid={gid}", ref)
+            fetched += 1
+        except Exception as e:
+            print(f"[WARN] 過去の記録: 丸岡RUCK {m.get('date')} の試合の記録を読めませんでした {e!r}")
+            continue
+        lineup = wfl_game_lineup(main_html)
+        m["lineup"] = lineup
+        m["scorers"] = [{"name": r[0], "goals": r[5]} for r in sorted(lineup, key=lambda r: -r[5]) if r[5] > 0]
+        try:
+            detail = fetch(f"{WFL_SITE}/modules/php/FlRecordDetail2022.php?gid={gid}", ref)
+            va = re.search(r"観客数\s*([\d,]+)\s*人", _wfl_text(detail))
+            if va:
+                m["visitors"] = int(va.group(1).replace(",", ""))
+        except Exception as e:
+            print(f"[WARN] 過去の記録: 丸岡RUCK {m.get('date')} の観客数を読めませんでした {e!r}")
+    print(f"[過去の記録] 丸岡RUCK: 試合の記録を{fetched}試合分読みました(残り{left}試合)")
+    return left > 0
+
+
+def ruck_players_from_lineups(matches, current_keys):
+    """試合ごとの出場選手から、丸岡RUCKのこれまでの選手(出場・先発・得点・シュート)。
+    結婚などで名字が変わった選手は今の名前にまとめる。出場選手が分かる試合が無ければ []"""
+    book = PlayerBook("RAC")
+    shots = {}
+    numbers = {}
+    for m in sorted(matches, key=lambda x: (x["date"], x.get("time", ""))):
+        for name, number, pos, app, sh, goals in m.get("lineup") or []:
+            if not app:
+                continue
+            book.add(name, number, pos, m.get("season"), m["date"], True, app == "S", goals)
+            k = name_key(name_changes.current_name("RAC", name))
+            shots[k] = shots.get(k, 0) + (sh or 0)
+    players = book.result(current_keys)
+    for p in players:
+        p["shots"] = shots.get(name_key(p["name"]), 0)
+    return players
+
+
 def ruck_players(extras, current_keys):
     """ゴールランキング(1点以上の選手)から、丸岡RUCKのこれまでの選手(得点の多い順)。出場は得点したシーズンの分だけ"""
     book = {}
     for y in sorted(int(k) for k in (extras.get("years") or {})):
         v = extras["years"][str(y)]
         for r in v.get("scorers") or []:
-            k = name_key(r["name"])
-            p = book.setdefault(k, {"name": r["name"], "number": "", "position": "", "seasons": [], "apps": 0,
-                                    "starts": 0, "goals": 0, "first": "", "last": ""})
+            # 結婚などで名字が変わった選手は、今の名前にまとめる(前の名前は former に残す)
+            name = name_changes.current_name("RAC", r["name"])
+            k = name_key(name)
+            p = book.setdefault(k, {"name": name, "number": "", "position": "", "seasons": [], "apps": 0,
+                                    "starts": 0, "goals": 0, "first": "", "last": "",
+                                    "former": name_changes.former_names("RAC", name)})
             if v["season"] not in p["seasons"]:
                 p["seasons"].append(v["season"])
             p["apps"] += r.get("apps") or 0
@@ -474,8 +607,9 @@ def ruck_matches(fetch, old_matches):
                 continue
             if r["date"] < f"{cur}-05-01":
                 continue
-            m = _ruck_match(dict(r, gid="", round=""), season, "")
-            m["url"] = f"{WFL_SITE}/score/"
+            m = _ruck_match(dict(r, round=""), season, "")
+            if not r.get("gid"):
+                m["url"] = f"{WFL_SITE}/score/"
             m["y"] = None
             key = ("cur", m["date"], m["time"], m["opp"])
             if key in seen:
@@ -815,19 +949,31 @@ def bleague_box(fetch, game_url: str, team_id: str = BLOWINDS_TEAM_ID):
             continue
         pt = str(r.get("PlayTime") or "")
         played = bool(re.search(r"[1-9]", pt)) or (r.get("Point") or 0) > 0
+        mm = re.match(r"(\d+):(\d+)", pt)
+        secs = int(mm.group(1)) * 60 + int(mm.group(2)) if mm else 0
+        n = lambda k: int(r.get(k) or 0)
+        # [PlayerID, 名前, 背番号, 得点, 先発か, 出場したか, 出場秒数, 2P成功, 2P試投, 3P成功, 3P試投, FT成功, FT試投,
+        #  リバウンド, アシスト, スティール, ブロック, ターンオーバー, 貢献度(EFF)]
         rows.append([str(r.get("PlayerID") or ""), (r.get("PlayerNameJ") or "").strip(), str(r.get("PlayerNo") or ""),
-                     int(r.get("Point") or 0), bool(r.get("StartingFlg")), played])
+                     n("Point"), bool(r.get("StartingFlg")), played, secs,
+                     n("PT2M"), n("PT2A"), n("PT3M"), n("PT3A"), n("FTM"), n("FTA"),
+                     n("RB_TOT"), n("AS"), n("ST"), n("BS"), n("TO"), n("EFF")])
     return rows, info
+
+
+# 試合ごとの選手の成績の1行の長さ(これより短い前回の分は、細かい成績が無いので読み直す)
+BOX_ROW_LEN = 19
 
 
 def blowinds_boxes(fetch, matches, prev_matches):
     """各試合に選手の成績(box)を付ける。前回読んだ試合はその分を使い、新しく読むのは BOX_PER_RUN 試合まで。
     まだ読めていない試合が残れば True(続きは次の更新で)"""
     # 前回読んだ試合の分(選手の成績と、相手の正式名・会場・観客数)
-    prev_box = {m.get("url"): m for m in prev_matches or [] if m.get("box")}
+    prev_box = {m.get("url"): m for m in prev_matches or []
+                if m.get("box") and all(len(r) >= BOX_ROW_LEN for r in m["box"])}
     fetched, left = 0, 0
     for m in matches:
-        if m.get("box"):
+        if m.get("box") and all(len(r) >= BOX_ROW_LEN for r in m["box"]):
             continue
         prev = prev_box.get(m.get("url"))
         if prev:
@@ -878,14 +1024,33 @@ def blowinds_players(matches, current_keys, old_players=None):
                  if p.get("pid") and p.get("photo") and not p.get("photo_now")}
     book = PlayerBook()
     pids = {}
+    # 細かい成績の合計(選手 → シーズン → 合計)。行が短い(細かい成績が無い)試合は数えない
+    keys = ("sec", "p2m", "p2a", "p3m", "p3a", "ftm", "fta", "reb", "ast", "stl", "blk", "to", "eff")
+    detail = {}
     for m in sorted(matches, key=lambda x: (x["date"], x.get("time", ""))):
-        for pid, name, number, points, started, played in m.get("box") or []:
+        for row in m.get("box") or []:
+            pid, name, number, points, started, played = row[:6]
             if not played:
                 continue
             book.add(name, number, "", m.get("season"), m["date"], True, started, points)
             if pid:
                 pids[name_key(name)] = pid
+            if len(row) >= BOX_ROW_LEN:
+                d = detail.setdefault(name_key(name), {}).setdefault(m.get("season"), dict.fromkeys(("g", "pts") + keys, 0))
+                d["g"] += 1
+                d["pts"] += points
+                for k, v in zip(keys, row[6:BOX_ROW_LEN]):
+                    d[k] += v
     players = book.result(current_keys)
+    for p in players:
+        by = detail.get(name_key(p["name"])) or {}
+        if by:
+            total = dict.fromkeys(("g", "pts") + keys, 0)
+            for v in by.values():
+                for k in total:
+                    total[k] += v[k]
+            # シーズンごと(古い順)と通算の合計。アプリで平均・成功率にする
+            p["stats"] = {"total": total, "seasons": [dict(v, season=s) for s, v in sorted(by.items())]}
     checked = 0
     for p in players:
         pid = pids.get(name_key(p["name"]), "")
@@ -1023,7 +1188,7 @@ def build(fetch, post_json, old, current=None):
     old_teams = dict(old.get("teams") or {})
     pending = False
     try:
-        book = PlayerBook()
+        book = PlayerBook("UNITED")
         got = united_matches(post_json, book)
         if got:
             players = book.result(cur_keys.get("UNITED"))
@@ -1050,6 +1215,11 @@ def build(fetch, post_json, old, current=None):
     try:
         got = ruck_matches(fetch, (teams.get("RAC") or {}).get("matches"))
         if got:
+            # 試合ごとの記録(出場選手・得点者・観客数)。少しずつ読む
+            try:
+                pending = ruck_lineups(fetch, got, (old_teams.get("RAC") or {}).get("matches")) or pending
+            except Exception as e:
+                print(f"[WARN] 過去の記録: 丸岡RUCKの試合ごとの記録の取得に失敗 {e!r}")
             teams["RAC"] = {"source": "女子Fリーグ公式の過去の記録・試合一覧", "source_url": f"{WFL_SITE}/archive/", "matches": got}
     except Exception as e:
         print(f"[WARN] 過去の記録: 丸岡RUCKの取得に失敗。前回の分を使います {e!r}")
@@ -1058,7 +1228,10 @@ def build(fetch, post_json, old, current=None):
         extras = ruck_archive_extras(fetch, (old_teams.get("RAC") or {}).get("extras"))
         if "RAC" in teams:
             teams["RAC"]["extras"] = extras
-            teams["RAC"]["players"] = ruck_players(extras, cur_keys.get("RAC"))
+            # 試合ごとの記録(出場選手)があればそこから、無ければゴールランキングから
+            from_lineups = ruck_players_from_lineups(teams["RAC"]["matches"], cur_keys.get("RAC"))
+            teams["RAC"]["players"] = from_lineups or ruck_players(extras, cur_keys.get("RAC"))
+            teams["RAC"]["players_from"] = "lineup" if from_lineups else "ranking"
             teams["RAC"]["awards"] = [dict(a, season=v["season"]) for k, v in sorted(extras["years"].items(), reverse=True)
                                       for a in v.get("awards") or []]
     except Exception as e:

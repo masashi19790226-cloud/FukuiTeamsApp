@@ -630,7 +630,7 @@ private fun pastMatchStory(team: Team, today: LocalDate): List<FeatureStory> {
                 "${m.myScore}-${m.opponentScore}" + (if (m.pk.isNotBlank()) "(PK${m.pk})" else "") + "。" +
                 (scorers?.let { "得点は$it。" } ?: "") +
                 (m.visitors?.let { "観客は${"%,d".format(it)}人。" } ?: "") +
-                "下のメニューの「記録」で、ほかの試合も振り返れます。",
+                "下のメニューの「チーム」で、ほかの試合も振り返れます。",
             bigNumber = "${m.myScore}-${m.opponentScore}",
             url = m.url.ifBlank { null }
         )
@@ -641,13 +641,27 @@ private fun pastMatchStory(team: Team, today: LocalDate): List<FeatureStory> {
 private fun legendStory(team: Team, today: LocalDate): List<FeatureStory> {
     // バスケットボール(ブローウィンズ)は得点が多いので、10試合以上出た選手だけ
     val players = HistoryRepository.data[team]?.players.orEmpty()
-        .filter { it.apps >= 10 || (team != Team.BLOWINDS && it.goals >= 5) }
+        .filter {
+            when (team) {
+                // 丸岡RUCKは、ゴールランキングからのときは出場試合数が分からないので得点で選ぶ
+                Team.RAC -> if (HistoryRepository.data[team]?.playersFromLineup == true) it.apps >= 10 || it.goals >= 5 else it.goals >= 5
+                Team.BLOWINDS -> it.apps >= 10
+                else -> it.apps >= 10 || it.goals >= 5
+            }
+        }
     if (players.isEmpty()) return emptyList()
     val former = players.filter { it.now == false }
     val pool = former.ifEmpty { players }
     val p = pool[Math.floorMod(today.toEpochDay().toInt() * 13 + team.ordinal, pool.size)]
     val head = (if (p.number.isNotBlank()) "#${p.number} " else "") + p.name
-    val record = if (team == Team.UNITED || team == Team.BLOWINDS) "${p.apps}試合(先発${p.starts})に出場し${p.goals}得点" else "${p.apps}試合で${p.goals}得点"
+    val record = when (team) {
+        Team.UNITED, Team.BLOWINDS -> "${p.apps}試合(先発${p.starts})に出場し${p.goals}得点"
+        Team.RAC -> if (HistoryRepository.data[team]?.playersFromLineup == true)
+            "${p.apps}試合(先発${p.starts})に出場し${p.goals}得点"
+        else
+            "通算${p.goals}得点(公式のゴールランキングから)"
+        else -> "${p.apps}試合で${p.goals}得点"
+    }
     // 写真:いまのチームの選手の写真 → 過去の記録の写真(ブローウィンズ)。名前を添える
     val key = p.name.replace(Regex("[\\s　]"), "")
     val photo = TeamPhotos.findByName(TeamPhotos.forTeam(team), p.name)?.url
@@ -667,7 +681,7 @@ private fun legendStory(team: Team, today: LocalDate): List<FeatureStory> {
             team = team,
             headline = "$head、${p.seasonsLabel}で${p.goals}得点",
             body = "${p.seasonsLabel}(${p.seasons.size}シーズン)に${team.shortName}で$record。$status" +
-                "下のメニューの「記録」の「過去の選手」で、ほかの選手も見られます。",
+                "下のメニューの「選手」の「過去の選手」で、ほかの選手も見られます。",
             bigNumber = "${p.goals}",
             bigUnit = "得点"
         )
@@ -706,10 +720,12 @@ private fun nationalStory(team: Team, today: LocalDate): List<FeatureStory> {
  */
 fun nationalPhoto(team: Team, n: NationalSelection, name: String): String? {
     n.photos[name]?.takeIf { it.isNotBlank() }?.let { return it }
-    val key = name.replace(Regex("[\\s　]"), "")
+    // 結婚などで名字が変わった選手は、今の名前で探す
+    val now = NameChanges.current(team, name)
+    val key = now.replace(Regex("[\\s　]"), "")
     Alumni.players.firstOrNull { it.team == team && it.name.replace(Regex("[\\s　]"), "") == key && it.photo.isNotBlank() }
         ?.let { return it.photo }
-    return TeamPhotos.findByName(TeamPhotos.forTeam(team), name)?.url?.takeIf { it.isNotBlank() }
+    return TeamPhotos.findByName(TeamPhotos.forTeam(team), now)?.url?.takeIf { it.isNotBlank() }
 }
 
 /**

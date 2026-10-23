@@ -18,6 +18,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
 
+import name_changes
 import ruck_wp
 
 JST = timezone(timedelta(hours=9))
@@ -207,6 +208,8 @@ def build(fetch, old, ruck_scorers=None, current_ruck_names=(), club_photos=None
         known = {_key(x["name"]) for x in new} | now_ruck
         for n in national or []:
             for name in n.get("players") or []:
+                # 結婚などで名字が変わった選手は、今の名前で見る(今もチームにいれば元選手ではない)
+                name = name_changes.current_name("RAC", name)
                 k = _key(name)
                 if not name or k in known:
                     continue

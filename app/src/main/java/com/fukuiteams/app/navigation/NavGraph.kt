@@ -45,7 +45,7 @@ object Routes {
     const val PLAYERS = "players"
     // 福井ブローウィンズ掲示板(読むだけ)
     const val BBS = "bbs"
-    // 過去の記録(シーズンごとの成績・相手別の対戦成績・過去の試合)。下のメニューの「記録」から開く
+    // チームの数字と記録(シーズンごとの成績・相手別の対戦成績・過去の試合)。下のメニューの「チーム」から開く
     const val ARCHIVE = "archive"
 }
 
@@ -74,7 +74,7 @@ fun AppNavHost(initialRoute: String? = null) {
         }
     }
 
-    // 下のメニューの画面(一面・試合・選手・記録・トピック・掲示板・メニュー)へ切り替える。戻るボタンで一面に戻る
+    // 下のメニューの画面(一面・試合・チーム・選手・トピック・掲示板・メニュー)へ切り替える。戻るボタンで一面に戻る
     fun navigateTab(route: String) {
         if (route != currentRoute) {
             navController.navigate(route) {
@@ -154,7 +154,7 @@ fun AppNavHost(initialRoute: String? = null) {
                     ChangelogScreen(onBack = { navController.popBackStack() })
                 }
                 composable(Routes.ARCHIVE) {
-                    // 下のメニューの「記録」タブ。ほかのタブと同じく、左上の戻るボタンは出さない
+                    // 下のメニューの「チーム」タブ。ほかのタブと同じく、左上の戻るボタンは出さない
                     ArchiveScreen(
                         onOpenTopics = { team -> navController.navigate(Routes.radarAll(team)) },
                         onOpenInvites = { navController.navigate(Routes.RADAR_INVITES) }
@@ -164,7 +164,7 @@ fun AppNavHost(initialRoute: String? = null) {
                     HowToUseScreen(onBack = { navController.popBackStack() })
                 }
                 composable(Routes.PLAYERS) {
-                    // 下のメニューの「選手」タブ。ほかのタブと同じく、左上の戻るボタンは出さない
+                    // 下のメニューの「選手」タブ(今季と過去の選手)。ほかのタブと同じく、左上の戻るボタンは出さない
                     PlayersScreen()
                 }
                 composable(Routes.BBS) {

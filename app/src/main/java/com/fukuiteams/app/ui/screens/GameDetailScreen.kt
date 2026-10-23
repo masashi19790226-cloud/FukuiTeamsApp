@@ -1317,7 +1317,7 @@ private fun statsSummaryText(records: Map<WatchMethod, WatchRecord>, homeAway: H
     return if (homeAway.total.games == 0 && onSite.watched == 0) {
         "まだ終了した試合はありません"
     } else {
-        "全体 ${homeAway.total.recordLabel()}\n現地観戦 ${onSite.summaryLabel()}"
+        "全体 ${homeAway.total.recordLabel()}(勝率 ${homeAway.total.winRatePercentLabel()})\n現地観戦 ${onSite.summaryLabel()}"
     }
 }
 
