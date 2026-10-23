@@ -45,7 +45,7 @@ object Routes {
     const val PLAYERS = "players"
     // 福井ブローウィンズ掲示板(読むだけ)
     const val BBS = "bbs"
-    // 過去の記録(シーズンごとの成績・相手別の対戦成績・過去の試合)。メニューから開く
+    // 過去の記録(シーズンごとの成績・相手別の対戦成績・過去の試合)。下のメニューの「記録」から開く
     const val ARCHIVE = "archive"
 }
 
@@ -74,7 +74,7 @@ fun AppNavHost(initialRoute: String? = null) {
         }
     }
 
-    // 下のメニューの画面(一面・試合・選手・トピック・掲示板・メニュー)へ切り替える。戻るボタンで一面に戻る
+    // 下のメニューの画面(一面・試合・選手・トピック・掲示板・記録・メニュー)へ切り替える。戻るボタンで一面に戻る
     fun navigateTab(route: String) {
         if (route != currentRoute) {
             navController.navigate(route) {
@@ -144,7 +144,6 @@ fun AppNavHost(initialRoute: String? = null) {
                     NotificationsScreen(
                         onOpenChangelog = { navController.navigate(Routes.CHANGELOG) },
                         onOpenHowToUse = { navController.navigate(Routes.HOW_TO_USE) },
-                        onOpenArchive = { navController.navigate(Routes.ARCHIVE) },
                         onOpenBbsSettings = {
                             BbsScreenRequest.openSettings = true
                             navigateTab(Routes.BBS)
@@ -155,8 +154,8 @@ fun AppNavHost(initialRoute: String? = null) {
                     ChangelogScreen(onBack = { navController.popBackStack() })
                 }
                 composable(Routes.ARCHIVE) {
+                    // 下のメニューの「記録」タブ。ほかのタブと同じく、左上の戻るボタンは出さない
                     ArchiveScreen(
-                        onBack = { navController.popBackStack() },
                         onOpenTopics = { team -> navController.navigate(Routes.radarAll(team)) },
                         onOpenInvites = { navController.navigate(Routes.RADAR_INVITES) }
                     )

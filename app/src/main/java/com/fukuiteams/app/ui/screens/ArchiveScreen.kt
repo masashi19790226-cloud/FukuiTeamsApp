@@ -98,13 +98,14 @@ private enum class ArchivePlayerSort(val label: String) {
 }
 
 /**
- * 過去の記録(メニューから開く)。チームごとに、シーズンごとの成績・相手別の通算の対戦成績・過去の試合の一覧と、
+ * 過去の記録(下のメニューの「記録」から開く)。チームごとに、シーズンごとの成績・相手別の通算の対戦成績・過去の試合の一覧と、
  * 過去の実績(TeamHistory.kt)・過去のニュースと招待(トピック)への入口を出す。
  * 試合の記録は data/history.json(scripts/history.py が公式サイトから作る)。
  */
 @Composable
 fun ArchiveScreen(
-    onBack: () -> Unit,
+    /** 左上の戻るボタンで戻る(下のメニューのタブとして開くときは null で、戻るボタンを出さない) */
+    onBack: (() -> Unit)? = null,
     /** トピック(そのチームの、すべての分類)を開く。過去1年分のニュースは「それより前」から見られる */
     onOpenTopics: (Team) -> Unit,
     /** トピックの「招待」を開く(受付中と過去の招待を切り替えられる) */
@@ -147,8 +148,10 @@ fun ArchiveScreen(
             MastheadTopBar(
                 section = "過去の記録",
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
+                        }
                     }
                 },
                 actions = {

@@ -629,7 +629,7 @@ private fun pastMatchStory(team: Team, today: LocalDate): List<FeatureStory> {
                 "${m.myScore}-${m.opponentScore}" + (if (m.pk.isNotBlank()) "(PK${m.pk})" else "") + "。" +
                 (scorers?.let { "得点は$it。" } ?: "") +
                 (m.visitors?.let { "観客は${"%,d".format(it)}人。" } ?: "") +
-                "メニューの「過去の記録」で、ほかの試合も振り返れます。",
+                "下のメニューの「記録」で、ほかの試合も振り返れます。",
             bigNumber = "${m.myScore}-${m.opponentScore}",
             url = m.url.ifBlank { null }
         )
@@ -656,7 +656,7 @@ private fun legendStory(team: Team, today: LocalDate): List<FeatureStory> {
             team = team,
             headline = "$head、${p.seasonsLabel}で${p.goals}得点",
             body = "${p.seasonsLabel}(${p.seasons.size}シーズン)に${team.shortName}で$record。$status" +
-                "メニューの「過去の記録」の「過去の選手」で、ほかの選手も見られます。",
+                "下のメニューの「記録」の「過去の選手」で、ほかの選手も見られます。",
             bigNumber = "${p.goals}",
             bigUnit = "得点"
         )

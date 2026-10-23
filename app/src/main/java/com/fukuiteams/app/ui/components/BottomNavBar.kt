@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Stadium
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.History
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -55,6 +56,8 @@ val bottomNavItems = listOf(
     NavItem(Routes.PLAYERS, "選手", Icons.Filled.BarChart),
     NavItem(Routes.RADAR, "トピック", Icons.Filled.Article),
     NavItem(Routes.BBS, "掲示板", Icons.Filled.Forum),
+    // 過去の記録(シーズンごとの成績・相手別の対戦成績・過去の試合・過去の選手)
+    NavItem(Routes.ARCHIVE, "記録", Icons.Filled.History),
     NavItem(Routes.NOTIFICATIONS, "メニュー", Icons.Filled.Menu)
 )
 
@@ -104,7 +107,7 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
 }
 
 /**
- * 下のメニューの文字。6つ並ぶと「トピック」「メニュー」が入りきらないことがあるので、
+ * 下のメニューの文字。7つ並ぶと「トピック」「メニュー」が入りきらないことがあるので、
  * 1行に収まるまで文字を小さくする(端が欠けないように)。
  */
 @Composable

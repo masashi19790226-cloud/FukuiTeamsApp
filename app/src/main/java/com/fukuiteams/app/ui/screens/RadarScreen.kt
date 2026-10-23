@@ -313,6 +313,9 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
     val olderItems = shown.filterNot { it.alert.eventInstant()?.isAfter(recentBorder) == true }
     // 分類ボタン(すべて・各分類)の横の数字は、直近3日の件数
     val teamRecentItems = teamItems.filter { it.alert.eventInstant()?.isAfter(recentBorder) == true }
+    // ただし「招待」の数字は、開いたときの見出し「無料招待 ○件」と同じ、いま受付中の招待の件数
+    // (直近3日の件数だと、少し前に出た受付中の招待が数に入らず、開いたときの件数と合わなかった)
+    val openInviteCount = teamItems.count { it.matches(RadarCategory.INVITE) && !it.alert.isLikelyClosed() }
     val knownIds = sorted.map { it.alert.id }.toSet()
     val knownLinks = sorted.map { it.alert.link }.filter { it.isNotBlank() }.toSet()
     val archiveItems = ((archiveResult as? AlertsResult.Success)?.items ?: emptyList())
@@ -384,7 +387,7 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                         )
                         Text(
                             // 説明は短く(詳しくはメニューの「アプリの使い方」)
-                            "ボタンの数字は直近3日の件数です。行を押すと元の記事を開きます。",
+                            "ボタンの数字は直近3日の件数です(招待は受付中の件数)。行を押すと元の記事を開きます。",
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
@@ -411,7 +414,8 @@ fun RadarScreen(initialCategory: String? = null, initialTeam: String? = null) {
                                     if (cat == null) {
                                         CategoryChip("すべて ${teamRecentItems.size}", selectedCategory == null) { selectedCategory = null }
                                     } else {
-                                        val count = teamRecentItems.count { it.matches(cat) }
+                                        val count = if (cat == RadarCategory.INVITE) openInviteCount
+                                            else teamRecentItems.count { it.matches(cat) }
                                         CategoryChip("${cat.label} $count", selectedCategory == cat) {
                                             selectedCategory = if (selectedCategory == cat) null else cat
                                             inviteTab = 0

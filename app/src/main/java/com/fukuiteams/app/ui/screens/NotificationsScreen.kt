@@ -93,8 +93,6 @@ private val kindDefs = listOf(
 fun NotificationsScreen(
     onOpenChangelog: () -> Unit = {},
     onOpenHowToUse: () -> Unit = {},
-    // 過去の記録(シーズンごとの成績・相手別の対戦成績・過去の試合)を開く
-    onOpenArchive: () -> Unit = {},
     // 掲示板タブを開いて、掲示板の設定(キーワード通知の言葉・NGなど)を開く
     onOpenBbsSettings: () -> Unit = {}
 ) {
@@ -154,16 +152,50 @@ fun NotificationsScreen(
                 .padding(bottom = ScrollJumpBottomPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // 下のメニューの「メニュー」画面。上から 通知の設定 → 掲示板 → 公式サイト → 表示の大きさ → 使い方
-            // → データの更新状況 → このアプリについて(更新履歴・最新版の入手)
+            // 下のメニューの「メニュー」画面。上から 公式サイト・SNS → 通知の設定(通知するチーム・通知する内容) → 掲示板
+            // → 着せ替え → 表示の大きさ → 使い方 → このアプリについて(更新履歴・最新版の入手) → データの更新状況
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Headline("通知の設定", fontSize = 22)
+                Headline("メニュー", fontSize = 22)
+                Text(
+                    "公式サイト・SNS、通知の設定、掲示板、着せ替え、表示の大きさ、使い方、更新履歴などがあります。過去の記録は下のメニューの「記録」から開きます。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+                DoubleRule(modifier = Modifier.padding(top = 6.dp))
+            }
+
+            // 4チームの公式サイトと公式SNS(X・インスタグラム)。SNSはチームごとに公式サイトの下に並べる
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("公式サイト・SNS")
+                Team.values().forEach { team ->
+                    team.officialSiteUrl?.let { url ->
+                        MenuLinkRow(
+                            title = team.displayName,
+                            sub = "公式サイトを開く",
+                            onClick = {
+                                runCatching {
+                                    context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url)))
+                                }
+                            }
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        NewsChip("公式X", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, team.officialXUrl) }
+                        team.officialInstagramUrl?.let { ig ->
+                            NewsChip("公式インスタグラム", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, ig) }
+                        }
+                    }
+                }
+            }
+
+            // 通知の設定(この下の赤枠のお知らせ・通知するチーム・通知する内容)
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                SectionLabel("通知の設定")
                 Text(
                     "チームごと・内容ごとに、スマホへの通知を受け取るか選べます。掲示板のキーワード通知は、下の「掲示板」で設定します。",
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
-                DoubleRule(modifier = Modifier.padding(top = 6.dp))
             }
 
             // スマホの設定で通知が止められていると、下のスイッチがONでも届かないので知らせる
@@ -192,7 +224,7 @@ fun NotificationsScreen(
             }
 
             Column {
-                SectionLabel("チーム", modifier = Modifier.padding(bottom = 6.dp))
+                SectionLabel("通知するチーム", modifier = Modifier.padding(bottom = 6.dp))
                 Card(
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp),
                     colors = CardDefaults.cardColors(containerColor = Paper),
@@ -228,16 +260,6 @@ fun NotificationsScreen(
                         }
                     }
                 }
-            }
-
-            // 過去の記録への入口(「チーム」のすぐ下)
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                SectionLabel("過去の記録")
-                MenuLinkRow(
-                    title = "過去の記録",
-                    sub = "シーズンごとの成績・相手別の通算の対戦成績・過去の試合・過去の選手・チームの歩み",
-                    onClick = onOpenArchive
-                )
             }
 
             Column {
@@ -319,36 +341,12 @@ fun NotificationsScreen(
                 }
             }
 
-            // 4チームの公式サイトと公式SNS(X・インスタグラム)。SNSはチームごとに公式サイトの下に並べる
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                SectionLabel("公式サイト・SNS")
-                Team.values().forEach { team ->
-                    team.officialSiteUrl?.let { url ->
-                        MenuLinkRow(
-                            title = team.displayName,
-                            sub = "公式サイトを開く",
-                            onClick = {
-                                runCatching {
-                                    context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url)))
-                                }
-                            }
-                        )
-                    }
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        NewsChip("公式X", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, team.officialXUrl) }
-                        team.officialInstagramUrl?.let { ig ->
-                            NewsChip("公式インスタグラム", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, ig) }
-                        }
-                    }
-                }
-            }
-
             // 着せ替え(アプリ全体の色)。標準(新聞)・選んだチームに合わせる・各チームの色から選ぶ。選んだものはスマホに保存する
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SectionLabel("着せ替え")
                 Text(
                     "アプリの色を各チームの色に変えられます。上の帯・下のメニューがチームの色になり、紙面にもチームの色がうっすら入ります。" +
-                        "「選んだチームに合わせる」にすると、画面の上のチームのボタンで選んだチームの色に変わります(「すべて」のときは標準。試合・選手のタブでは表示しているチームの色)。" +
+                        "「選んだチームに合わせる」にすると、画面の上のチームのボタンで選んだチームの色に変わります(「すべて」のときは標準。試合・選手・記録のタブでは表示しているチームの色)。" +
                         "掲示板の画面はブローウィンズの色、このメニューの画面は標準の色のままです。",
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
@@ -390,12 +388,6 @@ fun NotificationsScreen(
                 )
             }
 
-            // データの更新状況(GitHubの自動更新が最後に動いた時刻と、処理ごとの成否)
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                SectionLabel("データの更新状況")
-                DataStatusBlock(dataStatus, statusChecked)
-            }
-
             // アプリの版と更新履歴への入口
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SectionLabel("このアプリについて")
@@ -433,6 +425,12 @@ fun NotificationsScreen(
                         }
                     }
                 )
+            }
+
+            // データの更新状況(GitHubの自動更新が最後に動いた時刻と、処理ごとの成否)
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel("データの更新状況")
+                DataStatusBlock(dataStatus, statusChecked)
             }
         }
     }
