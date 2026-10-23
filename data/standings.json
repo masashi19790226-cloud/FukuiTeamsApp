@@ -1276,7 +1276,7 @@
       },
       "club_photo_cache": {
         "エスポラーダ北海道イルネーヴェ": {
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "photos": {
             "伊藤沙莉": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/d942d9d60f6954af06f23785cd842a48.jpg",
             "大西恋花": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/84dac01f4466b8da3fd82359eefb2263-1.jpg",
@@ -1289,7 +1289,7 @@
           }
         },
         "バルドラール浦安ラス・ボニータス": {
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "photos": {
             "塚本夏希": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/TSUKAMOTO_Natsuki.jpg",
             "中村美月": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/NAKAMURA_Mizuki.jpg",
@@ -1304,7 +1304,7 @@
           }
         },
         "立川アスレティックFCレディース": {
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "photos": {
             "平井成美": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg",
             "尾田緩奈": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
@@ -1319,7 +1319,7 @@
           }
         },
         "SWHレディース西宮": {
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "photos": {
             "尾川奈穂": "https://www.swh2003.com/img/202627-14.jpg",
             "江川涼": "https://www.swh2003.com/img/202627-9.jpg",
@@ -1337,7 +1337,7 @@
           }
         },
         "アルコ神戸": {
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "photos": {
             "鈴木心菜": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02914-768x512.jpg",
             "高橋京花": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02934-2-768x512.jpg",
@@ -1354,7 +1354,7 @@
           }
         },
         "ミネルバ宇部": {
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "photos": {
             "浜田莉那": "https://www.minerva-ube.jp/image/2026_minervaube_20.png",
             "田中夢": "https://www.minerva-ube.jp/image/2026_minervaube_19.png",
@@ -1364,7 +1364,7 @@
           }
         },
         "フウガドールすみだレディース": {
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "photos": {
             "蔀萌香": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1340x2010_v-frms_webp_f83c1416-bd26-4caa-87cb-cc5c6d1fd86f.jpg",
             "庄子彩": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_9482903a-6bac-46fc-a156-a4421cceb0ef.jpg",
@@ -1388,7 +1388,7 @@
         }
       }
     },
-    "updated_at": "2026-10-22T14:36:15.105919+00:00"
+    "updated_at": "2026-10-23T09:38:50.378013+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3130,13 +3130,13 @@
         }
       ]
     },
-    "updated_at": "2026-10-22T14:36:15.105919+00:00"
+    "updated_at": "2026-10-23T09:38:50.378013+00:00"
   },
   "BIRTHDAYS": {
-    "date": "2026-10-22",
+    "date": "2026-10-23",
     "v": 7,
     "manual": "d8535a448782",
-    "updated_at": "2026-10-21T15:33:04.180629+00:00",
+    "updated_at": "2026-10-22T17:47:56.669382+00:00",
     "players": [
       {
         "team": "UNITED",
@@ -4610,260 +4610,20 @@
         "high_school": "The First Academy(ザ ファースト アカデミ",
         "_key": "blowinds:51000417"
       },
-      "united:137": {
+      "united:82": {
         "team": "UNITED",
-        "name": "杉本 大雅",
-        "reading": "Taiga Sugimoto",
+        "name": "杉本 拓也",
+        "reading": "Takuya Sugimoto",
         "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/5c8c4b4bd439013ad8d098916aade0fd5b4b38fa.png",
-        "birthday": "2003-01-02",
-        "height": "173",
-        "weight": "66",
-        "hometown": "静岡県",
-        "school": "",
-        "position": "",
-        "high_school": "アスルクラロ沼津U-18",
-        "_key": "united:137"
-      },
-      "united:143": {
-        "team": "UNITED",
-        "name": "前田 稜太",
-        "reading": "Ryota Maeda",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/6bd5945f6c4fb9a632eb008d3fa31d79f78a821b.png",
-        "birthday": "2004-01-22",
-        "height": "180",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f5554143ba093bc657c63bb9132d6c2d1d8d78cb.png",
+        "birthday": "1989-12-31",
+        "height": "179",
         "weight": "75",
-        "hometown": "佐賀県",
-        "school": "",
-        "position": "",
-        "high_school": "東福岡高校",
-        "_key": "united:143"
-      },
-      "united:139": {
-        "team": "UNITED",
-        "name": "中島 修斗",
-        "reading": "Shuto Nakashima",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/05/ff09d6db60a2c0f89c88706926f7944de2c073f1.png",
-        "birthday": "2003-01-28",
-        "height": "176",
-        "weight": "72",
-        "hometown": "東京都",
-        "school": "",
-        "position": "",
-        "high_school": "前橋育英高校",
-        "_key": "united:139"
-      },
-      "united:114": {
-        "team": "UNITED",
-        "name": "岩島 巧",
-        "reading": "Kou Iwashima",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/9a99e2c3b367e29cc074d86a157a1e0285761937.png",
-        "birthday": "2003-01-31",
-        "height": "184",
-        "weight": "76",
-        "hometown": "愛知県",
-        "school": "",
-        "position": "",
-        "high_school": "東海学園高校",
-        "_key": "united:114"
-      },
-      "united:138": {
-        "team": "UNITED",
-        "name": "若月 尋",
-        "reading": "Jin Wakatsuki",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/04/9e3bc0b2291a5afe43acfb815e81dad1c5789c9f.png",
-        "birthday": "2002-02-15",
-        "height": "175",
-        "weight": "73",
-        "hometown": "神奈川県",
-        "school": "",
-        "position": "",
-        "high_school": "佐野日大高校",
-        "_key": "united:138"
-      },
-      "united:131": {
-        "team": "UNITED",
-        "name": "鬼京 大翔",
-        "reading": "Hiroto Kikyo",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/c824fe1c331bacaaa8074aabff73520c814cea30.png",
-        "birthday": "2000-02-25",
-        "height": "167",
-        "weight": "63",
-        "hometown": "愛知県",
-        "school": "",
-        "position": "",
-        "high_school": "流通経済大学付属柏高校",
-        "_key": "united:131"
-      },
-      "united:140": {
-        "team": "UNITED",
-        "name": "辻岡 招真",
-        "reading": "Shoma Tsujioka",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/05/0db10e2bd818400f239183a8caee38fe1ed76e5f.png",
-        "birthday": "2004-03-05",
-        "height": "176",
-        "weight": "70",
-        "hometown": "香川県",
-        "school": "",
-        "position": "",
-        "high_school": "尽誠学園高校",
-        "_key": "united:140"
-      },
-      "united:147": {
-        "team": "UNITED",
-        "name": "菅野 雅俊",
-        "reading": "Masatoshi Kanno",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/07/47c30872696bf3c4bef41ddf96f3dde33bd8c72e.png",
-        "birthday": "2003-03-19",
-        "height": "188",
-        "weight": "82",
         "hometown": "静岡県",
         "school": "",
         "position": "",
-        "high_school": "三浦学苑高校",
-        "_key": "united:147"
-      },
-      "united:134": {
-        "team": "UNITED",
-        "name": "山口 哲平",
-        "reading": "Teppei Yamaguchi",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/cd7169b9c78b8448f75c2e6ed7397e4bcd0f58bc.png",
-        "birthday": "2002-05-18",
-        "height": "171",
-        "weight": "65",
-        "hometown": "宮崎県",
-        "school": "",
-        "position": "",
-        "high_school": "宮崎日大高校",
-        "_key": "united:134"
-      },
-      "united:115": {
-        "team": "UNITED",
-        "name": "清水 雅仁",
-        "reading": "Masahito Shimizu",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/465112dd152644efbe3821dc61693778e850b2a8.png",
-        "birthday": "2001-06-12",
-        "height": "175",
-        "weight": "73",
-        "hometown": "東京都",
-        "school": "",
-        "position": "",
-        "high_school": "三菱養和SCユース",
-        "_key": "united:115"
-      },
-      "united:126": {
-        "team": "UNITED",
-        "name": "立山 大祐",
-        "reading": "Daisuke Tateyama",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/3f40a3bdca97022cf658809194ddbffd64801cfc.png",
-        "birthday": "2003-06-14",
-        "height": "175",
-        "weight": "66",
-        "hometown": "埼玉県",
-        "school": "",
-        "position": "",
-        "high_school": "武南高校",
-        "_key": "united:126"
-      },
-      "united:144": {
-        "team": "UNITED",
-        "name": "萩原 正太郎",
-        "reading": "Shotaro Hagiwara",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/07/e3a6e64df9404d959e6e6b175db7d5e7e69083c6.png",
-        "birthday": "2006-06-14",
-        "height": "174",
-        "weight": "70",
-        "hometown": "長野県",
-        "school": "",
-        "position": "",
-        "high_school": "松本山雅FC U-18",
-        "_key": "united:144"
-      },
-      "united:128": {
-        "team": "UNITED",
-        "name": "井出 龍志",
-        "reading": "Ryuji Ide",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/20d3a421b5852f50be599a961877726c13b375e2.png",
-        "birthday": "2002-06-22",
-        "height": "173",
-        "weight": "68",
-        "hometown": "静岡県",
-        "school": "",
-        "position": "",
-        "high_school": "アスルクラロ沼津U-18",
-        "_key": "united:128"
-      },
-      "united:122": {
-        "team": "UNITED",
-        "name": "中村 晃大",
-        "reading": "Akihiro Nakamura",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/593901478a13a1ca5bd4d77be36fbca9cb1784fe.png",
-        "birthday": "2002-06-27",
-        "height": "168",
-        "weight": "63",
-        "hometown": "福井県",
-        "school": "",
-        "position": "",
-        "high_school": "丸岡高校",
-        "_key": "united:122"
-      },
-      "united:123": {
-        "team": "UNITED",
-        "name": "眞古 大輔",
-        "reading": "Daisuke Shinko",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/783d0baae4338920ab74786ebbf67075c5450cbd.png",
-        "birthday": "2002-07-11",
-        "height": "183",
-        "weight": "85",
-        "hometown": "兵庫県",
-        "school": "",
-        "position": "",
-        "high_school": "滝川第二高校",
-        "_key": "united:123"
-      },
-      "united:120": {
-        "team": "UNITED",
-        "name": "杉浦 秀謙",
-        "reading": "Hidekata Sugiura",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/b71f584b42108d2130a748b25b6b5e46b9cab18a.png",
-        "birthday": "2002-07-22",
-        "height": "181",
-        "weight": "72",
-        "hometown": "茨城県",
-        "school": "",
-        "position": "",
-        "high_school": "大津高校",
-        "_key": "united:120"
-      },
-      "united:87": {
-        "team": "UNITED",
-        "name": "廣岡 睦樹",
-        "reading": "Mutsuki Hirooka",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/1d9315d63eb12a772d1c001e3691f72f5cfbb5e4.png",
-        "birthday": "2001-08-16",
-        "height": "174",
-        "weight": "75",
-        "hometown": "京都府",
-        "school": "",
-        "position": "",
-        "high_school": "JFAアカデミー福島 U-18",
-        "_key": "united:87"
+        "high_school": "藤枝明誠高校",
+        "checked": "2026-10-23"
       },
       "united:125": {
         "team": "UNITED",
@@ -4878,67 +4638,37 @@
         "school": "",
         "position": "",
         "high_school": "ヴァンフォーレ甲府U-18",
-        "_key": "united:125"
+        "checked": "2026-10-23"
       },
-      "united:141": {
+      "united:114": {
         "team": "UNITED",
-        "name": "加納 大",
-        "reading": "Haru Kano",
+        "name": "岩島 巧",
+        "reading": "Kou Iwashima",
         "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/81b5546a913c4b71c84450a768488c928192dfca.png",
-        "birthday": "2002-09-13",
-        "height": "173",
-        "weight": "71",
-        "hometown": "静岡県",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/9a99e2c3b367e29cc074d86a157a1e0285761937.png",
+        "birthday": "2003-01-31",
+        "height": "184",
+        "weight": "76",
+        "hometown": "愛知県",
         "school": "",
         "position": "",
-        "high_school": "静岡学園高校",
-        "_key": "united:141"
+        "high_school": "東海学園高校",
+        "checked": "2026-10-23"
       },
-      "united:88": {
+      "united:115": {
         "team": "UNITED",
-        "name": "北脇 健慈",
-        "reading": "Kenji Kitawaki",
+        "name": "清水 雅仁",
+        "reading": "Masahito Shimizu",
         "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ca018230e2c1352e52715c9d36f2890b6bc619cc.png",
-        "birthday": "1991-09-15",
-        "height": "174",
-        "weight": "72",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/465112dd152644efbe3821dc61693778e850b2a8.png",
+        "birthday": "2001-06-12",
+        "height": "175",
+        "weight": "73",
         "hometown": "東京都",
         "school": "",
         "position": "",
-        "high_school": "東京ヴェルディユース",
-        "_key": "united:88"
-      },
-      "united:130": {
-        "team": "UNITED",
-        "name": "今道 恭",
-        "reading": "Kyo Imamichi",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/11d946ed6914e9808968591b67a2588109704dd5.png",
-        "birthday": "2003-09-19",
-        "height": "167",
-        "weight": "63",
-        "hometown": "神奈川県",
-        "school": "",
-        "position": "",
-        "high_school": "湘南工科大学附属高校",
-        "_key": "united:130"
-      },
-      "united:127": {
-        "team": "UNITED",
-        "name": "本村 比呂",
-        "reading": "Hiro Honmura",
-        "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/bf1c39760ed769fe01f3eaa4989e55501b585a3d.png",
-        "birthday": "1998-10-04",
-        "height": "178",
-        "weight": "76",
-        "hometown": "富山県",
-        "school": "",
-        "position": "",
-        "high_school": "富山第一高校",
-        "_key": "united:127"
+        "high_school": "三菱養和SCユース",
+        "checked": "2026-10-23"
       },
       "united:64": {
         "team": "UNITED",
@@ -4953,37 +4683,67 @@
         "school": "",
         "position": "",
         "high_school": "山梨学院高校",
-        "_key": "united:64"
+        "checked": "2026-10-23"
       },
-      "united:119": {
+      "united:123": {
         "team": "UNITED",
-        "name": "野村 魁",
-        "reading": "Kai Nomura",
+        "name": "眞古 大輔",
+        "reading": "Daisuke Shinko",
         "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ce138cd4d4ba4301c3a9708d1d47ae569312c10a.png",
-        "birthday": "2000-10-21",
-        "height": "173",
-        "weight": "71",
-        "hometown": "長野県",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/783d0baae4338920ab74786ebbf67075c5450cbd.png",
+        "birthday": "2002-07-11",
+        "height": "183",
+        "weight": "85",
+        "hometown": "兵庫県",
         "school": "",
         "position": "",
-        "high_school": "塩尻高校",
-        "_key": "united:119"
+        "high_school": "滝川第二高校",
+        "checked": "2026-10-23"
       },
-      "united:129": {
+      "united:128": {
         "team": "UNITED",
-        "name": "和田 俊星",
-        "reading": "Shunsei Wada",
+        "name": "井出 龍志",
+        "reading": "Ryuji Ide",
         "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ee0faf4a7070b7f31ad4646547ab195413caf464.png",
-        "birthday": "2003-12-09",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/20d3a421b5852f50be599a961877726c13b375e2.png",
+        "birthday": "2002-06-22",
         "height": "173",
-        "weight": "75",
-        "hometown": "宮崎県",
+        "weight": "68",
+        "hometown": "静岡県",
         "school": "",
         "position": "",
-        "high_school": "宮崎日大高校",
-        "_key": "united:129"
+        "high_school": "アスルクラロ沼津U-18",
+        "checked": "2026-10-23"
+      },
+      "united:139": {
+        "team": "UNITED",
+        "name": "中島 修斗",
+        "reading": "Shuto Nakashima",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/05/ff09d6db60a2c0f89c88706926f7944de2c073f1.png",
+        "birthday": "2003-01-28",
+        "height": "176",
+        "weight": "72",
+        "hometown": "東京都",
+        "school": "",
+        "position": "",
+        "high_school": "前橋育英高校",
+        "checked": "2026-10-23"
+      },
+      "united:140": {
+        "team": "UNITED",
+        "name": "辻岡 招真",
+        "reading": "Shoma Tsujioka",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/05/0db10e2bd818400f239183a8caee38fe1ed76e5f.png",
+        "birthday": "2004-03-05",
+        "height": "176",
+        "weight": "70",
+        "hometown": "香川県",
+        "school": "",
+        "position": "",
+        "high_school": "尽誠学園高校",
+        "checked": "2026-10-23"
       },
       "united:142": {
         "team": "UNITED",
@@ -4998,22 +4758,262 @@
         "school": "",
         "position": "",
         "high_school": "長崎総合科学大学附属高校",
-        "_key": "united:142"
+        "checked": "2026-10-23"
       },
-      "united:82": {
+      "united:143": {
         "team": "UNITED",
-        "name": "杉本 拓也",
-        "reading": "Takuya Sugimoto",
+        "name": "前田 稜太",
+        "reading": "Ryota Maeda",
         "number": "",
-        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/f5554143ba093bc657c63bb9132d6c2d1d8d78cb.png",
-        "birthday": "1989-12-31",
-        "height": "179",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/6bd5945f6c4fb9a632eb008d3fa31d79f78a821b.png",
+        "birthday": "2004-01-22",
+        "height": "180",
         "weight": "75",
+        "hometown": "佐賀県",
+        "school": "",
+        "position": "",
+        "high_school": "東福岡高校",
+        "checked": "2026-10-23"
+      },
+      "united:147": {
+        "team": "UNITED",
+        "name": "菅野 雅俊",
+        "reading": "Masatoshi Kanno",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/07/47c30872696bf3c4bef41ddf96f3dde33bd8c72e.png",
+        "birthday": "2003-03-19",
+        "height": "188",
+        "weight": "82",
         "hometown": "静岡県",
         "school": "",
         "position": "",
-        "high_school": "藤枝明誠高校",
-        "_key": "united:82"
+        "high_school": "三浦学苑高校",
+        "checked": "2026-10-23"
+      },
+      "united:87": {
+        "team": "UNITED",
+        "name": "廣岡 睦樹",
+        "reading": "Mutsuki Hirooka",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/1d9315d63eb12a772d1c001e3691f72f5cfbb5e4.png",
+        "birthday": "2001-08-16",
+        "height": "174",
+        "weight": "75",
+        "hometown": "京都府",
+        "school": "",
+        "position": "",
+        "high_school": "JFAアカデミー福島 U-18",
+        "checked": "2026-10-23"
+      },
+      "united:126": {
+        "team": "UNITED",
+        "name": "立山 大祐",
+        "reading": "Daisuke Tateyama",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/3f40a3bdca97022cf658809194ddbffd64801cfc.png",
+        "birthday": "2003-06-14",
+        "height": "175",
+        "weight": "66",
+        "hometown": "埼玉県",
+        "school": "",
+        "position": "",
+        "high_school": "武南高校",
+        "checked": "2026-10-23"
+      },
+      "united:134": {
+        "team": "UNITED",
+        "name": "山口 哲平",
+        "reading": "Teppei Yamaguchi",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/cd7169b9c78b8448f75c2e6ed7397e4bcd0f58bc.png",
+        "birthday": "2002-05-18",
+        "height": "171",
+        "weight": "65",
+        "hometown": "宮崎県",
+        "school": "",
+        "position": "",
+        "high_school": "宮崎日大高校",
+        "checked": "2026-10-23"
+      },
+      "united:122": {
+        "team": "UNITED",
+        "name": "中村 晃大",
+        "reading": "Akihiro Nakamura",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/593901478a13a1ca5bd4d77be36fbca9cb1784fe.png",
+        "birthday": "2002-06-27",
+        "height": "168",
+        "weight": "63",
+        "hometown": "福井県",
+        "school": "",
+        "position": "",
+        "high_school": "丸岡高校",
+        "checked": "2026-10-23"
+      },
+      "united:130": {
+        "team": "UNITED",
+        "name": "今道 恭",
+        "reading": "Kyo Imamichi",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/11d946ed6914e9808968591b67a2588109704dd5.png",
+        "birthday": "2003-09-19",
+        "height": "167",
+        "weight": "63",
+        "hometown": "神奈川県",
+        "school": "",
+        "position": "",
+        "high_school": "湘南工科大学附属高校",
+        "checked": "2026-10-23"
+      },
+      "united:131": {
+        "team": "UNITED",
+        "name": "鬼京 大翔",
+        "reading": "Hiroto Kikyo",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/c824fe1c331bacaaa8074aabff73520c814cea30.png",
+        "birthday": "2000-02-25",
+        "height": "167",
+        "weight": "63",
+        "hometown": "愛知県",
+        "school": "",
+        "position": "",
+        "high_school": "流通経済大学付属柏高校",
+        "checked": "2026-10-23"
+      },
+      "united:138": {
+        "team": "UNITED",
+        "name": "若月 尋",
+        "reading": "Jin Wakatsuki",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/04/9e3bc0b2291a5afe43acfb815e81dad1c5789c9f.png",
+        "birthday": "2002-02-15",
+        "height": "175",
+        "weight": "73",
+        "hometown": "神奈川県",
+        "school": "",
+        "position": "",
+        "high_school": "佐野日大高校",
+        "checked": "2026-10-23"
+      },
+      "united:144": {
+        "team": "UNITED",
+        "name": "萩原 正太郎",
+        "reading": "Shotaro Hagiwara",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/07/e3a6e64df9404d959e6e6b175db7d5e7e69083c6.png",
+        "birthday": "2006-06-14",
+        "height": "174",
+        "weight": "70",
+        "hometown": "長野県",
+        "school": "",
+        "position": "",
+        "high_school": "松本山雅FC U-18",
+        "checked": "2026-10-23"
+      },
+      "united:119": {
+        "team": "UNITED",
+        "name": "野村 魁",
+        "reading": "Kai Nomura",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ce138cd4d4ba4301c3a9708d1d47ae569312c10a.png",
+        "birthday": "2000-10-21",
+        "height": "173",
+        "weight": "71",
+        "hometown": "長野県",
+        "school": "",
+        "position": "",
+        "high_school": "塩尻高校",
+        "checked": "2026-10-23"
+      },
+      "united:127": {
+        "team": "UNITED",
+        "name": "本村 比呂",
+        "reading": "Hiro Honmura",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/bf1c39760ed769fe01f3eaa4989e55501b585a3d.png",
+        "birthday": "1998-10-04",
+        "height": "178",
+        "weight": "76",
+        "hometown": "富山県",
+        "school": "",
+        "position": "",
+        "high_school": "富山第一高校",
+        "checked": "2026-10-23"
+      },
+      "united:88": {
+        "team": "UNITED",
+        "name": "北脇 健慈",
+        "reading": "Kenji Kitawaki",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ca018230e2c1352e52715c9d36f2890b6bc619cc.png",
+        "birthday": "1991-09-15",
+        "height": "174",
+        "weight": "72",
+        "hometown": "東京都",
+        "school": "",
+        "position": "",
+        "high_school": "東京ヴェルディユース",
+        "checked": "2026-10-23"
+      },
+      "united:120": {
+        "team": "UNITED",
+        "name": "杉浦 秀謙",
+        "reading": "Hidekata Sugiura",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/b71f584b42108d2130a748b25b6b5e46b9cab18a.png",
+        "birthday": "2002-07-22",
+        "height": "181",
+        "weight": "72",
+        "hometown": "茨城県",
+        "school": "",
+        "position": "",
+        "high_school": "大津高校",
+        "checked": "2026-10-23"
+      },
+      "united:129": {
+        "team": "UNITED",
+        "name": "和田 俊星",
+        "reading": "Shunsei Wada",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/ee0faf4a7070b7f31ad4646547ab195413caf464.png",
+        "birthday": "2003-12-09",
+        "height": "173",
+        "weight": "75",
+        "hometown": "宮崎県",
+        "school": "",
+        "position": "",
+        "high_school": "宮崎日大高校",
+        "checked": "2026-10-23"
+      },
+      "united:137": {
+        "team": "UNITED",
+        "name": "杉本 大雅",
+        "reading": "Taiga Sugimoto",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/03/5c8c4b4bd439013ad8d098916aade0fd5b4b38fa.png",
+        "birthday": "2003-01-02",
+        "height": "173",
+        "weight": "66",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
+        "high_school": "アスルクラロ沼津U-18",
+        "checked": "2026-10-23"
+      },
+      "united:141": {
+        "team": "UNITED",
+        "name": "加納 大",
+        "reading": "Haru Kano",
+        "number": "",
+        "photo": "https://fukuiunited.co.jp/upload/team/2026/06/81b5546a913c4b71c84450a768488c928192dfca.png",
+        "birthday": "2002-09-13",
+        "height": "173",
+        "weight": "71",
+        "hometown": "静岡県",
+        "school": "",
+        "position": "",
+        "high_school": "静岡学園高校",
+        "checked": "2026-10-23"
       }
     }
   },
@@ -6081,7 +6081,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-22T14:36:15.105919+00:00"
+    "updated_at": "2026-10-23T09:38:50.378013+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -7185,12 +7185,12 @@
         }
       }
     },
-    "updated_at": "2026-10-22T14:36:15.105919+00:00"
+    "updated_at": "2026-10-23T09:38:50.378013+00:00"
   },
   "ALUMNI": {
-    "date": "2026-10-22",
+    "date": "2026-10-23",
     "v": 2,
-    "updated_at": "2026-10-22T12:35:02.847045+00:00",
+    "updated_at": "2026-10-22T17:47:56.669382+00:00",
     "players": [
       {
         "team": "RAC",
@@ -7273,9 +7273,9 @@
     ]
   },
   "PHOTOS": {
-    "date": "2026-10-22",
+    "date": "2026-10-23",
     "v": 2,
-    "updated_at": "2026-10-22T12:35:02.847045+00:00",
+    "updated_at": "2026-10-22T17:47:56.669382+00:00",
     "teams": {
       "RAC": [
         {
