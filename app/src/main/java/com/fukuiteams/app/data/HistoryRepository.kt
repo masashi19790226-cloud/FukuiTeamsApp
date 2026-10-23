@@ -97,8 +97,8 @@ data class TeamHistoryData(
     val playersFromLineup: Boolean = false
 )
 
-/** 選手の細かい成績(通算と、シーズンごと。古い順) */
-data class PlayerStats(val total: StatLine, val seasons: List<StatLine>)
+/** 選手の細かい成績(通算と、シーズンごと。古い順)。選手タブの PlayerStats(今季の成績)とは別のもの */
+data class HistoryStats(val total: StatLine, val seasons: List<StatLine>)
 
 /**
  * 細かい成績の合計(ブローウィンズ。選手タブと同じ項目)。平均・成功率は表示のときに計算する。
@@ -201,7 +201,7 @@ data class HistoryPlayer(
     /** シュート数の合計(丸岡RUCK:試合ごとの記録から)。分からなければ null */
     val shots: Int? = null,
     /** 細かい成績(ブローウィンズ:試合ごとのボックススコアの合計)。無ければ null */
-    val stats: PlayerStats? = null
+    val stats: HistoryStats? = null
 ) {
     /** 「2019〜2022」(1シーズンだけなら「2019」) */
     val seasonsLabel: String
@@ -309,7 +309,7 @@ object HistoryRepository {
                         former = q.optJSONArray("former")?.let { a -> (0 until a.length()).map { a.optString(it) }.filter { it.isNotBlank() } }.orEmpty(),
                         stats = q.optJSONObject("stats")?.let { st ->
                             val sArr2 = st.optJSONArray("seasons")
-                            PlayerStats(
+                            HistoryStats(
                                 total = statLine(st.optJSONObject("total"), ""),
                                 seasons = if (sArr2 == null) emptyList() else (0 until sArr2.length()).mapNotNull { k ->
                                     sArr2.optJSONObject(k)?.let { statLine(it, it.optString("season")) }
