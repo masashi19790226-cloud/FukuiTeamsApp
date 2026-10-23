@@ -88,7 +88,22 @@ data class TeamHistoryData(
     /** これまでの選手(出場の多い順。ユナイテッド・ブルーサンダー) */
     val players: List<HistoryPlayer> = emptyList(),
     /** 日本代表・代表候補の選出(新しい順。丸岡RUCK) */
-    val national: List<NationalSelection> = emptyList()
+    val national: List<NationalSelection> = emptyList(),
+    /** 公式のシーズンごとの成績(新しい順。ブローウィンズ。Bリーグ公式のクラブページから) */
+    val officialSeasons: List<OfficialSeason> = emptyList()
+)
+
+/** 公式のシーズンごとの成績1行(ブローウィンズ。Bリーグ公式のクラブページの表) */
+data class OfficialSeason(
+    /** 2024-25 */
+    val season: String,
+    /** 「B2 リーグ戦」「プレーオフ」など */
+    val comp: String,
+    val win: Int,
+    val lose: Int,
+    /** 平均得点・平均失点(「93.8」の形) */
+    val ppg: String,
+    val oppg: String
 )
 
 /** 日本代表・代表候補への選出1回分(チームの公式サイトのお知らせから) */
@@ -101,7 +116,9 @@ data class NationalSelection(
     val kind: String,
     /** 選ばれた選手の名前 */
     val players: List<String>,
-    val link: String
+    val link: String,
+    /** お知らせに載っている選手の写真(名前 → URL。分かった選手だけ) */
+    val photos: Map<String, String> = emptyMap()
 )
 
 /** これまでにチームでプレーした選手1人の通算の記録(scripts/history.py が試合ごとの記録から足し合わせる) */
@@ -232,10 +249,26 @@ object HistoryRepository {
                         title = q.optString("title"),
                         kind = q.optString("kind"),
                         players = names?.let { a -> (0 until a.length()).map { a.optString(it) }.filter { it.isNotBlank() } }.orEmpty(),
-                        link = q.optString("link")
+                        link = q.optString("link"),
+                        photos = q.optJSONObject("photos")?.let { ph -> ph.keys().asSequence().associateWith { k -> ph.optString(k) } }
+                            ?.filterValues { it.isNotBlank() }.orEmpty()
                     )
                 }
-                out[team] = TeamHistoryData(o.optString("source"), o.optString("source_url"), matches, players, national)
+                val sArr = o.optJSONArray("seasons")
+                val officialSeasons = if (sArr == null) emptyList() else (0 until sArr.length()).mapNotNull { i ->
+                    val q = sArr.optJSONObject(i) ?: return@mapNotNull null
+                    val season = q.optString("season")
+                    if (season.isBlank()) return@mapNotNull null
+                    OfficialSeason(
+                        season = season,
+                        comp = q.optString("comp").ifBlank { q.optString("code") },
+                        win = q.optInt("win"),
+                        lose = q.optInt("lose"),
+                        ppg = q.optString("ppg"),
+                        oppg = q.optString("oppg")
+                    )
+                }
+                out[team] = TeamHistoryData(o.optString("source"), o.optString("source_url"), matches, players, national, officialSeasons)
             }
         }
         return out

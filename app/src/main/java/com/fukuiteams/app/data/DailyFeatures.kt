@@ -670,8 +670,12 @@ private fun nationalStory(team: Team, today: LocalDate): List<FeatureStory> {
     val n = list[Math.floorMod(today.toEpochDay().toInt() * 5 + team.ordinal, list.size)]
     val year = n.date.take(4)
     val names = n.players.joinToString("・")
+    // 写真:お知らせの写真 → 元選手の写真 → いまの選手の写真(名前で探す)。名前を添える
+    val photo = n.players.firstNotNullOfOrNull { name -> nationalPhoto(team, n, name)?.let { it to name } }
     return listOf(
         FeatureStory(
+            photo = photo?.first.orEmpty(),
+            photoCaption = photo?.second,
             kicker = "日本代表の歩み",
             team = team,
             headline = "${year}年、${names}が${n.kind}に",
@@ -682,6 +686,15 @@ private fun nationalStory(team: Team, today: LocalDate): List<FeatureStory> {
             url = n.link.ifBlank { null }
         )
     )
+}
+
+/** 日本代表に選ばれた選手の写真(お知らせの写真 → 元選手の写真 → いまの選手の写真)。無ければ null */
+fun nationalPhoto(team: Team, n: NationalSelection, name: String): String? {
+    n.photos[name]?.takeIf { it.isNotBlank() }?.let { return it }
+    val key = name.replace(Regex("[\\s　]"), "")
+    Alumni.players.firstOrNull { it.team == team && it.name.replace(Regex("[\\s　]"), "") == key && it.photo.isNotBlank() }
+        ?.let { return it.photo }
+    return TeamPhotos.findByName(TeamPhotos.forTeam(team), name)?.url
 }
 
 // ---------- ニュース・招待 ----------
@@ -1040,10 +1053,11 @@ private fun alumniStory(team: Team, today: LocalDate): List<FeatureStory> {
             FeatureStory(
                 kicker = "あの選手は今",
                 team = team,
-                headline = "$head、${when_}に${p.kind}",
-                body = "${when_}に${short}を${p.kind}した${p.name}(当時#${p.number})。" +
+                headline = if (p.left.isBlank()) "$head、${short}の元選手" else "$head、${when_}に${p.kind}",
+                body = (if (p.left.isBlank()) "${p.name}は${short}の元選手。${p.note.ifBlank { "" }}${if (p.note.isNotBlank()) "。" else ""}"
+                else "${when_}に${short}を${p.kind}した${p.name}" + (if (p.number.isNotBlank()) "(当時#${p.number})" else "") + "。") +
                     (if (p.dest.isNotBlank()) "移籍先は${p.dest}。" else "") +
-                    "いまはリーグの選手名簿には載っていません。お知らせのページで当時のコメントが読めます。",
+                    "いまはリーグの選手名簿には載っていません。押すと当時のお知らせが開きます。",
                 url = p.link.ifBlank { null }
             )
         )

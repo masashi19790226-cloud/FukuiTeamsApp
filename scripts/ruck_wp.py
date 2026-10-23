@@ -26,10 +26,25 @@ def _posts_api(fetch, site, word, per_page, fields):
 
 
 def _posts_feed(fetch, site, word, per_page):
-    """サイト内検索の RSS から、API と同じ形の記事のリスト(新しい順)"""
-    root = ET.fromstring(fetch(f"{site}/?s={quote(word)}&feed=rss2").encode("utf-8"))
+    """サイト内検索の RSS から、API と同じ形の記事のリスト(新しい順)。
+    RSS は1ページ10件なので、per_page 件になるまで次のページ(&paged=2, 3, …)も読む(ページが無くなったら終わり)"""
+    items = []
+    for page in range(1, (per_page + 9) // 10 + 1):
+        url = f"{site}/?s={quote(word)}&feed=rss2" + (f"&paged={page}" if page > 1 else "")
+        try:
+            root = ET.fromstring(fetch(url).encode("utf-8"))
+        except Exception:
+            if page == 1:
+                raise
+            break  # 次のページが無い(404)
+        got = list(root.iter("item"))
+        if not got:
+            break
+        items += got
+        if len(got) < 10:
+            break
     out = []
-    for item in root.iter("item"):
+    for item in items:
         date = ""
         try:
             date = parsedate_to_datetime(item.findtext("pubDate") or "").astimezone(JST).strftime("%Y-%m-%dT%H:%M:%S")

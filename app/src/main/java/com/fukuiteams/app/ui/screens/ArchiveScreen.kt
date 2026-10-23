@@ -45,6 +45,7 @@ import com.fukuiteams.app.data.AlumniPlayer
 import com.fukuiteams.app.data.DataRefresher
 import com.fukuiteams.app.data.HistoryPlayer
 import com.fukuiteams.app.data.NationalSelection
+import com.fukuiteams.app.data.nationalPhoto
 import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.TeamPhotos
 import com.fukuiteams.app.data.GameOutcome
@@ -196,7 +197,20 @@ fun ArchiveScreen(
                 }
             }
 
-            if (matches.isEmpty()) {
+            val officialSeasons = history?.officialSeasons.orEmpty()
+            if (matches.isEmpty() && officialSeasons.isNotEmpty()) {
+                // 試合ごとの記録がまだ無いチーム(ブローウィンズ)は、公式のシーズンごとの成績だけ出す
+                item {
+                    Text(
+                        "シーズンごとの成績(${history?.source ?: "公式サイト"}から)。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
+                    )
+                }
+                officialSeasons.groupBy { it.season }.forEach { (s, rows) ->
+                    item(key = "os-$s") { OfficialSeasonCard(team, s, rows) }
+                }
+            } else if (matches.isEmpty()) {
                 item { NoHistoryNote(team, HistoryRepository.loaded) }
             } else {
                 item {
@@ -257,7 +271,7 @@ fun ArchiveScreen(
                                 Text(
                                     when (team) {
                                         Team.RAC -> "日本代表の選出のお知らせを読み込めませんでした(データの自動更新を待っている場合もあります)。"
-                                        Team.BLOWINDS -> "ブローウィンズは、Bリーグ公式サイトのメンテナンスが終わってから調べます。"
+                                        Team.BLOWINDS -> "ブローウィンズの日本代表の選出は、まだ調べていません。"
                                         else -> "${team.shortName}の公式サイトのお知らせには、日本代表に選ばれたという記事は見つかりませんでした。"
                                     },
                                     style = MaterialTheme.typography.bodySmall,
@@ -277,7 +291,7 @@ fun ArchiveScreen(
                                 )
                             }
                             items(national, key = { "n-" + it.link }) { n ->
-                                NationalRow(n) { openExternalUrl(context, n.link) }
+                                NationalRow(team, n) { openExternalUrl(context, n.link) }
                             }
                         }
                         if (team == Team.RAC) {
@@ -402,7 +416,7 @@ private fun seasonLabel(season: String): String = "${season}シーズン"
 private fun NoHistoryNote(team: Team, loaded: Boolean) {
     val text = when {
         !loaded -> "読み込んでいます…"
-        team == Team.BLOWINDS -> "ブローウィンズの過去の試合は、Bリーグ公式サイトのメンテナンスが終わってから加える予定です。"
+        team == Team.BLOWINDS -> "ブローウィンズの過去の記録を読み込めませんでした(データの自動更新を待っている場合もあります)。"
         else -> "過去の試合の記録を読み込めませんでした。通信環境を確かめて、あとで開き直してください(データの自動更新を待っている場合もあります)。"
     }
     Text(
@@ -411,6 +425,41 @@ private fun NoHistoryNote(team: Team, loaded: Boolean) {
         style = MaterialTheme.typography.bodyMedium,
         color = Ink
     )
+}
+
+/** 公式のシーズンごとの成績(1シーズン分。リーグ戦・プレーオフなどの行をまとめて出す) */
+@Composable
+private fun OfficialSeasonCard(team: Team, season: String, rows: List<com.fukuiteams.app.data.OfficialSeason>) {
+    val startYear = season.take(4).toIntOrNull()
+    val events = TEAM_HISTORY.filter { it.team == team && it.year == startYear }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Ink)
+            .background(Paper)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Headline(seasonLabel(season), fontSize = 18)
+        rows.forEach { r ->
+            Text(
+                "${r.comp}  ${r.win}勝${r.lose}敗(${r.win + r.lose}試合)",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = Ink
+            )
+            if (r.ppg.isNotBlank() && r.oppg.isNotBlank()) {
+                Text(
+                    "平均得点 ${r.ppg}・平均失点 ${r.oppg}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+            }
+        }
+        events.forEach { e ->
+            Text("★ ${e.title}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = NewsRed)
+        }
+    }
 }
 
 /** 1シーズン分の成績 */
@@ -648,7 +697,8 @@ private fun AlumniCard(a: AlumniPlayer, onClick: () -> Unit) {
             color = Ink
         )
         Text(
-            "${a.left.replace("-", "/")} ${a.kind}" + (if (a.dest.isNotBlank()) "(移籍先:${a.dest})" else ""),
+            if (a.left.isBlank()) a.note.ifBlank { "元選手" }
+            else "${a.left.replace("-", "/")} ${a.kind}" + (if (a.dest.isNotBlank()) "(移籍先:${a.dest})" else ""),
             style = MaterialTheme.typography.bodySmall,
             color = Ink
         )
@@ -666,7 +716,9 @@ private fun AlumniCard(a: AlumniPlayer, onClick: () -> Unit) {
 
 /** 日本代表・代表候補への選出1回分。押すとお知らせのページが開く */
 @Composable
-private fun NationalRow(n: NationalSelection, onClick: () -> Unit) {
+private fun NationalRow(team: Team, n: NationalSelection, onClick: () -> Unit) {
+    // 選ばれた選手の写真(お知らせの写真 → 元選手の写真 → いまの選手の写真)。名前は写真の下に出す
+    val photos = n.players.mapNotNull { name -> nationalPhoto(team, n, name)?.let { com.fukuiteams.app.data.PhotoRef(it, name) } }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -687,5 +739,10 @@ private fun NationalRow(n: NationalSelection, onClick: () -> Unit) {
             color = Ink
         )
         Text(n.title, style = MaterialTheme.typography.labelSmall, color = InkSoft, maxLines = 2)
+        if (photos.isNotEmpty()) {
+            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                com.fukuiteams.app.ui.components.PlayerPhotoRow(photos, count = photos.size, photoWidth = 52.dp, photoHeight = 65.dp)
+            }
+        }
     }
 }

@@ -1152,7 +1152,11 @@ def main():
         bd = STANDINGS.get("BIRTHDAYS") or old_all.get("BIRTHDAYS", {})
         ruck_now = [p.get("name", "") for p in bd.get("players") or [] if p.get("team") == "RAC"]
         scorers_rows = (STANDINGS.get("RAC") or old_all.get("RAC", {})).get("scorers", {}).get("rows") or []
-        al = alumni.build(fetch, old_all.get("ALUMNI", {}), scorers_rows, ruck_now)
+        # 女子Fリーグの各クラブ公式サイトの選手の写真(得点表の写真を付けるときに読んだ分)と、日本代表の選出(過去の記録)
+        club_cache = (STANDINGS.get("RAC") or old_all.get("RAC", {})).get("scorers", {}).get("club_photo_cache") or {}
+        club_photos = {t: (v or {}).get("photos") or {} for t, v in club_cache.items()}
+        national = (load_json(HISTORY_PATH, {}).get("teams", {}).get("RAC") or {}).get("national") or []
+        al = alumni.build(fetch, old_all.get("ALUMNI", {}), scorers_rows, ruck_now, club_photos, national)
         if al and STANDINGS:
             STANDINGS["ALUMNI"] = al
             print(f"[あの選手は今] {len(al['players'])}人分")

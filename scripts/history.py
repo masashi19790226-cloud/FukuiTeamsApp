@@ -26,7 +26,7 @@ import standings
 JST = timezone(timedelta(hours=9))
 
 # データの形の版。変えたときに上げると、その日のうちに作り直す
-VERSION = 3
+VERSION = 4
 
 UNITED_SITE = "https://fukuiunited.co.jp"
 UNITED_ASYNC = UNITED_SITE + "/system/async/async.php"
@@ -343,7 +343,10 @@ def ruck_matches(fetch, old_matches):
         for i, (path, data) in enumerate(mods):
             q = data if data.endswith("t=0") else (data + "0" if data.endswith("t=") else data)
             try:
-                rows = wfl_archive_rows(fetch(f"{WFL_SITE}{path}?{q}"))
+                # この部品は、元のページ(Referer)が無いと「情報が入るまでしばらくお待ちください」しか返さない
+                rows = wfl_archive_rows(fetch(f"{WFL_SITE}{path}?{q}",
+                                              {"Referer": f"{WFL_SITE}/archive/{y}/score.html?t=0",
+                                               "X-Requested-With": "XMLHttpRequest"}))
             except Exception as e:
                 print(f"[WARN] 過去の記録: 丸岡RUCK {season} {path} の取得に失敗 {e!r}")
                 continue
@@ -426,7 +429,8 @@ def national_selections(fetch, max_pages=10):
             if "代表" not in title or NATIONAL_EXCLUDE.search(title) or link in seen:
                 continue
             seen.add(link)
-            body = _wfl_text(it.findtext(ns) or it.findtext("description") or "")
+            raw = it.findtext(ns) or it.findtext("description") or ""
+            body = _wfl_text(raw)
             names = []
             for rx, text in ((NATIONAL_NO_NAME, body), (NATIONAL_NAME, title + " " + body[:300])):
                 for n in rx.findall(text):
@@ -439,10 +443,56 @@ def national_selections(fetch, max_pages=10):
             head = title + body[:120]
             kind = ("U-18日本代表" if "U-18" in head else
                     "日本代表候補" if "候補" in head else "日本代表")
-            out.append({"date": date, "title": title, "kind": kind, "players": names, "link": link})
+            # 選手の写真:お知らせの写真(絵文字を除く)の数と選手の数が同じなら、順に対応させる
+            imgs = []
+            for tag in re.findall(r"<img\b[^>]*>", raw):
+                if "wp-smiley" in tag or "s.w.org" in tag:
+                    continue
+                src = re.search(r"\bsrc=[\"']([^\"']+)[\"']", tag)
+                if not src:
+                    continue
+                url = htmllib.unescape(src.group(1))
+                ss = re.search(r"\bsrcset=[\"']([^\"']+)[\"']", tag)
+                for part in (ss.group(1).split(",") if ss else []):
+                    bits = part.strip().split()
+                    if len(bits) == 2 and bits[1] == "300w":
+                        url = htmllib.unescape(bits[0])
+                        break
+                if url not in imgs:
+                    imgs.append(url)
+            photos = dict(zip(names, imgs)) if names and len(imgs) == len(names) else {}
+            out.append({"date": date, "title": title, "kind": kind, "players": names, "link": link, "photos": photos})
     out.sort(key=lambda x: x["date"], reverse=True)
     print(f"[過去の記録] 丸岡RUCK: 代表選出のお知らせ {len(out)}件")
     return out
+
+
+# ---------- ブローウィンズ(Bリーグ公式のクラブページの、シーズンごとの成績) ----------
+
+BLEAGUE = "https://www.bleague.jp"
+BLOWINDS_TEAM_ID = "2891"
+# 大会の略号 → アプリに出す名前
+BLEAGUE_COMP = {"BO": "B.ONE リーグ戦", "B1": "B1 リーグ戦", "B2": "B2 リーグ戦", "B3": "B3 リーグ戦",
+                "B3RS": "B3 レギュラーシーズン", "B3PO": "B3 プレーオフ", "PO": "プレーオフ", "CS": "チャンピオンシップ"}
+
+
+def blowinds_seasons(fetch):
+    """Bリーグ公式のクラブページの「シーズン・大会・勝・負・平均得点・平均失点…」の表から、シーズンごとの成績(新しい順)。
+    [{"season": "2023-24", "comp": "B3 レギュラーシーズン", "code": "B3RS", "win": 46, "lose": 4, "ppg": "93.8", "oppg": "79.2"}, ...]"""
+    page = fetch(f"{BLEAGUE}/club_detail/?TeamID={BLOWINDS_TEAM_ID}")
+    for table in re.findall(r"<table\b.*?</table>", page, flags=re.S | re.I):
+        out = []
+        for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", table, flags=re.S | re.I):
+            tds = [_wfl_text(x) for x in re.findall(r"<td\b[^>]*>(.*?)</td>", tr, flags=re.S | re.I)]
+            # 1列目がシーズン(2024-25)、2列目が大会の略号、3・4列目が勝・負、5・6列目が平均得点・平均失点(小数)の表だけを使う
+            if (len(tds) >= 6 and re.fullmatch(r"\d{4}-\d{2}", tds[0]) and re.fullmatch(r"[A-Z0-9]{2,6}", tds[1])
+                    and tds[2].isdigit() and tds[3].isdigit() and re.fullmatch(r"\d+\.\d", tds[4])):
+                out.append({"season": tds[0], "code": tds[1], "comp": BLEAGUE_COMP.get(tds[1], tds[1]),
+                            "win": int(tds[2]), "lose": int(tds[3]), "ppg": tds[4], "oppg": tds[5]})
+        if out:
+            print(f"[過去の記録] ブローウィンズ: シーズンごとの成績 {len(out)}行")
+            return out
+    raise ValueError("クラブページにシーズンごとの成績の表が見つかりません")
 
 
 def build(fetch, post_json, old, current=None):
@@ -488,5 +538,15 @@ def build(fetch, post_json, old, current=None):
             teams["RAC"]["national"] = nat
     except Exception as e:
         print(f"[WARN] 過去の記録: 丸岡RUCKの取得に失敗。前回の分を使います {e!r}")
+    try:
+        seasons = blowinds_seasons(fetch)
+        if seasons:
+            prev = teams.get("BLOWINDS") or {}
+            teams["BLOWINDS"] = {**prev, "source": "Bリーグ公式のクラブページ", "source_url": f"{BLEAGUE}/club_detail/?TeamID={BLOWINDS_TEAM_ID}",
+                                 "matches": prev.get("matches") or [], "seasons": seasons}
+    except Exception as e:
+        print(f"[WARN] 過去の記録: ブローウィンズのシーズンごとの成績の取得に失敗。前回の分を使います {e!r}")
+        if "BLOWINDS" not in teams and (old_teams.get("BLOWINDS") or {}).get("seasons"):
+            teams["BLOWINDS"] = old_teams["BLOWINDS"]
     return {"date": today, "v": VERSION, "pending": pending,
             "updated_at": datetime.now(timezone.utc).isoformat(), "teams": teams}

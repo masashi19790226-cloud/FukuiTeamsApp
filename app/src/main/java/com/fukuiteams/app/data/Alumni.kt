@@ -29,8 +29,10 @@ data class AlumniPlayer(
     val nowUrl: String,
     /** 今季の得点(リーグの得点ランキングに載っていれば) */
     val goals: Int?,
-    /** 退団・移籍のお知らせに載っている、その選手の写真(分からなければ空) */
-    val photo: String = ""
+    /** その選手の写真(退団・移籍のお知らせ・今いるクラブ・日本代表のお知らせから。分からなければ空) */
+    val photo: String = "",
+    /** 退団のお知らせが無い元選手の説明(例「2021年に日本代表候補に選ばれた元選手」。ふつうは空) */
+    val note: String = ""
 )
 
 object Alumni {
@@ -55,7 +57,8 @@ object Alumni {
                 nowNumber = p.optString("now_number"),
                 nowUrl = p.optString("now_url"),
                 goals = if (p.has("goals") && !p.isNull("goals")) p.optInt("goals") else null,
-                photo = p.optString("photo")
+                photo = p.optString("photo"),
+                note = p.optString("note")
             )
         }.filter { it.name.isNotBlank() }
     }
