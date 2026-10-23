@@ -681,7 +681,7 @@ private fun legendStory(team: Team, today: LocalDate): List<FeatureStory> {
             team = team,
             headline = "$head、${p.seasonsLabel}で${p.goals}得点",
             body = "${p.seasonsLabel}(${p.seasons.size}シーズン)に${team.shortName}で$record。$status" +
-                "下のメニューの「選手」の「過去の選手」で、ほかの選手も見られます。",
+                "下のメニューの「選手」の「歴代の選手」で、ほかの選手も見られます。",
             bigNumber = "${p.goals}",
             bigUnit = "得点"
         )

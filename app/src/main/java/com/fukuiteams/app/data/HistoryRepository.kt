@@ -94,7 +94,9 @@ data class TeamHistoryData(
     /** リーグの表彰(新しい順。丸岡RUCK:女子Fリーグ公式の過去の記録から) */
     val awards: List<SeasonAward> = emptyList(),
     /** 選手の記録が試合ごとの出場選手から数えたものか(丸岡RUCK。false ならゴールランキングからで、出場試合数は正しくない) */
-    val playersFromLineup: Boolean = false
+    val playersFromLineup: Boolean = false,
+    /** 試合ごとの記録(ブローウィンズ:ボックススコア、丸岡RUCK:出場選手)を読み終えた試合数と全体の試合数。無ければ null */
+    val detailProgress: Pair<Int, Int>? = null
 )
 
 /** 選手の細かい成績(通算と、シーズンごと。古い順)。選手タブの PlayerStats(今季の成績)とは別のもの */
@@ -355,7 +357,8 @@ object HistoryRepository {
                 }
                 out[team] = TeamHistoryData(
                     o.optString("source"), o.optString("source_url"), matches, players, national, officialSeasons, awards,
-                    playersFromLineup = o.optString("players_from") == "lineup"
+                    playersFromLineup = o.optString("players_from") == "lineup",
+                    detailProgress = o.optJSONObject("detail_progress")?.let { dp -> dp.optInt("done") to dp.optInt("total") }
                 )
             }
         }

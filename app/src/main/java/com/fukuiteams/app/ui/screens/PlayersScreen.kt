@@ -227,13 +227,14 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            JumpLink("▼ ${selectedTeam.shortLabel()}", Modifier.weight(1f)) { jumpTo(marks.own) }
-            // 丸岡RUCK・ユナイテッドは、全選手の一覧へ飛ぶボタンも出す
+            // 文字が「…」で切れないよう、短い言葉にする(相手の名前は見出しに出る)
+            JumpLink("▼ 自チーム", Modifier.weight(1f)) { jumpTo(marks.own) }
+            // 丸岡RUCK・ユナイテッド・ブルーサンダーは、全選手の一覧へ飛ぶボタンも出す
             if (selectedTeam != Team.BLOWINDS) {
-                JumpLink("▼ 全選手", Modifier.weight(0.8f)) { jumpTo(marks.all) }
+                JumpLink("▼ 全選手", Modifier.weight(1f)) { jumpTo(marks.all) }
             }
-            JumpLink("▼ 相手:${nextGame?.opponent ?: "次の対戦相手"}", Modifier.weight(if (selectedTeam != Team.BLOWINDS) 1.2f else 1f)) { jumpTo(marks.opp) }
-            JumpLink("▼ 過去", Modifier.weight(0.7f)) { jumpTo(marks.past) }
+            JumpLink("▼ 相手", Modifier.weight(1f)) { jumpTo(marks.opp) }
+            JumpLink("▼ 歴代", Modifier.weight(1f)) { jumpTo(marks.past) }
         }
         Column(
             modifier = Modifier
@@ -408,12 +409,6 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             preview?.oppLink?.let { link ->
                 LinkText("相手チームの情報を見る ›") { openPlayersUrl(context, link) }
             }
-            // 過去の選手(代表選出・元選手・表彰・これまでの選手。以前は「記録」タブにあったもの)
-            ThinRule(modifier = Modifier.padding(vertical = 4.dp))
-            Box(modifier = Modifier.onGloballyPositioned { marks.past = it }) {
-                SectionLabel("${selectedTeam.displayName}の過去の選手")
-            }
-            PastPlayersSection(selectedTeam)
             Text(
                 "選手の数字はGitHubの自動更新(約20分おき)で" +
                     when (selectedTeam) {
@@ -426,6 +421,12 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
+            // 歴代の選手(今の選手も含むこれまでの全選手の記録。代表選出・元選手・表彰。以前は「記録」タブの「過去の選手」にあったもの)
+            ThinRule(modifier = Modifier.padding(vertical = 4.dp))
+            Box(modifier = Modifier.onGloballyPositioned { marks.past = it }) {
+                SectionLabel("${selectedTeam.displayName}の歴代の選手")
+            }
+            PastPlayersSection(selectedTeam, profileOf = { name -> profiles[profileKey(selectedTeam, name)] })
         }
         }
         PullToRefreshContainer(
@@ -574,9 +575,7 @@ private fun UpdateTimesBox(team: Team, roster: TeamPlayers?, scorersUpdatedAt: j
     val now = java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Tokyo"))
     val lines = mutableListOf<Pair<String, java.time.ZonedDateTime?>>()
     if (team == Team.BLOWINDS) {
-        if (roster?.teamStats?.isNotEmpty() == true) {
-            lines += "チームの数字(公式の更新)" to parseOfficialTime(roster.teamStatsUpdated)
-        }
+        // チームの数字はチームタブに移したので、ここには選手の成績の時刻だけを出す
         lines += "選手の成績(取り込み)" to roster?.updatedAt?.atZone(now.zone)
     } else {
         lines += "得点(取り込み)" to scorersUpdatedAt?.atZone(now.zone)
@@ -794,7 +793,7 @@ private class JumpMarks {
 
 /** 上に固定する「自チーム」「相手」へ飛ぶリンク。 */
 /** 選手カードのプロフィールの行のうち、並び順に合わせて色を付ける行 */
-private enum class ProfileMark { NONE, BIRTHDAY, AGE, HEIGHT }
+internal enum class ProfileMark { NONE, BIRTHDAY, AGE, HEIGHT }
 
 /**
  * 選手カードの写真の下に出す、生年月日・年齢の行と、身長・体重・出身地などの行、出身校の行(カードの幅いっぱい・1行ずつ)。
@@ -802,7 +801,7 @@ private enum class ProfileMark { NONE, BIRTHDAY, AGE, HEIGHT }
  * 誕生日順のときは、次の誕生日まで何日かも出す
  */
 @Composable
-private fun ProfileLines(p: PlayerBirthday, mark: ProfileMark) {
+internal fun ProfileLines(p: PlayerBirthday, mark: ProfileMark) {
     val today = BirthdaysRepository.today()
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(2.dp)) {
         val days = p.daysUntilNext(today)
@@ -1086,19 +1085,22 @@ private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, sort: 
 
 @Composable
 private fun JumpLink(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    // ボタンが4つ並ぶと文字が入りきらないことがあるので、1行に収まるまで文字を小さくする(「…」で切れないように)
+    var size by remember(label) { mutableStateOf(13f) }
     Text(
         label,
         modifier = modifier
             .border(1.dp, Ink)
             .background(Paper)
             .clickable(onClick = onClick)
-            .padding(horizontal = 8.dp, vertical = 7.dp),
+            .padding(horizontal = 4.dp, vertical = 7.dp),
         color = Ink,
-        fontSize = 13.sp,
+        fontSize = size.sp,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+        softWrap = false,
+        onTextLayout = { r -> if (r.hasVisualOverflow && size > 8f) size -= 0.5f }
     )
 }
 
@@ -1204,7 +1206,7 @@ private fun minutesToSeconds(text: String?): Double? {
 
 /** 並び順の切り替えボタン。幅は呼び出し側(modifier)で決め、文字は中央に1行で表示する。 */
 @Composable
-private fun SortChip(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) =
+internal fun SortChip(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) =
     NewsChip(label, selected, modifier, horizontalPadding = 0.dp, onClick = onClick)
 /**
  * 全選手一覧の1人分。背番号・名前・ポジションと、試合数・平均出場時間・平均得点・リバウンド・アシスト。
@@ -1213,7 +1215,7 @@ private fun SortChip(label: String, selected: Boolean, modifier: Modifier = Modi
  */
 /** 選手名の下に出す読み方(ローマ字)。分からない選手は何も出さない */
 @Composable
-private fun PlayerReading(reading: String) {
+internal fun PlayerReading(reading: String) {
     if (reading.isBlank()) return
     Text(
         reading,
@@ -1424,7 +1426,7 @@ private fun gameLogDate(date: String): String = try {
 
 /** 数字1つ分(上に項目名、下に数字)。数字が無ければ「データなし」。 */
 @Composable
-private fun StatCell(label: String, value: String?, modifier: Modifier) {
+internal fun StatCell(label: String, value: String?, modifier: Modifier) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(label, style = MaterialTheme.typography.labelSmall, color = InkSoft, maxLines = 1)
         Text(

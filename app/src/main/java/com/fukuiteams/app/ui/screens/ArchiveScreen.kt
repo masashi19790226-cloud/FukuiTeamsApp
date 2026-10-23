@@ -7,6 +7,9 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -91,14 +94,17 @@ private enum class ArchiveTab(val label: String) {
 
 /** 「過去の選手」の絞り込み・並び順 */
 private enum class ArchivePlayerFilter(val label: String) {
-    FORMER("元選手"),
-    ALL("全選手")
+    FORMER("元選手だけ"),
+    ALL("全員(今の選手も)")
 }
 
 private enum class ArchivePlayerSort(val label: String) {
-    APPS("出場の多い順"),
-    GOALS("得点の多い順"),
-    RECENT("最近まで在籍順")
+    APPS("出場"),
+    GOALS("得点"),
+    RECENT("最近"),
+    NUMBER("背番号"),
+    HEIGHT("身長"),
+    AGE("年齢")
 }
 
 /**
@@ -140,7 +146,10 @@ fun ArchiveScreen(
     // 今季のチームの数字(ブローウィンズ:Bリーグ公式のクラブ成績。次の相手の分も並べる。以前は選手タブにあったもの)
     var teamPlayers by remember { mutableStateOf<Map<String, com.fukuiteams.app.data.TeamPlayers>>(emptyMap()) }
     var previews by remember { mutableStateOf<Map<String, com.fukuiteams.app.data.GamePreview>>(emptyMap()) }
+    // 今季の順位・勝敗(試合タブの「順位」と同じデータ)
+    var standings by remember { mutableStateOf<Map<String, com.fukuiteams.app.data.LeagueStandings>>(emptyMap()) }
     LaunchedEffect(Unit) {
+        standings = runCatching { StandingsRepository.fetch() }.getOrDefault(emptyMap())
         teamPlayers = runCatching { com.fukuiteams.app.data.PlayersRepository.fetch() }.getOrDefault(emptyMap())
         previews = runCatching { com.fukuiteams.app.data.GamePreviewRepository.fetch() }.getOrDefault(emptyMap())
     }
@@ -149,6 +158,7 @@ fun ArchiveScreen(
             val d = DataRefresher.refreshAll(context)
             teamPlayers = d.players
             previews = d.previews
+            standings = d.standings
             pullToRefreshState.endRefresh()
         }
     }
@@ -210,6 +220,22 @@ fun ArchiveScreen(
                 }
             }
 
+            // 今季の順位・勝敗(4チームとも。試合タブの「順位」の要点と同じ)
+            item { SectionLabel("今季", modifier = Modifier.padding(top = 4.dp)) }
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper).padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    Text(
+                        com.fukuiteams.app.ui.components.teamStandingsSummary(team, standings[team.name]),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Ink
+                    )
+                    Text("順位表は試合タブの「順位」で見られます。", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                }
+            }
             // 今季のチームの数字(ブローウィンズ。Bリーグ公式のクラブ成績を、次の対戦相手と並べて比べる)
             val roster = teamPlayers[team.name]
             if (roster != null && roster.teamStats.isNotEmpty()) {
@@ -221,7 +247,7 @@ fun ArchiveScreen(
                 val opp = teamPlayers[com.fukuiteams.app.data.BLOWINDS_OPP_KEY]?.takeIf { r ->
                     r.teamStats.isNotEmpty() && (r.gameId.isBlank() || r.gameId == preview?.gameId)
                 }
-                item { SectionLabel("今季のチームの数字", modifier = Modifier.padding(top = 4.dp)) }
+                item { SectionLabel("今季のチームの数字", modifier = Modifier.padding(top = 8.dp)) }
                 item {
                     TeamStatsSection(
                         mine = roster,
@@ -230,8 +256,8 @@ fun ArchiveScreen(
                         oppName = opp?.teamName?.ifBlank { null } ?: nextGame?.opponent ?: "相手"
                     )
                 }
-                item { SectionLabel("これまでの記録", modifier = Modifier.padding(top = 8.dp)) }
             }
+            item { SectionLabel("これまでの記録", modifier = Modifier.padding(top = 8.dp)) }
 
             val officialSeasons = history?.officialSeasons.orEmpty()
             if (matches.isEmpty() && officialSeasons.isNotEmpty()) {
@@ -333,22 +359,6 @@ fun ArchiveScreen(
                 }
             }
 
-            // 過去のニュース・招待(トピックの画面で見る)
-            item { SectionLabel("過去のニュース・招待", modifier = Modifier.padding(top = 8.dp)) }
-            item {
-                MenuLinkRow(
-                    title = "${team.shortName}の過去のニュース",
-                    sub = "トピックを開きます。下の「それより前(過去1年)」を押すと、45日より前のニュースも見られます",
-                    onClick = { onOpenTopics(team) }
-                )
-            }
-            item {
-                MenuLinkRow(
-                    title = "過去の招待・プレゼント企画",
-                    sub = "トピックの「招待」を開きます。「過去の招待」に切り替えると、終わった招待を見られます",
-                    onClick = onOpenInvites
-                )
-            }
             // 右下のボタンに最後の行が隠れないよう、下に余白を空ける
             item { Spacer(modifier = Modifier.height(ScrollJumpBottomPadding)) }
         }
@@ -366,7 +376,7 @@ fun ArchiveScreen(
  * これまでの選手(出場・得点。ブローウィンズは細かい成績も)。以前は「記録」タブの「過去の選手」にあったもの。
  */
 @Composable
-fun PastPlayersSection(team: Team) {
+fun PastPlayersSection(team: Team, profileOf: (String) -> com.fukuiteams.app.data.PlayerBirthday? = { null }) {
     val context = LocalContext.current
     LaunchedEffect(Unit) { HistoryRepository.ensureLoaded() }
     LaunchedEffect(Unit) { if (Alumni.players.isEmpty()) runCatching { StandingsRepository.fetch() } }
@@ -374,7 +384,102 @@ fun PastPlayersSection(team: Team) {
     val history = HistoryRepository.data[team]
     var playerFilter by remember { mutableStateOf(ArchivePlayerFilter.FORMER) }
     var playerSort by remember { mutableStateOf(ArchivePlayerSort.APPS) }
+    // 選んでいる並び順のボタンをもう一度押すと、逆の順番にする(選手タブと同じ)
+    var reversed by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (team != Team.RAC || history?.players.orEmpty().isNotEmpty()) {
+            val all = history?.players.orEmpty()
+            val hasNow = all.any { it.now != null }
+            val filtered = all.filter { playerFilter == ArchivePlayerFilter.ALL || !hasNow || it.now == false }
+            // 身長・年齢は、選手紹介に載っている(今の)選手だけ分かる。分からない選手は最後
+            val base = when (playerSort) {
+                ArchivePlayerSort.APPS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.apps }.thenByDescending { it.goals })
+                ArchivePlayerSort.GOALS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.goals }.thenByDescending { it.apps })
+                // 最後の試合の日付が分からない選手(丸岡RUCK)は、最後のシーズンで並べる
+                ArchivePlayerSort.RECENT -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.last.ifBlank { it.seasons.lastOrNull().orEmpty() } }.thenByDescending { it.apps })
+                ArchivePlayerSort.NUMBER -> filtered.sortedBy { it.number.toIntOrNull() ?: 999 }
+                ArchivePlayerSort.HEIGHT -> filtered.sortedWith(
+                    compareBy<HistoryPlayer> { profileOf(it.name)?.heightCm == null }.thenByDescending { profileOf(it.name)?.heightCm ?: 0.0 }
+                )
+                ArchivePlayerSort.AGE -> filtered.sortedWith(
+                    compareBy<HistoryPlayer> { profileOf(it.name) == null }.thenBy { profileOf(it.name)?.birthday }
+                )
+            }
+            val sorted = if (reversed) {
+                val (missing, known) = base.partition {
+                    (playerSort == ArchivePlayerSort.HEIGHT && profileOf(it.name)?.heightCm == null) ||
+                        (playerSort == ArchivePlayerSort.AGE && profileOf(it.name) == null)
+                }
+                known.reversed() + missing
+            } else base
+            SectionLabel("歴代の選手(今の選手も含む)", modifier = Modifier.padding(top = 4.dp))
+            if (hasNow) {
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    ArchivePlayerFilter.values().forEach { f ->
+                        NewsChip(f.label, playerFilter == f, modifier = Modifier.weight(1f)) { playerFilter = f }
+                    }
+                }
+            }
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                ArchivePlayerSort.values().forEach { o ->
+                    SortChip(
+                        if (playerSort == o && reversed) o.label + "(逆)" else o.label,
+                        playerSort == o,
+                        Modifier.weight(o.label.length + 1f)
+                    ) {
+                        if (playerSort == o) {
+                            reversed = !reversed
+                        } else {
+                            reversed = false
+                            playerSort = o
+                        }
+                    }
+                }
+            }
+            Text(
+                when (team) {
+                    Team.THUNDER -> "リーグH公式の試合ページのスコア表から数えています(2024-25シーズン〜)。「試合」はスコア表に名前のあった試合です。"
+                    Team.BLOWINDS -> "Bリーグ公式の試合ごとのボックススコア(2023-24シーズン〜)から数えています。「試合」はコートに立った試合です。選手を押すとシーズンごとの成績が開きます。"
+                    Team.RAC -> if (history?.playersFromLineup == true)
+                        "女子Fリーグ公式の試合ごとの記録(出場選手・シュート・得点。2017年〜今季)から数えています。「試合」はコートに立った試合(先発・途中出場)です。"
+                    else
+                        "女子Fリーグ公式の過去の記録のゴールランキング(1点以上の選手)から数えた得点です。試合ごとの記録を読み込むと、出場試合数も出ます(データの自動更新を待っています)。"
+                    Team.UNITED -> "ユナイテッド公式サイトの試合情報(2019年〜の公式戦)の先発・交代・得点から数えています。"
+                } +
+                    (if (hasNow) "「元選手」はいまの選手名簿にいない選手です。" else "") +
+                    "${sorted.size}人",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
+            // 試合ごとの記録の読み込み具合(ブローウィンズ・丸岡RUCKは少しずつ読むので、そろうまでは数字が少なめ)
+            history?.detailProgress?.let { (done, total) ->
+                if (total > 0 && done < total) {
+                    Text(
+                        "試合ごとの記録を読み込み中です($done/${total}試合)。そろうまで、出場・得点などの数字は少なめに出ます。",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold,
+                        color = NewsRed
+                    )
+                }
+            }
+            if (sorted.isEmpty()) {
+                Text(
+                    if (HistoryRepository.loaded) "歴代の選手のデータはまだありません(データの自動更新を待っている場合もあります)。" else "読み込んでいます…",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft
+                )
+            }
+            val mark = when (playerSort) {
+                ArchivePlayerSort.HEIGHT -> ProfileMark.HEIGHT
+                ArchivePlayerSort.AGE -> ProfileMark.AGE
+                else -> ProfileMark.NONE
+            }
+            sorted.forEach { p ->
+                androidx.compose.runtime.key(team, p.name) {
+                    HistoryPlayerCard(team, p, history?.playersFromLineup == true, profileOf(p.name), mark)
+                }
+            }
+        }
         // 代表・代表候補の選出(チームの公式サイトのお知らせから)
         val national = history?.national.orEmpty()
         SectionLabel("代表・代表候補の選出", modifier = Modifier.padding(top = 4.dp))
@@ -401,18 +506,6 @@ fun PastPlayersSection(team: Team) {
             )
             national.forEach { n -> NationalRow(team, n) { openExternalUrl(context, n.link) } }
         }
-        if (team == Team.RAC) {
-            SectionLabel("元選手(退団・移籍)", modifier = Modifier.padding(top = 4.dp))
-            // 丸岡RUCKは、公式サイトの退団・移籍のお知らせからの元選手(「あの選手は今」と同じデータ)
-            val alumni = Alumni.players.filter { it.team == Team.RAC }.sortedByDescending { it.left }
-            Text(
-                if (alumni.isEmpty()) "元選手のデータを読み込めませんでした(データの自動更新を待っている場合もあります)。"
-                else "丸岡RUCK公式サイトの退団・移籍のお知らせ(2019年〜)に載っている元選手${alumni.size}人。いまのクラブは女子Fリーグ公式の選手名簿から調べています。押すとページが開きます。",
-                style = MaterialTheme.typography.bodySmall,
-                color = InkSoft
-            )
-            alumni.forEach { a -> AlumniCard(a) { openExternalUrl(context, a.nowUrl.ifBlank { a.link }) } }
-        }
         // リーグの表彰(丸岡RUCK:女子Fリーグ公式の過去の記録の「最優秀選手賞」「ベストファイブ」など)
         val awards = history?.awards.orEmpty()
         if (awards.isNotEmpty()) {
@@ -427,52 +520,22 @@ fun PastPlayersSection(team: Team) {
                 )
             }
         }
-        if (team != Team.RAC || history?.players.orEmpty().isNotEmpty()) {
-            val all = history?.players.orEmpty()
-            val hasNow = all.any { it.now != null }
-            val filtered = all.filter { playerFilter == ArchivePlayerFilter.ALL || !hasNow || it.now == false }
-            val sorted = when (playerSort) {
-                ArchivePlayerSort.APPS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.apps }.thenByDescending { it.goals })
-                ArchivePlayerSort.GOALS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.goals }.thenByDescending { it.apps })
-                // 最後の試合の日付が分からない選手(丸岡RUCK)は、最後のシーズンで並べる
-                ArchivePlayerSort.RECENT -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.last.ifBlank { it.seasons.lastOrNull().orEmpty() } }.thenByDescending { it.apps })
-            }
-            SectionLabel("これまでの選手", modifier = Modifier.padding(top = 4.dp))
-            if (hasNow) {
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    ArchivePlayerFilter.values().forEach { f ->
-                        NewsChip(f.label, playerFilter == f, modifier = Modifier.weight(1f)) { playerFilter = f }
-                    }
-                }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                ArchivePlayerSort.values().forEach { o ->
-                    NewsChip(o.label, playerSort == o, modifier = Modifier.weight(1f), horizontalPadding = 2.dp, fontSize = 11.sp) { playerSort = o }
-                }
-            }
+        if (team == Team.RAC) {
+            // 丸岡RUCKは、公式サイトの退団・移籍のお知らせからの元選手(「あの選手は今」と同じデータ)
+            // 歴代の選手の一覧に出ている選手は、そのカードに「いま」・退団の情報を出すので、ここには出さない
+            val listed = history?.players.orEmpty().map { it.name.replace(Regex("[\\s　]"), "") }.toSet()
+            val alumni = Alumni.players.filter { it.team == Team.RAC && NameChanges.current(team, it.name).replace(Regex("[\\s　]"), "") !in listed }
+                .sortedByDescending { it.left }
+            if (alumni.isNotEmpty() || listed.isEmpty()) {
+            SectionLabel("ほかの元選手(退団・移籍のお知らせから)", modifier = Modifier.padding(top = 4.dp))
             Text(
-                when (team) {
-                    Team.THUNDER -> "リーグH公式の試合ページのスコア表から数えています(2024-25シーズン〜)。「試合」はスコア表に名前のあった試合です。"
-                    Team.BLOWINDS -> "Bリーグ公式の試合ごとのボックススコア(2023-24シーズン〜)から数えています。「試合」はコートに立った試合です。選手を押すとシーズンごとの成績が開きます。"
-                    Team.RAC -> if (history?.playersFromLineup == true)
-                        "女子Fリーグ公式の試合ごとの記録(出場選手・シュート・得点。2017年〜今季)から数えています。「試合」はコートに立った試合(先発・途中出場)です。"
-                    else
-                        "女子Fリーグ公式の過去の記録のゴールランキング(1点以上の選手)から数えた得点です。試合ごとの記録を読み込むと、出場試合数も出ます(データの自動更新を待っています)。"
-                    Team.UNITED -> "ユナイテッド公式サイトの試合情報(2019年〜の公式戦)の先発・交代・得点から数えています。"
-                } +
-                    (if (hasNow) "「元選手」はいまの選手名簿にいない選手です。" else "") +
-                    "${sorted.size}人",
+                if (alumni.isEmpty()) "元選手のデータを読み込めませんでした(データの自動更新を待っている場合もあります)。"
+                else "上の歴代の選手に出ていない、丸岡RUCK公式サイトの退団・移籍のお知らせ(2019年〜)の元選手${alumni.size}人。いまのクラブは女子Fリーグ公式の選手名簿から調べています。押すとページが開きます。",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
-            if (sorted.isEmpty()) {
-                Text(
-                    if (HistoryRepository.loaded) "過去の選手のデータはまだありません(データの自動更新を待っている場合もあります)。" else "読み込んでいます…",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = InkSoft
-                )
+            alumni.forEach { a -> AlumniCard(a) { openExternalUrl(context, a.nowUrl.ifBlank { a.link }) } }
             }
-            sorted.forEach { p -> HistoryPlayerCard(team, p, history?.playersFromLineup == true) }
         }
     }
 }
@@ -740,70 +803,117 @@ private fun MatchRow(m: HistoryMatch, onClick: () -> Unit) {
 
 /** これまでの選手1人(ユナイテッド・ブルーサンダー) */
 @Composable
-private fun HistoryPlayerCard(team: Team, p: HistoryPlayer, fromLineup: Boolean = false) {
-    // 写真:いまのチームの選手の写真(公式サイトの選手紹介など)に名前が同じ選手がいれば出す。
-    // いなければ、過去の記録に入っている写真(ブローウィンズ:Bリーグ公式の、福井にいたシーズンの写真)。
-    // 元選手の写真は、ユナイテッド公式サイトには残っていない(選手のページが消えている)ため出せない
-    val photo = remember(team, p.name, p.photo, TeamPhotos.own) {
-        TeamPhotos.findByName(TeamPhotos.forTeam(team), p.name)
+private fun HistoryPlayerCard(
+    team: Team,
+    p: HistoryPlayer,
+    fromLineup: Boolean = false,
+    profile: com.fukuiteams.app.data.PlayerBirthday? = null,
+    mark: ProfileMark = ProfileMark.NONE
+) {
+    // 選手タブの今の選手のカードと同じ見た目(写真・背番号・名前・プロフィール・数字のます目)。
+    // 写真:選手紹介の写真 → いまのチームの選手の写真 → 過去の記録の写真(ブローウィンズ:Bリーグ公式) → 丸岡RUCKの「あの選手は今」の写真
+    // (元選手の写真は、ユナイテッド公式サイトには残っていない(選手のページが消えている)ため出せない)
+    val photo = remember(team, p.name, p.photo, profile?.photo, TeamPhotos.own) {
+        profile?.photo?.takeIf { it.isNotBlank() }?.let { com.fukuiteams.app.data.PhotoRef(it, p.name) }
+            ?: TeamPhotos.findByName(TeamPhotos.forTeam(team), p.name)
             ?: p.photo.takeIf { it.isNotBlank() }?.let { com.fukuiteams.app.data.PhotoRef(it, p.name) }
-            // 丸岡RUCKの元選手は「あの選手は今」の写真
             ?: Alumni.players.firstOrNull { it.team == team && it.photo.isNotBlank() &&
                 it.name.replace(Regex("[\\s　]"), "") == p.name.replace(Regex("[\\s　]"), "") }
                 ?.let { com.fukuiteams.app.data.PhotoRef(it.photo, p.name) }
     }
     // 細かい成績(ブローウィンズ)がある選手は、押すとシーズンごとの成績が開く
     var opened by remember(team, p.name) { mutableStateOf(false) }
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, if (opened) Ink else LineGray)
+            .border(1.dp, Ink)
             .background(Paper)
             .then(if (p.stats != null) Modifier.clickable { opened = !opened } else Modifier)
-            .padding(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-    if (photo != null) {
-        RemoteThumbnail(photo.url, width = 44.dp, height = 55.dp, alignTop = true, zoomCaption = photo.label)
-    }
-    Column(
-        modifier = Modifier.weight(1f),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text(
-                (if (p.number.isNotBlank()) "#${p.number} " else "") + p.name +
-                    // 結婚などで名字が変わった選手は、前の名前も添える
-                    (if (p.former.isNotEmpty()) "(旧:${p.former.joinToString("・")})" else ""),
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                color = Ink
-            )
-            if (p.position.isNotBlank()) Text(p.position, style = MaterialTheme.typography.labelSmall, color = InkSoft)
-            when (p.now) {
-                true -> Text("在籍中", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = NewsRed)
-                false -> Text("元選手", style = MaterialTheme.typography.labelSmall, color = InkSoft)
-                null -> {}
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            if (photo != null) {
+                RemoteThumbnail(photo.url, width = 72.dp, height = 90.dp, alignTop = true, zoomCaption = photo.label)
+            } else {
+                // 写真が無い選手も、並びがそろうよう同じ大きさの枠を出す
+                Box(modifier = Modifier.size(width = 72.dp, height = 90.dp).border(1.dp, LineGray))
+            }
+            val number = p.number.ifBlank { profile?.number.orEmpty() }
+            Headline(if (number.isNotBlank()) "#$number" else "#-", fontSize = 22, modifier = Modifier.width(58.dp))
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(
+                    p.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+                // 結婚などで名字が変わった選手は、前の名前も添える
+                if (p.former.isNotEmpty()) {
+                    Text("旧:${p.former.joinToString("・")}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                }
+                profile?.reading?.let { PlayerReading(it) }
+                (p.position.ifBlank { profile?.position.orEmpty() }).takeIf { it.isNotBlank() }?.let {
+                    Text("ポジション:$it", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                }
+                when (p.now) {
+                    true -> Text("在籍中", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = NewsRed)
+                    false -> Text("元選手", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = InkSoft)
+                    null -> {}
+                }
             }
         }
-        val record = when (team) {
-            Team.UNITED, Team.BLOWINDS -> "出場 ${p.apps}試合(先発${p.starts})・${p.goals}得点"
-            // 丸岡RUCKは、試合ごとの記録(出場選手)から数えたときは出場・先発・得点・シュート。
-            // ゴールランキング(得点した選手)からのときは出場試合数が正しくないので得点だけ
-            Team.RAC -> if (fromLineup)
-                "出場 ${p.apps}試合(先発${p.starts})・${p.goals}得点" + (p.shots?.let { "・シュート$it" } ?: "")
-            else
-                "${p.goals}得点(公式のゴールランキングに載ったシーズンの合計)"
-            else -> "${p.apps}試合・${p.goals}得点"
+        // 生年月日・身長など(今の選手で、選手紹介に載っている選手だけ)
+        profile?.let { ProfileLines(it, mark) }
+        // 元選手のいま(ブローウィンズ:Bリーグ公式、ブルーサンダー:リーグH公式の選手ページから)
+        if (p.now == false && p.nowChecked) {
+            Text(
+                if (p.nowTeam.isNotBlank()) "いま:${p.nowTeam}"
+                else if (team == Team.BLOWINDS) "いま:Bリーグのクラブには所属していません"
+                else "いま:リーグHのチームには所属していません",
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = if (p.nowTeam.isNotBlank()) FontWeight.Bold else FontWeight.Normal,
+                color = if (p.nowTeam.isNotBlank()) NewsRed else InkSoft
+            )
         }
-        Text(record, style = MaterialTheme.typography.bodySmall, color = if (p.goals > 0) Ink else InkSoft)
+        // 丸岡RUCKの元選手:退団・移籍のお知らせ(あの選手は今)にある、退団の時期と今のクラブ
+        if (team == Team.RAC && p.now != true) {
+            val key = p.name.replace(Regex("[\\s　]"), "")
+            val a = Alumni.players.firstOrNull {
+                it.team == team && NameChanges.current(team, it.name).replace(Regex("[\\s　]"), "") == key
+            }
+            if (a != null) {
+                if (a.now.isNotBlank()) {
+                    Text("いま:${a.now}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = NewsRed)
+                }
+                val leftText = listOfNotNull(
+                    a.left.takeIf { it.isNotBlank() }?.replace("-", "/"),
+                    a.kind.takeIf { it.isNotBlank() },
+                    a.dest.takeIf { it.isNotBlank() }?.let { "($it)" }
+                ).joinToString(" ").ifBlank { a.note }
+                if (leftText.isNotBlank()) {
+                    Text(leftText, style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                }
+            }
+        }
         Text(
             "${p.seasonsLabel}(${p.seasons.size}シーズン)" + (if (p.last.isNotBlank()) "・最後の試合 ${p.last.replace("-", "/")}" else ""),
             style = MaterialTheme.typography.labelSmall,
             color = InkSoft
         )
+        // 数字のます目(選手タブと同じ形)。丸岡RUCKでゴールランキングからのときは、出場・先発は分からないので「-」
+        val knowApps = team != Team.RAC || fromLineup
+        Row(modifier = Modifier.fillMaxWidth()) {
+            StatCell("出場", if (knowApps) "${p.apps}試合" else "-", Modifier.weight(1f))
+            if (team != Team.THUNDER) {
+                StatCell("先発", if (knowApps) "${p.starts}" else "-", Modifier.weight(1f))
+            }
+            StatCell("得点", "${p.goals}", Modifier.weight(1f))
+            if (team == Team.RAC && fromLineup) {
+                StatCell("シュート", p.shots?.toString() ?: "-", Modifier.weight(1f))
+            }
+        }
         // 細かい成績(ブローウィンズ:選手タブと同じ項目。試合ごとのボックススコアの合計から)
         p.stats?.let { st ->
             StatLines(st.total, "通算")
@@ -817,18 +927,6 @@ private fun HistoryPlayerCard(team: Team, p: HistoryPlayer, fromLineup: Boolean 
                 st.seasons.asReversed().forEach { s -> StatLines(s, seasonLabel(s.season)) }
             }
         }
-        // 元選手のいま(ブローウィンズ:Bリーグ公式、ブルーサンダー:リーグH公式の選手ページから)
-        if (p.now == false && p.nowChecked) {
-            Text(
-                if (p.nowTeam.isNotBlank()) "いま:${p.nowTeam}"
-                else if (team == Team.BLOWINDS) "いま:Bリーグのクラブには所属していません"
-                else "いま:リーグHのチームには所属していません",
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = if (p.nowTeam.isNotBlank()) FontWeight.Bold else FontWeight.Normal,
-                color = if (p.nowTeam.isNotBlank()) NewsRed else InkSoft
-            )
-        }
-    }
     }
 }
 

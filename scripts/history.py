@@ -1220,7 +1220,10 @@ def build(fetch, post_json, old, current=None):
                 pending = ruck_lineups(fetch, got, (old_teams.get("RAC") or {}).get("matches")) or pending
             except Exception as e:
                 print(f"[WARN] 過去の記録: 丸岡RUCKの試合ごとの記録の取得に失敗 {e!r}")
-            teams["RAC"] = {"source": "女子Fリーグ公式の過去の記録・試合一覧", "source_url": f"{WFL_SITE}/archive/", "matches": got}
+            teams["RAC"] = {"source": "女子Fリーグ公式の過去の記録・試合一覧", "source_url": f"{WFL_SITE}/archive/", "matches": got,
+                            # 試合ごとの記録(出場選手)を読み終えた試合の数(アプリで「読み込み中」を出す)
+                            "detail_progress": {"done": sum(1 for m in got if m.get("lineup") is not None),
+                                                "total": sum(1 for m in got if "gid=" in (m.get("url") or ""))}}
     except Exception as e:
         print(f"[WARN] 過去の記録: 丸岡RUCKの取得に失敗。前回の分を使います {e!r}")
     # 丸岡RUCKの選手の得点(ゴールランキング)とリーグの表彰
@@ -1276,7 +1279,10 @@ def build(fetch, post_json, old, current=None):
     if seasons or bw_matches:
         teams["BLOWINDS"] = {"source": "Bリーグ公式の日程・結果・クラブページ", "source_url": f"{BLEAGUE}/club_detail/?TeamID={BLOWINDS_TEAM_ID}",
                              "matches": bw_matches, "seasons": seasons, "players": bw_players,
-                             "national": bw_nat.get("items") or [], "national_scan": {"months": bw_nat.get("months") or []}}
+                             "national": bw_nat.get("items") or [], "national_scan": {"months": bw_nat.get("months") or []},
+                             # 試合ごとの選手の成績(細かい成績まで)を読み終えた試合の数(アプリで「読み込み中」を出す)
+                             "detail_progress": {"done": sum(1 for m in bw_matches if m.get("box") and all(len(r) >= BOX_ROW_LEN for r in m["box"])),
+                                                 "total": len(bw_matches)}}
     # 取れなかったチームは前回の分を残す(版を上げて作り直したときも消さない)
     for key, val in old_teams.items():
         if key not in teams and val:
