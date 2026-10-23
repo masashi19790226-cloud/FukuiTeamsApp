@@ -1388,7 +1388,7 @@
         }
       }
     },
-    "updated_at": "2026-10-23T09:38:50.378013+00:00"
+    "updated_at": "2026-10-23T10:59:11.244793+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3130,7 +3130,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-23T09:38:50.378013+00:00"
+    "updated_at": "2026-10-23T10:59:11.244793+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-10-23",
@@ -6081,7 +6081,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-23T09:38:50.378013+00:00"
+    "updated_at": "2026-10-23T10:59:11.244793+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -7185,12 +7185,12 @@
         }
       }
     },
-    "updated_at": "2026-10-23T09:38:50.378013+00:00"
+    "updated_at": "2026-10-23T10:59:11.244793+00:00"
   },
   "ALUMNI": {
     "date": "2026-10-23",
-    "v": 2,
-    "updated_at": "2026-10-22T17:47:56.669382+00:00",
+    "v": 3,
+    "updated_at": "2026-10-23T10:59:11.244793+00:00",
     "players": [
       {
         "team": "RAC",
@@ -7200,6 +7200,7 @@
         "kind": "移籍",
         "dest": "バルドラール浦安ラス・ボニータス",
         "link": "https://ruck-fukui.com/archives/5721",
+        "photo": "",
         "now": "バルドラール浦安ラス・ボニータス",
         "now_number": "10",
         "now_url": "https://w-fleague.jp/club/urayasu/",
@@ -7213,6 +7214,7 @@
         "kind": "退団",
         "dest": "",
         "link": "https://ruck-fukui.com/archives/5232",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2018/09/3c0361712750d55f9f43e41f7a5f7b3e-300x300.jpg",
         "now": "",
         "now_number": "",
         "now_url": "",
@@ -7226,6 +7228,7 @@
         "kind": "退団",
         "dest": "",
         "link": "https://ruck-fukui.com/archives/5215",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2018/09/8jun-300x300.jpg",
         "now": "",
         "now_number": "",
         "now_url": "",
@@ -7239,6 +7242,7 @@
         "kind": "退団",
         "dest": "",
         "link": "https://ruck-fukui.com/archives/5215",
+        "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2018/09/14miu-300x300.jpg",
         "now": "",
         "now_number": "",
         "now_url": "",
@@ -7252,6 +7256,7 @@
         "kind": "退団",
         "dest": "",
         "link": "https://ruck-fukui.com/archives/2325",
+        "photo": "",
         "now": "アルコ神戸",
         "now_number": "19",
         "now_url": "https://w-fleague.jp/club/kobe/",
@@ -7265,6 +7270,7 @@
         "kind": "退団",
         "dest": "",
         "link": "https://ruck-fukui.com/archives/1701",
+        "photo": "",
         "now": "",
         "now_number": "",
         "now_url": "",
