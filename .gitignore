@@ -16,3 +16,6 @@ local.properties
 # 古いバックアップと、Pythonが自動で作る一時ファイルはリポジトリに入れない(2026年10月)
 *.bak
 __pycache__/
+
+# Claude のデスクトップアプリが受け取ったファイルを置くフォルダ(アプリには使わない)
+Claude outputs/

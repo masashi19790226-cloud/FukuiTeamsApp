@@ -532,6 +532,33 @@ def ruck_players_from_lineups(matches, current_keys):
     return players
 
 
+def ruck_former_profiles(fetch, players):
+    """丸岡RUCKの元所属の選手(now が False)を、女子Fリーグのほかのクラブの選手名簿(alumni.wfl_rosters)と名前で合わせ、
+    生年月日(birthday)・いまのクラブ(now_team)を入れる。名簿にいなければ now_checked だけ付ける"""
+    import alumni
+    rosters = alumni.wfl_rosters(fetch)
+    if not rosters:
+        return
+    found = 0
+    for p in players:
+        if p.get("now") is not False:
+            continue
+        r = rosters.get(alumni._key(p["name"]))
+        if r is None:
+            # 結婚などで名前が変わる前の名前でも探す
+            for f in p.get("former") or []:
+                r = rosters.get(alumni._key(f))
+                if r:
+                    break
+        p["now_checked"] = datetime.now(JST).strftime("%Y-%m-%d")
+        if r:
+            p["now_team"] = r.get("club", "")
+            if r.get("birthday"):
+                p["birthday"] = r["birthday"]
+            found += 1
+    print(f"[過去の記録] 丸岡RUCK: 元所属の選手のうち、いま女子Fリーグのほかのクラブにいる選手 {found}人")
+
+
 def ruck_players(extras, current_keys):
     """ゴールランキング(1点以上の選手)から、丸岡RUCKのこれまでの選手(得点の多い順)。出場は得点したシーズンの分だけ"""
     book = {}
@@ -1298,6 +1325,12 @@ def build(fetch, post_json, old, current=None):
             from_lineups = ruck_players_from_lineups(teams["RAC"]["matches"], cur_keys.get("RAC"))
             teams["RAC"]["players"] = from_lineups or ruck_players(extras, cur_keys.get("RAC"))
             teams["RAC"]["players_from"] = "lineup" if from_lineups else "ranking"
+            # 元所属の選手で、いま女子Fリーグのほかのクラブにいる選手は、そのクラブの選手名簿の生年月日といまのクラブを入れる
+            # (女子Fリーグ公式の選手名簿には身長が無いので、身長は入らない。引退した選手などは分からない)
+            try:
+                ruck_former_profiles(fetch, teams["RAC"]["players"])
+            except Exception as e:
+                print(f"[WARN] 過去の記録: 丸岡RUCKの元所属の選手の生年月日の取得に失敗 {e!r}")
             teams["RAC"]["awards"] = [dict(a, season=v["season"]) for k, v in sorted(extras["years"].items(), reverse=True)
                                       for a in v.get("awards") or []]
     except Exception as e:

@@ -1197,35 +1197,40 @@ private fun HistoryPlayerCard(
                 ProfileLine("${heightText}cm", marked = mark == ProfileMark.HEIGHT)
             }
         }
-        // 元選手のいま(ブローウィンズ:Bリーグ公式、ブルーサンダー:リーグH公式の選手ページから)
-        if (p.now == false && p.nowChecked) {
+        // 丸岡RUCKの元所属の選手:退団・移籍のお知らせ(あの選手は今)の、退団の時期と今のクラブ
+        val alumni = if (team == Team.RAC && p.now != true) {
+            val key = p.name.replace(Regex("[\\s　]"), "")
+            Alumni.players.firstOrNull {
+                it.team == team && NameChanges.current(team, it.name).replace(Regex("[\\s　]"), "") == key
+            }
+        } else null
+        // 元所属の選手のいま(ブローウィンズ:Bリーグ公式、ブルーサンダー:リーグH公式、丸岡RUCK:女子Fリーグ公式の選手名簿から)。
+        // 丸岡RUCKで「あの選手は今」にいまのクラブがあれば、そちらを出す(同じことを2回出さない)
+        val nowFromAlumni = alumni?.now?.takeIf { it.isNotBlank() }
+        if (nowFromAlumni != null) {
+            Text("いま:$nowFromAlumni", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = NewsRed)
+        } else if (p.now == false && p.nowChecked) {
             Text(
                 if (p.nowTeam.isNotBlank()) "いま:${p.nowTeam}"
-                else if (team == Team.BLOWINDS) "いま:Bリーグのクラブには所属していません"
-                else "いま:リーグHのチームには所属していません",
+                else when (team) {
+                    Team.BLOWINDS -> "いま:Bリーグのクラブには所属していません"
+                    Team.RAC -> "いま:女子Fリーグのクラブには所属していません"
+                    else -> "いま:リーグHのチームには所属していません"
+                },
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = if (p.nowTeam.isNotBlank()) FontWeight.Bold else FontWeight.Normal,
                 color = if (p.nowTeam.isNotBlank()) NewsRed else InkSoft
             )
         }
-        // 丸岡RUCKの元選手:退団・移籍のお知らせ(あの選手は今)にある、退団の時期と今のクラブ
-        if (team == Team.RAC && p.now != true) {
-            val key = p.name.replace(Regex("[\\s　]"), "")
-            val a = Alumni.players.firstOrNull {
-                it.team == team && NameChanges.current(team, it.name).replace(Regex("[\\s　]"), "") == key
-            }
-            if (a != null) {
-                if (a.now.isNotBlank()) {
-                    Text("いま:${a.now}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = NewsRed)
-                }
-                val leftText = listOfNotNull(
-                    a.left.takeIf { it.isNotBlank() }?.replace("-", "/"),
-                    a.kind.takeIf { it.isNotBlank() },
-                    a.dest.takeIf { it.isNotBlank() }?.let { "($it)" }
-                ).joinToString(" ").ifBlank { a.note }
-                if (leftText.isNotBlank()) {
-                    Text(leftText, style = MaterialTheme.typography.labelSmall, color = InkSoft)
-                }
+        if (alumni != null) {
+            // 退団の時期・種類・移籍先(種類が「元選手」だけのときは、上の「元所属」と同じなので出さない)
+            val leftText = listOfNotNull(
+                alumni.left.takeIf { it.isNotBlank() }?.replace("-", "/"),
+                alumni.kind.takeIf { it.isNotBlank() && it != "元選手" },
+                alumni.dest.takeIf { it.isNotBlank() }?.let { "($it)" }
+            ).joinToString(" ").ifBlank { alumni.note.replace("元選手", "元所属の選手") }
+            if (leftText.isNotBlank()) {
+                Text(leftText, style = MaterialTheme.typography.labelSmall, color = InkSoft)
             }
         }
         // シーズンと最後の試合は、途中で折り返さないよう2行に分ける
@@ -1445,7 +1450,7 @@ private fun AlumniCard(a: AlumniPlayer, onClick: () -> Unit) {
             color = Ink
         )
         Text(
-            if (a.left.isBlank()) a.note.ifBlank { "元選手" }
+            if (a.left.isBlank()) a.note.replace("元選手", "元所属の選手").ifBlank { "元所属の選手" }
             else "${a.left.replace("-", "/")} ${a.kind}" + (if (a.dest.isNotBlank()) "(移籍先:${a.dest})" else ""),
             style = MaterialTheme.typography.bodySmall,
             color = Ink

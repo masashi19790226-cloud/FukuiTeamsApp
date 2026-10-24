@@ -152,7 +152,10 @@ def wfl_rosters(fetch):
             if len(tds) < 3:
                 continue
             # 列は ポジション・背番号・氏名・ローマ字・生年月日・出身 の順
-            out[_key(tds[2])] = {"club": name, "number": tds[1], "name": tds[2], "url": club_url}
+            bd = re.match(r"(\d{4})\.(\d{1,2})\.(\d{1,2})", tds[4]) if len(tds) >= 5 else None
+            out[_key(tds[2])] = {"club": name, "number": tds[1], "name": tds[2], "url": club_url,
+                                 # 生年月日(歴代の選手の元所属の選手に出す。読めなければ "")
+                                 "birthday": "%04d-%02d-%02d" % tuple(int(x) for x in bd.groups()) if bd else ""}
     print(f"[あの選手は今] 女子Fリーグ: {len(slugs)}クラブ・{len(out)}人の名簿")
     return out
 
