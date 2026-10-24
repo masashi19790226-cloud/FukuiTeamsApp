@@ -1268,13 +1268,13 @@ private fun HistoryPlayerCard(
         }
         // 出た試合の一覧と、相手別の成績(試合ごとの記録から)
         if (p.log.isNotEmpty()) {
-            GameLogSection(team, p, logOpened, { logOpened = !logOpened }, splitOpened, { splitOpened = !splitOpened })
+            HistoryGameLogSection(team, p, logOpened, { logOpened = !logOpened }, splitOpened, { splitOpened = !splitOpened })
         }
     }
 }
 
 /** 1試合分の、選手の数字(「先発・12点・5リバウンド・3アシスト・24分」「途中出場・2得点・シュート5」) */
-private fun gameLogLine(team: Team, l: com.fukuiteams.app.data.PlayerGameLog): String = listOfNotNull(
+private fun gameLogLine(team: Team, l: com.fukuiteams.app.data.HistoryGameLog): String = listOfNotNull(
     if (l.started) "先発" else "途中出場".takeIf { team != Team.THUNDER },
     if (team == Team.BLOWINDS) "${l.points}点" else "${l.points}得点",
     l.rebounds?.let { "${it}リバウンド" },
@@ -1285,7 +1285,7 @@ private fun gameLogLine(team: Team, l: com.fukuiteams.app.data.PlayerGameLog): S
 
 /** 選手の「出た試合」(新しい順)と「相手別の成績」。押すと開く */
 @Composable
-private fun GameLogSection(
+private fun HistoryGameLogSection(
     team: Team,
     p: HistoryPlayer,
     logOpened: Boolean,

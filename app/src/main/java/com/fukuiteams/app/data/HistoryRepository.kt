@@ -211,7 +211,7 @@ data class HistoryPlayer(
     /** 身長(cm。元選手:選手ページから)。分からなければ null */
     val heightCm: Double? = null,
     /** 出た試合ごとの記録(古い順)。データに無ければ空 */
-    val log: List<PlayerGameLog> = emptyList()
+    val log: List<HistoryGameLog> = emptyList()
 ) {
     /** 「2019〜2022」(1シーズンだけなら「2019」) */
     val seasonsLabel: String
@@ -227,7 +227,7 @@ data class HistoryPlayer(
  * points はブローウィンズは得点、ほかのチームはゴール数。
  * shots は丸岡RUCKだけ、seconds・rebounds・assists はブローウィンズだけ(無ければ null)
  */
-data class PlayerGameLog(
+data class HistoryGameLog(
     /** 2024-10-05 */
     val date: String,
     val opponent: String,
@@ -340,14 +340,14 @@ object HistoryRepository {
      * 選手の試合ごとの記録 [日付, 相手, H/A, 福井の点, 相手の点, 先発か, 得点, …] を読む。
      * 8つ目以降:丸岡RUCKはシュート、ブローウィンズは出場秒数・リバウンド・アシスト
      */
-    private fun parseLog(team: Team, a: org.json.JSONArray?): List<PlayerGameLog> {
+    private fun parseLog(team: Team, a: org.json.JSONArray?): List<HistoryGameLog> {
         if (a == null) return emptyList()
         return (0 until a.length()).mapNotNull { i ->
             val r = a.optJSONArray(i) ?: return@mapNotNull null
             if (r.length() < 7) return@mapNotNull null
             fun intAt(k: Int): Int? = if (k < r.length() && !r.isNull(k)) r.optInt(k) else null
             val opp = r.optString(1).replace("&#039;", "'").replace("&amp;", "&")
-            PlayerGameLog(
+            HistoryGameLog(
                 date = r.optString(0),
                 opponent = if (team == Team.BLOWINDS) BLEAGUE_SHORT_NAMES[opp.trim()] ?: opp else opp,
                 homeAway = r.optString(2),

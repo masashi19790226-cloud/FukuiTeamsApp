@@ -85,7 +85,7 @@ fun teamRecords(team: Team): List<TeamRecord> {
  * 1試合の個人の記録の上位(歴代)。value が null・0 の試合は数えない。
  * 試合ごとの記録(選手の log)が無いチームは、試合の得点者(scorers)から数える(得点だけ)
  */
-fun singleGameHighs(team: Team, top: Int = 5, value: (PlayerGameLog) -> Int?): List<GameHigh> {
+fun singleGameHighs(team: Team, top: Int = 5, value: (HistoryGameLog) -> Int?): List<GameHigh> {
     val players = HistoryRepository.data[team]?.players.orEmpty()
     val rows = players.flatMap { p ->
         p.log.mapNotNull { l ->
@@ -120,8 +120,8 @@ data class OpponentSplit(
 }
 
 /** 選手の試合ごとの記録を、相手ごとにまとめる(対戦の多い順)。表記ゆれ・名前の変わった相手はまとめる */
-fun opponentSplits(log: List<PlayerGameLog>): List<OpponentSplit> {
-    val groups = mutableListOf<MutableList<PlayerGameLog>>()
+fun opponentSplits(log: List<HistoryGameLog>): List<OpponentSplit> {
+    val groups = mutableListOf<MutableList<HistoryGameLog>>()
     log.sortedByDescending { it.date }.forEach { l ->
         val g = groups.firstOrNull { sameOpponentLoose(it.first().opponent, l.opponent) }
         if (g != null) g += l else groups += mutableListOf(l)
