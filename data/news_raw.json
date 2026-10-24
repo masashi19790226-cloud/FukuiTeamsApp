@@ -4677,5 +4677,13 @@
     "source": "ORICON NEWS",
     "image": "https://www.bing.com/th?id=ONUT.RFoqyHlEGgKI8F1YBlSr4g&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-24T00:04:57.813319+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1403652092544231220",
+    "team": "THUNDER",
+    "title": "11月23日 リーグＨ 福井永平寺ブルーサンダー ＶＳ ゴールデンウルヴス福岡 - Teket",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://teket.jp/10834/74775&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw1MZunNtyMwJGPIz1D6ZxjQ",
+    "published": "2026-10-23T13:22:38Z",
+    "detected_at": "2026-10-24T09:09:46.265351+00:00"
   }
 ]
