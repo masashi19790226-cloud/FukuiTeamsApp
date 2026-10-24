@@ -8,7 +8,11 @@ import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -79,29 +83,45 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
                 .fillMaxWidth()
                 .windowInsetsPadding(NavigationBarDefaults.windowInsets)
                 .heightIn(min = 56.dp)
+                // 選んでいるタブの背景・上の線を、帯の上端から下端まで引くため、高さを中身に合わせて決める
+                .height(IntrinsicSize.Min)
                 .selectableGroup(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             bottomNavItems.forEach { item ->
                 val selected = currentRoute == item.route
+                // 選んでいるタブは、上に太い線を引き、背景をうっすら明るく(暗く)する。
+                // チームの色の着せ替えでは、アイコン・文字が白どうしで選んでいるタブが分かりにくかったため
                 Column(
                     modifier = Modifier
                         .weight(1f)
+                        .fillMaxHeight()
                         .selectable(selected = selected, role = Role.Tab, onClick = { onNavigate(item.route) })
-                        .padding(vertical = 6.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                        .then(if (selected) Modifier.background(OnBarColor.copy(alpha = 0.14f)) else Modifier),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // アイコンは標準(24dp)より少し小さくして、文字とのつり合いをとる
-                    Icon(
-                        item.icon,
-                        contentDescription = item.label,
-                        modifier = Modifier.size(20.dp),
-                        tint = if (selected) NavSelectedIconColor else OnBarSoftColor
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(3.dp)
+                            .background(if (selected) NavSelectedIconColor else Color.Transparent)
                     )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    CompositionLocalProvider(LocalContentColor provides if (selected) OnBarColor else OnBarSoftColor) {
-                        NavLabel(item.label, selected, labelSize) { if (labelSize > 8f) labelSize -= 0.5f }
+                    Column(
+                        modifier = Modifier.weight(1f).padding(top = 3.dp, bottom = 6.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        // アイコンは標準(24dp)より少し小さくして、文字とのつり合いをとる
+                        Icon(
+                            item.icon,
+                            contentDescription = item.label,
+                            modifier = Modifier.size(20.dp),
+                            tint = if (selected) NavSelectedIconColor else OnBarSoftColor
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        CompositionLocalProvider(LocalContentColor provides if (selected) OnBarColor else OnBarSoftColor) {
+                            NavLabel(item.label, selected, labelSize) { if (labelSize > 8f) labelSize -= 0.5f }
+                        }
                     }
                 }
             }

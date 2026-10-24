@@ -395,3 +395,90 @@ private fun LeagueStandingsTable(rows: List<StandingRow>, ownWord: String, ownCo
         }
     }
 }
+
+/**
+ * チームタブの「今季」:順位・勝敗などを、数字のます目で大きく見やすく出す(以前は1行の文章だった)。
+ * ブローウィンズは地区の順位表(順位・勝敗・勝率・首位との差・連勝/連敗、ホーム/アウェー・直近5試合)、
+ * ほかのチームはリーグの順位表(順位・勝点・勝敗)から。順位表がまだ無ければ一言だけ出す
+ */
+@Composable
+fun TeamSeasonCard(team: Team, standings: LeagueStandings?) {
+    Column(
+        modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper).padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        val bleague = standings?.bleague?.takeIf { team == Team.BLOWINDS }
+        val me = bleague?.me
+        if (bleague != null && me != null) {
+            Text(bleague.own?.label ?: bleague.ownDistrict, style = MaterialTheme.typography.labelMedium, color = InkSoft)
+            Row(modifier = Modifier.fillMaxWidth()) {
+                SeasonCell("順位", "${me.rank}位", Modifier.weight(1f), strong = true)
+                SeasonCell("勝敗", "${me.win}勝${me.lose}敗", Modifier.weight(1.3f))
+                SeasonCell("勝率", com.fukuiteams.app.data.winRateLabel(me.win, me.win + me.lose), Modifier.weight(1f))
+                SeasonCell("首位との差", if (me.rank == 1) "首位" else me.gamesBehind.ifBlank { "0" }, Modifier.weight(1.1f))
+            }
+            val second = listOfNotNull(
+                me.streakLabel.takeIf { it.isNotBlank() }?.let { "連勝・連敗" to it },
+                me.home.takeIf { it.isNotBlank() }?.let { "ホーム" to it.replace("-", "勝") + "敗" },
+                me.away.takeIf { it.isNotBlank() }?.let { "アウェー" to it.replace("-", "勝") + "敗" },
+                me.last5.takeIf { it.isNotBlank() }?.let { "直近5試合" to it.replace("-", "勝") + "敗" }
+            )
+            if (second.isNotEmpty()) {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    second.forEach { (label, value) -> SeasonCell(label, value, Modifier.weight(1f), small = true) }
+                }
+            }
+        } else if (standings != null && team != Team.BLOWINDS) {
+            val word = when (team) {
+                Team.RAC -> "丸岡"
+                Team.THUNDER -> "ブルーサンダー"
+                else -> "福井ユナイテッド"
+            }
+            val part = standings.final?.takeIf { p -> p.rows.any { (it.played ?: 0) > 0 } } ?: standings.regular
+            val row = part?.rows?.firstOrNull { it.team.contains(word) }
+            if (part == null || row == null) {
+                Text(teamStandingsSummary(team, standings), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
+            } else {
+                Text(
+                    listOf(standings.league, part.label).filter { it.isNotBlank() }.joinToString(" "),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = InkSoft
+                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    SeasonCell("順位", "${row.rank}位", Modifier.weight(1f), strong = true)
+                    SeasonCell("勝点", "${row.points}", Modifier.weight(1f))
+                    if (row.win != null && row.lose != null) {
+                        SeasonCell(
+                            "勝敗",
+                            "${row.win}勝${row.lose}敗" + (if ((row.draw ?: 0) > 0) "${row.draw}分" else ""),
+                            Modifier.weight(1.6f)
+                        )
+                    }
+                    row.goalDiff?.let { d -> SeasonCell("得失点差", if (d > 0) "+$d" else "$d", Modifier.weight(1.1f)) }
+                }
+            }
+        } else {
+            Text(teamStandingsSummary(team, standings), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
+        }
+        Text("順位表は試合タブの「順位」で見られます。", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+    }
+}
+
+/** 今季の数字1つ(上に項目名、下に数字) */
+@Composable
+private fun SeasonCell(label: String, value: String, modifier: Modifier, strong: Boolean = false, small: Boolean = false) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(label, style = MaterialTheme.typography.labelSmall, color = InkSoft, maxLines = 1)
+        // 入りきらないときは、1行に収まるまで文字を小さくする(「12勝12敗」などが切れないように)
+        var size by remember(value) { mutableStateOf(if (small) 14f else 18f) }
+        Text(
+            value,
+            fontSize = size.sp,
+            fontWeight = FontWeight.ExtraBold,
+            color = if (strong) Accent else Ink,
+            maxLines = 1,
+            softWrap = false,
+            onTextLayout = { r -> if (r.hasVisualOverflow && size > 9f) size -= 0.5f }
+        )
+    }
+}

@@ -12,7 +12,28 @@ import java.net.URLEncoder
  * 試合当日の天気(Open-Meteo。登録やAPIキー不要の無料の天気予報)。
  * ホームゲームは福井市、アウェイは対戦相手の地名から場所を決め、試合開始の時刻の予報を返す。
  */
-data class MatchWeather(val placeLabel: String, val summary: String, val temperature: Int, val rainChance: Int?)
+data class MatchWeather(
+    val placeLabel: String,
+    val summary: String,
+    val temperature: Int,
+    val rainChance: Int?,
+    /** その1時間の降水量(mm)。取れなければ null */
+    val precipitationMm: Double? = null,
+    /** その1時間の降雪量(cm)。取れなければ null */
+    val snowfallCm: Double? = null,
+    /** 積雪の深さ(cm)。取れなければ null */
+    val snowDepthCm: Int? = null
+) {
+    /**
+     * 降水量・降雪量・積雪(0より多いものだけ)。例「1時間に2.5mm・降雪1cm・積雪15cm」。どれも無ければ ""
+     */
+    val amountLabel: String
+        get() = listOfNotNull(
+            precipitationMm?.takeIf { it >= 0.1 }?.let { "1時間に${"%.1f".format(it)}mm" },
+            snowfallCm?.takeIf { it >= 0.1 }?.let { "降雪${if (it >= 1) Math.round(it).toString() else "%.1f".format(it)}cm" },
+            snowDepthCm?.takeIf { it >= 1 }?.let { "積雪${it}cm" }
+        ).joinToString("・")
+}
 
 /** 試合前の天気予報(一面の「次の試合」用)。入場の時刻と試合開始の時刻、それぞれの予報。 */
 data class GameForecast(
@@ -54,7 +75,7 @@ object WeatherRepository {
             // 試合の日の分だけ取る(終わった試合の「速報」でも、その日の天気を出せるように日付で指定する)
             val date = game.dateLabel.split("/").let { "%04d-%02d-%02d".format(it[0].toInt(), it[1].toInt(), it[2].toInt()) }
             val url = "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
-                "&hourly=temperature_2m,precipitation_probability,weather_code&timezone=Asia%2FTokyo" +
+                "&hourly=temperature_2m,precipitation_probability,weather_code,precipitation,snowfall,snow_depth&timezone=Asia%2FTokyo" +
                 "&start_date=$date&end_date=$date"
             val o = JSONObject(get(url))
             val hourly = o.getJSONObject("hourly")
@@ -66,7 +87,7 @@ object WeatherRepository {
             val temp = hourly.getJSONArray("temperature_2m").optDouble(idx)
             val rain = hourly.optJSONArray("precipitation_probability")?.optInt(idx, -1)?.takeIf { it >= 0 }
             val code = hourly.getJSONArray("weather_code").optInt(idx)
-            MatchWeather(label, weatherLabel(code), Math.round(temp).toInt(), rain)
+            MatchWeather(label, weatherLabel(code), Math.round(temp).toInt(), rain, amounts(hourly, idx).first, amounts(hourly, idx).second, amounts(hourly, idx).third)
         } catch (e: Exception) {
             null
         }
@@ -85,7 +106,7 @@ object WeatherRepository {
             }
             val date = game.dateLabel.split("/").let { "%04d-%02d-%02d".format(it[0].toInt(), it[1].toInt(), it[2].toInt()) }
             val url = "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
-                "&hourly=temperature_2m,precipitation_probability,weather_code&timezone=Asia%2FTokyo" +
+                "&hourly=temperature_2m,precipitation_probability,weather_code,precipitation,snowfall,snow_depth&timezone=Asia%2FTokyo" +
                 "&start_date=$date&end_date=$date"
             val hourly = JSONObject(get(url)).getJSONObject("hourly")
             val times = hourly.getJSONArray("time")
@@ -96,11 +117,20 @@ object WeatherRepository {
                 if (temp.isNaN()) return@mapNotNull null
                 val rain = hourly.optJSONArray("precipitation_probability")?.optInt(idx, -1)?.takeIf { it >= 0 }
                 val code = hourly.getJSONArray("weather_code").optInt(idx)
-                hour to MatchWeather(label, weatherLabel(code), Math.round(temp).toInt(), rain)
+                val (precip, snow, depth) = amounts(hourly, idx)
+                hour to MatchWeather(label, weatherLabel(code), Math.round(temp).toInt(), rain, precip, snow, depth)
             }.toMap()
         } catch (e: Exception) {
             emptyMap()
         }
+    }
+
+    /** 降水量(mm)・降雪量(cm)・積雪の深さ(m → cm)。取れないものは null */
+    private fun amounts(hourly: JSONObject, idx: Int): Triple<Double?, Double?, Int?> {
+        fun at(key: String): Double? = hourly.optJSONArray(key)?.let { a ->
+            if (idx < a.length() && !a.isNull(idx)) a.optDouble(idx).takeIf { !it.isNaN() } else null
+        }
+        return Triple(at("precipitation"), at("snowfall"), at("snow_depth")?.let { Math.round(it * 100).toInt() })
     }
 
     private fun geocode(name: String): Triple<Double, Double, String>? = try {

@@ -352,6 +352,10 @@ fun GameDetailScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
+            // チームの写真(公式サイトのお知らせの写真。日替わりで1枚。無ければ選手の写真)。
+            // 文字と表だけでさみしかったため、日程の上に1枚だけ出す
+            com.fukuiteams.app.ui.components.TeamPhotoBanner(selectedTeam, "game-tab", height = 130.dp)
+
             // 「成績」と「順位」は横に並べた小さな囲みにし、押した方の中身をその下に開く
             // (日程の一覧をなるべく上に出すため)
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {

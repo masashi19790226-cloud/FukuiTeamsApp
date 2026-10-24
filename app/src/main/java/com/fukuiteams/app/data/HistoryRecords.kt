@@ -151,10 +151,19 @@ fun strongAgainst(team: Team, opponent: String, top: Int = 3): List<Pair<History
             if (games.size < 2) return@mapNotNull null
             val s = opponentSplits(games).firstOrNull() ?: return@mapNotNull null
             val merged = s.copy(games = games.size, wins = games.count { it.won }, points = games.sumOf { it.points })
-            if (merged.points <= 0) null else p to merged
+            // ふだん(通算の1試合平均)より、この相手との試合のほうが多く得点している選手だけ(「強い」と言えるもの)
+            if (merged.points <= 0 || merged.pointsPerGame < overallPerGame(p)) null else p to merged
         }
         .sortedByDescending { it.second.pointsPerGame }
         .take(top)
+}
+
+/** 選手の通算の1試合平均の得点(ブローウィンズは細かい成績の平均得点、ほかは得点÷出場) */
+fun overallPerGame(p: HistoryPlayer): Double {
+    val t = p.stats?.total
+    if (t != null && t.games > 0) return t.ppg
+    if (p.log.isNotEmpty()) return p.log.sumOf { it.points }.toDouble() / p.log.size
+    return if (p.apps > 0) p.goals.toDouble() / p.apps else 0.0
 }
 
 /** 今の選手の、通算の出場・得点の節目が近いもの(「節目まであと」の記事と、節目の通知に使う) */

@@ -190,3 +190,41 @@ private fun PhotoLabel(label: String) {
         }
     )
 }
+
+/**
+ * 画面の上に出す、チームの写真の帯(公式サイトのお知らせの写真。試合・イベントの場面)。日替わりで1枚。
+ * お知らせの写真が無い・読み込めないときは、選手の写真を順に試す。どれも無ければ何も出さない。
+ * 写真の下に、その写真の見出し(選手の写真なら名前)を1行出す
+ */
+@Composable
+fun TeamPhotoBanner(team: com.fukuiteams.app.model.Team, seed: String, height: Dp = 150.dp) {
+    androidx.compose.runtime.LaunchedEffect(Unit) { com.fukuiteams.app.data.TeamPhotos.ensureLoaded() }
+    val list = remember(team, seed, com.fukuiteams.app.data.TeamPhotos.own, com.fukuiteams.app.data.TeamPhotos.scenes) {
+        (com.fukuiteams.app.data.TeamPhotos.rotate(com.fukuiteams.app.data.TeamPhotos.scenesFor(team), seed) +
+            com.fukuiteams.app.data.TeamPhotos.rotate(com.fukuiteams.app.data.TeamPhotos.forTeam(team), seed))
+            .filter { it.url.isNotBlank() }.distinctBy { it.url }
+    }
+    var index by remember(list) { mutableStateOf(0) }
+    val current = list.getOrNull(index) ?: return
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        androidx.compose.runtime.key(current.url) {
+            RemoteThumbnail(
+                current.url,
+                fillWidth = true,
+                height = height,
+                alignTop = true,
+                zoomCaption = current.label.ifBlank { null },
+                onFailed = { index++ }
+            )
+        }
+        if (current.label.isNotBlank()) {
+            Text(
+                current.label,
+                style = MaterialTheme.typography.labelSmall,
+                color = InkSoft,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}

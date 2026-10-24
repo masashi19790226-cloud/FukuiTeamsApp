@@ -43,6 +43,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import com.fukuiteams.app.data.Alumni
 import com.fukuiteams.app.data.NameChanges
 import com.fukuiteams.app.data.fgLabel
@@ -96,7 +97,7 @@ private enum class ArchiveTab(val label: String) {
 
 /** 「過去の選手」の絞り込み・並び順 */
 private enum class ArchivePlayerFilter(val label: String) {
-    FORMER("元選手だけ"),
+    FORMER("元所属の選手だけ"),
     ALL("全員(今の選手も)")
 }
 
@@ -201,6 +202,9 @@ fun ArchiveScreen(
 
     // 右下の「一番上へ」「一番下へ」ボタン用
     val listState = rememberLazyListState()
+    // 上の「今季」「これまでの記録」「歩み」のボタンで飛ぶ先(LazyColumn の何行目か。並べるときに数える)
+    val anchors = remember { HashMap<String, Int>() }
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
     // 画面を下に引っ張る・右上の更新ボタンで、アプリのすべての情報(過去の記録も)を読み直す(ほかのタブと同じ)
     val pullToRefreshState = rememberPullToRefreshState()
     // 今季のチームの数字(ブローウィンズ:Bリーグ公式のクラブ成績。次の相手の分も並べる。以前は選手タブにあったもの)
@@ -263,12 +267,39 @@ fun ArchiveScreen(
             showAll = false,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
         )
+        // 「今季」「これまでの記録」「歩み」へ飛ぶボタン(チームの切り替えの下に固定)
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            listOf("season" to "▼ 今季", "records" to "▼ これまでの記録", "history" to "▼ 歩み").forEach { (k, label) ->
+                NewsChip(label, false, modifier = Modifier.weight(label.length + 1f), horizontalPadding = 2.dp, fontSize = 12.sp) {
+                    anchors[k]?.let { index -> scope.launch { listState.animateScrollToItem(index) } }
+                }
+            }
+        }
         LazyColumn(
             state = listState,
             modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            item {
+            // 上の「今季」「これまでの記録」「歩み」のボタンで飛ぶ先の行の番号を数えながら並べる
+            // (LazyColumn は行の番号でしか飛べないので、add・addAll で1行ずつ数える)
+            var n = 0
+            anchors.clear()
+            fun add(key: Any? = null, content: @Composable androidx.compose.foundation.lazy.LazyItemScope.() -> Unit) {
+                item(key = key, content = content)
+                n++
+            }
+            fun <T> addAll(
+                list: List<T>,
+                key: (T) -> Any,
+                content: @Composable androidx.compose.foundation.lazy.LazyItemScope.(T) -> Unit
+            ) {
+                items(list, key = key, itemContent = content)
+                n += list.size
+            }
+            add {
                 Column(modifier = Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Headline("チームの数字と記録", fontSize = 22)
                     Text(
@@ -279,22 +310,21 @@ fun ArchiveScreen(
                     DoubleRule(modifier = Modifier.padding(top = 6.dp))
                 }
             }
+            // チームの写真(公式サイトのお知らせの写真。日替わりで1枚。無ければ選手の写真)
+            add(key = "banner-${team.name}") { com.fukuiteams.app.ui.components.TeamPhotoBanner(team, "team-tab") }
 
-            // 今季の順位・勝敗(4チームとも。試合タブの「順位」の要点と同じ)
-            item { SectionLabel("今季", modifier = Modifier.padding(top = 4.dp)) }
-            item {
-                Column(
-                    modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper).padding(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    Text(
-                        com.fukuiteams.app.ui.components.teamStandingsSummary(team, standings[team.name]),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Ink
-                    )
-                    Text("順位表は試合タブの「順位」で見られます。", style = MaterialTheme.typography.labelSmall, color = InkSoft)
-                }
+            // 今季の順位・勝敗(4チームとも。試合タブの「順位」と同じデータを、数字のます目で)
+            anchors["season"] = n
+            add { SectionLabel("今季", modifier = Modifier.padding(top = 4.dp)) }
+            add { com.fukuiteams.app.ui.components.TeamSeasonCard(team, standings[team.name]) }
+            // 今の選手の写真(日替わりで5人。名前を添える)
+            add(key = "players-${team.name}") {
+                com.fukuiteams.app.ui.components.PlayerPhotoRow(
+                    TeamPhotos.rotate(TeamPhotos.forTeam(team), "team-tab"),
+                    count = 5,
+                    photoWidth = 56.dp,
+                    photoHeight = 70.dp
+                )
             }
             // 今季のチームの数字(ブローウィンズ。Bリーグ公式のクラブ成績を、次の対戦相手と並べて比べる)
             val roster = teamPlayers[team.name]
@@ -307,8 +337,8 @@ fun ArchiveScreen(
                 val opp = teamPlayers[com.fukuiteams.app.data.BLOWINDS_OPP_KEY]?.takeIf { r ->
                     r.teamStats.isNotEmpty() && (r.gameId.isBlank() || r.gameId == preview?.gameId)
                 }
-                item { SectionLabel("今季のチームの数字", modifier = Modifier.padding(top = 8.dp)) }
-                item {
+                add { SectionLabel("今季のチームの数字", modifier = Modifier.padding(top = 8.dp)) }
+                add {
                     TeamStatsSection(
                         mine = roster,
                         mineName = team.shortLabel(),
@@ -317,11 +347,12 @@ fun ArchiveScreen(
                     )
                 }
             }
-            item { SectionLabel("これまでの記録", modifier = Modifier.padding(top = 8.dp)) }
+            anchors["records"] = n
+            add { SectionLabel("これまでの記録", modifier = Modifier.padding(top = 8.dp)) }
             // 試合ごとの記録の読み込み具合(ブローウィンズ・丸岡RUCKは少しずつ読むので、そろうまで観客数・最多得点などが欠ける)
             history?.detailProgress?.let { (done, total) ->
                 if (total > 0 && done < total) {
-                    item {
+                    add {
                         Text(
                             "試合ごとの記録を読み込み中です($done/${total}試合)。そろうまで、観客数・チーム最多得点などは一部だけ出ます。",
                             style = MaterialTheme.typography.bodySmall,
@@ -335,7 +366,7 @@ fun ArchiveScreen(
             val officialSeasons = history?.officialSeasons.orEmpty()
             if (matches.isEmpty() && officialSeasons.isNotEmpty()) {
                 // 試合ごとの記録がまだ無いチーム(ブローウィンズ)は、公式のシーズンごとの成績だけ出す
-                item {
+                add {
                     Text(
                         "シーズンごとの成績(${history?.source ?: "公式サイト"}から)。",
                         style = MaterialTheme.typography.bodySmall,
@@ -343,12 +374,12 @@ fun ArchiveScreen(
                     )
                 }
                 officialSeasons.groupBy { it.season }.forEach { (s, rows) ->
-                    item(key = "os-$s") { OfficialSeasonCard(team, s, rows) }
+                    add(key = "os-$s") { OfficialSeasonCard(team, s, rows) }
                 }
             } else if (matches.isEmpty()) {
-                item { NoHistoryNote(team, HistoryRepository.loaded) }
+                add { NoHistoryNote(team, HistoryRepository.loaded) }
             } else {
-                item {
+                add {
                     // 切り替え(シーズンごと・相手別・過去の試合・記録集)は1段に並べる。
                     // 幅は文字数に合わせる(同じ幅だと、長い「シーズンごと」だけ文字が小さくなるため)
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -359,7 +390,7 @@ fun ArchiveScreen(
                 }
                 when (tab) {
                     ArchiveTab.SEASONS -> {
-                        items(seasons, key = { "s-" + it.season }) { s ->
+                        addAll(seasons, key = { "s-" + it.season }) { s ->
                             // ブローウィンズは、Bリーグ公式のシーズンごとの成績(平均得点・平均失点)も一緒に出す
                             SeasonCard(
                                 team, s,
@@ -369,14 +400,14 @@ fun ArchiveScreen(
                         }
                     }
                     ArchiveTab.OPPONENTS -> {
-                        item {
+                        add {
                             Text(
                                 "${opponents.size}チームと対戦(公式戦。対戦の多い順)。押すと試合の一覧が開きます。",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = InkSoft
                             )
                         }
-                        items(opponents, key = { "o-" + it.opponent }) { o ->
+                        addAll(opponents, key = { "o-" + it.opponent }) { o ->
                             OpponentCard(
                                 record = o,
                                 opened = openedOpponent == o.opponent,
@@ -386,7 +417,7 @@ fun ArchiveScreen(
                         }
                     }
                     ArchiveTab.MATCHES -> {
-                        item {
+                        add {
                             Row(
                                 modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                                 horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -397,15 +428,15 @@ fun ArchiveScreen(
                             }
                         }
                         val list = matches.filter { it.season == season }.sortedByDescending { it.date + it.time }
-                        items(list, key = { "m-" + it.date + it.time + it.opponent + it.url }) { m ->
+                        addAll(list, key = { "m-" + it.date + it.time + it.opponent + it.url }) { m ->
                             MatchRow(m) { openExternalUrl(context, m.url) }
                         }
                     }
                     ArchiveTab.RECORDS -> {
-                        item { RecordsSection(team) { openExternalUrl(context, it) } }
+                        add { RecordsSection(team) { openExternalUrl(context, it) } }
                     }
                 }
-                item {
+                add {
                     Text(
                         "出典:${history?.source.orEmpty()}(押すと公式のページが開きます)",
                         style = MaterialTheme.typography.labelSmall,
@@ -418,8 +449,9 @@ fun ArchiveScreen(
             // 過去の実績(チームの歩み・タイトルなど。TeamHistory.kt)
             val achievements = TEAM_HISTORY.filter { it.team == team }.sortedByDescending { it.year }
             if (achievements.isNotEmpty()) {
-                item { SectionLabel("${team.shortName}の歩み", modifier = Modifier.padding(top = 8.dp)) }
-                items(achievements, key = { "h-" + it.year + it.title }) { h ->
+                anchors["history"] = n
+                add { SectionLabel("${team.shortName}の歩み", modifier = Modifier.padding(top = 8.dp)) }
+                addAll(achievements, key = { "h-" + it.year + it.title }) { h ->
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -437,7 +469,7 @@ fun ArchiveScreen(
             }
 
             // 右下のボタンに最後の行が隠れないよう、下に余白を空ける
-            item { Spacer(modifier = Modifier.height(ScrollJumpBottomPadding)) }
+            add { Spacer(modifier = Modifier.height(ScrollJumpBottomPadding)) }
         }
         }
         PullToRefreshContainer(
@@ -583,7 +615,7 @@ fun PastPlayersSection(team: Team, profileOf: (String) -> com.fukuiteams.app.dat
                         "女子Fリーグ公式の過去の記録のゴールランキング(1点以上の選手)から数えた得点です。試合ごとの記録を読み込むと、出場試合数も出ます(データの自動更新を待っています)。"
                     Team.UNITED -> "ユナイテッド公式サイトの試合情報(2019年〜の公式戦)の先発・交代・得点から数えています。"
                 } +
-                    (if (hasNow) "「元選手」はいまの選手名簿にいない選手です。" else "") +
+                    (if (hasNow) "「元所属」はいまの選手名簿にいない(以前に所属していた)選手です。" else "") +
                     (if (season != null) "${season}シーズンに出た選手だけを、そのシーズンの成績で並べています。" else "") +
                     (if (ranks.isNotEmpty()) "「${rankPrefix.trim()}○位」は今の選手も含めた順位です。" else "") +
                     "${sorted.size}人",
@@ -1095,13 +1127,15 @@ private fun HistoryPlayerCard(
     // 選手タブの今の選手のカードと同じ見た目(写真・背番号・名前・プロフィール・数字のます目)。
     // 写真:選手紹介の写真 → いまのチームの選手の写真 → 過去の記録の写真(ブローウィンズ:Bリーグ公式) → 丸岡RUCKの「あの選手は今」の写真
     // (元選手の写真は、ユナイテッド公式サイトには残っていない(選手のページが消えている)ため出せない)
-    val photo = remember(team, p.name, p.photo, profile?.photo, TeamPhotos.own) {
-        profile?.photo?.takeIf { it.isNotBlank() }?.let { com.fukuiteams.app.data.PhotoRef(it, p.name) }
-            ?: TeamPhotos.findByName(TeamPhotos.forTeam(team), p.name)
-            ?: p.photo.takeIf { it.isNotBlank() }?.let { com.fukuiteams.app.data.PhotoRef(it, p.name) }
-            ?: Alumni.players.firstOrNull { it.team == team && it.photo.isNotBlank() &&
-                it.name.replace(Regex("[\\s　]"), "") == p.name.replace(Regex("[\\s　]"), "") }
-                ?.let { com.fukuiteams.app.data.PhotoRef(it.photo, p.name) }
+    // 候補を順に試す(読み込めなければ次の写真。全部だめでも同じ大きさの枠は出す)
+    val photos = remember(team, p.name, p.photo, profile?.photo, TeamPhotos.own) {
+        val key = p.name.replace(Regex("[\\s　]"), "")
+        listOfNotNull(
+            profile?.photo,
+            TeamPhotos.findByName(TeamPhotos.forTeam(team), p.name)?.url,
+            p.photo,
+            Alumni.players.firstOrNull { it.team == team && it.photo.isNotBlank() && it.name.replace(Regex("[\\s　]"), "") == key }?.photo
+        )
     }
     // 細かい成績(ブローウィンズ)がある選手は、押すとシーズンごとの成績が開く
     var opened by remember(team, p.name) { mutableStateOf(false) }
@@ -1118,12 +1152,8 @@ private fun HistoryPlayerCard(
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            if (photo != null) {
-                RemoteThumbnail(photo.url, width = 72.dp, height = 90.dp, alignTop = true, zoomCaption = photo.label)
-            } else {
-                // 写真が無い選手も、並びがそろうよう同じ大きさの枠を出す
-                Box(modifier = Modifier.size(width = 72.dp, height = 90.dp).border(1.dp, LineGray))
-            }
+            // 写真が無い・読み込めない選手も、並びがそろうよう同じ大きさの枠を出す
+            PlayerPhotoBox(photos, p.name)
             val number = p.number.ifBlank { profile?.number.orEmpty() }
             Headline(if (number.isNotBlank()) "#$number" else "#-", fontSize = 22, modifier = Modifier.width(58.dp))
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -1144,26 +1174,28 @@ private fun HistoryPlayerCard(
                 }
                 when (p.now) {
                     true -> Text("在籍中", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = NewsRed)
-                    false -> Text("元選手", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = InkSoft)
+                    false -> Text("元所属", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = InkSoft)
                     null -> {}
                 }
             }
         }
-        // 生年月日・身長など(今の選手は選手紹介から。元選手は選手ページから読んだ生年月日・身長)
+        // 生年月日・身長など(今の選手は選手紹介から。元選手は選手ページから読んだ生年月日・身長)。
+        // 元選手も今の選手と同じ形(「○年○月○日生まれ(○歳)」「○cm」。並べている項目は色の付いた枠で太字)にそろえる
         if (profile != null) {
             ProfileLines(profile, mark)
-        } else if (p.birthday != null || p.heightCm != null) {
-            val today = com.fukuiteams.app.data.BirthdaysRepository.today()
-            val parts = listOfNotNull(
-                p.birthday?.let { "${it.year}年${it.monthValue}月${it.dayOfMonth}日生(${java.time.Period.between(it, today).years}歳)" },
-                p.heightCm?.let { "${if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()}cm" }
-            )
-            Text(
-                parts.joinToString("・"),
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = if (mark != ProfileMark.NONE) FontWeight.Bold else FontWeight.Normal,
-                color = if (mark != ProfileMark.NONE) NewsRed else Ink
-            )
+        } else {
+            val heightText = p.heightCm?.let { if (it % 1.0 == 0.0) it.toInt().toString() else it.toString() }.orEmpty()
+            val bd = p.birthday
+            if (bd != null) {
+                ProfileLines(
+                    com.fukuiteams.app.data.PlayerBirthday(
+                        team = team, name = p.name, number = p.number, photo = "", birthday = bd, height = heightText
+                    ),
+                    mark
+                )
+            } else if (heightText.isNotBlank()) {
+                ProfileLine("${heightText}cm", marked = mark == ProfileMark.HEIGHT)
+            }
         }
         // 元選手のいま(ブローウィンズ:Bリーグ公式、ブルーサンダー:リーグH公式の選手ページから)
         if (p.now == false && p.nowChecked) {
@@ -1196,11 +1228,15 @@ private fun HistoryPlayerCard(
                 }
             }
         }
+        // シーズンと最後の試合は、途中で折り返さないよう2行に分ける
         Text(
-            "${p.seasonsLabel}(${p.seasons.size}シーズン)" + (if (p.last.isNotBlank()) "・最後の試合 ${p.last.replace("-", "/")}" else ""),
+            "${p.seasonsLabel}(${p.seasons.size}シーズン)",
             style = MaterialTheme.typography.labelSmall,
             color = InkSoft
         )
+        if (p.last.isNotBlank()) {
+            Text("最後の試合 ${p.last.replace("-", "/")}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+        }
         // 並べている項目での順位(歴代○位)
         rank?.let {
             Text(it, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.ExtraBold, color = NewsRed)

@@ -486,6 +486,10 @@ private fun MatchDayCard(game: Game, weather: MatchWeather?, lp: GameLp?, onOpen
                 style = MaterialTheme.typography.bodyMedium,
                 color = Ink
             )
+            // 降水量・降雪量・積雪(降る・積もっているときだけ)
+            if (weather.amountLabel.isNotBlank()) {
+                Text(weather.amountLabel, style = MaterialTheme.typography.bodySmall, color = Ink)
+            }
         }
         Text("チケット:${game.ticketStatus}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントも出す
@@ -1039,17 +1043,25 @@ private fun NextGameBlock(
     }
 }
 
-/** 天気予報の1行。例「入場 13:00ごろ  晴れ 24℃ 降水確率10%」 */
+/**
+ * 天気予報の1行。例「入場 13:00ごろ  晴れ 24℃ 降水確率10%」。
+ * 雨・雪が降る(積もっている)ときは、その下に降水量・降雪量・積雪を出す(例「1時間に2.5mm・積雪15cm」)
+ */
 @Composable
 private fun ForecastLine(label: String, w: MatchWeather) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(verticalAlignment = Alignment.Top) {
         Text(label, modifier = Modifier.width(120.dp), style = MaterialTheme.typography.bodySmall, color = InkSoft, maxLines = 1)
-        Text(
-            "${w.summary} ${w.temperature}℃" + (w.rainChance?.let { " 降水確率$it%" } ?: ""),
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.Bold,
-            color = Ink
-        )
+        Column {
+            Text(
+                "${w.summary} ${w.temperature}℃" + (w.rainChance?.let { " 降水確率$it%" } ?: ""),
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Bold,
+                color = Ink
+            )
+            if (w.amountLabel.isNotBlank()) {
+                Text(w.amountLabel, style = MaterialTheme.typography.bodySmall, color = Ink)
+            }
+        }
     }
 }
 
@@ -1256,17 +1268,20 @@ private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
         }
         if (strong.isNotEmpty()) {
             val unit = if (game.team == com.fukuiteams.app.model.Team.BLOWINDS) "点" else "得点"
+            // 見出しの下に1人1行で並べる(1行に続けると、選手の名前の途中で折り返して読みにくいため)
             Text(
-                "この相手に強い選手:" + strong.joinToString("・") { (p, sp) ->
-                    if (game.team == com.fukuiteams.app.model.Team.BLOWINDS)
-                        "${p.name} 平均${"%.1f".format(sp.pointsPerGame)}$unit(${sp.games}試合)"
-                    else
-                        "${p.name} ${sp.points}$unit(${sp.games}試合)"
-                },
+                "この相手に強い選手",
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Bold,
                 color = Ink
             )
+            strong.forEach { (p, sp) ->
+                Text(
+                    "・${p.name} 平均${"%.1f".format(sp.pointsPerGame)}$unit(${sp.games}試合・ふだんは${"%.1f".format(com.fukuiteams.app.data.overallPerGame(p))}$unit)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Ink
+                )
+            }
         }
         Text(
             if (h2h.usesHistory) "※公式サイトの過去の試合の記録と、このアプリが記録している試合から数えています(公式戦)"

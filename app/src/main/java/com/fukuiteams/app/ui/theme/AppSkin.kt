@@ -137,7 +137,8 @@ object AppSkin {
             topBar = c,
             navBar = c,
             onBar = Color.White,
-            onBarSoft = Color.White.copy(alpha = 0.72f),
+            // 選んでいない下のタブの白は少し薄く(選んでいるタブの白との差が分かるように)
+            onBarSoft = Color.White.copy(alpha = 0.6f),
             navSelectedIcon = Color.White,
             // チームの色の帯の上でも読める明るい黄色
             barWarn = Color(0xFFFFD54F),

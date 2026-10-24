@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -248,12 +249,15 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             // 文字の大きさは並んだボタンで共通にする(いちばん長い「自チーム」だけ小さくならないように)
             var jumpSize by remember(selectedTeam) { mutableStateOf(13f) }
             val shrink: () -> Unit = { if (jumpSize > 8f) jumpSize -= 0.5f }
-            JumpLink("▼ 自チーム", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.own) }
+            // 丸岡RUCK・ユナイテッド・ブルーサンダーの「自チーム」の場所は得点ランキングなので、ボタンも「得点」にする
+            // (「全選手」との違いが分からなかったため)
+            JumpLink(if (selectedTeam == Team.BLOWINDS) "▼ 自チーム" else "▼ 得点", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.own) }
             // 丸岡RUCK・ユナイテッド・ブルーサンダーは、全選手の一覧へ飛ぶボタンも出す
             if (selectedTeam != Team.BLOWINDS) {
-                JumpLink("▼ 全選手", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.all) }
+                // 全員(公式サイトの選手紹介)の一覧へ。「全選手」より分かりやすい「自チーム」にする
+                JumpLink("▼ 自チーム", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.all) }
             }
-            JumpLink("▼ 相手", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.opp) }
+            JumpLink("▼ 相手チーム", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.opp) }
         }
         Column(
             modifier = Modifier
@@ -338,7 +342,12 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                     // 丸岡RUCK・ユナイテッド・ブルーサンダーは、選手の得点(取れたとき)を出す。リーグの順位表は試合タブの「順位」にある
                     val scorers = st.scorers
                     if (scorers != null) {
-                        SectionLabel("${selectedTeam.displayName}の得点", modifier = Modifier.onGloballyPositioned { marks.own = it })
+                        SectionLabel("${selectedTeam.displayName}の得点ランキング", modifier = Modifier.onGloballyPositioned { marks.own = it })
+                        Text(
+                            "今季、得点した選手を得点の多い順に並べた表です。得点していない選手も含めた全員のプロフィール(生年月日・身長など)と数字は、下の「選手(全員)」にあります。",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = InkSoft
+                        )
                         ScorersSection(
                             scorers = scorers,
                             rows = scorers.rows.filter { it.team.contains(teamWord(selectedTeam)) },
@@ -348,7 +357,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                             profileOf = { name -> profiles[profileKey(selectedTeam, name)] }
                         )
                     } else {
-                        SectionLabel("${selectedTeam.displayName}の得点", modifier = Modifier.onGloballyPositioned { marks.own = it })
+                        SectionLabel("${selectedTeam.displayName}の得点ランキング", modifier = Modifier.onGloballyPositioned { marks.own = it })
                         NoDataBox("得点のデータはまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。")
                     }
                     Text(
@@ -369,7 +378,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             // 丸岡RUCK・ユナイテッドの全選手(公式サイトの選手紹介の全員。得点などの数字を重ねる)
             if (selectedTeam != Team.BLOWINDS) {
                 val teamRoster = profiles.values.filter { it.team == selectedTeam }
-                SectionLabel("${selectedTeam.displayName}の全選手", modifier = Modifier.onGloballyPositioned { marks.all = it })
+                SectionLabel("${selectedTeam.displayName}の選手(全員)", modifier = Modifier.onGloballyPositioned { marks.all = it })
                 if (teamRoster.isEmpty()) {
                     NoDataBox("全選手のデータはまだ届いていません。GitHubの自動更新が動くと、公式サイトの選手紹介から表示されます。")
                 } else {
@@ -882,9 +891,26 @@ internal fun ProfileLines(p: PlayerBirthday, mark: ProfileMark) {
     }
 }
 
+/**
+ * 選手の写真の枠(72×90)。写真が無い・読み込めないときも同じ大きさの枠を出して、カードの並びをそろえる。
+ * urls は候補を順に試す(読み込めなければ次の写真)
+ */
+@Composable
+internal fun PlayerPhotoBox(urls: List<String>, zoomCaption: String) {
+    val list = remember(urls) { urls.filter { it.isNotBlank() }.distinct() }
+    var index by remember(list) { mutableStateOf(0) }
+    Box(modifier = Modifier.size(width = 72.dp, height = 90.dp).border(1.dp, LineGray)) {
+        list.getOrNull(index)?.let { url ->
+            androidx.compose.runtime.key(url) {
+                RemoteThumbnail(url, width = 72.dp, height = 90.dp, alignTop = true, zoomCaption = zoomCaption, onFailed = { index++ })
+            }
+        }
+    }
+}
+
 /** プロフィールの1行。marked なら背景に色を付けて太字にする */
 @Composable
-private fun ProfileLine(text: String, marked: Boolean, color: androidx.compose.ui.graphics.Color? = null) {
+internal fun ProfileLine(text: String, marked: Boolean, color: androidx.compose.ui.graphics.Color? = null) {
     Text(
         text,
         style = if (marked) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodySmall,
@@ -1037,7 +1063,7 @@ private fun AllPlayersSection(team: Team, roster: List<PlayerBirthday>, scorerRo
     } else base
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(
-            "公式サイトの選手紹介の${roster.size}人です。同じ並び順のボタンをもう一度押すと逆の順になります。" +
+            "公式サイトの選手紹介に載っている全員(${roster.size}人。得点していない選手も含む)の、生年月日・身長などのプロフィールと今季の数字です。同じ並び順のボタンをもう一度押すと逆の順になります。" +
                 (when (team) {
                     Team.RAC -> "得点・シュート・出場は女子Fリーグ公式の得点ランキングから(得点していない選手は得点0、ほかは「-」)。"
                     Team.THUNDER -> "得点・シュート・出場はリーグH公式の試合ごとの記録から数えた数字です(出場=試合のメンバーに入った試合数。メンバーに入っていない選手のシュート・出場は「-」)。"
@@ -1080,7 +1106,8 @@ private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, sort: 
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             // 写真は選手紹介のもの。無ければ得点の表に付いている写真を使う
-            RemoteThumbnail(p.photo.ifBlank { row?.photo.orEmpty() }, width = 72.dp, height = 90.dp, alignTop = true, zoomCaption = p.label)
+            // 写真が無い・読み込めないときも同じ大きさの枠を出す
+            PlayerPhotoBox(listOf(p.photo, row?.photo.orEmpty()), p.label)
             // 公式の選手一覧で背番号が読めなかった選手は、得点の表の背番号を使う
             val number = p.number.ifBlank { row?.number.orEmpty() }
             Headline(if (number.isNotBlank()) "#$number" else "#-", fontSize = 22, modifier = Modifier.width(58.dp))
@@ -1294,10 +1321,11 @@ private fun RosterCard(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             // 顔写真(ブローウィンズは公式サイトの選手紹介、相手チームはBリーグ公式の画像。読み込めないときは出さない)
-            RemoteThumbnail(
-                player.photo, width = 72.dp, height = 90.dp, alignTop = true,
+            // 読み込めないときも同じ大きさの枠を出す(カードの並びをそろえる)
+            PlayerPhotoBox(
+                listOf(player.photo),
                 // タップで大きく表示(カードの開閉はせず、写真だけ大きくする)
-                zoomCaption = (if (player.number.isNotBlank()) "#${player.number} " else "") + player.name +
+                (if (player.number.isNotBlank()) "#${player.number} " else "") + player.name +
                     (if (player.position.isNotBlank()) "(${player.position})" else "")
             )
             Headline(
