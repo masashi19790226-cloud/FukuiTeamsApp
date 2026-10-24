@@ -491,12 +491,7 @@ private fun MatchDayCard(game: Game, weather: MatchWeather?, forecast: GameForec
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 val place = forecast?.let { it.start ?: it.entry ?: it.before }?.placeLabel ?: weather?.placeLabel.orEmpty()
-                Text(
-                    "天気予報($place)",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Ink
-                )
+                WeatherForecastHeading("天気予報($place)", weatherColumns)
                 ForecastTable(weatherColumns)
             }
             val rainExpected = weatherColumns.any { column ->
@@ -1004,11 +999,9 @@ private fun NextGameBlock(
                     .padding(horizontal = 8.dp, vertical = 5.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                Text(
+                WeatherForecastHeading(
                     "天気予報(${(forecast.start ?: forecast.entry)?.placeLabel ?: ""})",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Ink
+                    forecast.toColumns()
                 )
                 // 時刻ごとに列を分けた表(入場の1時間前 → 入場 → 試合開始)。行は天気・気温・降水確率・降水量など
                 ForecastTable(forecast.toColumns())
@@ -1090,6 +1083,36 @@ private fun GameForecast.toColumns(): List<ForecastColumn> = listOfNotNull(
     start?.let { ForecastColumn("試合開始", startTime, it) }
 )
 
+/** 天気予報の見出しとアプリ取得時刻を同じ行に表示する。 */
+@Composable
+private fun WeatherForecastHeading(title: String, cols: List<ForecastColumn>) {
+    val retrievedAt = cols.maxOf { it.w.retrievedAt }
+    val fetched = retrievedAt.atZone(java.time.ZoneId.of("Asia/Tokyo"))
+        .format(java.time.format.DateTimeFormatter.ofPattern("M/d HH:mm"))
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            title,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = Ink,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            "取得 $fetched",
+            style = MaterialTheme.typography.labelSmall,
+            color = InkSoft,
+            maxLines = 1,
+            softWrap = false
+        )
+    }
+}
+
 /**
  * 天気予報の表。列が時刻(入場の1時間前・入場・試合開始)、行が 天気・気温・降水確率・降水量(・降雪・積雪)。
  * 降水量・降雪・積雪は、どれかの時刻で降る(積もっている)ときだけ行を出す
@@ -1108,14 +1131,6 @@ private fun ForecastTable(cols: List<ForecastColumn>) {
         if (cols.any { (it.w.snowDepthCm ?: 0) >= 1 }) add("積雪" to { w: MatchWeather -> w.snowDepthCm?.takeIf { it >= 1 }?.let { "${it}cm" } ?: "0" })
     }
     Column(modifier = Modifier.fillMaxWidth()) {
-        val retrievedAt = cols.maxOf { it.w.retrievedAt }
-        Text(
-            "取得 ${retrievedAt.atZone(java.time.ZoneId.of("Asia/Tokyo")).format(java.time.format.DateTimeFormatter.ofPattern("M/d HH:mm"))}",
-            modifier = Modifier.fillMaxWidth(),
-            style = MaterialTheme.typography.labelSmall,
-            color = InkSoft,
-            textAlign = androidx.compose.ui.text.style.TextAlign.End
-        )
         // 見出しの行(時刻)
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
             Spacer(modifier = Modifier.weight(1.1f))
