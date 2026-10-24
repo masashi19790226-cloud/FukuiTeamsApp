@@ -523,14 +523,20 @@ private fun BbsStatusBar(baseline: Int, posts: Map<Int, BbsPost>, sort: BbsSort,
                 updated?.let { "${timeLabel(it)}更新" },
                 if (newCount > 0) "新着${newCount}件" else null
             )
+            // 閲覧中の人数・新着件数が増えて入りきらないときは、「…」で更新時刻が切れないよう、文字を少し小さくして1行に収める
+            // (9まで小さくしても入りきらないときだけ「…」にする)
+            val statusText = if (parts.isEmpty()) "読み込み中…" else parts.joinToString("・")
+            var statusSize by remember(statusText) { mutableStateOf(12f) }
             Text(
-                if (parts.isEmpty()) "読み込み中…" else parts.joinToString("・"),
+                statusText,
                 modifier = Modifier.weight(1f),
-                fontSize = 12.sp,
+                fontSize = statusSize.sp,
                 color = if (newCount > 0) NewsRed else InkSoft,
                 fontWeight = if (newCount > 0) FontWeight.Bold else FontWeight.Normal,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                softWrap = false,
+                overflow = if (statusSize > 9f) TextOverflow.Clip else TextOverflow.Ellipsis,
+                onTextLayout = { r -> if (r.hasVisualOverflow && statusSize > 9f) statusSize -= 0.5f }
             )
             Box {
                 Text(

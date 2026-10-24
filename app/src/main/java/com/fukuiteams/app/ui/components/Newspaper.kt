@@ -88,6 +88,9 @@ fun MastheadTopBar(
         // 左右のボタンの残りの幅に、現在の日時と最終更新日時を同じ形(9/30(水) 22:45)で1行に並べる。
         // 入りきらない画面(左右にボタンがある画面など)では、1行に収まるまで文字を小さくする
         var fontSizeSp by remember { mutableStateOf(13f) }
+        // いちばん小さくしても入りきらない画面(右上のボタンが3つある掲示板で、左に戻るボタンも出たときなど)は、
+        // 現在の日時を省いて「最終更新 …」だけにする(最終更新の日時の端が欠けて見えなくならないように)
+        var compact by remember { mutableStateOf(false) }
         Row(
             modifier = Modifier.fillMaxWidth().heightIn(min = 44.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -99,8 +102,11 @@ fun MastheadTopBar(
             }
             Text(
                 buildAnnotatedString {
-                    append(shortDateTime(now))
-                    append("  |  最終更新 ")
+                    if (!compact) {
+                        append(shortDateTime(now))
+                        append("  |  ")
+                    }
+                    append("最終更新 ")
                     if (updated != null) {
                         if (stale) {
                             withStyle(SpanStyle(color = com.fukuiteams.app.ui.theme.BarWarnColor, fontWeight = FontWeight.Bold)) { append(shortDateTime(updated)) }
@@ -119,7 +125,14 @@ fun MastheadTopBar(
                 maxLines = 1,
                 softWrap = false,
                 onTextLayout = { result ->
-                    if (result.hasVisualOverflow && fontSizeSp > 9f) fontSizeSp -= 0.5f
+                    if (result.hasVisualOverflow) {
+                        if (fontSizeSp > 9f) {
+                            fontSizeSp -= 0.5f
+                        } else if (!compact) {
+                            compact = true
+                            fontSizeSp = 13f
+                        }
+                    }
                 }
             )
             // 右上のボタン(更新など)のアイコンも帯の文字と同じ色にする

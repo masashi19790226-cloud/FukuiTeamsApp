@@ -268,14 +268,14 @@ fun AddFromXSheet(
             Text("公式のXを開く", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Team.values().forEach { t ->
-                    NewsChip(t.shortName, false, modifier = Modifier.weight(1f)) { openExternalUrl(context, t.officialXUrl) }
+                    NewsChip(t.shortName, false, modifier = Modifier.weight(t.shortName.length + 1f), horizontalPadding = 2.dp) { openExternalUrl(context, t.officialXUrl) }
                 }
             }
             Text("公式のインスタを開く", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Team.values().forEach { t ->
                     t.officialInstagramUrl?.let { ig ->
-                        NewsChip(t.shortName, false, modifier = Modifier.weight(1f)) { openExternalUrl(context, ig) }
+                        NewsChip(t.shortName, false, modifier = Modifier.weight(t.shortName.length + 1f), horizontalPadding = 2.dp) { openExternalUrl(context, ig) }
                     }
                 }
             }
@@ -391,7 +391,7 @@ fun AddFromXSheet(
                 Text("見つけた日程の候補", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Team.values().forEach { t ->
-                        NewsChip(t.shortName, team == t, modifier = Modifier.weight(1f)) { team = t }
+                        NewsChip(t.shortName, team == t, modifier = Modifier.weight(t.shortName.length + 1f), horizontalPadding = 2.dp) { team = t }
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -467,7 +467,7 @@ fun AddFromXSheet(
                 if (post == null && imageText == null) {
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         Team.values().forEach { t ->
-                            NewsChip(t.shortName, team == t, modifier = Modifier.weight(1f)) { team = t }
+                            NewsChip(t.shortName, team == t, modifier = Modifier.weight(t.shortName.length + 1f), horizontalPadding = 2.dp) { team = t }
                         }
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {

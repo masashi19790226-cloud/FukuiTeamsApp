@@ -9,6 +9,8 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.fukuiteams.app.data.AlertsResult
 import com.fukuiteams.app.data.BirthdaysRepository
+import com.fukuiteams.app.data.HistoryRepository
+import com.fukuiteams.app.data.upcomingMilestones
 import com.fukuiteams.app.data.InvitationAlertsRepository
 import com.fukuiteams.app.data.NewsAlertsRepository
 import com.fukuiteams.app.data.NotificationPrefsKeys
@@ -64,6 +66,9 @@ class AlertsCheckWorker(
         // 選手の誕生日(その日の朝8時以降に1回だけ。設定でオフにできる)
         runCatching { notifyBirthdays(::teamEnabled, prefs[NotificationPrefsKeys.kindKey("birthday")] ?: true) }
 
+        // 選手の節目まであと少し(通算100試合出場・通算1000点など。1日1回、朝8時以降に調べる。設定でオフにできる)
+        runCatching { notifyMilestones(::teamEnabled, prefs[NotificationPrefsKeys.kindKey("milestone")] ?: true) }
+
         // 試合開始前の通知も予約し直す(アプリを開かなくても、あとから決まった開始時刻や日程の変更に合わせる)
         runCatching { rescheduleGameStartNotifications(applicationContext) }
 
@@ -93,6 +98,39 @@ class AlertsCheckWorker(
             )
         }
         applicationContext.notificationDataStore.edit { it[NotificationPrefsKeys.LAST_BIRTHDAY_DATE] = today.toString() }
+    }
+
+    /**
+     * 今の選手の通算の出場・得点の節目が近いとき(一面の「節目まであと」と同じ数え方)に通知する。
+     * 同じ節目は1回だけ。過去の記録(history.json)は大きいので、読み込むのは1日1回
+     */
+    private suspend fun notifyMilestones(teamEnabled: (String) -> Boolean, enabled: Boolean) {
+        if (!enabled) return
+        val now = java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Tokyo"))
+        if (now.hour < 8) return
+        val today = now.toLocalDate().toString()
+        val store = applicationContext.notificationDataStore
+        if (store.data.first()[NotificationPrefsKeys.LAST_MILESTONE_DATE] == today) return
+        HistoryRepository.refresh()
+        if (HistoryRepository.data.isEmpty()) return  // 読み込めなかったときは、次の回にもう一度
+        val notified = store.data.first()[NotificationPrefsKeys.NOTIFIED_MILESTONES].orEmpty()
+        val fresh = Team.values().filter { teamEnabled(it.name) }
+            .flatMap { upcomingMilestones(it).map { m -> it to m } }
+            .filter { (_, m) -> m.key !in notified }
+        fresh.take(3).forEachIndexed { index, (team, m) ->
+            showAlertNotification(
+                applicationContext,
+                4900 + index,
+                "${team.displayName}:${m.headline}",
+                m.body,
+                "home"
+            )
+        }
+        store.edit {
+            it[NotificationPrefsKeys.LAST_MILESTONE_DATE] = today
+            // 通知しなかった分(4つ目以降)も、次の日にまとめて出ないよう「通知した」にしておく。古い目印は増えすぎないよう300件まで
+            it[NotificationPrefsKeys.NOTIFIED_MILESTONES] = (notified + fresh.map { p -> p.second.key }).toList().takeLast(300).toSet()
+        }
     }
 
     private suspend fun checkAndNotify(

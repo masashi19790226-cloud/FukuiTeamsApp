@@ -1250,6 +1250,24 @@ private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
                 color = if (line.outcome == com.fukuiteams.app.data.GameOutcome.WIN) NewsRed else Ink
             )
         }
+        // この相手に強い今の選手(過去の記録の、選手の試合ごとの記録から。その相手との1試合平均の得点が多い順)
+        val strong = remember(game.team, game.opponent, history) {
+            com.fukuiteams.app.data.strongAgainst(game.team, game.opponent)
+        }
+        if (strong.isNotEmpty()) {
+            val unit = if (game.team == com.fukuiteams.app.model.Team.BLOWINDS) "点" else "得点"
+            Text(
+                "この相手に強い選手:" + strong.joinToString("・") { (p, sp) ->
+                    if (game.team == com.fukuiteams.app.model.Team.BLOWINDS)
+                        "${p.name} 平均${"%.1f".format(sp.pointsPerGame)}$unit(${sp.games}試合)"
+                    else
+                        "${p.name} ${sp.points}$unit(${sp.games}試合)"
+                },
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Bold,
+                color = Ink
+            )
+        }
         Text(
             if (h2h.usesHistory) "※公式サイトの過去の試合の記録と、このアプリが記録している試合から数えています(公式戦)"
             else "※このアプリが記録している試合(今季など)から数えています",

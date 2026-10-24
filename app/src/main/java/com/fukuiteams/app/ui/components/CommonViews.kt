@@ -9,6 +9,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -57,6 +61,9 @@ fun NewsChip(
     verticalPadding: Dp = 7.dp,
     onClick: () -> Unit
 ) {
+    // 幅が足りずに文字が切れて見えなくなるとき(並べ替えの「(逆)」が付いたとき・表示を大きくしたときなど)は、
+    // 1行に収まるまで文字を少しずつ小さくする(8まで)。幅が足りていれば、いままでどおりの大きさ
+    var size by remember(label, fontSize, selected) { mutableStateOf(fontSize.value) }
     Text(
         label,
         modifier = modifier
@@ -65,10 +72,11 @@ fun NewsChip(
             .clickable(onClick = onClick)
             .padding(horizontal = horizontalPadding, vertical = verticalPadding),
         color = if (selected) Ivory else Ink,
-        fontSize = fontSize,
+        fontSize = size.sp,
         fontWeight = if (selected) FontWeight.ExtraBold else FontWeight.Normal,
         textAlign = TextAlign.Center,
         maxLines = 1,
-        softWrap = false
+        softWrap = false,
+        onTextLayout = { r -> if (r.hasVisualOverflow && size > 8f) size -= 0.5f }
     )
 }

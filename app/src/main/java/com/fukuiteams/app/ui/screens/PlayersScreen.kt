@@ -138,6 +138,9 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
         scope.launch { scrollState.animateScrollTo((scrollState.value + dy).toInt().coerceAtLeast(0)) }
     }
 
+    // 上の切り替え:今季の選手(false)/ 歴代の選手(true)
+    var showHistory by remember { mutableStateOf(false) }
+
     // 自動更新の最終時刻(相手の注目選手・主な選手の「何日時点」表示に使う)
     var dataStatus by remember { mutableStateOf<DataStatus?>(null) }
 
@@ -221,20 +224,36 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             showAll = false,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
         )
+        // 今季の選手と歴代の選手(今の選手も含むこれまでの全選手)の切り替え
         Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            NewsChip("今季の選手", !showHistory, modifier = Modifier.weight(1f)) {
+                if (showHistory) { showHistory = false; scope.launch { scrollState.scrollTo(0) } }
+            }
+            NewsChip("歴代の選手", showHistory, modifier = Modifier.weight(1f)) {
+                if (!showHistory) { showHistory = true; scope.launch { scrollState.scrollTo(0) } }
+            }
+        }
+        if (!showHistory) Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            // 文字が「…」で切れないよう、短い言葉にする(相手の名前は見出しに出る)
-            JumpLink("▼ 自チーム", Modifier.weight(1f)) { jumpTo(marks.own) }
+            // 文字が「…」で切れないよう、短い言葉にする(相手の名前は見出しに出る)。
+            // 文字の大きさは並んだボタンで共通にする(いちばん長い「自チーム」だけ小さくならないように)
+            var jumpSize by remember(selectedTeam) { mutableStateOf(13f) }
+            val shrink: () -> Unit = { if (jumpSize > 8f) jumpSize -= 0.5f }
+            JumpLink("▼ 自チーム", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.own) }
             // 丸岡RUCK・ユナイテッド・ブルーサンダーは、全選手の一覧へ飛ぶボタンも出す
             if (selectedTeam != Team.BLOWINDS) {
-                JumpLink("▼ 全選手", Modifier.weight(1f)) { jumpTo(marks.all) }
+                JumpLink("▼ 全選手", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.all) }
             }
-            JumpLink("▼ 相手", Modifier.weight(1f)) { jumpTo(marks.opp) }
-            JumpLink("▼ 歴代", Modifier.weight(1f)) { jumpTo(marks.past) }
+            JumpLink("▼ 相手", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.opp) }
         }
         Column(
             modifier = Modifier
@@ -245,6 +264,21 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = ScrollJumpBottomPadding),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
+
+            // 歴代の選手(上の切り替えで「歴代の選手」を選んだとき)。今季の選手の一覧の代わりに出す
+            if (showHistory) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Headline("${selectedTeam.displayName}の歴代の選手", fontSize = 22)
+                    Text(
+                        "今の選手も含む、これまでの全選手の記録です。代表選出・リーグの表彰もここにあります。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
+                    )
+                    DoubleRule(modifier = Modifier.padding(top = 4.dp))
+                }
+                PastPlayersSection(selectedTeam, profileOf = { name -> profiles[profileKey(selectedTeam, name)] })
+                return@Column
+            }
 
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Headline("選手の数字", fontSize = 22)
@@ -276,7 +310,15 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                     "${selectedTeam.displayName}の選手",
                     modifier = Modifier.onGloballyPositioned { marks.own = it }
                 )
-                RosterSection(roster, sortKey, profileOf = { name -> profiles[profileKey(selectedTeam, name)] }) { sortKey = it }
+                RosterSection(
+                    roster, sortKey,
+                    profileOf = { name -> profiles[profileKey(selectedTeam, name)] },
+                    pastOf = { name ->
+                        val k = com.fukuiteams.app.data.playerNameKey(name)
+                        com.fukuiteams.app.data.HistoryRepository.data[selectedTeam]?.players
+                            ?.firstOrNull { com.fukuiteams.app.data.playerNameKey(it.name) == k }?.stats
+                    }
+                ) { sortKey = it }
             } else if (myPlayers.isNotEmpty()) {
                 SectionLabel("${selectedTeam.displayName}の主な選手", modifier = Modifier.onGloballyPositioned { marks.own = it })
                 AsOfLine(previewUpdatedAt(dataStatus), null)
@@ -421,12 +463,6 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
             )
-            // 歴代の選手(今の選手も含むこれまでの全選手の記録。代表選出・元選手・表彰。以前は「記録」タブの「過去の選手」にあったもの)
-            ThinRule(modifier = Modifier.padding(vertical = 4.dp))
-            Box(modifier = Modifier.onGloballyPositioned { marks.past = it }) {
-                SectionLabel("${selectedTeam.displayName}の歴代の選手")
-            }
-            PastPlayersSection(selectedTeam, profileOf = { name -> profiles[profileKey(selectedTeam, name)] })
         }
         }
         PullToRefreshContainer(
@@ -447,6 +483,8 @@ private fun RosterSection(
     sortKey: PlayerSort,
     // 選手名 → 身長・出身地など(自チームのときだけ。相手チームは null を返す)
     profileOf: (String) -> PlayerBirthday? = { null },
+    // 選手名 → これまでのシーズンごとの成績(自チームのブローウィンズだけ。過去の記録から)
+    pastOf: (String) -> com.fukuiteams.app.data.HistoryStats? = { null },
     onSortChange: (PlayerSort) -> Unit
 ) {
     // 選んでいる並び順のボタンをもう一度押すと、逆の順番にする
@@ -509,7 +547,7 @@ private fun RosterSection(
             val (missing, known) = sorted.partition { sortValueMissing(it, sortKey, profileOf) }
             known.reversed() + missing
         } else sorted
-        shown.forEach { p -> key(p.number, p.name) { RosterCard(p, sortKey, profileOf(p.name)) } }
+        shown.forEach { p -> key(p.number, p.name) { RosterCard(p, sortKey, profileOf(p.name), pastOf(p.name)) } }
     }
 }
 
@@ -1084,9 +1122,16 @@ private fun AllPlayerCard(team: Team, p: PlayerBirthday, row: ScorerRow?, sort: 
 }
 
 @Composable
-private fun JumpLink(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    // ボタンが4つ並ぶと文字が入りきらないことがあるので、1行に収まるまで文字を小さくする(「…」で切れないように)
-    var size by remember(label) { mutableStateOf(13f) }
+private fun JumpLink(
+    label: String,
+    /** 文字の大きさ(並んだボタンで共通) */
+    size: Float,
+    /** 入りきらなかったときに呼ぶ(並んだボタン全部の文字を少し小さくする) */
+    onOverflow: () -> Unit,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    // ボタンが並ぶと文字が入りきらないことがあるので、1行に収まるまで文字を小さくする(「…」で切れないように)
     Text(
         label,
         modifier = modifier
@@ -1100,7 +1145,7 @@ private fun JumpLink(label: String, modifier: Modifier = Modifier, onClick: () -
         textAlign = TextAlign.Center,
         maxLines = 1,
         softWrap = false,
-        onTextLayout = { r -> if (r.hasVisualOverflow && size > 8f) size -= 0.5f }
+        onTextLayout = { r -> if (r.hasVisualOverflow) onOverflow() }
     )
 }
 
@@ -1227,7 +1272,12 @@ internal fun PlayerReading(reading: String) {
 }
 
 @Composable
-private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUMBER, profile: PlayerBirthday? = null) {
+private fun RosterCard(
+    player: PlayerStats,
+    sortKey: PlayerSort = PlayerSort.NUMBER,
+    profile: PlayerBirthday? = null,
+    past: com.fukuiteams.app.data.HistoryStats? = null
+) {
     var expanded by remember(player.number, player.name) { mutableStateOf(false) }
     val hasStats = listOf(
         player.games, player.minutesPerGame, player.points, player.rebounds, player.assists,
@@ -1330,6 +1380,21 @@ private fun RosterCard(player: PlayerStats, sortKey: PlayerSort = PlayerSort.NUM
                 StatRow("貢献度(平均)", player.efficiency ?: NO_DATA)
                 if (player.gameLog.isNotEmpty()) {
                     GameLogSection(player.gameLog)
+                }
+                // これまでのシーズンごとの成績(歴代の選手と同じもの。福井での通算と、シーズンごと)
+                if (past != null && past.seasons.isNotEmpty()) {
+                    Text(
+                        "福井でのこれまでの成績",
+                        modifier = Modifier.padding(top = 8.dp),
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Ink
+                    )
+                    StatLines(past.total, "通算")
+                    val leaders = remember(com.fukuiteams.app.data.HistoryRepository.data) {
+                        seasonLeaders(Team.BLOWINDS)
+                    }
+                    past.seasons.asReversed().forEach { s -> StatLines(s, "${s.season}シーズン", seasonStar(s, leaders)) }
                 }
             }
         }

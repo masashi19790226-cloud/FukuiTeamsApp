@@ -86,7 +86,8 @@ private val kindDefs = listOf(
     NotificationKind("invite", "無料招待の新着", true),
     NotificationKind("news", "ニュース", true),
     NotificationKind("gamestart", "試合開始1時間前", true),
-    NotificationKind("birthday", "選手の誕生日(朝8時ごろ)", true)
+    NotificationKind("birthday", "選手の誕生日(朝8時ごろ)", true),
+    NotificationKind("milestone", "選手の節目まであと少し(朝8時ごろ)", true)
 )
 
 @Composable

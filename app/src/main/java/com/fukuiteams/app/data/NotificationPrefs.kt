@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 
 val Context.notificationDataStore: DataStore<Preferences> by preferencesDataStore(name = "notification_prefs")
@@ -16,4 +17,8 @@ object NotificationPrefsKeys {
     val LAST_SEEN_NEWS_AT = stringPreferencesKey("last_seen_news_at")
     /** 選手の誕生日の通知を最後に出した日(同じ日に何度も通知しないため) */
     val LAST_BIRTHDAY_DATE = stringPreferencesKey("last_birthday_date")
+    /** 節目の通知を最後に調べた日(過去の記録の読み込みは1日1回にするため) */
+    val LAST_MILESTONE_DATE = stringPreferencesKey("last_milestone_date")
+    /** これまでに通知した節目(同じ節目を2回通知しないため。Milestone.key) */
+    val NOTIFIED_MILESTONES = stringSetPreferencesKey("notified_milestones")
 }

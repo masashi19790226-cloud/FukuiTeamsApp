@@ -88,8 +88,10 @@ import com.fukuiteams.app.ui.theme.Paper
 /** 「過去の記録」の中の切り替え */
 private enum class ArchiveTab(val label: String) {
     SEASONS("シーズンごと"),
-    OPPONENTS("相手別の対戦成績"),
-    MATCHES("過去の試合")
+    OPPONENTS("相手別"),
+    MATCHES("過去の試合"),
+    // チームの記録(1試合の最多得点・最多連勝など)と、個人の1試合の記録
+    RECORDS("記録集")
 }
 
 /** 「過去の選手」の絞り込み・並び順 */
@@ -98,13 +100,71 @@ private enum class ArchivePlayerFilter(val label: String) {
     ALL("全員(今の選手も)")
 }
 
-private enum class ArchivePlayerSort(val label: String) {
+/**
+ * 歴代の選手の並び順。row は並べるボタンの段(0:全チーム、1・2:ブローウィンズだけ(細かい成績)、3:全チーム(身長・年齢))
+ * ブローウィンズの出場時間・リバウンド・アシスト・スティール・ブロック・貢献度は1試合平均、成功率は通算(試投が少ない選手は後ろ)
+ */
+private enum class ArchivePlayerSort(val label: String, val row: Int = 0) {
     APPS("出場"),
     GOALS("得点"),
-    RECENT("最近"),
+    // 最後に試合に出た日が新しい順(元選手なら、最近チームを離れた選手から)
+    RECENT("最終出場"),
     NUMBER("背番号"),
-    HEIGHT("身長"),
-    AGE("年齢")
+    MINUTES("出場時間", 1),
+    PPG("平均得点", 1),
+    REBOUNDS("リバウンド", 1),
+    ASSISTS("アシスト", 1),
+    FG_PCT("FG成功率", 2),
+    THREE_PCT("3P成功率", 2),
+    FT_PCT("FT成功率", 2),
+    EFFICIENCY("貢献度", 2),
+    HEIGHT("身長", 3),
+    AGE("年齢", 3)
+}
+
+/** 成功率で並べるときに、順位を付ける最低限の試投数(これより少ない選手は後ろに回す) */
+private fun minAttempts(sort: ArchivePlayerSort): Int = when (sort) {
+    ArchivePlayerSort.FG_PCT -> 30
+    ArchivePlayerSort.THREE_PCT, ArchivePlayerSort.FT_PCT -> 15
+    else -> 0
+}
+
+/**
+ * ブローウィンズの細かい成績の並べ替えの値(分からなければ null)。成功率は成功数÷試投数。
+ * t は通算か、選んだシーズンの成績
+ */
+private fun statSortValue(t: com.fukuiteams.app.data.StatLine?, sort: ArchivePlayerSort): Double? {
+    if (t == null || t.games == 0) return null
+    fun pct(m: Int, a: Int) = if (a >= maxOf(1, minAttempts(sort))) m.toDouble() / a else null
+    return when (sort) {
+        ArchivePlayerSort.MINUTES -> t.minutes
+        ArchivePlayerSort.PPG -> t.ppg
+        ArchivePlayerSort.REBOUNDS -> t.rpg
+        ArchivePlayerSort.ASSISTS -> t.apg
+        ArchivePlayerSort.FG_PCT -> pct(t.fgm, t.fga)
+        ArchivePlayerSort.THREE_PCT -> pct(t.p3m, t.p3a)
+        ArchivePlayerSort.FT_PCT -> pct(t.ftm, t.fta)
+        ArchivePlayerSort.EFFICIENCY -> t.effPerGame
+        else -> null
+    }
+}
+
+/** 並べている項目の数字を、カードの上に1行で目立たせる(選手タブと同じ)。対象外なら null。t は通算か、選んだシーズンの成績 */
+private fun historySortHighlight(t: com.fukuiteams.app.data.StatLine?, sort: ArchivePlayerSort, seasonName: String?): Pair<String, String>? {
+    if (t == null) return null
+    val pair = when (sort) {
+        ArchivePlayerSort.MINUTES -> "平均出場時間" to "%.1f分".format(t.minutes)
+        ArchivePlayerSort.PPG -> "平均得点" to "%.1f".format(t.ppg)
+        ArchivePlayerSort.REBOUNDS -> "平均リバウンド" to "%.1f".format(t.rpg)
+        ArchivePlayerSort.ASSISTS -> "平均アシスト" to "%.1f".format(t.apg)
+        ArchivePlayerSort.FG_PCT -> "フィールドゴール成功率(通算)" to t.fgLabel()
+        ArchivePlayerSort.THREE_PCT -> "3ポイント成功率(通算)" to t.p3Label()
+        ArchivePlayerSort.FT_PCT -> "フリースロー成功率(通算)" to t.ftLabel()
+        ArchivePlayerSort.EFFICIENCY -> "平均貢献度" to "%.1f".format(t.effPerGame)
+        else -> null
+    } ?: return null
+    // シーズンを選んでいるときは「(通算)」を外して、シーズン名を付ける
+    return if (seasonName != null) "${seasonName} ${pair.first.replace("(通算)", "")}" to pair.second else pair
 }
 
 /**
@@ -258,6 +318,19 @@ fun ArchiveScreen(
                 }
             }
             item { SectionLabel("これまでの記録", modifier = Modifier.padding(top = 8.dp)) }
+            // 試合ごとの記録の読み込み具合(ブローウィンズ・丸岡RUCKは少しずつ読むので、そろうまで観客数・最多得点などが欠ける)
+            history?.detailProgress?.let { (done, total) ->
+                if (total > 0 && done < total) {
+                    item {
+                        Text(
+                            "試合ごとの記録を読み込み中です($done/${total}試合)。そろうまで、観客数・チーム最多得点などは一部だけ出ます。",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Bold,
+                            color = NewsRed
+                        )
+                    }
+                }
+            }
 
             val officialSeasons = history?.officialSeasons.orEmpty()
             if (matches.isEmpty() && officialSeasons.isNotEmpty()) {
@@ -276,10 +349,11 @@ fun ArchiveScreen(
                 item { NoHistoryNote(team, HistoryRepository.loaded) }
             } else {
                 item {
-                    // 切り替え(シーズンごと・相手別・過去の試合)は1段に並べる
+                    // 切り替え(シーズンごと・相手別・過去の試合・記録集)は1段に並べる。
+                    // 幅は文字数に合わせる(同じ幅だと、長い「シーズンごと」だけ文字が小さくなるため)
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         ArchiveTab.values().forEach { t ->
-                            NewsChip(t.label, tab == t, modifier = Modifier.weight(1f), horizontalPadding = 2.dp, fontSize = 11.sp) { tab = t }
+                            NewsChip(t.label, tab == t, modifier = Modifier.weight(t.label.length + 1f), horizontalPadding = 2.dp, fontSize = 11.sp) { tab = t }
                         }
                     }
                 }
@@ -326,6 +400,9 @@ fun ArchiveScreen(
                         items(list, key = { "m-" + it.date + it.time + it.opponent + it.url }) { m ->
                             MatchRow(m) { openExternalUrl(context, m.url) }
                         }
+                    }
+                    ArchiveTab.RECORDS -> {
+                        item { RecordsSection(team) { openExternalUrl(context, it) } }
                     }
                 }
                 item {
@@ -386,32 +463,71 @@ fun PastPlayersSection(team: Team, profileOf: (String) -> com.fukuiteams.app.dat
     var playerSort by remember { mutableStateOf(ArchivePlayerSort.APPS) }
     // 選んでいる並び順のボタンをもう一度押すと、逆の順番にする(選手タブと同じ)
     var reversed by remember { mutableStateOf(false) }
+    // 生年月日・身長:今の選手は選手紹介(プロフィール)、元選手は選手ページから読んだもの
+    fun birthdayOf(p: HistoryPlayer): java.time.LocalDate? = profileOf(p.name)?.birthday ?: p.birthday
+    fun heightOf(p: HistoryPlayer): Double? = profileOf(p.name)?.heightCm ?: p.heightCm
+    // 細かい成績(ブローウィンズ)をどのシーズンで比べるか(null なら通算)。チームを変えたら通算に戻す
+    var statSeason by remember(team) { mutableStateOf<String?>(null) }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         if (team != Team.RAC || history?.players.orEmpty().isNotEmpty()) {
             val all = history?.players.orEmpty()
             val hasNow = all.any { it.now != null }
+            val hasDetail = all.any { it.stats != null }
+            // 細かい成績のあるシーズン(古い順)
+            val detailSeasons = all.flatMap { p -> p.stats?.seasons.orEmpty().map { it.season } }.distinct().sorted()
+            val season = statSeason?.takeIf { hasDetail && it in detailSeasons }
+            // 比べる成績(通算か、選んだシーズン)
+            fun lineOf(p: HistoryPlayer): com.fukuiteams.app.data.StatLine? =
+                if (season == null) p.stats?.total else p.stats?.seasons?.firstOrNull { it.season == season }
             val filtered = all.filter { playerFilter == ArchivePlayerFilter.ALL || !hasNow || it.now == false }
+                // シーズンを選んでいるときは、そのシーズンに出た選手だけ
+                .filter { season == null || (lineOf(it)?.games ?: 0) > 0 }
+            // 出場・得点(シーズンを選んでいるときは、そのシーズンの試合数・得点)
+            fun appsOf(p: HistoryPlayer): Int = if (season == null) p.apps else lineOf(p)?.games ?: 0
+            fun goalsOf(p: HistoryPlayer): Int = if (season == null) p.goals else lineOf(p)?.points ?: 0
             // 身長・年齢は、選手紹介に載っている(今の)選手だけ分かる。分からない選手は最後
             val base = when (playerSort) {
-                ArchivePlayerSort.APPS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.apps }.thenByDescending { it.goals })
-                ArchivePlayerSort.GOALS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.goals }.thenByDescending { it.apps })
+                ArchivePlayerSort.APPS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { appsOf(it) }.thenByDescending { goalsOf(it) })
+                ArchivePlayerSort.GOALS -> filtered.sortedWith(compareByDescending<HistoryPlayer> { goalsOf(it) }.thenByDescending { appsOf(it) })
                 // 最後の試合の日付が分からない選手(丸岡RUCK)は、最後のシーズンで並べる
                 ArchivePlayerSort.RECENT -> filtered.sortedWith(compareByDescending<HistoryPlayer> { it.last.ifBlank { it.seasons.lastOrNull().orEmpty() } }.thenByDescending { it.apps })
                 ArchivePlayerSort.NUMBER -> filtered.sortedBy { it.number.toIntOrNull() ?: 999 }
                 ArchivePlayerSort.HEIGHT -> filtered.sortedWith(
-                    compareBy<HistoryPlayer> { profileOf(it.name)?.heightCm == null }.thenByDescending { profileOf(it.name)?.heightCm ?: 0.0 }
+                    compareBy<HistoryPlayer> { heightOf(it) == null }.thenByDescending { heightOf(it) ?: 0.0 }
                 )
                 ArchivePlayerSort.AGE -> filtered.sortedWith(
-                    compareBy<HistoryPlayer> { profileOf(it.name) == null }.thenBy { profileOf(it.name)?.birthday }
+                    compareBy<HistoryPlayer> { birthdayOf(it) == null }.thenBy { birthdayOf(it) }
+                )
+                // ブローウィンズの細かい成績(値が分からない・試投が少ない選手は最後。同じ値なら出場の多い順)
+                else -> filtered.sortedWith(
+                    compareBy<HistoryPlayer> { statSortValue(lineOf(it), playerSort) == null }
+                        .thenByDescending { statSortValue(lineOf(it), playerSort) ?: 0.0 }
+                        .thenByDescending { appsOf(it) }
                 )
             }
             val sorted = if (reversed) {
                 val (missing, known) = base.partition {
-                    (playerSort == ArchivePlayerSort.HEIGHT && profileOf(it.name)?.heightCm == null) ||
-                        (playerSort == ArchivePlayerSort.AGE && profileOf(it.name) == null)
+                    (playerSort == ArchivePlayerSort.HEIGHT && heightOf(it) == null) ||
+                        (playerSort == ArchivePlayerSort.AGE && birthdayOf(it) == null) ||
+                        (playerSort.row in 1..2 && statSortValue(lineOf(it), playerSort) == null)
                 }
                 known.reversed() + missing
             } else base
+            // 歴代○位(並べている項目の順位。同じ数字は同じ順位。値が分からない選手・背番号・最終出場・年齢には付けない)。
+            // 元選手だけを出しているときも、順位は今の選手も含めた全員の中で数える
+            val rankPool = all.filter { season == null || (lineOf(it)?.games ?: 0) > 0 }
+            val rankValue: ((HistoryPlayer) -> Double?)? = when (playerSort) {
+                ArchivePlayerSort.APPS -> { p -> appsOf(p).toDouble().takeIf { it > 0 } }
+                ArchivePlayerSort.GOALS -> { p -> goalsOf(p).toDouble().takeIf { it > 0 } }
+                ArchivePlayerSort.HEIGHT -> { p -> heightOf(p) }
+                ArchivePlayerSort.RECENT, ArchivePlayerSort.NUMBER, ArchivePlayerSort.AGE -> null
+                else -> { p -> statSortValue(lineOf(p), playerSort) }
+            }
+            val ranks: Map<String, Int> = if (rankValue == null) emptyMap() else {
+                val values = rankPool.mapNotNull { p -> rankValue(p)?.let { p.name to it } }
+                values.associate { (name, v) -> name to (values.count { it.second > v } + 1) }
+            }
+            val rankPrefix = season?.let { "${it}シーズン " } ?: "歴代"
             SectionLabel("歴代の選手(今の選手も含む)", modifier = Modifier.padding(top = 4.dp))
             if (hasNow) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -420,21 +536,42 @@ fun PastPlayersSection(team: Team, profileOf: (String) -> com.fukuiteams.app.dat
                     }
                 }
             }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                ArchivePlayerSort.values().forEach { o ->
-                    SortChip(
-                        if (playerSort == o && reversed) o.label + "(逆)" else o.label,
-                        playerSort == o,
-                        Modifier.weight(o.label.length + 1f)
-                    ) {
-                        if (playerSort == o) {
-                            reversed = !reversed
-                        } else {
-                            reversed = false
-                            playerSort = o
+            // ブローウィンズ:比べるシーズン(通算・シーズンごと)。シーズンを選ぶと、そのシーズンの成績で並べ替え・比べられる
+            if (hasDetail && detailSeasons.isNotEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    NewsChip("通算", season == null) { statSeason = null }
+                    detailSeasons.asReversed().forEach { s -> NewsChip(s, season == s) { statSeason = s } }
+                }
+            }
+            // 並び順のボタン(選手タブと同じく段に分ける)。細かい成績の段(1・2段目)は、その成績がある(ブローウィンズ)ときだけ出す
+            ArchivePlayerSort.values().groupBy { it.row }.toSortedMap().forEach { (row, keys) ->
+                if (row in 1..2 && !hasDetail) return@forEach
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    keys.forEach { o ->
+                        SortChip(
+                            if (playerSort == o && reversed) o.label + "(逆)" else o.label,
+                            playerSort == o,
+                            Modifier.weight(o.label.length + 1f)
+                        ) {
+                            if (playerSort == o) {
+                                reversed = !reversed
+                            } else {
+                                reversed = false
+                                playerSort = o
+                            }
                         }
                     }
                 }
+            }
+            if (playerSort.row == 2 && minAttempts(playerSort) > 0) {
+                Text(
+                    "成功率は${if (season == null) "通算の" else "そのシーズンの"}成功数÷試投数です。試投が${minAttempts(playerSort)}本より少ない選手は後ろに並べます。",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = InkSoft
+                )
             }
             Text(
                 when (team) {
@@ -447,6 +584,8 @@ fun PastPlayersSection(team: Team, profileOf: (String) -> com.fukuiteams.app.dat
                     Team.UNITED -> "ユナイテッド公式サイトの試合情報(2019年〜の公式戦)の先発・交代・得点から数えています。"
                 } +
                     (if (hasNow) "「元選手」はいまの選手名簿にいない選手です。" else "") +
+                    (if (season != null) "${season}シーズンに出た選手だけを、そのシーズンの成績で並べています。" else "") +
+                    (if (ranks.isNotEmpty()) "「${rankPrefix.trim()}○位」は今の選手も含めた順位です。" else "") +
                     "${sorted.size}人",
                 style = MaterialTheme.typography.bodySmall,
                 color = InkSoft
@@ -476,7 +615,12 @@ fun PastPlayersSection(team: Team, profileOf: (String) -> com.fukuiteams.app.dat
             }
             sorted.forEach { p ->
                 androidx.compose.runtime.key(team, p.name) {
-                    HistoryPlayerCard(team, p, history?.playersFromLineup == true, profileOf(p.name), mark)
+                    HistoryPlayerCard(
+                        team, p, history?.playersFromLineup == true, profileOf(p.name), mark,
+                        historySortHighlight(lineOf(p), playerSort, season?.let { "${it}シーズン" }),
+                        rank = ranks[p.name]?.let { "$rankPrefix${it}位(${playerSort.label})" },
+                        seasonLine = if (season != null) lineOf(p) else null
+                    )
                 }
             }
         }
@@ -540,10 +684,46 @@ fun PastPlayersSection(team: Team, profileOf: (String) -> com.fukuiteams.app.dat
     }
 }
 
+/** シーズンごとのチーム内1位(細かい成績がある選手の中で、最多得点・最多出場) */
+internal data class SeasonLeaders(val topScorer: String, val topPoints: Int, val mostGames: Int)
+
+/** チームの歴代の選手の細かい成績から、シーズン → チーム内1位(ブローウィンズ)。細かい成績が無ければ空 */
+internal fun seasonLeaders(team: Team): Map<String, SeasonLeaders> {
+    val rows = HistoryRepository.data[team]?.players.orEmpty().flatMap { p ->
+        p.stats?.seasons.orEmpty().map { s -> Triple(s.season, p.name, s) }
+    }
+    return rows.groupBy { it.first }.mapValues { (_, list) ->
+        val top = list.maxByOrNull { it.third.points }
+        SeasonLeaders(top?.second.orEmpty(), top?.third?.points ?: 0, list.maxOfOrNull { it.third.games } ?: 0)
+    }
+}
+
+/** そのシーズンの成績がチーム内1位なら、印の文字(「★チーム最多得点・★チーム最多出場」)。違えば "" */
+internal fun seasonStar(s: com.fukuiteams.app.data.StatLine, leaders: Map<String, SeasonLeaders>): String {
+    val l = leaders[s.season] ?: return ""
+    return listOfNotNull(
+        "★チーム最多得点".takeIf { l.topPoints > 0 && s.points == l.topPoints },
+        "★チーム最多出場".takeIf { l.mostGames > 0 && s.games == l.mostGames }
+    ).joinToString("・")
+}
+
+/** 成功率などの1行(選手タブの StatRow と同じ見た目) */
+@Composable
+private fun HistoryStatRow(label: String, value: String) {
+    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+        Text(label, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, color = InkSoft)
+        Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.ExtraBold, color = Ink)
+    }
+}
+
 /** 細かい成績の2行(試合数・平均出場時間・平均得点・リバウンド・アシストと、成功率・スティール・ブロック・貢献度) */
 @Composable
-private fun StatLines(s: com.fukuiteams.app.data.StatLine, label: String) {
+internal fun StatLines(s: com.fukuiteams.app.data.StatLine, label: String, star: String = "") {
     Column(modifier = Modifier.padding(top = 2.dp)) {
+        // そのシーズンのチーム内1位(最多得点・最多出場)の印
+        if (star.isNotBlank()) {
+            Text(star, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.ExtraBold, color = NewsRed)
+        }
         Text(
             "$label ${s.games}試合・平均${"%.1f".format(s.minutes)}分  ${"%.1f".format(s.ppg)}点・" +
                 "${"%.1f".format(s.rpg)}リバウンド・${"%.1f".format(s.apg)}アシスト",
@@ -657,6 +837,12 @@ private fun SeasonCard(
         s.topScorer?.let { (name, goals) ->
             Text("チーム最多得点  $name ${goals}点", style = MaterialTheme.typography.bodySmall, color = Ink)
         }
+        // ブローウィンズは試合ごとのボックススコアから(得点者の記録が試合に無いため)
+        if (s.topScorer == null) {
+            seasonLeaders(team)[s.season]?.takeIf { it.topPoints > 0 }?.let { l ->
+                Text("チーム最多得点  ${l.topScorer} ${l.topPoints}点", style = MaterialTheme.typography.bodySmall, color = Ink)
+            }
+        }
         s.averageHomeVisitors?.let {
             Text("ホームの観客数の平均  ${"%,d".format(it)}人", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         }
@@ -755,6 +941,96 @@ private fun OpponentCard(
     }
 }
 
+/**
+ * 記録集:チームの記録(1試合の最多得点・最大点差の勝利・最多連勝・ホームの最多観客など)と、
+ * 個人の1試合の記録の上位5人(ブローウィンズ:得点・リバウンド・アシスト、ほかのチーム:得点)。公式戦だけ
+ */
+@Composable
+private fun RecordsSection(team: Team, onOpenUrl: (String) -> Unit) {
+    val history = HistoryRepository.data
+    val records = remember(team, history) { com.fukuiteams.app.data.teamRecords(team) }
+    val unit = if (team == Team.BLOWINDS) "点" else "得点"
+    // 個人の1試合の記録(選手の試合ごとの記録から。無いときは試合の得点者から)
+    val individual: List<Pair<String, List<com.fukuiteams.app.data.GameHigh>>> = remember(team, history) {
+        val pts = com.fukuiteams.app.data.singleGameHighs(team) { it.points }
+            .ifEmpty { if (team != Team.BLOWINDS) com.fukuiteams.app.data.singleGameGoalsFromScorers(team) else emptyList() }
+        listOfNotNull(
+            ("1試合の最多得点" to pts).takeIf { pts.isNotEmpty() },
+            com.fukuiteams.app.data.singleGameHighs(team) { it.rebounds }.takeIf { it.isNotEmpty() }?.let { "1試合の最多リバウンド" to it },
+            com.fukuiteams.app.data.singleGameHighs(team) { it.assists }.takeIf { it.isNotEmpty() }?.let { "1試合の最多アシスト" to it }
+        )
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            "公式の試合の記録(エキシビジョンを除く公式戦)から数えた、${team.shortName}の記録です。押すと公式の試合のページが開きます。",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+        if (records.isEmpty()) {
+            Text("記録を数えられる試合がまだありません。", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+        }
+        records.forEach { r ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, Ink)
+                    .background(Paper)
+                    .then(if (r.url != null) Modifier.clickable { onOpenUrl(r.url) } else Modifier)
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(r.label, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
+                    Text(r.value, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black, color = NewsRed)
+                }
+                Text(r.detail, style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            }
+        }
+        if (individual.isNotEmpty()) {
+            SectionLabel("個人の1試合の記録", modifier = Modifier.padding(top = 4.dp))
+            individual.forEach { (label, rows) ->
+                Column(
+                    modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper).padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(3.dp)
+                ) {
+                    Text(label, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
+                    // 同じ数字は同じ順位
+                    rows.forEach { h ->
+                        val place = rows.count { it.value > h.value } + 1
+                        val u = when (label) {
+                            "1試合の最多得点" -> unit
+                            else -> ""
+                        }
+                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text("${place}位", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = if (place == 1) NewsRed else Ink, modifier = Modifier.width(30.dp))
+                            Text("${h.value}$u", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Black, color = Ink, modifier = Modifier.width(52.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(h.name, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = Ink)
+                                Text(
+                                    "${h.dateLabel} vs ${h.opponent}" + (if (h.scoreLabel.isNotBlank()) " ${h.scoreLabel}" else ""),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = InkSoft,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        history[team]?.detailProgress?.let { (done, total) ->
+            if (total > 0 && done < total) {
+                Text(
+                    "試合ごとの記録を読み込み中です($done/${total}試合)。そろうまで、個人の記録・観客数は一部の試合だけから数えています。",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = NewsRed
+                )
+            }
+        }
+    }
+}
+
 /** 過去の試合1つ。押すと公式の結果のページを開く */
 @Composable
 private fun MatchRow(m: HistoryMatch, onClick: () -> Unit) {
@@ -808,7 +1084,13 @@ private fun HistoryPlayerCard(
     p: HistoryPlayer,
     fromLineup: Boolean = false,
     profile: com.fukuiteams.app.data.PlayerBirthday? = null,
-    mark: ProfileMark = ProfileMark.NONE
+    mark: ProfileMark = ProfileMark.NONE,
+    /** 並べている項目の名前と数字(ブローウィンズの細かい成績で並べているとき)。カードの上に1行で目立たせる */
+    highlight: Pair<String, String>? = null,
+    /** 並べている項目での順位(例「歴代3位(得点)」)。無ければ null */
+    rank: String? = null,
+    /** シーズンを選んで比べているときの、そのシーズンの成績(ます目をこの数字にする)。通算なら null */
+    seasonLine: com.fukuiteams.app.data.StatLine? = null
 ) {
     // 選手タブの今の選手のカードと同じ見た目(写真・背番号・名前・プロフィール・数字のます目)。
     // 写真:選手紹介の写真 → いまのチームの選手の写真 → 過去の記録の写真(ブローウィンズ:Bリーグ公式) → 丸岡RUCKの「あの選手は今」の写真
@@ -823,6 +1105,9 @@ private fun HistoryPlayerCard(
     }
     // 細かい成績(ブローウィンズ)がある選手は、押すとシーズンごとの成績が開く
     var opened by remember(team, p.name) { mutableStateOf(false) }
+    // 出た試合の一覧・相手別の成績(試合ごとの記録がある選手だけ)
+    var logOpened by remember(team, p.name) { mutableStateOf(false) }
+    var splitOpened by remember(team, p.name) { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -864,8 +1149,22 @@ private fun HistoryPlayerCard(
                 }
             }
         }
-        // 生年月日・身長など(今の選手で、選手紹介に載っている選手だけ)
-        profile?.let { ProfileLines(it, mark) }
+        // 生年月日・身長など(今の選手は選手紹介から。元選手は選手ページから読んだ生年月日・身長)
+        if (profile != null) {
+            ProfileLines(profile, mark)
+        } else if (p.birthday != null || p.heightCm != null) {
+            val today = com.fukuiteams.app.data.BirthdaysRepository.today()
+            val parts = listOfNotNull(
+                p.birthday?.let { "${it.year}年${it.monthValue}月${it.dayOfMonth}日生(${java.time.Period.between(it, today).years}歳)" },
+                p.heightCm?.let { "${if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()}cm" }
+            )
+            Text(
+                parts.joinToString("・"),
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = if (mark != ProfileMark.NONE) FontWeight.Bold else FontWeight.Normal,
+                color = if (mark != ProfileMark.NONE) NewsRed else Ink
+            )
+        }
         // 元選手のいま(ブローウィンズ:Bリーグ公式、ブルーサンダー:リーグH公式の選手ページから)
         if (p.now == false && p.nowChecked) {
             Text(
@@ -902,29 +1201,181 @@ private fun HistoryPlayerCard(
             style = MaterialTheme.typography.labelSmall,
             color = InkSoft
         )
-        // 数字のます目(選手タブと同じ形)。丸岡RUCKでゴールランキングからのときは、出場・先発は分からないので「-」
-        val knowApps = team != Team.RAC || fromLineup
-        Row(modifier = Modifier.fillMaxWidth()) {
-            StatCell("出場", if (knowApps) "${p.apps}試合" else "-", Modifier.weight(1f))
-            if (team != Team.THUNDER) {
-                StatCell("先発", if (knowApps) "${p.starts}" else "-", Modifier.weight(1f))
-            }
-            StatCell("得点", "${p.goals}", Modifier.weight(1f))
-            if (team == Team.RAC && fromLineup) {
-                StatCell("シュート", p.shots?.toString() ?: "-", Modifier.weight(1f))
+        // 並べている項目での順位(歴代○位)
+        rank?.let {
+            Text(it, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.ExtraBold, color = NewsRed)
+        }
+        // 並べている項目の数字を、開かなくても見えるように1行出す(選手タブと同じ)
+        highlight?.let { (label, value) ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(com.fukuiteams.app.ui.theme.Accent.copy(alpha = 0.08f))
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(label, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.ExtraBold, color = Ink)
             }
         }
-        // 細かい成績(ブローウィンズ:選手タブと同じ項目。試合ごとのボックススコアの合計から)
-        p.stats?.let { st ->
-            StatLines(st.total, "通算")
+        val st = p.stats
+        if (st != null && st.total.games > 0) {
+            // ブローウィンズ:選手タブの今の選手と同じます目(試合・平均出場時間・平均得点・リバウンド・アシスト)。
+            // 通算の数字(シーズンを選んで比べているときは、そのシーズンの数字)
+            val t = seasonLine ?: st.total
+            if (seasonLine != null) {
+                Text("${seasonLine.season}シーズンの成績", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = InkSoft)
+            }
+            Row(modifier = Modifier.fillMaxWidth()) {
+                StatCell("試合", "${t.games}", Modifier.weight(1f))
+                StatCell("出場時間", "%.1f".format(t.minutes), Modifier.weight(1.2f))
+                StatCell("得点", "%.1f".format(t.ppg), Modifier.weight(1f))
+                StatCell("リバウンド", "%.1f".format(t.rpg), Modifier.weight(1.3f))
+                StatCell("アシスト", "%.1f".format(t.apg), Modifier.weight(1f))
+            }
             Text(
-                if (opened) "▲ シーズンごとを閉じる" else "▼ シーズンごとの成績(${st.seasons.size}シーズン)",
+                if (opened) "▲ 閉じる" else "▼ 成功率・シーズンごとの成績(先発${p.starts}試合・通算${p.goals}得点)",
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
                 color = NewsRed
             )
             if (opened) {
-                st.seasons.asReversed().forEach { s -> StatLines(s, seasonLabel(s.season)) }
+                // 選手タブと同じ並び(成功率は「45.0%(18/40)」)。通算のあとに、シーズンごと(新しい順)
+                Column {
+                    HistoryStatRow("フィールドゴール成功率", t.fgLabel())
+                    HistoryStatRow("3ポイント成功率", t.p3Label())
+                    HistoryStatRow("フリースロー成功率", t.ftLabel())
+                    HistoryStatRow("スティール(平均)", "%.1f".format(t.spg))
+                    HistoryStatRow("ブロック(平均)", "%.1f".format(t.bpg))
+                    HistoryStatRow("貢献度(平均)", "%.1f".format(t.effPerGame))
+                }
+                val leaders = remember(team, HistoryRepository.data) { seasonLeaders(team) }
+                st.seasons.asReversed().forEach { s -> StatLines(s, seasonLabel(s.season), seasonStar(s, leaders)) }
+            }
+        } else {
+            // 数字のます目(選手タブと同じ形)。丸岡RUCKでゴールランキングからのときは、出場・先発は分からないので「-」
+            val knowApps = team != Team.RAC || fromLineup
+            Row(modifier = Modifier.fillMaxWidth()) {
+                StatCell("出場", if (knowApps) "${p.apps}試合" else "-", Modifier.weight(1f))
+                if (team != Team.THUNDER) {
+                    StatCell("先発", if (knowApps) "${p.starts}" else "-", Modifier.weight(1f))
+                }
+                StatCell("得点", "${p.goals}", Modifier.weight(1f))
+                if (team == Team.RAC && fromLineup) {
+                    StatCell("シュート", p.shots?.toString() ?: "-", Modifier.weight(1f))
+                }
+            }
+        }
+        // 出た試合の一覧と、相手別の成績(試合ごとの記録から)
+        if (p.log.isNotEmpty()) {
+            GameLogSection(team, p, logOpened, { logOpened = !logOpened }, splitOpened, { splitOpened = !splitOpened })
+        }
+    }
+}
+
+/** 1試合分の、選手の数字(「先発・12点・5リバウンド・3アシスト・24分」「途中出場・2得点・シュート5」) */
+private fun gameLogLine(team: Team, l: com.fukuiteams.app.data.PlayerGameLog): String = listOfNotNull(
+    if (l.started) "先発" else "途中出場".takeIf { team != Team.THUNDER },
+    if (team == Team.BLOWINDS) "${l.points}点" else "${l.points}得点",
+    l.rebounds?.let { "${it}リバウンド" },
+    l.assists?.let { "${it}アシスト" },
+    l.seconds?.let { "${it / 60}分" },
+    l.shots?.let { "シュート$it" }
+).joinToString("・")
+
+/** 選手の「出た試合」(新しい順)と「相手別の成績」。押すと開く */
+@Composable
+private fun GameLogSection(
+    team: Team,
+    p: HistoryPlayer,
+    logOpened: Boolean,
+    onToggleLog: () -> Unit,
+    splitOpened: Boolean,
+    onToggleSplit: () -> Unit
+) {
+    // 出た試合は多いと長くなるので、はじめは新しい20試合だけ。「もっと見る」で全部
+    var showAll by remember(team, p.name) { mutableStateOf(false) }
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            NewsChip(
+                (if (logOpened) "▲ " else "▼ ") + "出た試合(${p.log.size})",
+                logOpened,
+                modifier = Modifier.weight(1f),
+                horizontalPadding = 2.dp,
+                fontSize = 11.sp
+            ) { onToggleLog() }
+            NewsChip(
+                (if (splitOpened) "▲ " else "▼ ") + "相手別の成績",
+                splitOpened,
+                modifier = Modifier.weight(1f),
+                horizontalPadding = 2.dp,
+                fontSize = 11.sp
+            ) { onToggleSplit() }
+        }
+        if (logOpened) {
+            val list = p.log.asReversed()
+            (if (showAll) list else list.take(20)).forEach { l ->
+                Column(modifier = Modifier.fillMaxWidth().border(1.dp, LineGray).padding(horizontal = 8.dp, vertical = 4.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            l.scoreLabel.ifBlank { "-" },
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Bold,
+                            color = if (l.won) NewsRed else Ink
+                        )
+                        Text(
+                            "${l.dateLabel} vs ${l.opponent}",
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Ink,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        if (l.homeAway == "H" || l.homeAway == "A") HomeAwayTag(isHome = l.homeAway == "H")
+                    }
+                    Text(gameLogLine(team, l), style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                }
+            }
+            if (!showAll && list.size > 20) {
+                Text(
+                    "▼ 残り${list.size - 20}試合も見る",
+                    modifier = Modifier.fillMaxWidth().clickable { showAll = true }.padding(vertical = 4.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = NewsRed
+                )
+            }
+        }
+        if (splitOpened) {
+            val splits = remember(team, p.name, p.log) { com.fukuiteams.app.data.opponentSplits(p.log) }
+            val unit = if (team == Team.BLOWINDS) "点" else "得点"
+            splits.forEach { sp ->
+                Row(
+                    modifier = Modifier.fillMaxWidth().border(1.dp, LineGray).padding(horizontal = 8.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        sp.opponent,
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Ink,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        "${sp.games}試合(${sp.wins}勝)・" +
+                            (if (team == Team.BLOWINDS) "平均${"%.1f".format(sp.pointsPerGame)}点" else "${sp.points}$unit") +
+                            (sp.rebounds?.let { r -> "・${"%.1f".format(r.toDouble() / sp.games)}R" } ?: "") +
+                            (sp.assists?.let { a -> "・${"%.1f".format(a.toDouble() / sp.games)}A" } ?: ""),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = InkSoft
+                    )
+                }
+            }
+            if (team == Team.BLOWINDS) {
+                Text("R=リバウンド、A=アシスト(1試合平均)", style = MaterialTheme.typography.labelSmall, color = InkSoft)
             }
         }
     }

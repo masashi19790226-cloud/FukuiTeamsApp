@@ -69,6 +69,9 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
     // アイコンと文字の上下の余白を狭くする(高さは最低56dp。文字を大きくしている端末では、そのぶん高くなる)
     Column {
     DoubleRule()
+    // 文字の大きさは7つとも共通(入りきらない文字があれば、全部をそろえて少し小さくする。
+    // 以前はボタンごとに小さくしていたので、長い「トピック」「メニュー」だけ文字が小さくなっていた)
+    var labelSize by remember { mutableStateOf(12f) }
     // 地色・文字の色は着せ替えで変わる(標準は淡い紙の色、チームの色の着せ替えはチームの色に白)
     Surface(color = NavBarColor) {
         Row(
@@ -98,7 +101,7 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     CompositionLocalProvider(LocalContentColor provides if (selected) OnBarColor else OnBarSoftColor) {
-                        NavLabel(item.label, selected)
+                        NavLabel(item.label, selected, labelSize) { if (labelSize > 8f) labelSize -= 0.5f }
                     }
                 }
             }
@@ -109,11 +112,10 @@ fun AppBottomNavBar(currentRoute: String?, onNavigate: (String) -> Unit) {
 
 /**
  * 下のメニューの文字。7つ並ぶと「トピック」「メニュー」が入りきらないことがあるので、
- * 1行に収まるまで文字を小さくする(端が欠けないように)。
+ * 1行に収まるまで文字を小さくする(端が欠けないように)。大きさは7つで共通(fontSize)で、入りきらないと onOverflow を呼ぶ
  */
 @Composable
-private fun NavLabel(text: String, selected: Boolean) {
-    var fontSize by remember(text) { mutableStateOf(12f) }
+private fun NavLabel(text: String, selected: Boolean, fontSize: Float, onOverflow: () -> Unit) {
     Text(
         text,
         fontSize = fontSize.sp,
@@ -121,7 +123,7 @@ private fun NavLabel(text: String, selected: Boolean) {
         maxLines = 1,
         softWrap = false,
         onTextLayout = { result ->
-            if (result.hasVisualOverflow && fontSize > 8f) fontSize -= 0.5f
+            if (result.hasVisualOverflow) onOverflow()
         }
     )
 }

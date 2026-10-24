@@ -109,6 +109,8 @@ fun buildFeatureStories(
         // 過去の記録(data/history.json)から
         out += pastMatchStory(team, today)
         out += legendStory(team, today)
+        out += milestoneStory(team)
+        out += recordStory(team, today)
         out += nationalStory(team, today)
     }
     out += topNews(teams, news, today)
@@ -635,6 +637,80 @@ private fun pastMatchStory(team: Team, today: LocalDate): List<FeatureStory> {
             url = m.url.ifBlank { null }
         )
     )
+}
+
+/**
+ * 「節目まであと」:今の選手のうち、通算の出場・得点の節目(100試合など)や歴代最多得点が近い選手。
+ * 過去の記録(歴代の選手)の通算から。丸岡RUCKは出場選手の記録があるときだけ出場も数える
+ */
+private fun milestoneStory(team: Team): List<FeatureStory> {
+    // 節目の数え方は upcomingMilestones(HistoryRecords.kt。節目の通知と同じ)
+    val pick = upcomingMilestones(team).minByOrNull { it.left } ?: return emptyList()
+    val photo = TeamPhotos.findByName(TeamPhotos.forTeam(team), pick.player.name)?.url ?: pick.player.photo.takeIf { it.isNotBlank() }
+    return listOf(
+        FeatureStory(
+            photo = photo.orEmpty(),
+            photoCaption = photo?.let { pick.player.name },
+            kicker = "節目まであと",
+            team = team,
+            headline = pick.headline,
+            body = pick.body + "下のメニューの「選手」の「歴代の選手」で、ほかの選手の記録も見られます。",
+            bigNumber = "${pick.left}",
+            bigUnit = pick.unit
+        )
+    )
+}
+
+/**
+ * 「記録集」:最近(2週間以内)の試合で、チームの1試合の最多得点や、個人の1試合の最多得点(歴代1位)が出たとき。
+ * 過去の記録(data/history.json)から数える。同じ数字の試合が前にもあれば「タイ記録」
+ */
+private fun recordStory(team: Team, today: LocalDate): List<FeatureStory> {
+    val cutoff = today.minusDays(14).toString()
+    val matches = HistoryRepository.matchesFor(team).filterNot { it.isExhibition }
+    if (matches.isEmpty()) return emptyList()
+    val unit = if (team == Team.BLOWINDS) "点" else "得点"
+    // 個人の1試合の最多得点(試合ごとの記録が無いチームは得点者から)
+    val highs = singleGameHighs(team, top = 50) { it.points }.ifEmpty { singleGameGoalsFromScorers(team, top = 50) }
+    val topHigh = highs.firstOrNull()
+    if (topHigh != null && topHigh.date >= cutoff && topHigh.value >= (if (team == Team.BLOWINDS) 20 else 3)) {
+        val tie = highs.any { it.value == topHigh.value && it !== topHigh && it.date < topHigh.date }
+        val photo = TeamPhotos.findByName(TeamPhotos.forTeam(team), topHigh.name)?.url
+        return listOf(
+            FeatureStory(
+                photo = photo.orEmpty(),
+                photoCaption = photo?.let { topHigh.name },
+                kicker = "記録集",
+                team = team,
+                headline = "${topHigh.name}、1試合${topHigh.value}${unit}は歴代最多" + (if (tie) "タイ" else ""),
+                body = "${topHigh.dateLabel}の${topHigh.opponent}戦(${topHigh.scoreLabel})で${topHigh.value}$unit。" +
+                    "過去の記録(公式の試合ごとの記録)で数えた、${team.shortName}の1試合の個人最多" + (if (tie) "に並びました。" else "です。") +
+                    "下のメニューの「チーム」の「記録集」で、ほかの記録も見られます。",
+                bigNumber = "${topHigh.value}",
+                bigUnit = unit
+            )
+        )
+    }
+    // チームの1試合の最多得点
+    val best = matches.maxOf { it.myScore }
+    val hit = matches.filter { it.myScore == best }.maxByOrNull { it.date }
+    if (hit != null && hit.date >= cutoff && best > 0) {
+        val tie = matches.count { it.myScore == best } > 1
+        return listOf(
+            FeatureStory(
+                kicker = "記録集",
+                team = team,
+                headline = "${hit.opponent}戦の${best}${unit}、チームの1試合最多" + (if (tie) "タイ" else ""),
+                body = "${hit.dateLabel}、${hit.title.ifBlank { hit.competition }}。${hit.opponent}に${hit.myScore}-${hit.opponentScore}。" +
+                    "過去の記録で数えた、${team.shortName}の公式戦の1試合の最多得点" + (if (tie) "に並びました。" else "です。") +
+                    "下のメニューの「チーム」の「記録集」で、ほかの記録も見られます。",
+                bigNumber = "$best",
+                bigUnit = unit,
+                url = hit.url.ifBlank { null }
+            )
+        )
+    }
+    return emptyList()
 }
 
 /** 「歴代の選手」:これまでにプレーした選手(元選手を優先)を日替わりで1人。出場・得点の記録から */

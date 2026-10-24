@@ -66,7 +66,9 @@ class PlayerBook:
         # チーム(結婚などで名字が変わった選手を今の名前にまとめるのに使う。name_changes.py)
         self.team = team
 
-    def add(self, name, number, position, season, date, played, started, goals):
+    def add(self, name, number, position, season, date, played, started, goals, log=None):
+        """log を渡すと、試合ごとの記録 [日付, 相手, H/A, 福井の点, 相手の点] + [先発か, 得点] を選手の "log" に足す
+        (アプリの「出た試合」・相手別の成績・1試合の最多得点に使う)"""
         name = (name or "").strip()
         if not name or name in ("???",):
             return
@@ -89,6 +91,8 @@ class PlayerBook:
         r["goals"] += goals or 0
         r["first"] = min(r["first"], date)
         r["last"] = max(r["last"], date)
+        if log is not None and played:
+            r.setdefault("log", []).append(list(log) + [bool(started), goals or 0])
 
     def result(self, current_keys=None):
         out = []
@@ -149,19 +153,20 @@ def united_matches(post_json, book=None):
             # 先発・控え(控えは途中で出たときだけ出場に数える)
             came_in = {name_key((c.get("in") or {}).get("player")) for c in _items(m.get("member_change_proponent"))}
             counted = set()
+            lg = [date, opponent, "H" if ha == "HOME" else "A" if ha == "AWAY" else "N", my, opp]
             for p in _items(m.get("starting_member_proponent")):
                 n = (p.get("player") or "").strip()
-                book.add(n, p.get("number"), p.get("position"), sea, date, True, True, goals.get(n, 0))
+                book.add(n, p.get("number"), p.get("position"), sea, date, True, True, goals.get(n, 0), lg)
                 counted.add(n)
             for p in _items(m.get("substitute_proponent")):
                 n = (p.get("player") or "").strip()
                 if name_key(n) in came_in and n not in counted:
-                    book.add(n, p.get("number"), p.get("position"), sea, date, True, False, goals.get(n, 0))
+                    book.add(n, p.get("number"), p.get("position"), sea, date, True, False, goals.get(n, 0), lg)
                     counted.add(n)
             # 先発・交代の記録に無い得点者(記録が抜けている試合)も、出場1・得点として数える
             for n, g in goals.items():
                 if n not in counted:
-                    book.add(n, "", "", sea, date, True, False, g)
+                    book.add(n, "", "", sea, date, True, False, g, lg)
         out.append({
             "date": f"{int(mk.group(1)):04d}-{int(mk.group(2)):02d}-{int(mk.group(3)):02d}",
             "time": mk.group(4),
@@ -508,7 +513,7 @@ def ruck_players_from_lineups(matches, current_keys):
     結婚などで名字が変わった選手は今の名前にまとめる。出場選手が分かる試合が無ければ []"""
     book = PlayerBook("RAC")
     shots = {}
-    numbers = {}
+    logs = {}
     for m in sorted(matches, key=lambda x: (x["date"], x.get("time", ""))):
         for name, number, pos, app, sh, goals in m.get("lineup") or []:
             if not app:
@@ -516,9 +521,14 @@ def ruck_players_from_lineups(matches, current_keys):
             book.add(name, number, pos, m.get("season"), m["date"], True, app == "S", goals)
             k = name_key(name_changes.current_name("RAC", name))
             shots[k] = shots.get(k, 0) + (sh or 0)
+            # 試合ごとの記録(アプリの「出た試合」と相手別の成績に使う)
+            # [日付, 相手, H/A, 福井の点, 相手の点, 先発か, 得点, シュート]
+            logs.setdefault(k, []).append([m["date"], m.get("opp", ""), m.get("ha", ""), m.get("my"), m.get("their"),
+                                           app == "S", goals, sh or 0])
     players = book.result(current_keys)
     for p in players:
         p["shots"] = shots.get(name_key(p["name"]), 0)
+        p["log"] = logs.get(name_key(p["name"]), [])
     return players
 
 
@@ -629,13 +639,28 @@ def thunder_players(matches, current_keys):
     for m in sorted(matches, key=lambda x: (x["date"], x.get("time", ""))):
         for row in m.get("roster") or []:
             name, number, position, goals = row[:4]
-            book.add(name, number, position, m.get("season"), m["date"], True, False, goals)
+            book.add(name, number, position, m.get("season"), m["date"], True, False, goals,
+                     [m["date"], m.get("opp", ""), m.get("ha", ""), m.get("my"), m.get("their")])
             if len(row) >= 5 and row[4]:
                 pids[name_key(name)] = row[4]
     players = book.result(current_keys)
     for p in players:
         p["pid"] = pids.get(name_key(p["name"]), "")
     return players
+
+
+def _add_birthday_height(p, page: str):
+    """選手ページ(Bリーグ公式・リーグH公式)の「生年月日」「身長」を、元選手の記録に入れる(読めなければ入れない)。
+    読み方は誕生日のデータ(birthdays.py)と同じ"""
+    import birthdays
+    text = birthdays._text(page)
+    bd = birthdays._birthday_in(text)
+    if bd:
+        p["birthday"] = bd
+    h = birthdays._profile(text).get("height")
+    if h:
+        p["height"] = h
+    p["bd_checked"] = True
 
 
 def thunder_players_now(fetch, players, old_players=None, recheck_days=7):
@@ -654,8 +679,10 @@ def thunder_players_now(fetch, players, old_players=None, recheck_days=7):
             fresh = (today - datetime.fromisoformat(o.get("now_checked", "")).date()).days < recheck_days
         except ValueError:
             fresh = False
+        # 生年月日・身長をまだ調べていない(2026年10月より前に調べた)選手は読み直す
+        fresh = fresh and o.get("bd_checked")
         if fresh:
-            for k in ("now_team", "now_checked", "photo"):
+            for k in ("now_team", "now_checked", "photo", "birthday", "height", "bd_checked"):
                 if k in o:
                     p[k] = o[k]
             continue
@@ -669,6 +696,7 @@ def thunder_players_now(fetch, players, old_players=None, recheck_days=7):
         team = re.search(r"[（(]([^（）()]+)[）)]\s*-", t.group(1)) if t else None
         p["now_team"] = htmllib.unescape(team.group(1)).strip() if team else ""
         p["now_checked"] = today.isoformat()
+        _add_birthday_height(p, page)
         ph = re.search(rf"src=[\"'](/files/[^\"']*/player/[^\"']*p{pid}\.(?:jpe?g|png))[\"']", page)
         if ph:
             p["photo"] = leagueh.LEAGUEH + ph.group(1)
@@ -965,6 +993,22 @@ def bleague_box(fetch, game_url: str, team_id: str = BLOWINDS_TEAM_ID):
 BOX_ROW_LEN = 19
 
 
+# 日程の一覧の略称 → 正式名(試合のページをまだ読めていない相手でも、同じ相手が2つの名前で並ばないように)
+BLEAGUE_SHORT_NAMES = {
+    "信州": "信州ブレイブウォリアーズ", "奈良": "バンビシャス奈良", "青森": "青森ワッツ",
+    "愛媛": "愛媛オレンジバイキングス", "山形": "山形ワイヴァンズ", "福岡": "ライジングゼファー福岡",
+    "A千葉": "アルティーリ千葉", "静岡": "ベルテックス静岡", "富山": "富山グラウジーズ",
+    "福島": "福島ファイヤーボンズ", "神戸": "神戸ストークス", "熊本": "熊本ヴォルターズ",
+    "鹿児島": "鹿児島レブナイズ", "岐阜": "岐阜スゥープス", "金沢": "金沢武士団",
+    "横浜EX": "横浜エクセレンス", "岩手": "岩手ビッグブルズ", "新潟": "新潟アルビレックスBB",
+    "東京Z": "アースフレンズ東京Z", "八王子": "東京八王子ビートレインズ", "埼玉": "さいたまブロンコス",
+    "岡山": "トライフープ岡山", "東京U": "東京ユナイテッドバスケットボールクラブ", "立川": "立川ダイス",
+    "越谷": "越谷アルファーズ", "FE名古屋": "ファイティングイーグルス名古屋", "香川": "香川ファイブアローズ",
+    "徳島": "徳島ガンバロウズ", "三重": "ヴィアティン三重", "湘南": "湘南ユナイテッドBC",
+    "山口": "山口パッツファイブ", "しながわ": "しながわシティ バスケットボールクラブ",
+}
+
+
 def blowinds_boxes(fetch, matches, prev_matches):
     """各試合に選手の成績(box)を付ける。前回読んだ試合はその分を使い、新しく読むのは BOX_PER_RUN 試合まで。
     まだ読めていない試合が残れば True(続きは次の更新で)"""
@@ -994,12 +1038,21 @@ def blowinds_boxes(fetch, matches, prev_matches):
             m["box"] = box
             # 相手は日程の一覧では「信州」のような略称なので、試合のページの正式名にする(略称は opp_short に残す)
             if info.get("opp"):
-                m["opp_short"] = m.get("opp", "")
+                m["opp_short"] = m.get("opp_short") or m.get("opp", "")
                 m["opp"] = info["opp"]
             if info.get("venue"):
                 m["venue"] = info["venue"]
             if info.get("visitors"):
                 m["visitors"] = info["visitors"]
+    # 試合のページをまだ読めていない試合の相手は、日程の一覧の略称(「信州」)のまま。
+    # 読めた試合でわかった「略称 → 正式名」で置き換えて、同じ相手が2つの名前で並ばないようにする
+    full_of = dict(BLEAGUE_SHORT_NAMES)
+    full_of.update({m["opp_short"]: m["opp"] for m in matches
+                    if m.get("opp_short") and m.get("opp") and m["opp_short"] != m["opp"]})
+    for m in matches:
+        if not m.get("opp_short") and m.get("opp") in full_of:
+            m["opp_short"] = m["opp"]
+            m["opp"] = full_of[m["opp_short"]]
     print(f"[過去の記録] ブローウィンズ: 選手の成績を{fetched}試合分読みました(残り{left}試合)")
     return left > 0
 
@@ -1027,6 +1080,7 @@ def blowinds_players(matches, current_keys, old_players=None):
     # 細かい成績の合計(選手 → シーズン → 合計)。行が短い(細かい成績が無い)試合は数えない
     keys = ("sec", "p2m", "p2a", "p3m", "p3a", "ftm", "fta", "reb", "ast", "stl", "blk", "to", "eff")
     detail = {}
+    logs = {}
     for m in sorted(matches, key=lambda x: (x["date"], x.get("time", ""))):
         for row in m.get("box") or []:
             pid, name, number, points, started, played = row[:6]
@@ -1035,6 +1089,11 @@ def blowinds_players(matches, current_keys, old_players=None):
             book.add(name, number, "", m.get("season"), m["date"], True, started, points)
             if pid:
                 pids[name_key(name)] = pid
+            # 試合ごとの記録(アプリの「出た試合」・相手別の成績・1試合の最高記録に使う)
+            # [日付, 相手, H/A, 福井の点, 相手の点, 先発か, 得点, 出場秒数, リバウンド, アシスト]
+            if len(row) >= BOX_ROW_LEN:
+                logs.setdefault(name_key(name), []).append([m["date"], m.get("opp", ""), m.get("ha", ""), m.get("my"), m.get("their"),
+                                                            bool(started), points, row[6], row[13], row[14]])
             if len(row) >= BOX_ROW_LEN:
                 d = detail.setdefault(name_key(name), {}).setdefault(m.get("season"), dict.fromkeys(("g", "pts") + keys, 0))
                 d["g"] += 1
@@ -1043,6 +1102,7 @@ def blowinds_players(matches, current_keys, old_players=None):
                     d[k] += v
     players = book.result(current_keys)
     for p in players:
+        p["log"] = logs.get(name_key(p["name"]), [])
         by = detail.get(name_key(p["name"])) or {}
         if by:
             total = dict.fromkeys(("g", "pts") + keys, 0)
@@ -1096,8 +1156,10 @@ def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
             fresh = (today - datetime.fromisoformat(o.get("now_checked", "")).date()).days < recheck_days
         except ValueError:
             fresh = False
+        # 生年月日・身長をまだ調べていない(2026年10月より前に調べた)選手は読み直す
+        fresh = fresh and o.get("bd_checked")
         if fresh:
-            for k in ("now_team", "now_team_id", "now_checked"):
+            for k in ("now_team", "now_team_id", "now_checked", "birthday", "height", "bd_checked"):
                 if k in o:
                     p[k] = o[k]
         else:
@@ -1111,6 +1173,7 @@ def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
             p["now_team"] = htmllib.unescape(m.group(2)).strip() if m else ""
             p["now_team_id"] = m.group(1) if m else ""
             p["now_checked"] = today.isoformat()
+            _add_birthday_height(p, page)
         if not p.get("photo") and p.get("now_team_id") and p["now_team_id"] != BLOWINDS_TEAM_ID:
             url = f"https://bleague.bl.kuroco-img.app/files/user/roster/{p['now_team_id']}/{season_now}/{pid}_03.png"
             if _url_exists(url):

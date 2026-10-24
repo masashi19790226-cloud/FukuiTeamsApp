@@ -46,7 +46,9 @@ data class HistoryMatch(
     val visitors: Int?,
     /** 得点した選手と得点(ブルーサンダーは得点の多い3人まで) */
     val scorers: List<Pair<String, Int>>,
-    val url: String
+    val url: String,
+    /** 日程の一覧での相手の略称(ブローウィンズ:「信州」など。試合のページを読めた試合だけ)。無ければ "" */
+    val opponentShort: String = ""
 ) {
     val localDate: LocalDate? get() = runCatching { LocalDate.parse(date) }.getOrNull()
 
@@ -203,7 +205,13 @@ data class HistoryPlayer(
     /** シュート数の合計(丸岡RUCK:試合ごとの記録から)。分からなければ null */
     val shots: Int? = null,
     /** 細かい成績(ブローウィンズ:試合ごとのボックススコアの合計)。無ければ null */
-    val stats: HistoryStats? = null
+    val stats: HistoryStats? = null,
+    /** 生年月日(元選手:Bリーグ公式・リーグH公式の選手ページから)。分からなければ null */
+    val birthday: java.time.LocalDate? = null,
+    /** 身長(cm。元選手:選手ページから)。分からなければ null */
+    val heightCm: Double? = null,
+    /** 出た試合ごとの記録(古い順)。データに無ければ空 */
+    val log: List<PlayerGameLog> = emptyList()
 ) {
     /** 「2019〜2022」(1シーズンだけなら「2019」) */
     val seasonsLabel: String
@@ -212,6 +220,75 @@ data class HistoryPlayer(
             seasons.size == 1 -> seasons.first()
             else -> "${seasons.first()}〜${seasons.last()}"
         }
+}
+
+/**
+ * 選手が出た試合1つ分の記録(scripts/history.py が試合ごとの記録から作る)。
+ * points はブローウィンズは得点、ほかのチームはゴール数。
+ * shots は丸岡RUCKだけ、seconds・rebounds・assists はブローウィンズだけ(無ければ null)
+ */
+data class PlayerGameLog(
+    /** 2024-10-05 */
+    val date: String,
+    val opponent: String,
+    /** H・A・N */
+    val homeAway: String,
+    val myScore: Int?,
+    val opponentScore: Int?,
+    val started: Boolean,
+    val points: Int,
+    val shots: Int? = null,
+    val seconds: Int? = null,
+    val rebounds: Int? = null,
+    val assists: Int? = null
+) {
+    val localDate: LocalDate? get() = runCatching { LocalDate.parse(date) }.getOrNull()
+
+    /** 「2024/10/5」 */
+    val dateLabel: String
+        get() = localDate?.let { "${it.year}/${it.monthValue}/${it.dayOfMonth}" } ?: date
+
+    /** 「○85-70」(点数が分からなければ "") */
+    val scoreLabel: String
+        get() {
+            val my = myScore ?: return ""
+            val their = opponentScore ?: return ""
+            val mark = when {
+                my > their -> "○"
+                my < their -> "●"
+                else -> "△"
+            }
+            return "$mark$my-$their"
+        }
+
+    val won: Boolean get() = myScore != null && opponentScore != null && myScore > opponentScore
+}
+
+/**
+ * ブローウィンズの日程の一覧での相手の略称 → 正式名(scripts/history.py の BLEAGUE_SHORT_NAMES と同じ)。
+ * 試合のページをまだ読めていない試合は略称のままなので、同じ相手が2つの名前で並ばないよう正式名にそろえる。
+ * 次の試合(日程は略称)と過去の対戦を合わせるときにも使う
+ */
+private val BLEAGUE_SHORT_NAMES: Map<String, String> = mapOf(
+    "信州" to "信州ブレイブウォリアーズ", "奈良" to "バンビシャス奈良", "青森" to "青森ワッツ",
+    "愛媛" to "愛媛オレンジバイキングス", "山形" to "山形ワイヴァンズ", "福岡" to "ライジングゼファー福岡",
+    "A千葉" to "アルティーリ千葉", "静岡" to "ベルテックス静岡", "富山" to "富山グラウジーズ",
+    "福島" to "福島ファイヤーボンズ", "神戸" to "神戸ストークス", "熊本" to "熊本ヴォルターズ",
+    "鹿児島" to "鹿児島レブナイズ", "岐阜" to "岐阜スゥープス", "金沢" to "金沢武士団",
+    "横浜EX" to "横浜エクセレンス", "岩手" to "岩手ビッグブルズ", "新潟" to "新潟アルビレックスBB",
+    "東京Z" to "アースフレンズ東京Z", "八王子" to "東京八王子ビートレインズ", "埼玉" to "さいたまブロンコス",
+    "岡山" to "トライフープ岡山", "東京U" to "東京ユナイテッドバスケットボールクラブ", "立川" to "立川ダイス",
+    "越谷" to "越谷アルファーズ", "FE名古屋" to "ファイティングイーグルス名古屋", "香川" to "香川ファイブアローズ",
+    "徳島" to "徳島ガンバロウズ", "三重" to "ヴィアティン三重", "湘南" to "湘南ユナイテッドBC",
+    "山口" to "山口パッツファイブ", "しながわ" to "しながわシティ バスケットボールクラブ"
+)
+
+/** ブローウィンズの相手の略称を正式名にする(試合のページで分かった略称 → 正式名を優先。ほかのチームはそのまま) */
+fun fullOpponentName(team: Team, name: String): String {
+    if (team != Team.BLOWINDS) return name
+    val key = name.trim()
+    HistoryRepository.matchesFor(team).firstOrNull { it.opponentShort == key && it.opponent != key }?.let { return it.opponent }
+    return BLEAGUE_SHORT_NAMES[key] ?: name
 }
 
 object HistoryRepository {
@@ -249,6 +326,43 @@ object HistoryRepository {
         if (!loaded || data.isEmpty()) refresh()
     }
 
+    /** ブローウィンズの相手の略称(まだ試合のページを読めていない試合)を、正式名にそろえる */
+    private fun blowindsFullNames(list: List<HistoryMatch>): List<HistoryMatch> {
+        val known = list.filter { it.opponentShort.isNotBlank() && it.opponentShort != it.opponent }
+            .associate { it.opponentShort to it.opponent }
+        return list.map { m ->
+            val full = known[m.opponent.trim()] ?: BLEAGUE_SHORT_NAMES[m.opponent.trim()]
+            if (full != null && full != m.opponent) m.copy(opponent = full, opponentShort = m.opponent) else m
+        }
+    }
+
+    /**
+     * 選手の試合ごとの記録 [日付, 相手, H/A, 福井の点, 相手の点, 先発か, 得点, …] を読む。
+     * 8つ目以降:丸岡RUCKはシュート、ブローウィンズは出場秒数・リバウンド・アシスト
+     */
+    private fun parseLog(team: Team, a: org.json.JSONArray?): List<PlayerGameLog> {
+        if (a == null) return emptyList()
+        return (0 until a.length()).mapNotNull { i ->
+            val r = a.optJSONArray(i) ?: return@mapNotNull null
+            if (r.length() < 7) return@mapNotNull null
+            fun intAt(k: Int): Int? = if (k < r.length() && !r.isNull(k)) r.optInt(k) else null
+            val opp = r.optString(1).replace("&#039;", "'").replace("&amp;", "&")
+            PlayerGameLog(
+                date = r.optString(0),
+                opponent = if (team == Team.BLOWINDS) BLEAGUE_SHORT_NAMES[opp.trim()] ?: opp else opp,
+                homeAway = r.optString(2),
+                myScore = intAt(3),
+                opponentScore = intAt(4),
+                started = r.optBoolean(5),
+                points = r.optInt(6),
+                shots = if (team == Team.RAC) intAt(7) else null,
+                seconds = if (team == Team.BLOWINDS) intAt(7) else null,
+                rebounds = if (team == Team.BLOWINDS) intAt(8) else null,
+                assists = if (team == Team.BLOWINDS) intAt(9) else null
+            )
+        }.filter { it.date.isNotBlank() }.sortedBy { it.date }
+    }
+
     private fun parse(root: JSONObject): Map<Team, TeamHistoryData> {
         val teams = root.optJSONObject("teams") ?: return emptyMap()
         val out = mutableMapOf<Team, TeamHistoryData>()
@@ -283,9 +397,11 @@ object HistoryRepository {
                             a.optJSONObject(j)?.let { s -> s.optString("name") to s.optInt("goals") }
                         }.filter { it.first.isNotBlank() }
                     }.orEmpty(),
-                    url = m.optString("url")
+                    url = m.optString("url"),
+                    opponentShort = m.optString("opp_short")
                 )
             }.sortedWith(compareBy({ it.date }, { it.time }))
+                .let { list -> if (team == Team.BLOWINDS) blowindsFullNames(list) else list }
             if (matches.isNotEmpty()) {
                 val pArr = o.optJSONArray("players")
                 val players = if (pArr == null) emptyList() else (0 until pArr.length()).mapNotNull { i ->
@@ -308,6 +424,9 @@ object HistoryRepository {
                         nowTeam = q.optString("now_team"),
                         nowChecked = q.optString("now_checked").isNotBlank(),
                         shots = if (q.has("shots")) q.optInt("shots") else null,
+                        birthday = q.optString("birthday").takeIf { it.isNotBlank() }?.let { runCatching { java.time.LocalDate.parse(it) }.getOrNull() },
+                        heightCm = q.optString("height").toDoubleOrNull(),
+                        log = parseLog(team, q.optJSONArray("log")),
                         former = q.optJSONArray("former")?.let { a -> (0 until a.length()).map { a.optString(it) }.filter { it.isNotBlank() } }.orEmpty(),
                         stats = q.optJSONObject("stats")?.let { st ->
                             val sArr2 = st.optJSONArray("seasons")
@@ -504,7 +623,13 @@ fun sameOpponentLoose(a: String, b: String): Boolean {
 }
 
 /** その相手との、date より前の過去の試合(新しい順。エキシビジョンは除く) */
-fun pastMeetings(team: Team, opponent: String, beforeDate: String): List<HistoryMatch> =
-    HistoryRepository.matchesFor(team)
-        .filter { !it.isExhibition && it.date < beforeDate && sameOpponentLoose(it.opponent, opponent) }
+fun pastMeetings(team: Team, opponent: String, beforeDate: String): List<HistoryMatch> {
+    // ブローウィンズの日程は相手が略称(「信州」)なので、正式名にしてから比べる(略称どうしも同じ相手)
+    val full = fullOpponentName(team, opponent)
+    return HistoryRepository.matchesFor(team)
+        .filter {
+            !it.isExhibition && it.date < beforeDate &&
+                (sameOpponentLoose(it.opponent, full) || (it.opponentShort.isNotBlank() && it.opponentShort == opponent.trim()))
+        }
         .sortedByDescending { it.date }
+}
