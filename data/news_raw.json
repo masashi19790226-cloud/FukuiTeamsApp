@@ -4651,5 +4651,31 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://newspicks.com/news/17752938/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3y_VJB23CkTC87T4uYp6P0",
     "published": "2026-10-23T07:20:37Z",
     "detected_at": "2026-10-23T21:43:35.909797+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2173901972552967931",
+    "team": "BLOWINDS",
+    "title": "ブローウィンズ福井 - Instagram",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/popular/%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA%25E7%25A6%258F%25E4%25BA%2595/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw37ov6Y41nakN_RYFsKbZCF",
+    "published": "2026-10-23T20:45:40Z",
+    "detected_at": "2026-10-24T00:04:56.717716+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9254153669670477165",
+    "team": "BLOWINDS",
+    "title": "ブローウィンズ 掲示板 - Instagram",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/popular/%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA-%25E6%258E%25B2%25E7%25A4%25BA%25E6%259D%25BF/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1Ht_eVuJVwqkyJyiQBD9yu",
+    "published": "2026-10-23T15:33:14Z",
+    "detected_at": "2026-10-24T00:04:56.717786+00:00"
+  },
+  {
+    "id": "bing:https://www.oricon.co.jp/pressrelease/3049906/",
+    "team": "BLOWINDS",
+    "title": "（株）アトム×福井ブローウィンズ コラボ企画「ぶーず」がカルビ ...",
+    "link": "https://www.oricon.co.jp/pressrelease/3049906/",
+    "published": "2026-10-22T08:46:00+00:00",
+    "source": "ORICON NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.RFoqyHlEGgKI8F1YBlSr4g&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-24T00:04:57.813319+00:00"
   }
 ]
