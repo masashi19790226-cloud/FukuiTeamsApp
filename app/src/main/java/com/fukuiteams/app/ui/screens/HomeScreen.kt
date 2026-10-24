@@ -841,25 +841,33 @@ private fun TwoColumnFront(
                 Text("予定はまだ発表されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
             }
             nextGames.forEachIndexed { index, game ->
-                if (index > 0) {
-                    // 試合と試合の区切り(チームの色の太線)
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 10.dp)
-                            .height(3.dp)
-                            .background(game.team.color)
+                val block: @Composable () -> Unit = {
+                    NextGameBlock(
+                        nextGame = game,
+                        hasOpenInvite = hasOpenInvite(game),
+                        preview = previews[game.id],
+                        lp = lps[game.id],
+                        forecast = forecasts[game.id],
+                        results = autoResults,
+                        onOpenGame = onOpenGame
                     )
                 }
-                NextGameBlock(
-                    nextGame = game,
-                    hasOpenInvite = hasOpenInvite(game),
-                    preview = previews[game.id],
-                    lp = lps[game.id],
-                    forecast = forecasts[game.id],
-                    results = autoResults,
-                    onOpenGame = onOpenGame
-                )
+                if (nextGames.size > 1) {
+                    // 同じ日に2試合以上あるときは、1試合ずつチームの色の枠と、うっすらチームの色の背景で囲む
+                    // (以前は区切りの線だけで、どこからどこまでが1試合か分かりにくかったため)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = if (index > 0) 10.dp else 4.dp)
+                            .border(1.5.dp, game.team.color)
+                            .background(game.team.color.copy(alpha = 0.07f))
+                    ) {
+                        Box(modifier = Modifier.fillMaxWidth().height(5.dp).background(game.team.color))
+                        Box(modifier = Modifier.padding(10.dp)) { block() }
+                    }
+                } else {
+                    block()
+                }
             }
         }
 

@@ -15,6 +15,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月24日",
+        title = "同じ日に2試合あるときの一面を見やすく",
+        items = listOf(
+            "一面の「次の試合」で、同じ日に2試合以上あるときは、1試合ずつチームの色の枠とうっすらチームの色の背景で囲むようにしました(区切りの線だけでは、どこからどこまでが1試合か分かりにくかったため)"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月24日",
         title = "写真の下の選手名の大きさをそろえました・歩みの並び順を直しました",
         items = listOf(
             "チームの歩みで、同じ年の出来事の並び順が前後していたのを、起きた月の順に直しました。シーズンの成績は「2023-24シーズン」のようにシーズンで出し、シーズンが終わった時期で並べます。月が分かる出来事は「2023年4月」のように月も出します",
