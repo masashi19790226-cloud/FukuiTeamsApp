@@ -973,14 +973,18 @@ private fun NextGameBlock(
                     fontWeight = FontWeight.Bold,
                     color = Ink
                 )
-                // 会場へ向かうころ(入場の1時間前)の天気
-                if (forecast.beforeTime != null && forecast.before != null) {
-                    ForecastLine("${forecast.beforeLabel}\n${forecast.beforeTime}ごろ", forecast.before)
-                }
-                if (forecast.entryTime != null && forecast.entry != null) {
-                    ForecastLine("入場 ${forecast.entryTime}ごろ", forecast.entry)
-                }
-                forecast.start?.let { ForecastLine("試合開始 ${forecast.startTime}ごろ", it) }
+                // 時刻ごとに列を分けた表(入場の1時間前 → 入場 → 試合開始)。行は天気・気温・降水確率・降水量など
+                ForecastTable(
+                    listOfNotNull(
+                        forecast.before?.takeIf { forecast.beforeTime != null }?.let {
+                            ForecastColumn(if (forecast.beforeLabel.startsWith("入場")) "入場1時間前" else "開始1時間前", forecast.beforeTime.orEmpty(), it)
+                        },
+                        forecast.entry?.takeIf { forecast.entryTime != null }?.let {
+                            ForecastColumn("入場", forecast.entryTime.orEmpty(), it)
+                        },
+                        forecast.start?.let { ForecastColumn("試合開始", forecast.startTime, it) }
+                    )
+                )
             }
         }
 
@@ -1042,6 +1046,57 @@ private fun NextGameBlock(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
+            }
+        }
+    }
+}
+
+/** 天気予報の表の1列(見出し・時刻・予報) */
+private data class ForecastColumn(val title: String, val time: String, val w: MatchWeather)
+
+/**
+ * 天気予報の表。列が時刻(入場の1時間前・入場・試合開始)、行が 天気・気温・降水確率・降水量(・降雪・積雪)。
+ * 降水量・降雪・積雪は、どれかの時刻で降る(積もっている)ときだけ行を出す
+ */
+@Composable
+private fun ForecastTable(cols: List<ForecastColumn>) {
+    if (cols.isEmpty()) return
+    fun mm(v: Double?) = v?.takeIf { it >= 0.1 }?.let { "%.1fmm".format(it) } ?: "0"
+    fun cm(v: Double?) = v?.takeIf { it >= 0.1 }?.let { if (it >= 1) "${Math.round(it)}cm" else "%.1fcm".format(it) } ?: "0"
+    val rows = buildList<Pair<String, (MatchWeather) -> String>> {
+        add("天気" to { w: MatchWeather -> w.summary })
+        add("気温" to { w: MatchWeather -> "${w.temperature}℃" })
+        if (cols.any { it.w.rainChance != null }) add("降水確率" to { w: MatchWeather -> w.rainChance?.let { "$it%" } ?: "-" })
+        if (cols.any { (it.w.precipitationMm ?: 0.0) >= 0.1 }) add("降水量(1時間)" to { w: MatchWeather -> mm(w.precipitationMm) })
+        if (cols.any { (it.w.snowfallCm ?: 0.0) >= 0.1 }) add("降雪(1時間)" to { w: MatchWeather -> cm(w.snowfallCm) })
+        if (cols.any { (it.w.snowDepthCm ?: 0) >= 1 }) add("積雪" to { w: MatchWeather -> w.snowDepthCm?.takeIf { it >= 1 }?.let { "${it}cm" } ?: "0" })
+    }
+    Column(modifier = Modifier.fillMaxWidth()) {
+        // 見出しの行(時刻)
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
+            Spacer(modifier = Modifier.weight(1.1f))
+            cols.forEach { c ->
+                Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(c.title, style = MaterialTheme.typography.labelSmall, color = InkSoft, maxLines = 1, softWrap = false)
+                    Text(c.time, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = Ink, maxLines = 1)
+                }
+            }
+        }
+        ThinRule(color = LineGray, modifier = Modifier.padding(vertical = 3.dp))
+        rows.forEach { (label, value) ->
+            Row(modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(label, modifier = Modifier.weight(1.1f), style = MaterialTheme.typography.labelSmall, color = InkSoft, maxLines = 1)
+                cols.forEach { c ->
+                    Text(
+                        value(c.w),
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Ink,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        maxLines = 1
+                    )
+                }
             }
         }
     }
