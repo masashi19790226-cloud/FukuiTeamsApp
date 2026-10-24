@@ -14,6 +14,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月25日",
+        title = "試合当日の天気を会場に合わせて表示",
+        items = listOf(
+            "天気予報の位置を対戦相手の地名ではなく試合会場から求めるようにし、会場名で見つからない場合は福井県内の地名を使って補います。位置を確認できないアウェー会場の予報は表示しません",
+            "予報表にアプリでの取得時刻を追加し、雨・雪の予報がある場合はカード内で分かるようにしました。予報データがない場合も、その状態を表示します"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月24日",
         title = "同じ日に2試合あるときの一面を見やすく",
         items = listOf(

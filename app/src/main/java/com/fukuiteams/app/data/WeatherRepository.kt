@@ -7,10 +7,11 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
+import java.time.Instant
 
 /**
  * 試合当日の天気(Open-Meteo。登録やAPIキー不要の無料の天気予報)。
- * ホームゲームは福井市、アウェイは対戦相手の地名から場所を決め、試合開始の時刻の予報を返す。
+ * 会場名から場所を決め、試合開始の時刻の予報を返す。
  */
 data class MatchWeather(
     val placeLabel: String,
@@ -22,7 +23,9 @@ data class MatchWeather(
     /** その1時間の降雪量(cm)。取れなければ null */
     val snowfallCm: Double? = null,
     /** 積雪の深さ(cm)。取れなければ null */
-    val snowDepthCm: Int? = null
+    val snowDepthCm: Int? = null,
+    /** この予報をアプリが取得した日時(予報の発表日時とは別) */
+    val retrievedAt: Instant = Instant.now()
 ) {
     /**
      * 降水量・降雪量・積雪(0より多いものだけ)。例「1時間に2.5mm・降雪1cm・積雪15cm」。どれも無ければ ""
@@ -80,11 +83,7 @@ object WeatherRepository {
 
     suspend fun forGame(game: Game): MatchWeather? = withContext(Dispatchers.IO) {
         try {
-            val (lat, lon, label) = if (game.isHome) {
-                Triple(FUKUI_LAT, FUKUI_LON, "福井")
-            } else {
-                geocode(game.opponent) ?: geocode(game.opponent.take(2)) ?: return@withContext null
-            }
+            val (lat, lon, label) = gameLocation(game) ?: return@withContext null
             // 試合の日の分だけ取る(終わった試合の「速報」でも、その日の天気を出せるように日付で指定する)
             val date = game.dateLabel.split("/").let { "%04d-%02d-%02d".format(it[0].toInt(), it[1].toInt(), it[2].toInt()) }
             val url = "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
@@ -112,11 +111,7 @@ object WeatherRepository {
      */
     suspend fun forGameHours(game: Game, hours: List<Int>): Map<Int, MatchWeather> = withContext(Dispatchers.IO) {
         try {
-            val (lat, lon, label) = if (game.isHome) {
-                Triple(FUKUI_LAT, FUKUI_LON, "福井")
-            } else {
-                geocode(game.opponent) ?: geocode(game.opponent.take(2)) ?: return@withContext emptyMap()
-            }
+            val (lat, lon, label) = gameLocation(game) ?: return@withContext emptyMap()
             val date = game.dateLabel.split("/").let { "%04d-%02d-%02d".format(it[0].toInt(), it[1].toInt(), it[2].toInt()) }
             val url = "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
                 "&hourly=temperature_2m,precipitation_probability,weather_code,precipitation,snowfall,snow_depth&timezone=Asia%2FTokyo" +
@@ -136,6 +131,19 @@ object WeatherRepository {
         } catch (e: Exception) {
             emptyMap()
         }
+    }
+
+    /** 対戦相手の本拠地ではなく、試合会場を優先する。ホーム会場が未登録なら従来の福井市座標を使う。 */
+    private suspend fun gameLocation(game: Game): Triple<Double, Double, String>? {
+        val venue = game.venue.trim()
+        if (venue.isNotBlank() && venue != "会場未定" && !venue.contains("調整中")) {
+            geocode(venue)?.let { return it }
+            // Open-Meteoの地名検索で施設名が見つからない場合、県内の市区町村名を含む会場のみ地域を補助検索。
+            Regex("(福井|坂井|敦賀|鯖江|越前|大野|勝山|あわら|小浜|三国)").find(venue)?.value?.let { city ->
+                geocode(city)?.let { return it }
+            }
+        }
+        return if (game.isHome) Triple(FUKUI_LAT, FUKUI_LON, "福井市") else null
     }
 
     /** 降水量(mm)・降雪量(cm)・積雪の深さ(m → cm)。取れないものは null */

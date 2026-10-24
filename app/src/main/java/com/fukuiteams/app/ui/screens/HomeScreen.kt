@@ -293,7 +293,7 @@ fun HomeScreen(
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         todayGames.forEach { g ->
-                            MatchDayCard(g, weathers[g.id], GameLpRepository.latest[g.id], onOpen = { onOpenGame(g.id) })
+                            MatchDayCard(g, weathers[g.id], forecasts[g.id], GameLpRepository.latest[g.id], onOpen = { onOpenGame(g.id) })
                         }
                     }
                 }
@@ -452,7 +452,7 @@ fun HomeScreen(
 
 /** 試合当日のまとめ。赤い見出しで目立たせ、開始時刻・会場(地図)・天気をまとめて出す。 */
 @Composable
-private fun MatchDayCard(game: Game, weather: MatchWeather?, lp: GameLp?, onOpen: () -> Unit) {
+private fun MatchDayCard(game: Game, weather: MatchWeather?, forecast: GameForecast?, lp: GameLp?, onOpen: () -> Unit) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -479,17 +479,46 @@ private fun MatchDayCard(game: Game, weather: MatchWeather?, lp: GameLp?, onOpen
                     java.net.URLEncoder.encode(game.venue, "UTF-8"))
             }
         )
-        if (weather != null) {
-            Text(
-                "${weather.placeLabel}の${game.timeLabel.substringBefore(":")}時ごろの天気:${weather.summary} ${weather.temperature}℃" +
-                    (weather.rainChance?.let { " 降水確率$it%" } ?: ""),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Ink
-            )
-            // 降水量・降雪量・積雪(降る・積もっているときだけ)
-            if (weather.amountLabel.isNotBlank()) {
-                Text(weather.amountLabel, style = MaterialTheme.typography.bodySmall, color = Ink)
+        val weatherColumns = forecast?.toColumns().orEmpty().ifEmpty {
+            listOfNotNull(weather?.let { ForecastColumn("試合開始", game.timeLabel, it) })
+        }
+        if (weatherColumns.isNotEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, LineGray)
+                    .padding(horizontal = 8.dp, vertical = 5.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                val place = forecast?.let { it.start ?: it.entry ?: it.before }?.placeLabel ?: weather?.placeLabel.orEmpty()
+                Text(
+                    "天気予報($place)",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Ink
+                )
+                ForecastTable(weatherColumns)
             }
+            val rainExpected = weatherColumns.any { column ->
+                column.w.precipitationMm?.let { it >= 0.1 } == true || column.w.summary.contains("雨") || column.w.summary.contains("雷")
+            }
+            val snowExpected = weatherColumns.any { column ->
+                column.w.snowfallCm?.let { it >= 0.1 } == true || column.w.snowDepthCm?.let { it >= 1 } == true || column.w.summary.contains("雪")
+            }
+            if (rainExpected || snowExpected) {
+                Text(
+                    listOfNotNull("雨の予報あり".takeIf { rainExpected }, "雪の予報あり".takeIf { snowExpected }).joinToString("・"),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = NewsRed,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        } else {
+            Text(
+                "天気予報データはありません（会場・時刻未確定、または取得できません）",
+                style = MaterialTheme.typography.bodySmall,
+                color = InkSoft
+            )
         }
         Text("チケット:${game.ticketStatus}", style = MaterialTheme.typography.bodySmall, color = InkSoft)
         // ブローウィンズのホームゲームは、公式の試合情報ページの開場時刻・当日スケジュール・イベントも出す
@@ -982,17 +1011,7 @@ private fun NextGameBlock(
                     color = Ink
                 )
                 // 時刻ごとに列を分けた表(入場の1時間前 → 入場 → 試合開始)。行は天気・気温・降水確率・降水量など
-                ForecastTable(
-                    listOfNotNull(
-                        forecast.before?.takeIf { forecast.beforeTime != null }?.let {
-                            ForecastColumn(if (forecast.beforeLabel.startsWith("入場")) "入場1時間前" else "開始1時間前", forecast.beforeTime.orEmpty(), it)
-                        },
-                        forecast.entry?.takeIf { forecast.entryTime != null }?.let {
-                            ForecastColumn("入場", forecast.entryTime.orEmpty(), it)
-                        },
-                        forecast.start?.let { ForecastColumn("試合開始", forecast.startTime, it) }
-                    )
-                )
+                ForecastTable(forecast.toColumns())
             }
         }
 
@@ -1062,6 +1081,15 @@ private fun NextGameBlock(
 /** 天気予報の表の1列(見出し・時刻・予報) */
 private data class ForecastColumn(val title: String, val time: String, val w: MatchWeather)
 
+/** 試合前予報を、本日の試合カードと次の試合カードで共通の表形式にする。 */
+private fun GameForecast.toColumns(): List<ForecastColumn> = listOfNotNull(
+    before?.takeIf { beforeTime != null }?.let {
+        ForecastColumn(if (beforeLabel.startsWith("入場")) "入場1時間前" else "開始1時間前", beforeTime.orEmpty(), it)
+    },
+    entry?.takeIf { entryTime != null }?.let { ForecastColumn("入場", entryTime.orEmpty(), it) },
+    start?.let { ForecastColumn("試合開始", startTime, it) }
+)
+
 /**
  * 天気予報の表。列が時刻(入場の1時間前・入場・試合開始)、行が 天気・気温・降水確率・降水量(・降雪・積雪)。
  * 降水量・降雪・積雪は、どれかの時刻で降る(積もっている)ときだけ行を出す
@@ -1080,6 +1108,14 @@ private fun ForecastTable(cols: List<ForecastColumn>) {
         if (cols.any { (it.w.snowDepthCm ?: 0) >= 1 }) add("積雪" to { w: MatchWeather -> w.snowDepthCm?.takeIf { it >= 1 }?.let { "${it}cm" } ?: "0" })
     }
     Column(modifier = Modifier.fillMaxWidth()) {
+        val retrievedAt = cols.maxOf { it.w.retrievedAt }
+        Text(
+            "取得 ${retrievedAt.atZone(java.time.ZoneId.of("Asia/Tokyo")).format(java.time.format.DateTimeFormatter.ofPattern("M/d HH:mm"))}",
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.labelSmall,
+            color = InkSoft,
+            textAlign = androidx.compose.ui.text.style.TextAlign.End
+        )
         // 見出しの行(時刻)
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
             Spacer(modifier = Modifier.weight(1.1f))
