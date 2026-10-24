@@ -244,5 +244,23 @@
         "opp": 14
       }
     ]
+  },
+  "th02": {
+    "my_score": 30,
+    "opponent_score": 31,
+    "checked_at": "2026-10-24T09:11:35.910107",
+    "source_url": "https://leagueh.jp/schedule/511M18/",
+    "periods": [
+      {
+        "label": "前半",
+        "my": 16,
+        "opp": 12
+      },
+      {
+        "label": "後半",
+        "my": 14,
+        "opp": 19
+      }
+    ]
   }
 }
