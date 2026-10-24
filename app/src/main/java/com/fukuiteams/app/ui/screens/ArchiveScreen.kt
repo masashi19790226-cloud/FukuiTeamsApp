@@ -447,7 +447,8 @@ fun ArchiveScreen(
             }
 
             // 過去の実績(チームの歩み・タイトルなど。TeamHistory.kt)
-            val achievements = TEAM_HISTORY.filter { it.team == team }.sortedByDescending { it.year }
+            // 新しい順(同じ年の中も、起きた月・シーズンの順に並べる)
+            val achievements = TEAM_HISTORY.filter { it.team == team }.sortedByDescending { it.sortKey }
             if (achievements.isNotEmpty()) {
                 anchors["history"] = n
                 add { SectionLabel("${team.shortName}の歩み", modifier = Modifier.padding(top = 8.dp)) }
@@ -461,7 +462,7 @@ fun ArchiveScreen(
                             .padding(10.dp),
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        Text("${h.year}年  ${h.title}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
+                        Text("${h.whenLabel}  ${h.title}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
                         Text(h.detail, style = MaterialTheme.typography.bodySmall, color = Ink)
                         Text("出典:${h.source}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
                     }
@@ -795,7 +796,7 @@ private fun NoHistoryNote(team: Team, loaded: Boolean) {
 @Composable
 private fun OfficialSeasonCard(team: Team, season: String, rows: List<com.fukuiteams.app.data.OfficialSeason>) {
     val startYear = season.take(4).toIntOrNull()
-    val events = TEAM_HISTORY.filter { it.team == team && it.year == startYear }
+    val events = TEAM_HISTORY.filter { it.team == team && it.year == startYear }.sortedBy { it.sortKey }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -836,7 +837,7 @@ private fun SeasonCard(
 ) {
     // そのシーズンにあった出来事(過去の実績)。ユナイテッドのシーズンは年、ブルーサンダー・丸岡RUCKは始まった年で合わせる
     val startYear = s.season.take(4).toIntOrNull()
-    val events = TEAM_HISTORY.filter { it.team == team && it.year == startYear }
+    val events = TEAM_HISTORY.filter { it.team == team && it.year == startYear }.sortedBy { it.sortKey }
     Column(
         modifier = Modifier
             .fillMaxWidth()

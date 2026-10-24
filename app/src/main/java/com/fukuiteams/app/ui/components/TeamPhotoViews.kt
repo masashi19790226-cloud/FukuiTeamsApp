@@ -117,6 +117,11 @@ fun PlayerPhotoRow(
     val failed = remember(photos) { mutableStateListOf<String>() }
     val shown = photos.filter { it.url !in failed }.take(count)
     if (shown.isEmpty()) return
+    // 名前の文字の大きさは並んだ写真で共通にする(長い名前の人だけ小さくなって、大きさがばらばらに見えないように)。
+    // どれか1人でも入りきらなければ、全員の名前をいっしょに小さくする
+    val baseStyle = MaterialTheme.typography.labelSmall
+    val baseSize = if (baseStyle.fontSize.isSp) baseStyle.fontSize.value else 11f
+    var nameSize by remember(shown.map { it.url }) { mutableStateOf(baseSize) }
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         if (title != null) SectionLabel(title)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -134,7 +139,7 @@ fun PlayerPhotoRow(
                         zoomCaption = p.label,
                         onFailed = { if (p.url !in failed) failed.add(p.url) }
                     )
-                    PhotoLabel(p.label)
+                    PhotoLabel(p.label, nameSize) { if (nameSize > 8f) nameSize -= 0.5f }
                 }
             }
         }
@@ -150,7 +155,7 @@ private val NUMBER_LABEL = Regex("""^(#\S+)\s+(.+)$""")
  * 背番号の無いもの(記事の写真の見出しなど)は従来どおり2行まで
  */
 @Composable
-private fun PhotoLabel(label: String) {
+private fun PhotoLabel(label: String, size: Float, onOverflow: () -> Unit) {
     if (label.isBlank()) return
     val m = NUMBER_LABEL.matchEntire(label.trim())
     if (m == null) {
@@ -172,22 +177,16 @@ private fun PhotoLabel(label: String) {
         textAlign = TextAlign.Center
     )
     val base = MaterialTheme.typography.labelSmall
-    val baseSize = if (base.fontSize.isSp) base.fontSize.value else 11f
-    var size by remember(label) { mutableStateOf(baseSize) }
-    var done by remember(label) { mutableStateOf(false) }
     Text(
         m.groupValues[2],
         style = base.copy(fontSize = size.sp, lineHeight = (size + 2f).sp),
         color = InkSoft,
         maxLines = 1,
         softWrap = false,
-        overflow = if (done) TextOverflow.Ellipsis else TextOverflow.Clip,
+        // いちばん小さくしても入りきらない名前だけ、末尾を…で省略する
+        overflow = if (size <= 8f) TextOverflow.Ellipsis else TextOverflow.Clip,
         textAlign = TextAlign.Center,
-        onTextLayout = { r ->
-            if (!done) {
-                if (r.hasVisualOverflow && size > 8f) size -= 1f else done = true
-            }
-        }
+        onTextLayout = { r -> if (r.hasVisualOverflow && size > 8f) onOverflow() }
     )
 }
 

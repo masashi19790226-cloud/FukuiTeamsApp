@@ -1206,7 +1206,7 @@ private fun historyStory(team: Team, today: LocalDate): List<FeatureStory> {
         FeatureStory(
             kicker = "過去の実績",
             team = team,
-            headline = "${h.year}年、${h.title}",
+            headline = "${h.whenLabel}、${h.title}",
             body = h.detail + (if (ago > 0) "(${ago}年前)" else "") + "\n出典:${h.source}",
             bigNumber = "${h.year}",
             bigUnit = "年",

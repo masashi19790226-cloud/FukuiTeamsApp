@@ -21,8 +21,27 @@ data class HistoryItem(
     val detail: String,
     /** 出典の名前とURL */
     val source: String,
-    val url: String
-)
+    val url: String,
+    /** 起きた月(1〜12。分からなければ 0)。歩みの並び順と「2023年4月」の表示に使う */
+    val month: Int = 0,
+    /** シーズンの成績など、シーズンで書くとき(例「2023-24シーズン」)。year はシーズンの始まりの年のまま(シーズンごとの成績と合わせるため) */
+    val season: String = ""
+) {
+    /** 並び順(年月。シーズンで書くものはシーズンが終わる年の5月として並べる) */
+    val sortKey: Int
+        get() = when {
+            season.isNotBlank() -> (year + 1) * 100 + 5
+            else -> year * 100 + month
+        }
+
+    /** 表示する時期(「2023-24シーズン」「2023年4月」「2017年」) */
+    val whenLabel: String
+        get() = when {
+            season.isNotBlank() -> season
+            month in 1..12 -> "${year}年${month}月"
+            else -> "${year}年"
+        }
+}
 
 private const val JFA_WF_HISTORY = "https://www.jfa.jp/match/womens_futsal_2025/history.html"
 private const val JFA_WF_TEAM_2026 = "https://www.jfa.jp/match/womens_futsal_2026/team_detail/08.html"
@@ -63,23 +82,23 @@ val TEAM_HISTORY: List<HistoryItem> = listOf(
     HistoryItem(Team.UNITED, 2026, "15年連続で天皇杯に出場", "福井県代表決定戦の決勝で坂井フェニックスに2-1で逆転勝ちし、15年連続18度目の天皇杯へ。1回戦でAC長野パルセイロに1-2で敗れました。", "JFA 天皇杯チーム紹介・福井ユナイテッド公式 試合結果", JFA_EMPEROR_2026),
 
     // ---------- ブローウィンズ ----------
-    HistoryItem(Team.BLOWINDS, 2020, "福井にプロバスケットボールクラブをつくる動きが始まる", "2020年11月30日、県内の有志が「一般社団法人福井県プロバスケットボールクラブ」を設立し、12月10日に記者会見を開きました。最初のB3参入申請(2022-23シーズン)は審査に通りませんでした。", "Wikipedia", WIKI_BLOWINDS),
-    HistoryItem(Team.BLOWINDS, 2022, "チーム名「福井ブローウィンズ」が決まる", "2022年11月25日にチーム名が「福井ブローウィンズ」に決まりました。運営会社の福井バスケットボール株式会社は同じ年の5月に設立されています。", "Wikipedia", WIKI_BLOWINDS),
-    HistoryItem(Team.BLOWINDS, 2023, "Bリーグ(B3)への入会が決まる", "2023年4月の最終審査に通り、4月20日にB3リーグへの入会が決まりました。初代ヘッドコーチは伊佐勉さんです。", "Wikipedia", WIKI_BLOWINDS),
+    HistoryItem(Team.BLOWINDS, 2020, "福井にプロバスケットボールクラブをつくる動きが始まる", "2020年11月30日、県内の有志が「一般社団法人福井県プロバスケットボールクラブ」を設立し、12月10日に記者会見を開きました。最初のB3参入申請(2022-23シーズン)は審査に通りませんでした。", "Wikipedia", WIKI_BLOWINDS, month = 11),
+    HistoryItem(Team.BLOWINDS, 2022, "チーム名「福井ブローウィンズ」が決まる", "2022年11月25日にチーム名が「福井ブローウィンズ」に決まりました。運営会社の福井バスケットボール株式会社は同じ年の5月に設立されています。", "Wikipedia", WIKI_BLOWINDS, month = 11),
+    HistoryItem(Team.BLOWINDS, 2023, "Bリーグ(B3)への入会が決まる", "2023年4月の最終審査に通り、4月20日にB3リーグへの入会が決まりました。初代ヘッドコーチは伊佐勉さんです。", "Wikipedia", WIKI_BLOWINDS, month = 4),
     HistoryItem(Team.BLOWINDS, 2023, "マスコット「BOOZ」が誕生", "Bリーグ1年目の2023年に、チームのマスコットキャラクター「BOOZ」が生まれました。", "Wikipedia", WIKI_BLOWINDS),
-    HistoryItem(Team.BLOWINDS, 2023, "B3初年度で完全優勝、B2昇格", "Bリーグ1年目の2023-24シーズンは、B3レギュラーシーズンを46勝4敗(勝率.920)で優勝。B3で初めての31連勝を記録し、ホームゲームは負けなしでした。プレーオフも勝ち抜いて完全優勝し、次のシーズンからB2で戦いました。", "ALL CONNECT(2024年5月20日)", ALLCONNECT_B3),
-    HistoryItem(Team.BLOWINDS, 2023, "B3初年度の観客数はリーグトップ", "2023-24シーズンのホームゲームの観客数は合わせて69,673人で、B3でいちばん多い数字でした。", "ALL CONNECT(2024年5月20日)", ALLCONNECT_B3),
-    HistoryItem(Team.BLOWINDS, 2024, "B2初年度は32勝28敗でプレーオフへ", "2024-25シーズンはB2で32勝28敗。B2プレーオフに進みました(0勝2敗)。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS),
-    HistoryItem(Team.BLOWINDS, 2025, "新しい福井アリーナの計画が進む", "福井市の東公園に計画されている「福井アリーナ」は、2028年秋ごろの完成を見込み、完成後はブローウィンズの本拠地になる予定です(2025年10月の発表時点)。", "ALL CONNECT(2025年10月8日)", ALLCONNECT_ARENA),
-    HistoryItem(Team.BLOWINDS, 2025, "クラブ史上最多の4,579人", "2025-26シーズンは、ホーム開幕戦(10月11日)の4,076人に続き、平日の11月2日に4,579人とクラブ史上最多の観客を集めました。11月19日時点のホームの平均入場者数は4,062人で、新しいトップリーグ「B.PREMIER」の参入基準の一つ(平均4,000人以上)に届きました。", "ALL CONNECT(2025年11月19日)", ALLCONNECT_ATTEND),
-    HistoryItem(Team.BLOWINDS, 2025, "B2で35勝、2年続けてプレーオフへ", "2025-26シーズンはB2で35勝25敗。2年続けてB2プレーオフに進み、1勝しました(1勝2敗)。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS),
-    HistoryItem(Team.BLOWINDS, 2026, "新しいリーグ「B.ONE」で戦う", "Bリーグの新しい仕組みが始まった2026-27シーズンは、B.ONEで戦っています。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS),
+    HistoryItem(Team.BLOWINDS, 2023, "B3初年度で完全優勝、B2昇格", "Bリーグ1年目の2023-24シーズンは、B3レギュラーシーズンを46勝4敗(勝率.920)で優勝。B3で初めての31連勝を記録し、ホームゲームは負けなしでした。プレーオフも勝ち抜いて完全優勝し、次のシーズンからB2で戦いました。", "ALL CONNECT(2024年5月20日)", ALLCONNECT_B3, season = "2023-24シーズン"),
+    HistoryItem(Team.BLOWINDS, 2023, "B3初年度の観客数はリーグトップ", "2023-24シーズンのホームゲームの観客数は合わせて69,673人で、B3でいちばん多い数字でした。", "ALL CONNECT(2024年5月20日)", ALLCONNECT_B3, season = "2023-24シーズン"),
+    HistoryItem(Team.BLOWINDS, 2024, "B2初年度は32勝28敗でプレーオフへ", "2024-25シーズンはB2で32勝28敗。B2プレーオフに進みました(0勝2敗)。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS, season = "2024-25シーズン"),
+    HistoryItem(Team.BLOWINDS, 2025, "新しい福井アリーナの計画が進む", "福井市の東公園に計画されている「福井アリーナ」は、2028年秋ごろの完成を見込み、完成後はブローウィンズの本拠地になる予定です(2025年10月の発表時点)。", "ALL CONNECT(2025年10月8日)", ALLCONNECT_ARENA, month = 10),
+    HistoryItem(Team.BLOWINDS, 2025, "クラブ史上最多の4,579人", "2025-26シーズンは、ホーム開幕戦(10月11日)の4,076人に続き、平日の11月2日に4,579人とクラブ史上最多の観客を集めました。11月19日時点のホームの平均入場者数は4,062人で、新しいトップリーグ「B.PREMIER」の参入基準の一つ(平均4,000人以上)に届きました。", "ALL CONNECT(2025年11月19日)", ALLCONNECT_ATTEND, month = 11),
+    HistoryItem(Team.BLOWINDS, 2025, "B2で35勝、2年続けてプレーオフへ", "2025-26シーズンはB2で35勝25敗。2年続けてB2プレーオフに進み、1勝しました(1勝2敗)。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS, season = "2025-26シーズン"),
+    HistoryItem(Team.BLOWINDS, 2026, "新しいリーグ「B.ONE」で戦う", "Bリーグの新しい仕組みが始まった2026-27シーズンは、B.ONEで戦っています。", "Bリーグ公式 クラブページ", BLEAGUE_CLUB_BLOWINDS, season = "2026-27シーズン"),
 
     // ---------- ブルーサンダー ----------
     HistoryItem(Team.THUNDER, 1992, "前身の北陸電力ブルーサンダーがリーグに参戦", "前身の北陸電力ブルーサンダーは1992年からリーグで戦いました。チームのスローガン「不撓不屈」は今のチームにも受け継がれています。", "Wikipedia", WIKI_THUNDER),
-    HistoryItem(Team.THUNDER, 2022, "新しいプロリーグへの参入が決まる", "2022年10月21日、2024年に始まる新しいプロリーグ(今のリーグH)への参入が決まりました。", "Wikipedia", WIKI_THUNDER),
-    HistoryItem(Team.THUNDER, 2022, "運営会社ができ、マスコットも発表", "2022年7月に運営会社「株式会社永平寺町ハンドボールまちづくり推進機構」が設立され、10月にはチームのマスコットも発表されました。", "Wikipedia", WIKI_THUNDER),
-    HistoryItem(Team.THUNDER, 2024, "リーグHの初年度を戦う", "2024年9月に始まった新しいリーグ「リーグH」の最初のシーズン(2024-25)に参加し、リーグ戦は12勝14敗でした。", "リーグH公式 星取表", LEAGUEH_MATRIX),
-    HistoryItem(Team.THUNDER, 2025, "リーグH2年目を戦う", "リーグHの2年目(2025-26シーズン)は、リーグ戦を8勝2分16敗で終えました。", "リーグH公式 星取表", LEAGUEH_MATRIX),
-    HistoryItem(Team.THUNDER, 2023, "福井永平寺ブルーサンダーが発足", "2023年4月25日に福井市で発足式を行い、地元の企業約50社の支えで新しいチームが動き出しました。前身の北陸電力ブルーサンダーは同じ年の3月に活動を終えています。", "Wikipedia", WIKI_THUNDER)
+    HistoryItem(Team.THUNDER, 2022, "新しいプロリーグへの参入が決まる", "2022年10月21日、2024年に始まる新しいプロリーグ(今のリーグH)への参入が決まりました。", "Wikipedia", WIKI_THUNDER, month = 10),
+    HistoryItem(Team.THUNDER, 2022, "運営会社ができ、マスコットも発表", "2022年7月に運営会社「株式会社永平寺町ハンドボールまちづくり推進機構」が設立され、10月にはチームのマスコットも発表されました。", "Wikipedia", WIKI_THUNDER, month = 7),
+    HistoryItem(Team.THUNDER, 2024, "リーグHの初年度を戦う", "2024年9月に始まった新しいリーグ「リーグH」の最初のシーズン(2024-25)に参加し、リーグ戦は12勝14敗でした。", "リーグH公式 星取表", LEAGUEH_MATRIX, season = "2024-25シーズン"),
+    HistoryItem(Team.THUNDER, 2025, "リーグH2年目を戦う", "リーグHの2年目(2025-26シーズン)は、リーグ戦を8勝2分16敗で終えました。", "リーグH公式 星取表", LEAGUEH_MATRIX, season = "2025-26シーズン"),
+    HistoryItem(Team.THUNDER, 2023, "福井永平寺ブルーサンダーが発足", "2023年4月25日に福井市で発足式を行い、地元の企業約50社の支えで新しいチームが動き出しました。前身の北陸電力ブルーサンダーは同じ年の3月に活動を終えています。", "Wikipedia", WIKI_THUNDER, month = 4)
 )
