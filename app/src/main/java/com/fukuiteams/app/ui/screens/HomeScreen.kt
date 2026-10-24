@@ -973,6 +973,10 @@ private fun NextGameBlock(
                     fontWeight = FontWeight.Bold,
                     color = Ink
                 )
+                // 会場へ向かうころ(入場の1時間前)の天気
+                if (forecast.beforeTime != null && forecast.before != null) {
+                    ForecastLine("${forecast.beforeLabel}\n${forecast.beforeTime}ごろ", forecast.before)
+                }
                 if (forecast.entryTime != null && forecast.entry != null) {
                     ForecastLine("入場 ${forecast.entryTime}ごろ", forecast.entry)
                 }
@@ -1050,7 +1054,8 @@ private fun NextGameBlock(
 @Composable
 private fun ForecastLine(label: String, w: MatchWeather) {
     Row(verticalAlignment = Alignment.Top) {
-        Text(label, modifier = Modifier.width(120.dp), style = MaterialTheme.typography.bodySmall, color = InkSoft, maxLines = 1)
+        // 項目名は2行まで(文字を大きくしている画面や「入場の1時間前」で、時刻の端が切れないように)
+        Text(label, modifier = Modifier.width(120.dp), style = MaterialTheme.typography.bodySmall, color = InkSoft, maxLines = 2)
         Column {
             Text(
                 "${w.summary} ${w.temperature}℃" + (w.rainChance?.let { " 降水確率$it%" } ?: ""),

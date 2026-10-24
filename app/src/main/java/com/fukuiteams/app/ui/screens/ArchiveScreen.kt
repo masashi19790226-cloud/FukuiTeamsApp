@@ -310,7 +310,7 @@ fun ArchiveScreen(
                     DoubleRule(modifier = Modifier.padding(top = 6.dp))
                 }
             }
-            // チームの写真(公式サイトのお知らせの写真。日替わりで1枚。無ければ選手の写真)
+            // チームの写真(公式サイトのお知らせの試合・イベントの写真。日替わりで1枚。無ければ出さない。選手の写真は「今季」の下に並べる)
             add(key = "banner-${team.name}") { com.fukuiteams.app.ui.components.TeamPhotoBanner(team, "team-tab") }
 
             // 今季の順位・勝敗(4チームとも。試合タブの「順位」と同じデータを、数字のます目で)
