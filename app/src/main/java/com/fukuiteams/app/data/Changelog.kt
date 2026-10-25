@@ -15,6 +15,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月25日",
+        title = "選手タブのジャンプ先をチーム名で表示",
+        items = listOf(
+            "選手タブ上部の「自チーム」ボタンを、選択中のチーム名(福井ブローウィンズ・福井丸岡ラック・福井ユナイテッド・福井永平寺ブルーサンダー)に変更しました。どのチームの選手一覧へ移動するか分かりやすくしました"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月25日",
         title = "試合当日の天気を会場に合わせて表示",
         items = listOf(
             "天気予報の位置を対戦相手の地名ではなく試合会場から求めるようにし、会場名で見つからない場合は福井県内の地名を使って補います。位置を確認できないアウェー会場の予報は表示しません",

@@ -246,16 +246,16 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             // 文字が「…」で切れないよう、短い言葉にする(相手の名前は見出しに出る)。
-            // 文字の大きさは並んだボタンで共通にする(いちばん長い「自チーム」だけ小さくならないように)
+            // 文字の大きさは並んだボタンで共通にする(チーム名も切れずに表示)
             var jumpSize by remember(selectedTeam) { mutableStateOf(13f) }
             val shrink: () -> Unit = { if (jumpSize > 8f) jumpSize -= 0.5f }
             // 丸岡RUCK・ユナイテッド・ブルーサンダーの「自チーム」の場所は得点ランキングなので、ボタンも「得点」にする
             // (「全選手」との違いが分からなかったため)
-            JumpLink(if (selectedTeam == Team.BLOWINDS) "▼ 自チーム" else "▼ 得点", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.own) }
+            JumpLink(if (selectedTeam == Team.BLOWINDS) "▼ ${selectedTeam.displayName}" else "▼ 得点", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.own) }
             // 丸岡RUCK・ユナイテッド・ブルーサンダーは、全選手の一覧へ飛ぶボタンも出す
             if (selectedTeam != Team.BLOWINDS) {
-                // 全員(公式サイトの選手紹介)の一覧へ。「全選手」より分かりやすい「自チーム」にする
-                JumpLink("▼ 自チーム", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.all) }
+                // 公式サイトの選手紹介に載っているチーム全員の一覧へ
+                JumpLink("▼ ${selectedTeam.displayName}", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.all) }
             }
             JumpLink("▼ 相手チーム", jumpSize, shrink, Modifier.weight(1f)) { jumpTo(marks.opp) }
         }
