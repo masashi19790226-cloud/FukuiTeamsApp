@@ -4891,5 +4891,23 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.GCyf15v8WLqDdg68uyXYnw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-25T20:00:09.858177+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:107600892709087432",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズVS埼玉ブロンコス | の実験室(旧、魁・電波道)",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://ameblo.jp/radikan/entry-12982668125.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3YLL0dLjp9DlTS6xmluA7G",
+    "published": "2026-10-25T12:51:39Z",
+    "detected_at": "2026-10-25T22:30:36.513742+00:00"
+  },
+  {
+    "id": "bing:https://www.oricon.co.jp/article/3417208/",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣 ...",
+    "link": "https://www.oricon.co.jp/article/3417208/",
+    "published": "2026-10-25T11:32:00+00:00",
+    "source": "ORICON NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.t7nleFM9qaDCtIT5hA2Anw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-25T22:30:37.028707+00:00"
   }
 ]
