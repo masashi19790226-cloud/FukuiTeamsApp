@@ -4863,5 +4863,23 @@
     "source": "47NEWS",
     "image": "https://www.bing.com/th?id=ONUT.3Sx9aei4zWepWIUQtgriDw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-25T13:58:16.625520+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7543032963050171378",
+    "team": "BLOWINDS",
+    "title": "【ハイライト】福井ブローウィンズvsさいたまブロンコス｜りそなグループ B.LEAGUE 2026-27",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DmzabP6ZMKmk&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw16YD1NohWxAw4h4aXdPdqK",
+    "published": "2026-10-25T14:13:08Z",
+    "detected_at": "2026-10-25T17:37:18.309312+00:00"
+  },
+  {
+    "id": "bing:https://note.com/cod_fukui/n/nb2e71777a030",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズで福井の関係人口を拡大！",
+    "link": "https://note.com/cod_fukui/n/nb2e71777a030",
+    "published": "2026-10-24T04:14:00+00:00",
+    "source": "note",
+    "image": "",
+    "detected_at": "2026-10-25T17:37:18.753976+00:00"
   }
 ]
