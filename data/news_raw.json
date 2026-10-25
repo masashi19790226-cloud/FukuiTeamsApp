@@ -4837,5 +4837,31 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.GCyf15v8WLqDdg68uyXYnw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-25T09:46:32.425607+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15327719540985810427",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣崩せず バスケBリーグワン",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15136146.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2zDAPALRAgfZWS5ydOWDcP",
+    "published": "2026-10-25T09:49:21Z",
+    "detected_at": "2026-10-25T13:58:15.500560+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8939404972788531502",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣崩せず バスケBリーグワン",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://article.auone.jp/a4d0b92c-2383-4c70-a4d0-44e4c7f0ac4f&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0-QE-aqgvj7kb7IYtu4_EO",
+    "published": "2026-10-25T09:34:37Z",
+    "detected_at": "2026-10-25T13:58:15.500622+00:00"
+  },
+  {
+    "id": "bing:https://www.47news.jp/15136146.html",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣 ...",
+    "link": "https://www.47news.jp/15136146.html",
+    "published": "2026-10-25T02:30:00+00:00",
+    "source": "47NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.3Sx9aei4zWepWIUQtgriDw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-25T13:58:16.625520+00:00"
   }
 ]
