@@ -4785,5 +4785,57 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/reader/2730659&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3ra0Eo_4wAT3vFJ6RsOz7x",
     "published": "2026-10-25T00:29:52Z",
     "detected_at": "2026-10-25T05:04:21.424446+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11075521247613434022",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ悔しい4連敗 さいたまブロンコスの守備陣崩せず",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2730938&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0TcOZ9Bb7w_g3kEbeNNE1A",
+    "published": "2026-10-25T08:42:01Z",
+    "detected_at": "2026-10-25T09:46:31.888964+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11666574222050021784",
+    "team": "BLOWINDS",
+    "title": "第9節 福井ブローウィンズvsトライフープ岡山 11/8 [B.ONE] - 動画配信 - U-NEXT",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://video.unext.jp/livedetail/LIV0000016621&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2w3XDphxQ7ziA9_uFgX9mI",
+    "published": "2026-10-25T04:21:23Z",
+    "detected_at": "2026-10-25T09:46:31.889116+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5647944495019748688",
+    "team": "THUNDER",
+    "title": "福井永平寺ブルーサンダー【公式】 on X - @fu_ei_bluethun",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fu_ei_bluethun/status/2113933544108261499&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw0Fh5NKuzPPh-jQEdF9N3f6",
+    "published": "2026-10-24T23:14:25Z",
+    "detected_at": "2026-10-25T09:46:32.144859+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4212448967738581795",
+    "team": "THUNDER",
+    "title": "2026/10/24 | 福井永平寺ブルーサンダー",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuieiheijihand.co.jp/latestmatch/4301/&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw182IwCwImaXpQ8lQvNQDwd",
+    "published": "2026-10-24T10:23:08Z",
+    "detected_at": "2026-10-25T09:46:32.144968+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2730968",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2730968",
+    "published": "2026-10-25T02:30:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "",
+    "detected_at": "2026-10-25T09:46:32.425583+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/reader/2730938",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ悔しい4連敗 さいたまブロンコスの守備陣崩せ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/reader/2730938",
+    "published": "2026-10-25T02:24:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.GCyf15v8WLqDdg68uyXYnw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-25T09:46:32.425607+00:00"
   }
 ]
