@@ -414,16 +414,6 @@
     "image": ""
   },
   {
-    "id": "official-news:https://ruck-fukui.com/archives/6388",
-    "team": "RAC",
-    "title": "【第10節】メットライフ生命日本女子Fリーグ2026-27 福井開催のお知らせ【詳細】",
-    "link": "https://ruck-fukui.com/archives/6388",
-    "published": "2026-09-11T05:07:00+00:00",
-    "detected_at": "2026-09-11T05:07:00+00:00",
-    "source": "丸岡RUCK公式",
-    "image": ""
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -4917,5 +4907,29 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://paypayfleamarket.yahoo.co.jp/item/z711042330&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3lbXfm2Mgm9VCL4LULH9ag",
     "published": "2026-10-25T23:08:36Z",
     "detected_at": "2026-10-26T00:45:02.476300+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4524372879333213964",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ｜爆サイ.com北陸版",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://bakusai.com/thr_res_show/acode%3D6/ctgid%3D104/bid%3D272/tid%3D13498677/rid%3D1752338359/word%3D%25E7%25A6%258F%25E4%25BA%2595/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1eNoMCh4UcS1kOB2UOn8hh",
+    "published": "2026-10-26T02:09:19Z",
+    "detected_at": "2026-10-26T05:27:45.406205+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8482527071355979453",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ ロッカー風キーホルダー 14 RISTIC - Yahoo!フリマ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://paypayfleamarket.yahoo.co.jp/item/z711228332&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3Rm4Z2FAQ30J147Y44H8K1",
+    "published": "2026-10-25T15:09:33Z",
+    "detected_at": "2026-10-26T05:27:45.406279+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10528852819540584532",
+    "team": "RAC",
+    "title": "グランアルボル戦セーブ集‼️ 福井丸岡RUCKには、タイプの違うGKが複数います。フットサルは ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fukuiruck/status/2114492082673078497&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3K_2LuO6Wi9tCdACtGcjuL",
+    "published": "2026-10-25T23:56:48Z",
+    "detected_at": "2026-10-26T05:27:45.731700+00:00"
   }
 ]
