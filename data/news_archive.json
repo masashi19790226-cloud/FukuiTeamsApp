@@ -1,5 +1,24 @@
 [
   {
+    "id": "bing:https://basketballking.jp/news/japan/20260911/631930.html",
+    "team": "BLOWINDS",
+    "title": "石崎巧氏が福井ブローウィンズアカデミーの臨時コーチ就任「成長 ...",
+    "link": "https://basketballking.jp/news/japan/20260911/631930.html",
+    "published": "2026-09-11T08:17:00+00:00",
+    "source": "バスケットボールキング",
+    "detected_at": "2026-10-04T13:52:12.766165+00:00"
+  },
+  {
+    "id": "official-news:https://ruck-fukui.com/archives/6388",
+    "team": "RAC",
+    "title": "【第10節】メットライフ生命日本女子Fリーグ2026-27 福井開催のお知らせ【詳細】",
+    "link": "https://ruck-fukui.com/archives/6388",
+    "published": "2026-09-11T05:07:00+00:00",
+    "detected_at": "2026-09-11T05:07:00+00:00",
+    "source": "丸岡RUCK公式",
+    "image": ""
+  },
+  {
     "id": "official-news:https://ruck-fukui.com/archives/6361",
     "team": "RAC",
     "title": "【第10節】メットライフ生命日本女子Fリーグ2026-27 福井開催のお知らせ",

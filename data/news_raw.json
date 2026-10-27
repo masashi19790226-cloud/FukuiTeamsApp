@@ -414,16 +414,6 @@
     "image": ""
   },
   {
-    "id": "official-news:https://ruck-fukui.com/archives/6388",
-    "team": "RAC",
-    "title": "【第10節】メットライフ生命日本女子Fリーグ2026-27 福井開催のお知らせ【詳細】",
-    "link": "https://ruck-fukui.com/archives/6388",
-    "published": "2026-09-11T05:07:00+00:00",
-    "detected_at": "2026-09-11T05:07:00+00:00",
-    "source": "丸岡RUCK公式",
-    "image": ""
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -1105,15 +1095,6 @@
     "published": "2026-09-27T02:14:00+00:00",
     "source": "note",
     "detected_at": "2026-10-04T13:52:12.766150+00:00"
-  },
-  {
-    "id": "bing:https://basketballking.jp/news/japan/20260911/631930.html",
-    "team": "BLOWINDS",
-    "title": "石崎巧氏が福井ブローウィンズアカデミーの臨時コーチ就任「成長 ...",
-    "link": "https://basketballking.jp/news/japan/20260911/631930.html",
-    "published": "2026-09-11T08:17:00+00:00",
-    "source": "バスケットボールキング",
-    "detected_at": "2026-10-04T13:52:12.766165+00:00"
   },
   {
     "id": "bing:https://www.rbbtoday.com/release/prtimes2-today/20260918/1359621.html",
@@ -4769,5 +4750,423 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.VekTwm8XxMrRZO6i7gvd0Q&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-24T21:57:33.273361+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17704913460217920973",
+    "team": "BLOWINDS",
+    "title": "ШУУД ҮЗЭХ     Fukui Blowinds vs Saitama Broncos Манай хуудсыг яг одоо FOLLOW ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/De515CEmghD/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2Q789Mzxy_75dz9ADvkdG9",
+    "published": "2026-10-25T04:25:40Z",
+    "detected_at": "2026-10-25T05:04:21.424403+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3552976825219808770",
+    "team": "BLOWINDS",
+    "title": "福井拙攻３連敗 シュート成功率で明暗 埼玉に６５―７８ Ｂワン 福井ブローウィンズ - 福井新聞",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/reader/2730659&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3ra0Eo_4wAT3vFJ6RsOz7x",
+    "published": "2026-10-25T00:29:52Z",
+    "detected_at": "2026-10-25T05:04:21.424446+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11075521247613434022",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ悔しい4連敗 さいたまブロンコスの守備陣崩せず",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2730938&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0TcOZ9Bb7w_g3kEbeNNE1A",
+    "published": "2026-10-25T08:42:01Z",
+    "detected_at": "2026-10-25T09:46:31.888964+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11666574222050021784",
+    "team": "BLOWINDS",
+    "title": "第9節 福井ブローウィンズvsトライフープ岡山 11/8 [B.ONE] - 動画配信 - U-NEXT",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://video.unext.jp/livedetail/LIV0000016621&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2w3XDphxQ7ziA9_uFgX9mI",
+    "published": "2026-10-25T04:21:23Z",
+    "detected_at": "2026-10-25T09:46:31.889116+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5647944495019748688",
+    "team": "THUNDER",
+    "title": "福井永平寺ブルーサンダー【公式】 on X - @fu_ei_bluethun",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fu_ei_bluethun/status/2113933544108261499&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw0Fh5NKuzPPh-jQEdF9N3f6",
+    "published": "2026-10-24T23:14:25Z",
+    "detected_at": "2026-10-25T09:46:32.144859+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4212448967738581795",
+    "team": "THUNDER",
+    "title": "2026/10/24 | 福井永平寺ブルーサンダー",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuieiheijihand.co.jp/latestmatch/4301/&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw182IwCwImaXpQ8lQvNQDwd",
+    "published": "2026-10-24T10:23:08Z",
+    "detected_at": "2026-10-25T09:46:32.144968+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2730968",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2730968",
+    "published": "2026-10-25T02:30:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "",
+    "detected_at": "2026-10-25T09:46:32.425583+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/reader/2730938",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ悔しい4連敗 さいたまブロンコスの守備陣崩せ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/reader/2730938",
+    "published": "2026-10-25T02:24:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.GCyf15v8WLqDdg68uyXYnw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-25T09:46:32.425607+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15327719540985810427",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣崩せず バスケBリーグワン",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15136146.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2zDAPALRAgfZWS5ydOWDcP",
+    "published": "2026-10-25T09:49:21Z",
+    "detected_at": "2026-10-25T13:58:15.500560+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8939404972788531502",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣崩せず バスケBリーグワン",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://article.auone.jp/a4d0b92c-2383-4c70-a4d0-44e4c7f0ac4f&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0-QE-aqgvj7kb7IYtu4_EO",
+    "published": "2026-10-25T09:34:37Z",
+    "detected_at": "2026-10-25T13:58:15.500622+00:00"
+  },
+  {
+    "id": "bing:https://www.47news.jp/15136146.html",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣 ...",
+    "link": "https://www.47news.jp/15136146.html",
+    "published": "2026-10-25T02:30:00+00:00",
+    "source": "47NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.3Sx9aei4zWepWIUQtgriDw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-25T13:58:16.625520+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7543032963050171378",
+    "team": "BLOWINDS",
+    "title": "【ハイライト】福井ブローウィンズvsさいたまブロンコス｜りそなグループ B.LEAGUE 2026-27",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DmzabP6ZMKmk&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw16YD1NohWxAw4h4aXdPdqK",
+    "published": "2026-10-25T14:13:08Z",
+    "detected_at": "2026-10-25T17:37:18.309312+00:00"
+  },
+  {
+    "id": "bing:https://note.com/cod_fukui/n/nb2e71777a030",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズで福井の関係人口を拡大！",
+    "link": "https://note.com/cod_fukui/n/nb2e71777a030",
+    "published": "2026-10-24T04:14:00+00:00",
+    "source": "note",
+    "image": "",
+    "detected_at": "2026-10-25T17:37:18.753976+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2730938",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ悔しい4連敗 さいたまブロンコスの守備陣崩せ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2730938",
+    "published": "2026-10-25T02:24:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.GCyf15v8WLqDdg68uyXYnw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-25T20:00:09.858177+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:107600892709087432",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズVS埼玉ブロンコス | の実験室(旧、魁・電波道)",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://ameblo.jp/radikan/entry-12982668125.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3YLL0dLjp9DlTS6xmluA7G",
+    "published": "2026-10-25T12:51:39Z",
+    "detected_at": "2026-10-25T22:30:36.513742+00:00"
+  },
+  {
+    "id": "bing:https://www.oricon.co.jp/article/3417208/",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣 ...",
+    "link": "https://www.oricon.co.jp/article/3417208/",
+    "published": "2026-10-25T11:32:00+00:00",
+    "source": "ORICON NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.t7nleFM9qaDCtIT5hA2Anw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-25T22:30:37.028707+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2610616059571022902",
+    "team": "BLOWINDS",
+    "title": "【非売品】福井ブローウィンズ 公式ファンクラブ BWZRS 公認Tシャツ Lサイズ - Yahoo!フリマ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://paypayfleamarket.yahoo.co.jp/item/z711042330&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3lbXfm2Mgm9VCL4LULH9ag",
+    "published": "2026-10-25T23:08:36Z",
+    "detected_at": "2026-10-26T00:45:02.476300+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4524372879333213964",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ｜爆サイ.com北陸版",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://bakusai.com/thr_res_show/acode%3D6/ctgid%3D104/bid%3D272/tid%3D13498677/rid%3D1752338359/word%3D%25E7%25A6%258F%25E4%25BA%2595/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1eNoMCh4UcS1kOB2UOn8hh",
+    "published": "2026-10-26T02:09:19Z",
+    "detected_at": "2026-10-26T05:27:45.406205+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8482527071355979453",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ ロッカー風キーホルダー 14 RISTIC - Yahoo!フリマ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://paypayfleamarket.yahoo.co.jp/item/z711228332&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3Rm4Z2FAQ30J147Y44H8K1",
+    "published": "2026-10-25T15:09:33Z",
+    "detected_at": "2026-10-26T05:27:45.406279+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10528852819540584532",
+    "team": "RAC",
+    "title": "グランアルボル戦セーブ集‼️ 福井丸岡RUCKには、タイプの違うGKが複数います。フットサルは ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fukuiruck/status/2114492082673078497&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3K_2LuO6Wi9tCdACtGcjuL",
+    "published": "2026-10-25T23:56:48Z",
+    "detected_at": "2026-10-26T05:27:45.731700+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1821780560301462497",
+    "team": "BLOWINDS",
+    "title": "【イベント情報】11/15（日）福井ブローウィンズ×ハピライン福井コラボイベント実施のお知らせ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51737&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2Pn__Ljmir905obvZ-CSwr",
+    "published": "2026-10-26T07:22:01Z",
+    "detected_at": "2026-10-26T11:34:16.931896+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3677384777179271148",
+    "team": "THUNDER",
+    "title": "【ホームゲーム情報】10月31日(土)vs福井永平寺ブルーサンダー | アルバモス大阪高石 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.alvamososaka.com/etc/%25E3%2580%2590%25E3%2583%259B%25E3%2583%25BC%25E3%2583%25A0%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%25E6%2583%2585%25E5%25A0%25B1%25E3%2580%259110%25E6%259C%258831%25E6%2597%25A5%25E5%259C%259Fvs%25E7%25A6%258F%25E4%25BA%2595%25E6%25B0%25B8%25E5%25B9%25B3%25E5%25AF%25BA%25E3%2583%2596%25E3%2583%25AB%25E3%2583%25BC/&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw2teRBmMfgqzYyqmMQBUQJS",
+    "published": "2026-10-26T07:52:12Z",
+    "detected_at": "2026-10-26T11:34:17.435679+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3352160588420080447",
+    "team": "THUNDER",
+    "title": "【ハイライト】堺リエゾン vs 福井永平寺ブルーサンダー｜2026-27 リーグＨ 男子第3節 - YouTube",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DXSmIY3wWmI4&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw0kTibdDn5D7Qt64zWKHAzh",
+    "published": "2026-10-25T21:10:50Z",
+    "detected_at": "2026-10-26T11:34:17.435705+00:00"
+  },
+  {
+    "id": "bing:https://topics.smt.docomo.ne.jp/article/fbc/region/fbc-2026102604211972",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ歯車かみ合わず4連敗 昨季B3の ...",
+    "link": "https://topics.smt.docomo.ne.jp/article/fbc/region/fbc-2026102604211972",
+    "published": "2026-10-26T02:54:00+00:00",
+    "source": "dメニューニュース",
+    "image": "https://www.bing.com/th?id=ONUT.jXiCcNmkikW4zASmELl8eA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-26T11:34:17.715781+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2730938?page=1",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ悔しい4連敗 さいたまブロンコスの守備陣崩せ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2730938?page=1",
+    "published": "2026-10-25T02:24:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.GCyf15v8WLqDdg68uyXYnw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-26T11:34:17.715799+00:00"
+  },
+  {
+    "id": "bing:https://news.ntv.co.jp/n/fbc/category/society/fb3453c6beca3f48c3b06f507ab4da04a1",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ歯車かみ合わず4連敗 昨季B3の ...",
+    "link": "https://news.ntv.co.jp/n/fbc/category/society/fb3453c6beca3f48c3b06f507ab4da04a1",
+    "published": "2026-10-25T21:54:00+00:00",
+    "source": "日テレNEWS NNN",
+    "image": "",
+    "detected_at": "2026-10-26T11:34:19.393556+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51736",
+    "team": "BLOWINDS",
+    "title": "【第13節】12/5（土）・6（日）vs横浜EX 冠パートナーおよび来場者プレゼント決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51736",
+    "published": "2026-10-26T09:00:00+09:00",
+    "detected_at": "2026-10-26T11:34:19.716093+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E3%82%AF%E3%83%AA%E3%82%A2%E3%83%9B%E3%82%99%E3%83%88%E3%83%AB.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51737",
+    "team": "BLOWINDS",
+    "title": "【イベント情報】11/15（日）福井ブローウィンズ×ハピライン福井コラボイベント実施のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51737",
+    "published": "2026-10-26T09:00:00+09:00",
+    "detected_at": "2026-10-26T11:34:19.716093+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_EVENT.JPG"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51746",
+    "team": "BLOWINDS",
+    "title": "【イベント情報】11/1（日）カルビ大将 春江店「ぶーずの1日店長」開催！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51746",
+    "published": "2026-10-26T09:00:00+09:00",
+    "detected_at": "2026-10-26T11:34:19.716093+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E3%81%B5%E3%82%99%E3%83%BC%E3%81%99%E3%82%99%E3%81%AE1%E6%97%A5%E5%BA%97%E9%95%B7%E3%82%A4%E3%83%98%E3%82%99%E3%83%B3%E3%83%88%E3%83%8F%E3%82%99%E3%83%8A%E3%83%BC%20.png"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51733",
+    "team": "BLOWINDS",
+    "title": "【レポート】未来を創る子どもたちへ。YK建設株式会社様とのバスケットボール贈呈式を実施",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51733",
+    "published": "2026-10-26T09:00:00+09:00",
+    "detected_at": "2026-10-26T11:34:19.716093+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E3%83%9B%E3%82%99%E3%83%BC%E3%83%AB%E5%AF%84%E8%B4%882.jpg"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8116180815241406952",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ歯車かみ合わず 4連敗 昨季 B3のさいたまに後半引き離される 中 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/29eaa9d1469499c841c91abf27cc89ae3e4f68ea/images/000&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2QHcXrtFPMsaDmrBkJYPVR",
+    "published": "2026-10-26T11:00:29Z",
+    "detected_at": "2026-10-26T17:39:56.058240+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:48263274305743866",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ歯車かみ合わず4連敗 昨季B3のさいたまに後半引き離される 中地区 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.ntv.co.jp/category/society/fb3453c6beca3f48c3b06f507ab4da04a1&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0rOG2u63kIkk3bVp6_-QUI",
+    "published": "2026-10-26T10:11:47Z",
+    "detected_at": "2026-10-26T17:39:56.058284+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3174843794679870562",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ歯車かみ合わず4連敗 昨季B3のさいたまに後半引き離される 中地区 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/article/fbc/region/fbc-2026102604211972&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0-zxu2hl9PH9BssOd3zUn-",
+    "published": "2026-10-26T10:05:20Z",
+    "detected_at": "2026-10-26T17:39:56.058312+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:445648950321554608",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ歯車かみ合わず4連敗 昨季B3のさいたまに後半引き離される 中地区 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/29eaa9d1469499c841c91abf27cc89ae3e4f68ea&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1JIS9fYp__7r18aqhw4cav",
+    "published": "2026-10-26T10:03:56Z",
+    "detected_at": "2026-10-26T17:39:56.058337+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14183078296861261722",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ さいたまにも連敗で4連敗 | NHKニュース - NHK ONE",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.web.nhk/newsweb/na/nd-20261026de65925&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3Kn1RIx6_HVmnvENA5244j",
+    "published": "2026-10-26T09:30:41Z",
+    "detected_at": "2026-10-26T17:39:56.058373+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15421433830192614380",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 | ・ ⁡ 【 #Uniteファンディング 】 11/13(金)からはじまる全国地域SCL ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/De9KVICqXvf/&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0ue6a31gk58PzODx7102RJ",
+    "published": "2026-10-26T11:23:29Z",
+    "detected_at": "2026-10-26T17:39:56.222610+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2731914",
+    "team": "THUNDER",
+    "title": "福井永平寺3位 軟式野球 愛知県知事旗・JU愛知杯 争奪東海連盟秋季",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2731914",
+    "published": "2026-10-26T03:01:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.ioml2N9cyawklT7EmdrZYA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-26T21:55:56.182914+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:697758318385456055",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズはトレイボイドをなぜレンタル→放出したのですか？... - Yahoo!知恵袋",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q13332399253&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw13rvQsAKtqgzb8ns10AGHs",
+    "published": "2026-10-27T06:28:35Z",
+    "detected_at": "2026-10-27T06:46:33.848608+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6303918118445479360",
+    "team": "BLOWINDS",
+    "title": "【スクール】スキルアップクラス 追加トライアウトについて - 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51744&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2AkWgkXzLsvd4V0W8_KQUG",
+    "published": "2026-10-27T04:09:10Z",
+    "detected_at": "2026-10-27T06:46:33.848687+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11384003125109703241",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ歯車かみ合わず4連敗 昨季B3のさいたまに後半引き離される 中地区 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://tver.jp/episodes/epcx8guno0&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3s3PtlLDQLmRcfAL5ehVOk",
+    "published": "2026-10-27T00:54:50Z",
+    "detected_at": "2026-10-27T06:46:33.848747+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12549243059687971929",
+    "team": "RAC",
+    "title": "福井丸岡RUCK | 電子チケット販売『teket』",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://teket.jp/g/qfvnqr6evl&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2iCAJYWLFuFow9RbgE8X2r",
+    "published": "2026-10-27T03:38:15Z",
+    "detected_at": "2026-10-27T06:46:34.015514+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14202202104493155159",
+    "team": "THUNDER",
+    "title": "登録選手追加のお知らせ https://leagueh.jp/news/?id=22688 福井永平寺ブルーサンダー 9／RB 下倉 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.facebook.com/league.h.official/posts/%25E7%2599%25BB%25E9%258C%25B2%25E9%2581%25B8%25E6%2589%258B%25E8%25BF%25BD%25E5%258A%25A0%25E3%2581%25AE%25E3%2581%258A%25E7%259F%25A5%25E3%2582%2589%25E3%2581%259B-%25E7%25A6%258F%25E4%25BA%2595%25E6%25B0%25B8%25E5%25B9%25B3%25E5%25AF%25BA%25E3%2583%2596%25E3%2583%25AB%25E3%2583%25BC%25E3%2582%25B5%25E3%2583%25B3%25E3%2583%2580%25E3%2583%25BC9rb-%25E4%25B8%258B%25E5%2580%2589-%25E4%25BD%2591%25E7%259C%259F%25E3%2583%25AA%25E3%2583%25BC%25E3%2582%25B0h/1736930655108663/&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw2dh_pm11dytaxoE9iwwDgc",
+    "published": "2026-10-27T04:55:16Z",
+    "detected_at": "2026-10-27T06:46:34.340161+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51739",
+    "team": "BLOWINDS",
+    "title": "【募集】11月ホームゲーム ボランティア募集をスタート！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51739",
+    "published": "2026-10-27T09:00:00+09:00",
+    "detected_at": "2026-10-27T06:46:37.080616+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51744",
+    "team": "BLOWINDS",
+    "title": "【スクール】スキルアップクラス 追加トライアウトについて",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51744",
+    "published": "2026-10-27T09:00:00+09:00",
+    "detected_at": "2026-10-27T06:46:37.080616+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/HP%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9%E7%94%BB%E5%83%8F.jpeg"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15990653582064259951",
+    "team": "BLOWINDS",
+    "title": "【募集】11月ホームゲーム ボランティア募集をスタート！ - 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51739&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw115ITZG_cyhtD6rNoZ9P0Y",
+    "published": "2026-10-27T06:02:02Z",
+    "detected_at": "2026-10-27T12:46:33.251221+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17802279021349231923",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ歯車かみ合わず4連敗 昨季B3のさいたまに後半引き離される 中地区 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.ntv.co.jp/category/society/fb3453c6beca3f48c3b06f507ab4da04a1&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw0rOG2u63kIkk3bVp6_-QUI",
+    "published": "2026-10-26T11:12:51Z",
+    "detected_at": "2026-10-27T12:46:33.555252+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5025441135791753561",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズ歯車かみ合わず4連敗 昨季B3のさいたまに後半引き離される 中地区 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/amp/article/fbc/region/fbc-2026102604211972&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw1I7KWmhwMEB9ZKvVYACt8S",
+    "published": "2026-10-26T10:03:12Z",
+    "detected_at": "2026-10-27T12:46:33.555284+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51810",
+    "team": "BLOWINDS",
+    "title": "【レポート】10/20（火）福井市長を表敬訪問いたしました",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51810",
+    "published": "2026-10-27T09:00:00+09:00",
+    "detected_at": "2026-10-27T12:46:35.991087+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/DSC01783.jpeg"
   }
 ]
