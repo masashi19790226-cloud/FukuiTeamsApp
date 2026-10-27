@@ -761,6 +761,91 @@ def post_eyecatch(fetch, link: str) -> str:
     return widths.get(768) or widths.get(1024) or (htmllib.unescape(src.group(1)) if src else "")
 
 
+JFA_SITE = "https://www.jfa.jp"
+# JFA のメンバー発表の行「ALA 平田 梨豊 ﾋﾗﾀ ﾘﾎ（福井丸岡ラック）」から、丸岡の選手の名前(漢字・かな)を取り出す
+JFA_RUCK_MEMBER = re.compile(
+    r"([一-龥々ぁ-んァ-ヶー]{1,6}[ 　][一-龥々ぁ-んァ-ヶー]{1,6})[ 　]+[ｦ-ﾟ ･・]+[ 　]*[（(]\s*福井丸岡(?:ラック|RUCK)")
+
+
+def jfa_national_selections(fetch, old=None, years=None):
+    """JFA公式サイトのフットサル日本女子代表のニュース(メンバー発表)から、福井丸岡ラックの選手が選ばれたもの。
+    丸岡RUCK公式サイトにお知らせが出ないこともあるので、こちらでも探す。national_selections と同じ形で返す(新しい順)。
+    old: 前回の分(一度読んだ記事は読み直さない)"""
+    now = datetime.now(JST)
+    years = years or [now.year - 1, now.year]
+    done = {o.get("link"): o for o in old or [] if o.get("link", "").startswith(JFA_SITE)}
+    out = []
+    for y in years:
+        try:
+            listing = fetch(f"{JFA_SITE}/national_team/futsalw_{y}/news/")
+        except Exception as e:
+            print(f"[WARN] 過去の記録: JFAのフットサル女子代表 {y}年のニュース一覧を読めませんでした {e!r}")
+            continue
+        ids = []
+        for nid in re.findall(rf"/national_team/futsalw_{y}/news/(\d{{5,}})/", listing):
+            if nid not in ids:
+                ids.append(nid)
+        for nid in ids:
+            link = f"{JFA_SITE}/national_team/futsalw_{y}/news/{nid}/"
+            if link in done:
+                if done[link].get("players"):
+                    out.append(done[link])
+                continue
+            try:
+                page = fetch(link)
+            except Exception as e:
+                print(f"[WARN] 過去の記録: JFAのニュースを読めませんでした {link} {e!r}")
+                continue
+            text = _wfl_text(page)
+            title_m = re.search(r"<title>(.*?)</title>", page, flags=re.S)
+            title = _wfl_text(title_m.group(1)).split("|")[0].strip() if title_m else ""
+            if "メンバー" not in title:
+                continue
+            names = []
+            for n in JFA_RUCK_MEMBER.findall(text):
+                n = re.sub(r"[ 　]+", "", n)
+                if n not in names:
+                    names.append(n)
+            if not names:
+                continue
+            dm = re.search(r"(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日", text)
+            date = "%04d-%02d-%02d" % tuple(int(x) for x in dm.groups()) if dm else ""
+            kind = "U-18日本代表" if "U-18" in title else "日本代表候補" if "候補" in title else "日本代表"
+            out.append({"date": date, "title": title, "kind": kind, "players": names, "link": link,
+                        "photos": {}, "image": ""})
+    print(f"[過去の記録] 丸岡RUCK: JFAのメンバー発表から代表選出 {len(out)}件")
+    return out
+
+
+def merge_national(ruck, jfa):
+    """丸岡RUCK公式のお知らせと、JFAのメンバー発表を合わせる(新しい順)。
+    同じ選出(日付が14日以内で、選手が重なる)は、丸岡RUCK公式のお知らせ(写真がある)だけにする"""
+    out = [dict(r) for r in ruck or []]
+
+    def day(d):
+        try:
+            return datetime.strptime(d, "%Y-%m-%d")
+        except (TypeError, ValueError):
+            return None
+    for j in jfa or []:
+        dj = day(j.get("date"))
+        dup = False
+        for r in out:
+            dr = day(r.get("date"))
+            same_players = set(j.get("players") or []) & {re.sub(r"[ 　]+", "", n) for n in r.get("players") or []}
+            if dj and dr and abs((dj - dr).days) <= 14 and same_players:
+                # 丸岡RUCK公式のお知らせに名前が無い選手(JFAの発表にだけいる選手)は足す
+                for n in j.get("players") or []:
+                    if n not in {re.sub(r"[ 　]+", "", x) for x in r.get("players") or []}:
+                        r["players"] = list(r.get("players") or []) + [n]
+                dup = True
+                break
+        if not dup:
+            out.append(j)
+    out.sort(key=lambda x: x.get("date") or "", reverse=True)
+    return out
+
+
 def national_selections(fetch, max_pages=10, old=None):
     """丸岡RUCK公式サイトの「代表」のお知らせ(サイト内検索のRSS。古い記事まで)から、日本代表・代表候補に選ばれた選手。
     [{"date","title","kind","players":[名前...],"link","photos":{名前:写真},"image":アイキャッチ}, ...](新しい順)
@@ -1341,7 +1426,14 @@ def build(fetch, post_json, old, current=None):
                     teams["RAC"][k] = old_teams["RAC"][k]
     try:
         old_nat = (old_teams.get("RAC") or {}).get("national")
-        nat = national_selections(fetch, old=old_nat) or old_nat
+        ruck_nat = national_selections(fetch, old=old_nat) or [o for o in old_nat or [] if not o.get("link", "").startswith(JFA_SITE)]
+        # JFA公式のメンバー発表も合わせる(丸岡RUCK公式サイトにお知らせが出ていない選出もあるため)
+        try:
+            jfa_nat = jfa_national_selections(fetch, old=old_nat)
+        except Exception as e:
+            print(f"[WARN] 過去の記録: JFAの代表メンバー発表の取得に失敗 {e!r}")
+            jfa_nat = [o for o in old_nat or [] if o.get("link", "").startswith(JFA_SITE)]
+        nat = merge_national(ruck_nat, jfa_nat) or old_nat
         if nat and "RAC" in teams:
             teams["RAC"]["national"] = nat
     except Exception as e:

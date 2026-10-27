@@ -29,6 +29,12 @@ object BbsRepository {
     const val BASE_URL = "https://j-basketball.club/bbs/blowinds/"
     const val WRITE_URL = BASE_URL + "write.php"
 
+    /**
+     * 爆サイ.com のブローウィンズのスレッド(北陸版・バスケットボール板)。アプリの中では読まず、ブラウザで開くだけ。
+     * スレッドが新しく立て直されたら、ここのアドレスを新しいスレッドに変える
+     */
+    const val BAKUSAI_URL = "https://bakusai.com/thr_res/acode=6/ctgid=104/bid=272/tid=13498677/"
+
     /** 公式は1ページ15件。 */
     const val PAGE_SIZE = 15
 

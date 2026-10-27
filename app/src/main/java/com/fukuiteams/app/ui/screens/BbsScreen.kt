@@ -143,6 +143,8 @@ private sealed class BbsOverlay {
     data class User(val userKey: String, val name: String) : BbsOverlay()
     object Search : BbsOverlay()
     object Settings : BbsOverlay()
+    /** 爆サイ.com のブローウィンズのスレッド(アプリの中の画面で開く) */
+    object Bakusai : BbsOverlay()
 }
 
 /** 投稿カードから呼ぶ操作。 */
@@ -337,10 +339,18 @@ fun BbsScreen() {
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("公式の掲示板を開く") },
+                                text = { Text("掲示板のサイトを開く(j-basketball.club)") },
                                 onClick = {
                                     menuOpen = false
                                     openBbsUrl(context, BbsRepository.BASE_URL)
+                                }
+                            )
+                            // 爆サイ.com にもブローウィンズのスレッドがある(アプリの中の画面で開く)
+                            DropdownMenuItem(
+                                text = { Text("爆サイの掲示板を見る") },
+                                onClick = {
+                                    menuOpen = false
+                                    openOverlay(BbsOverlay.Bakusai)
                                 }
                             )
                         }
@@ -426,6 +436,10 @@ fun BbsScreen() {
                         onPeriod = { period = it }
                     )
                     is BbsOverlay.Settings -> SettingsPane(s)
+                    is BbsOverlay.Bakusai -> BakusaiPane(
+                        onClose = { if (overlays.isNotEmpty()) overlays.removeAt(overlays.lastIndex) },
+                        onOpenBrowser = { openBbsUrl(context, BbsRepository.BAKUSAI_URL) }
+                    )
                 }
             } else {
                 Column(modifier = Modifier.fillMaxSize()) {
@@ -888,7 +902,66 @@ private fun buildBodyText(text: String, highlight: List<String>): AnnotatedStrin
     }
 }
 
-// ---------------- いいね(公式ページをアプリの中で開く) ----------------
+// ---------------- 爆サイ(アプリの中の画面で開く) ----------------
+
+/**
+ * 爆サイ.com のブローウィンズのスレッドを、アプリの中の画面(WebView)でそのまま開く。
+ * j-basketball.club のように投稿を読み取って並べ直すのではなく、爆サイのページをそのまま表示する
+ * (爆サイはページの作りが変わりやすく広告も多いため、読み取ると表示が崩れやすい)。
+ * 戻るボタンは、ページの中で戻れるときはページを戻り、戻れないときはこの画面を閉じる
+ */
+@Composable
+private fun BakusaiPane(onClose: () -> Unit, onOpenBrowser: () -> Unit) {
+    var webView by remember { mutableStateOf<WebView?>(null) }
+    BackHandler {
+        val w = webView
+        if (w != null && w.canGoBack()) w.goBack() else onClose()
+    }
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier.fillMaxWidth().background(Ink).padding(start = 12.dp, end = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "爆サイ.com ブローウィンズのスレッド",
+                color = White,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                "ブラウザで開く",
+                color = White,
+                fontSize = 12.sp,
+                modifier = Modifier.clickable(onClick = onOpenBrowser).padding(horizontal = 8.dp, vertical = 10.dp)
+            )
+            IconButton(onClick = onClose) { Icon(Icons.Filled.Close, contentDescription = "閉じる", tint = White) }
+        }
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { ctx ->
+                WebView(ctx).apply {
+                    @Suppress("SetJavaScriptEnabled")
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = true
+                    // ページ内の移動(次のページ・レスの表示など)はこの画面の中で行う
+                    webViewClient = WebViewClient()
+                    CookieManager.getInstance().setAcceptCookie(true)
+                    loadUrl(BbsRepository.BAKUSAI_URL)
+                    webView = this
+                }
+            },
+            onRelease = {
+                webView = null
+                it.destroy()
+            }
+        )
+    }
+}
+
+// ---------------- いいね(掲示板のページをアプリの中で開く) ----------------
 
 /**
  * いいねは公式ページの「いいね」ボタンで押す仕組みなので、その投稿の公式ページ(?anc=番号)を
@@ -990,7 +1063,7 @@ private fun AnchorSheet(
                     OutlinedButton(
                         onClick = { actions.openUrl(BbsRepository.BASE_URL + "?anc=$no") },
                         modifier = Modifier.fillMaxWidth()
-                    ) { Text("公式の掲示板で開く") }
+                    ) { Text("掲示板のサイトで開く") }
                 }
             }
         }
@@ -1049,7 +1122,7 @@ private fun DetailPane(
                 OutlinedButton(
                     onClick = { actions.openUrl(BbsRepository.replyUrl(no)) },
                     modifier = Modifier.weight(1f)
-                ) { Text("返信する(公式)", maxLines = 1, fontSize = 13.sp) }
+                ) { Text("返信する(サイト)", maxLines = 1, fontSize = 13.sp) }
                 OutlinedButton(
                     onClick = { actions.openLike(no) },
                     modifier = Modifier.weight(1f)
@@ -1121,7 +1194,7 @@ private fun UserPane(
                         onClick = { profileUrl?.let(actions.openUrl) },
                         enabled = profileUrl != null,
                         modifier = Modifier.weight(1f)
-                    ) { Text("公式プロフィール", maxLines = 1, fontSize = 13.sp) }
+                    ) { Text("サイトのプロフィール", maxLines = 1, fontSize = 13.sp) }
                     Button(
                         onClick = { onToggleNg(isNg) },
                         colors = ButtonDefaults.buttonColors(containerColor = if (isNg) InkSoft else NewsRed),
@@ -1500,9 +1573,13 @@ private fun SettingsPane(settings: BbsSettings) {
         OutlinedButton(
             onClick = { openBbsUrl(context, BbsRepository.BASE_URL) },
             modifier = Modifier.fillMaxWidth()
-        ) { Text("公式の掲示板を開く") }
+        ) { Text("掲示板のサイトを開く(j-basketball.club)") }
+        OutlinedButton(
+            onClick = { openBbsUrl(context, BbsRepository.BAKUSAI_URL) },
+            modifier = Modifier.fillMaxWidth()
+        ) { Text("爆サイの掲示板をブラウザで開く") }
         Text(
-            "この画面は福井ブローウィンズ掲示板(j-basketball.club)を読みやすく表示するものです。投稿・返信・いいねは公式ページで行ってください。設定はこの端末だけに保存されます。",
+            "この画面は福井ブローウィンズ掲示板(j-basketball.club。チームの公式の掲示板ではありません)を読みやすく表示するものです。投稿・返信・いいねは掲示板のサイトで行ってください。爆サイ.comのブローウィンズのスレッドは、右上の「︙」の「爆サイの掲示板を見る」でアプリの中に開きます。設定はこの端末だけに保存されます。",
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )

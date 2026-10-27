@@ -676,7 +676,8 @@ fun PastPlayersSection(team: Team, profileOf: (String) -> com.fukuiteams.app.dat
             val counts = national.flatMap { it.players }.map { NameChanges.current(team, it) }.groupingBy { it }.eachCount()
                 .entries.sortedByDescending { it.value }
             Text(
-                "公式サイトのお知らせ ${national.size}件から。選ばれた回数:" +
+                (if (team == Team.RAC) "丸岡RUCK公式サイトのお知らせとJFA公式のメンバー発表 " else "公式サイトのお知らせ ") +
+                    "${national.size}件から。選ばれた回数:" +
                     counts.joinToString("・") { "${it.key} ${it.value}回" },
                 style = MaterialTheme.typography.bodySmall,
                 color = Ink

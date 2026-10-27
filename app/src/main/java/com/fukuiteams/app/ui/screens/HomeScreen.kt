@@ -293,7 +293,7 @@ fun HomeScreen(
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         todayGames.forEach { g ->
-                            MatchDayCard(g, weathers[g.id], forecasts[g.id], GameLpRepository.latest[g.id], onOpen = { onOpenGame(g.id) })
+                            MatchDayCard(g, weathers[g.id], forecasts[g.id], GameLpRepository.latest[g.id], multi = todayGames.size > 1, onOpen = { onOpenGame(g.id) })
                         }
                     }
                 }
@@ -452,14 +452,27 @@ fun HomeScreen(
 
 /** 試合当日のまとめ。赤い見出しで目立たせ、開始時刻・会場(地図)・天気をまとめて出す。 */
 @Composable
-private fun MatchDayCard(game: Game, weather: MatchWeather?, forecast: GameForecast?, lp: GameLp?, onOpen: () -> Unit) {
+private fun MatchDayCard(
+    game: Game,
+    weather: MatchWeather?,
+    forecast: GameForecast?,
+    lp: GameLp?,
+    /** 同じ日に2試合以上あるとき。1試合ずつチームの色の枠・上の帯・うっすらチームの色の背景で、区切りが分かるようにする */
+    multi: Boolean = false,
+    onOpen: () -> Unit
+) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(2.dp, NewsRed)
-            .background(Paper)
+            .border(2.dp, if (multi) game.team.color else NewsRed)
+            .background(if (multi) game.team.color.copy(alpha = 0.07f) else Paper)
             .clickable(onClick = onOpen)
+    ) {
+    if (multi) Box(modifier = Modifier.fillMaxWidth().height(5.dp).background(game.team.color))
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
@@ -521,6 +534,7 @@ private fun MatchDayCard(game: Game, weather: MatchWeather?, forecast: GameForec
             ThinRule(modifier = Modifier.padding(vertical = 4.dp))
             GameLpSection(lp, startExpanded = true)
         }
+    }
     }
 }
 
