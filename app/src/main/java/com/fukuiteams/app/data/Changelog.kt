@@ -14,6 +14,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月28日",
+        title = "丸岡RUCKの代表選出に2026年7月・10月の代表候補を反映",
+        items = listOf(
+            "JFA公式のメンバー発表からの自動の取り込みで、2026年7月のフットサル日本女子代表候補(小林望月選手・平田梨豊選手)と、10月28日発表の代表候補(小林望月選手・平田梨豊選手・足立紗菜選手・渡邊優和選手)が入っていなかったため、JFA公式の発表を確かめて加えました。JFA公式の記事の日付を正しく読むようにも直しました。データの自動更新(約20分おき)のあとに、選手タブの「代表・代表候補の選出」と一面の特集に出ます(その日の過去の記録を作り終えていても、作り直して反映します)"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月27日",
         title = "丸岡RUCKの代表選出に最新の発表を反映・爆サイの掲示板を開けるように",
         items = listOf(

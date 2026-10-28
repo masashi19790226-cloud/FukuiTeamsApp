@@ -767,6 +767,10 @@ JFA_RUCK_MEMBER = re.compile(
     r"([一-龥々ぁ-んァ-ヶー]{1,6}[ 　][一-龥々ぁ-んァ-ヶー]{1,6})[ 　]+[ｦ-ﾟ ･・]+[ 　]*[（(]\s*福井丸岡(?:ラック|RUCK)")
 
 
+# JFA の発表と丸岡RUCK公式の選手名簿で、漢字が違う名前(JFA → 丸岡RUCK公式)
+JFA_NAME_FIX = {"渡邉優和": "渡邊優和"}
+
+
 def jfa_national_selections(fetch, old=None, years=None):
     """JFA公式サイトのフットサル日本女子代表のニュース(メンバー発表)から、福井丸岡ラックの選手が選ばれたもの。
     丸岡RUCK公式サイトにお知らせが出ないこともあるので、こちらでも探す。national_selections と同じ形で返す(新しい順)。
@@ -798,22 +802,50 @@ def jfa_national_selections(fetch, old=None, years=None):
                 continue
             text = _wfl_text(page)
             title_m = re.search(r"<title>(.*?)</title>", page, flags=re.S)
-            title = _wfl_text(title_m.group(1)).split("|")[0].strip() if title_m else ""
+            # 見出しは「…｜JFA｜公益財団法人日本サッカー協会」の形(全角の｜)。最初の区切りの前だけ使う
+            title = re.split(r"[|｜]", _wfl_text(title_m.group(1)))[0].strip() if title_m else ""
             if "メンバー" not in title:
                 continue
             names = []
             for n in JFA_RUCK_MEMBER.findall(text):
                 n = re.sub(r"[ 　]+", "", n)
+                n = JFA_NAME_FIX.get(n, n)
                 if n not in names:
                     names.append(n)
             if not names:
                 continue
-            dm = re.search(r"(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日", text)
+            # ページの先頭には別の日付が出ることがあるので、記事の見出しのすぐあとにある日付を使う
+            dm = re.search(re.escape(title) + r"\s*(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日", text) if title else None
+            dm = dm or re.search(r"(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日", text)
             date = "%04d-%02d-%02d" % tuple(int(x) for x in dm.groups()) if dm else ""
             kind = "U-18日本代表" if "U-18" in title else "日本代表候補" if "候補" in title else "日本代表"
             out.append({"date": date, "title": title, "kind": kind, "players": names, "link": link,
                         "photos": {}, "image": ""})
     print(f"[過去の記録] 丸岡RUCK: JFAのメンバー発表から代表選出 {len(out)}件")
+    return out
+
+
+# 自動では取り込めなかった代表選出(JFA公式のメンバー発表を見て、手で確かめたもの)。
+# JFA公式から自動で取れたときは、同じ記事(link が同じ)の分は自動の方を使う
+MANUAL_NATIONAL = [
+    {"date": "2026-10-28",
+     "title": "フットサル日本女子代表候補 メンバー・スケジュール 国内トレーニングキャンプ(10.31-11.3 千葉/高円宮記念JFA夢フィールド)",
+     "kind": "日本代表候補", "players": ["小林望月", "平田梨豊", "足立紗菜", "渡邊優和"],
+     "link": f"{JFA_SITE}/national_team/futsalw_2026/news/00036957/", "photos": {}, "image": ""},
+    {"date": "2026-07-28",
+     "title": "フットサル日本女子代表候補 メンバー・スケジュール 国内トレーニングキャンプ(8.5-9 千葉/高円宮記念JFA夢フィールド)",
+     "kind": "日本代表候補", "players": ["小林望月", "平田梨豊"],
+     "link": f"{JFA_SITE}/national_team/futsalw_2026/news/00036567/", "photos": {}, "image": ""},
+]
+
+
+def with_manual_national(jfa):
+    """JFA公式から取れた代表選出に、手で確かめた分(MANUAL_NATIONAL)を足す。同じ記事は足さない"""
+    out = list(jfa or [])
+    links = {j.get("link") for j in out}
+    for m in MANUAL_NATIONAL:
+        if m["link"] not in links:
+            out.append(dict(m))
     return out
 
 
@@ -1357,7 +1389,10 @@ def build(fetch, post_json, old, current=None):
     current: チーム → 今の選手の名前のリスト(元選手かどうかの見分けに使う。standings.json の誕生日のデータから)"""
     cur_keys = {t: {name_key(n) for n in names} for t, names in (current or {}).items()}
     today = datetime.now(JST).date().isoformat()
-    if old.get("date") == today and old.get("v") == VERSION and not old.get("pending"):
+    # 手で確かめた代表選出(MANUAL_NATIONAL)がまだ入っていなければ、今日作り終えていても作り直す(次の自動更新ですぐ出すため)
+    old_nat_links = {n.get("link") for n in ((old.get("teams") or {}).get("RAC") or {}).get("national") or []}
+    manual_missing = any(m["link"] not in old_nat_links for m in MANUAL_NATIONAL)
+    if old.get("date") == today and old.get("v") == VERSION and not old.get("pending") and not manual_missing:
         return None
     teams = dict(old.get("teams") or {}) if old.get("v") == VERSION else {}
     old_teams = dict(old.get("teams") or {})
@@ -1433,11 +1468,21 @@ def build(fetch, post_json, old, current=None):
         except Exception as e:
             print(f"[WARN] 過去の記録: JFAの代表メンバー発表の取得に失敗 {e!r}")
             jfa_nat = [o for o in old_nat or [] if o.get("link", "").startswith(JFA_SITE)]
-        nat = merge_national(ruck_nat, jfa_nat) or old_nat
+        # 手で確かめた分も足す(JFA公式の一覧から自動で取れなかった選出のため)
+        nat = merge_national(ruck_nat, with_manual_national(jfa_nat)) or old_nat
         if nat and "RAC" in teams:
             teams["RAC"]["national"] = nat
     except Exception as e:
         print(f"[WARN] 過去の記録: 丸岡RUCKの取得に失敗。前回の分を使います {e!r}")
+        # 取得に失敗しても、手で確かめた代表選出は前回の分に足しておく(毎回作り直しにならないように)
+        try:
+            old_nat = list(((old_teams.get("RAC") or {}).get("national")) or [])
+            if "RAC" in teams:
+                teams["RAC"]["national"] = merge_national(
+                    [o for o in old_nat if not o.get("link", "").startswith(JFA_SITE)],
+                    with_manual_national([o for o in old_nat if o.get("link", "").startswith(JFA_SITE)])) or old_nat
+        except Exception:
+            pass
     old_bw = old_teams.get("BLOWINDS") or {}
     seasons = old_bw.get("seasons") or []
     try:
