@@ -5226,5 +5226,39 @@
     "detected_at": "2026-10-28T08:22:01.457674+00:00",
     "source": "ブローウィンズ公式",
     "image": "https://www.fukuiblowinds.com/files/user/HP%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9%E7%94%BB%E5%83%8F-2.jpeg"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7465818391469727167",
+    "team": "BLOWINDS",
+    "title": "【第8節】会場アクセス・駐車場情報について - 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51813&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0_pWP0uGJmUZLecCcOdgB0",
+    "published": "2026-10-28T08:12:13Z",
+    "detected_at": "2026-10-28T11:44:39.256536+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:18444553820373059323",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                               日本女子Fリーグチケット情報 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2115368130851844297&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw0pwMExhM0aoJNCAVY-oiG2",
+    "published": "2026-10-28T09:58:17Z",
+    "detected_at": "2026-10-28T11:44:39.302535+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11307817909028802115",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                             日本代表候補選出のお知らせ ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2115361774853898250&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw063seLIonEXYyYBDAcMIBV",
+    "published": "2026-10-28T08:43:17Z",
+    "detected_at": "2026-10-28T11:44:39.302599+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51811",
+    "team": "BLOWINDS",
+    "title": "【第9節】 11/7（土）・8（日）オリジナルバスケシャツ お申し込み・お受け取りに関する重要な注意事項",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51811",
+    "published": "2026-10-28T09:00:00+09:00",
+    "detected_at": "2026-10-28T11:44:41.950870+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/button%20GAME.JPG"
   }
 ]
