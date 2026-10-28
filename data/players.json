@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-27T12:48:18.715993+00:00",
+    "updated_at": "2026-10-28T08:23:49.716925+00:00",
     "players": [
       {
         "number": "1",
@@ -1635,7 +1635,7 @@
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年10月25日01:55",
+    "team_stats_updated": "2026年10月27日01:55",
     "league": "B.ONE",
     "league_teams": 25,
     "club_photos": {
@@ -3142,7 +3142,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=1363&tab=1",
-    "updated_at": "2026-10-27T12:48:20.044344+00:00",
+    "updated_at": "2026-10-28T08:23:52.701898+00:00",
     "players": [
       {
         "number": "0",
@@ -4758,7 +4758,7 @@
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年10月25日01:55",
+    "team_stats_updated": "2026年10月27日01:55",
     "league": "B.ONE",
     "league_teams": 25,
     "shot_cache": {
