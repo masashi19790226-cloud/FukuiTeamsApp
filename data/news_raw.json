@@ -404,16 +404,6 @@
     "image": ""
   },
   {
-    "id": "official-news:https://ruck-fukui.com/archives/6391",
-    "team": "RAC",
-    "title": "【第10節】メットライフ生命日本女子Fリーグ2026-27 福井開催 結果",
-    "link": "https://ruck-fukui.com/archives/6391",
-    "published": "2026-09-13T03:30:02+00:00",
-    "detected_at": "2026-09-13T03:30:02+00:00",
-    "source": "丸岡RUCK公式",
-    "image": ""
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -5200,5 +5190,41 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2115013134138441865&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2WKUvNatoNu4g1X5Gy4J3v",
     "published": "2026-10-27T10:43:04Z",
     "detected_at": "2026-10-27T22:29:53.489258+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8194541908457655479",
+    "team": "BLOWINDS",
+    "title": "【U18】説明会、トライアウトについて - 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51812&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2fMpHpj5sVaBSHI6pNzl2M",
+    "published": "2026-10-28T05:22:21Z",
+    "detected_at": "2026-10-28T08:21:58.246997+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4540001680157130203",
+    "team": "BLOWINDS",
+    "title": "2日目は23本中13本 福井ブローウィンズ×さいたまブロンコス - YouTube",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DtxRMiKLRtC8&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3v8Ufk4H6zXGkzvARS3ika",
+    "published": "2026-10-27T09:11:27Z",
+    "detected_at": "2026-10-28T08:21:58.247075+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51813",
+    "team": "BLOWINDS",
+    "title": "【第8節】会場アクセス・駐車場情報について",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51813",
+    "published": "2026-10-28T09:00:00+09:00",
+    "detected_at": "2026-10-28T08:22:01.457674+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51812",
+    "team": "BLOWINDS",
+    "title": "【U18】説明会、トライアウトについて",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51812",
+    "published": "2026-10-28T09:00:00+09:00",
+    "detected_at": "2026-10-28T08:22:01.457674+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/HP%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9%E7%94%BB%E5%83%8F-2.jpeg"
   }
 ]
