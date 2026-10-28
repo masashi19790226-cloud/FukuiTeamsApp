@@ -20,13 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <!-- XなどのアプリでURLを「共有」→「ふくスポ」で、その投稿から予定を追加する画面を開く -->
-            <intent-filter android:label="ふくスポに予定を追加">
+            <intent-filter android:label="ふくスポ+に予定を追加">
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <!-- スクリーンショットなどの画像を「共有」→「ふくスポ」で、画像の文字から予定を追加する画面を開く -->
-            <intent-filter android:label="ふくスポに予定を追加">
+            <intent-filter android:label="ふくスポ+に予定を追加">
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
@@ -42,7 +42,7 @@
         <receiver
             android:name=".widget.NextGameWidget"
             android:exported="false"
-            android:label="ふくスポ 次の試合">
+            android:label="ふくスポ+ 次の試合">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

@@ -235,7 +235,7 @@ fun HowToUseScreen(onBack: () -> Unit) {
         ) {
             item {
                 Column(modifier = Modifier.padding(top = 16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Headline("ふくスポの使い方", fontSize = 22)
+                    Headline("ふくスポ+の使い方", fontSize = 22)
                     Text(
                         "福井ブローウィンズ・福井丸岡RUCK・福井ユナイテッドの試合・結果・ニュース・無料招待をまとめて見られるアプリです。",
                         style = MaterialTheme.typography.bodySmall,

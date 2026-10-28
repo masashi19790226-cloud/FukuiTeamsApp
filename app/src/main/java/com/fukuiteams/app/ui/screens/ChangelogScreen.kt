@@ -54,7 +54,7 @@ fun ChangelogScreen(onBack: () -> Unit) {
         ) {
             item {
                 Column(modifier = Modifier.padding(top = 16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Headline("ふくスポのあゆみ", fontSize = 22)
+                    Headline("ふくスポ+のあゆみ", fontSize = 22)
                     Text(
                         "いま入っている版:v${appVersionName(context)}",
                         style = MaterialTheme.typography.bodySmall,
