@@ -588,7 +588,8 @@ private fun rawNameKey(name: String): String =
 /**
  * チーム名が変わった・表記が違うだけの同じクラブ(先頭の名前にそろえて同じ相手として数える)。
  * 例:さいたまサイコロ → さいたまSAICOLO、アルコイリス神戸 → アルコ神戸、ユニアオレディース → アスレジーナユニアオあいち一宮、
- * 府中アスレティックFCプリメイラ → 府中アスレティックFCレディース → 立川・府中アスレティックFCレディース → 立川アスレティックFCレディース
+ * 府中アスレティックFCプリメイラ → 府中アスレティックFCレディース → 立川・府中アスレティックFCレディース → 立川アスレティックFCレディース、
+ * 金沢武士団 = 金沢サムライズ(表記ちがい)
  */
 private val OPPONENT_ALIASES: List<List<String>> = listOf(
     listOf("さいたまSAICOLO", "さいたまサイコロ"),
@@ -598,7 +599,9 @@ private val OPPONENT_ALIASES: List<List<String>> = listOf(
         "立川アスレティックFCレディース", "立川・府中アスレティックFCレディース",
         "府中アスレティックFCレディース", "府中アスレティックFCプリメイラ"
     ),
-    listOf("JAPANサッカーカレッジ", "JAPAN.S.C.", "JAPAN.S.C")
+    listOf("JAPANサッカーカレッジ", "JAPAN.S.C.", "JAPAN.S.C"),
+    // Bリーグ:「金沢武士団」と「金沢サムライズ」は同じクラブの表記ちがい(武士団=サムライズ)
+    listOf("金沢サムライズ", "金沢武士団")
 )
 private val OPPONENT_ALIAS_KEYS: Map<String, String> = OPPONENT_ALIASES.flatMap { group ->
     val canonical = rawNameKey(group.first())

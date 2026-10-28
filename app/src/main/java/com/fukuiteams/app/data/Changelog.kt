@@ -15,6 +15,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月28日",
+        title = "金沢の相手が2つに分かれていたのを修正",
+        items = listOf(
+            "過去の記録の「相手別」で、金沢武士団と金沢サムライズ(同じクラブの表記ちがい)が別々に並んでいたのを1つにまとめました。一面の次の試合の対戦成績にも、両方の名前の試合が入ります"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月28日",
         title = "アプリの名前を「ふくスポ+」に",
         items = listOf(
             "公開用のWeb版「ふくスポ」と並べてホーム画面に置いても見分けられるよう、このアプリ(自分用)の名前を「ふくスポ+」にしました。ホーム画面・共有メニュー(「ふくスポ+に予定を追加」)・ウィジェット(「ふくスポ+ 次の試合」)・使い方・更新履歴の見出しの名前が変わります",
