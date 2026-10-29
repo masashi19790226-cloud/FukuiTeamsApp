@@ -1,6 +1,14 @@
 package com.fukuiteams.app.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.fukuiteams.app.R
+import com.fukuiteams.app.ui.theme.LineGray
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +38,20 @@ import com.fukuiteams.app.ui.theme.Paper
 
 private data class HowToSection(val label: String, val title: String, val lines: List<String>)
 
+/** 特徴的な画面(画像つき)。画像は画面の例(Web版で撮った画面。アプリ版もほぼ同じ作りです) */
+private data class HowToFeature(val image: Int, val title: String, val text: String)
+
+private val HOW_TO_FEATURES = listOf(
+    HowToFeature(R.drawable.howto_home, "一面は新聞のように", "試合の当日・翌日は、いちばん新しい結果が「速報」として大きく載ります。試合の無い日は「特集」で、起動するたびにまだ見ていない記事に入れかわります。"),
+    HowToFeature(R.drawable.howto_next, "次の試合がひと目で", "日時・会場・相手との対戦成績・天気予報・データで見る展望・相手の注目選手をまとめて出します。"),
+    HowToFeature(R.drawable.howto_glance, "各チームの近況", "4チームそれぞれの前回の結果と次の試合を1か所にまとめて出します。押すとその試合を開きます。"),
+    HowToFeature(R.drawable.howto_games, "日程と観戦の成績", "今後の試合・過去の試合を月ごとに並べます。上の「成績」で、現地観戦したときの勝率が分かります。"),
+    HowToFeature(R.drawable.howto_team, "チームの数字と記録", "今季の順位と、チームの数字を次の相手とくらべた表のほか、シーズンごとの成績・相手別の対戦成績・記録集・チームの歩みが見られます。"),
+    HowToFeature(R.drawable.howto_players, "選手の数字", "選手ごとの成績・プロフィールを並び替えて見られます。「歴代の選手」では、代表・代表候補の選出や表彰の欄へすぐ移動できます。"),
+    HowToFeature(R.drawable.howto_topics, "ニュースと無料招待", "ニュースと無料招待を分類で絞り込めます。過去の記事から検索もできます。"),
+    HowToFeature(R.drawable.howto_skin, "着せ替え", "アプリの色を、好きなチームの色に変えられます(メニューの「着せ替え」)。")
+)
+
 /**
  * 使い方の本文。アプリに実際にある機能だけを書く。
  * 機能を追加・変更したときは、ここも合わせて直すこと。
@@ -52,12 +74,13 @@ private val HOW_TO_SECTIONS = listOf(
             "試合の当日は、一番上に「本日の試合」が出ます。開始時刻・HOME/AWAY・会場・試合時間ごろの天気が分かり、会場名を押すと地図が開きます。ブローウィンズのホームゲームの日は、公式の「試合情報」ページから読み取った開場時刻・当日のスケジュール・イベントも表示し、公式ページへのリンクも付けます(開場時刻は、シルバー会員の先行入場の時刻です。公式の当日スケジュールに載っていないときは一般の開場時刻)。",
             "試合の当日と翌日は、一面のトップに「速報」として、いちばん新しい試合の結果が大きく載ります。HOME/AWAYと試合開始時刻も載ります(ユナイテッドの試合は、その日の試合開始ごろの天気も記事に入ります)。見出しと記事は、点差・連勝や連敗・前回対戦・今季の成績などに合わせて言い回しが変わります(途中の試合結果が分からないときは、連勝などは書きません)。試合画面でコメントを書いておくと、その最初の一文が大見出しになり、記事の本文にもコメントが入ります。",
             "「次の試合」では、チーム名の左にHOME/AWAYの札(HOMEは赤地、AWAYは紺の枠)、右端に試合まで「あと○日」(前日は「あと1日(明日)」、当日は「きょう試合」)を赤い枠の札で表示します。日時・対戦相手・会場のほか、ブローウィンズのホームゲームは公式の試合情報ページの開場時刻と、押すと開く当日のスケジュール・イベント、公式ページへのリンクを表示します(試合当日は「本日の試合」に表示)。また、データがあれば「データで見る展望」(順位・成績・直近の勝敗・前回対戦)と「相手の注目選手」を表示します。試合の3日前からは天気予報も出ます(入場の時刻が分かる試合は入場と試合開始の時刻、それ以外は試合開始の時刻)。次の試合の日にほかのチームの試合もあるときは、その日の試合をすべて縦に並べます(開始時刻順)。",
-            "試合の無い日は、一面のトップが日替わりの「特集」になります。注目選手・数字で見る・決戦までのカウントダウン・順位・過去の今日・得点ランキング・今週の試合・誕生月の選手などから、1日最大5本を選んで載せます。直近3日のトピック(ニュース)は毎回入り、新しいトピックが出れば日付が変わらなくても入れ替わります。指で左右にスライドするか「ほかの記事 ›」で記事を切り替えられ(最後の記事の次は最初の記事に戻ります。下の点で何本目かが分かります)、記事を押すとその試合・記事・トピックが開きます。特集の下には「前回の結果」が1行で出ます(押すとその試合が開きます)。",
-            "特集は、赤い「特集」の札と記事の種類、見出し、記事に合う写真、大きな数字、本文の順に表示します。写真は元の縦横比を保ち、全体が見えるように表示します。記事に合う写真がない場合や読み込めない場合は、チームカラーの札を表示します。",
+            "試合の無い日は、一面のトップが「特集」になります。注目選手・数字で見る・決戦までのカウントダウン・順位・過去の今日・得点ランキング・今週の試合・誕生月の選手などから、最大6本を選んで載せます。記事はアプリを起動するたびに選び直し、一度画面に出した記事は次に起動したときから出なくなります(まだ見ていない記事がすべて出たら、はじめからもう一度出ます。記録はこの端末の中だけ)。直近3日のトピック(ニュース)は毎回入ります。指で左右にスライドするか「ほかの記事 ›」で記事を切り替えられ(最後の記事の次は最初の記事に戻ります。下の点で何本目かが分かります)、記事を押すとその試合・記事・トピックが開きます。",
+            "特集は、赤い「特集」の札と記事の種類、見出しのあと、新聞のように右に写真(絵)を置き、本文をそのまわりに回り込ませます(写真より本文が長いときは、写真の下から全幅で続きます)。写真の無い選手の記事はチームカラーの選手カード(背番号と名前)、写真の無い「順位」「数字で見る」「決戦まで」などの記事は、直近の結果(○●とスコア)・順位表・試合までの日数と対戦成績の図と、競技のコートの線画を出します。どれも無い記事は、チームの頭文字の小さな四角です。",
             "ブローウィンズ掲示板の書き込みが多い日(24時間で5件以上)は、特集に「掲示板」の記事が入ります。24時間の書き込み数・ふだんの件数との比較・よく出た言葉(選手の名前など)・反応(返信といいね)が多かった投稿の冒頭を、アプリが自動で数えて載せます。文章を要約するものではありません。押すと掲示板タブで、その投稿が開きます。NGワード・NGユーザーの投稿は数えません。メニューでオフにできます。",
-            "選手の誕生日が7日以内にあると、一面に「誕生日」の欄が出ます。当日の選手は写真付きで、ほかの選手はあと何日かと一緒に並びます(誕生日の選手が複数いるときは全員並びます)。誕生日は各チームの公式サイト・女子Fリーグ公式サイトの選手名簿から1日1回集めています。",
+            "選手の誕生日が7日以内にあると、一面の「各チームの近況」の下に「誕生日」の欄が出ます。当日の選手は写真付きで、ほかの選手はあと何日かと一緒に並びます(誕生日の選手が複数いるときは全員並びます)。誕生日は各チームの公式サイト・女子Fリーグ公式サイトの選手名簿から1日1回集めています。",
             "「次の試合」には、その相手とのこれまでの対戦成績(○勝○敗と、最近の対戦の結果)も出ます。アプリが記録している試合から数えています。",
-            "「各チームの近況」「その後の日程」(次の試合の次から6件)「ニュース」も一面で確認できます。一面・特集・ウィジェットには、トップチームの公式の試合だけを出します(U-20・サテライトなどの試合と、自分で追加した予定は試合タブにだけ並びます)。試合を押すと、試合画面でその試合の詳細が開きます。",
+            "「次の試合」の下の「各チームの近況」には、4チームそれぞれの前回の結果(○●とスコア)と次の試合(日時・あと何日・HOME/AWAY・相手・会場・招待あり)が並びます。上の「本日の試合」「次の試合」に詳しく出ている試合は「(上に掲載)」と短く出します。試合の当日は、その試合を「次の試合」に重ねて出さず、本日の試合の欄に対戦成績と展望も出します。",
+            "「その後の日程」(上に出した試合を除いた6件)「ニュース」も一面で確認できます。一面・特集・ウィジェットには、トップチームの公式の試合だけを出します(U-20・サテライトなどの試合と、自分で追加した予定は試合タブにだけ並びます)。試合を押すと、試合画面でその試合の詳細が開きます。",
             "通知の設定・掲示板の設定・各チームの公式サイト・データの更新状況は、画面の一番下の「メニュー」にあります。"
         )
     ),
@@ -201,7 +224,7 @@ private val HOW_TO_SECTIONS = listOf(
         "ウィジェット", "ホーム画面のウィジェット",
         listOf(
             "スマホのホーム画面を長押しして「ウィジェット」を選び、「ふくスポ 次の試合」を置けます。",
-            "4チームそれぞれの次の試合を表示します。チーム名の前の札は、HOMEが赤、AWAYが紺です。その下に日付・時刻、相手・会場が並び、その試合向けの招待があれば「招待あり」が付きます。",
+            "4チームそれぞれの次の試合を表示します。チーム名の前の札は、HOMEが赤、AWAYが紺です。その下に日付・時刻、相手・会場が並び、その試合向けの招待があれば「招待あり」が付きます。チーム名の行の右には、前回の結果(例「前回 ●64-89」。勝ちは赤)も出ます。",
             "ウィジェットを押すとアプリが開きます。表示はおよそ1時間ごとと、アプリの一面を開いたときに更新されます。"
         )
     ),
@@ -245,8 +268,48 @@ fun HowToUseScreen(onBack: () -> Unit) {
                     DoubleRule(modifier = Modifier.padding(top = 6.dp))
                 }
             }
+            // 特徴的な画面(画像つき)
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    SectionLabel("ふくスポ+でできること", red = true)
+                    Text(
+                        "画像は画面の例です(Web版で撮った画面です。アプリ版もほぼ同じ作りで、表示される内容は日によって変わります)。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
+                    )
+                }
+            }
+            items(HOW_TO_FEATURES) { feature -> HowToFeatureCard(feature) }
+            item { SectionLabel("画面ごとの説明") }
             items(HOW_TO_SECTIONS) { section -> HowToCard(section) }
             item { Text(" ", modifier = Modifier.padding(bottom = 8.dp)) }
+        }
+    }
+}
+
+/** 特徴的な画面の1つ分(左に画面の例の画像、右に見出しと説明) */
+@Composable
+private fun HowToFeatureCard(feature: HowToFeature) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Ink)
+            .background(Paper),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Image(
+            painter = painterResource(feature.image),
+            contentDescription = "${feature.title}の画面の例",
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.TopCenter,
+            modifier = Modifier
+                .width(140.dp)
+                .heightIn(max = 220.dp)
+                .border(1.dp, LineGray)
+        )
+        Column(modifier = Modifier.weight(1f).padding(top = 10.dp, end = 12.dp, bottom = 12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Headline(feature.title, fontSize = 17)
+            Text(feature.text, style = MaterialTheme.typography.bodyMedium, color = Ink)
         }
     }
 }

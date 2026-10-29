@@ -48,6 +48,12 @@ import com.fukuiteams.app.data.BirthdaysRepository
 import com.fukuiteams.app.data.PlayerBirthday
 import com.fukuiteams.app.data.FeatureStory
 import com.fukuiteams.app.data.buildFeatureStories
+import com.fukuiteams.app.data.FeatureSeen
+import com.fukuiteams.app.ui.components.FeaturePlayerCard
+import com.fukuiteams.app.ui.components.FeatureDataGraphic
+import com.fukuiteams.app.ui.components.SportLines
+import com.fukuiteams.app.ui.components.hasFeatureDataGraphic
+import com.fukuiteams.app.ui.components.numberFromCaption
 import com.fukuiteams.app.data.BbsBuzz
 import com.fukuiteams.app.data.BbsBuzzRepository
 import com.fukuiteams.app.data.BbsPrefs
@@ -222,7 +228,12 @@ fun HomeScreen(
             .toMap()
     }
 
-    LaunchedEffect(Unit) { refreshAll() }
+    // 最初の読み込みが終わったか(特集の「見た記事」の記録を、読み込み途中の少ない記事で書きかえないため)
+    var loadedOnce by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        refreshAll()
+        loadedOnce = true
+    }
 
     // 掲示板の話題は、ほかの情報の読み込みを待たせないよう別に数える(30分以内に数えた分があればそれを使う)。
     // 選手の名字は「よく出た言葉」に選手名を拾うため。メニューでオフにしたときは数えない
@@ -293,7 +304,11 @@ fun HomeScreen(
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         todayGames.forEach { g ->
-                            MatchDayCard(g, weathers[g.id], forecasts[g.id], GameLpRepository.latest[g.id], multi = todayGames.size > 1, onOpen = { onOpenGame(g.id) })
+                            MatchDayCard(
+                                g, weathers[g.id], forecasts[g.id], GameLpRepository.latest[g.id],
+                                results = autoResults, preview = previews[g.id],
+                                multi = todayGames.size > 1, onOpen = { onOpenGame(g.id) }
+                            )
                         }
                     }
                 }
@@ -305,26 +320,19 @@ fun HomeScreen(
                 item { SpecialDayBanner(special, onOpenGame = { g -> onOpenGame(g.id) }) }
             }
 
-            // 選手の誕生日(今日が誕生日の選手と、7日以内に誕生日の選手)。選んでいるチームの選手だけ
-            val teamBirthdays = birthdays.filter { selectedTeam == null || it.team == selectedTeam }
-            val bdToday = BirthdaysRepository.today()
-            val soon = teamBirthdays.filter { it.daysUntilNext(bdToday) in 0..7 }
-                .sortedWith(compareBy<PlayerBirthday> { it.daysUntilNext(bdToday) }.thenBy { it.team?.ordinal ?: 9 })
-            if (soon.isNotEmpty()) {
-                item { BirthdayCard(soon, bdToday) }
-            }
-
+            // 一面トップ:選択中のチーム(「すべて」なら全チーム)の最新の試合結果
+            val latest = mainGames()
+                .filter { (selectedTeam == null || it.team == selectedTeam) && autoResults.containsKey(it.id) }
+                .maxByOrNull { it.sortKey }
+            // 速報に出している試合(下の「各チームの近況」では短く出す)
+            val heroId = latest?.takeIf { isFreshResult(it) }?.id
             item {
-                // 一面トップ:選択中のチーム(「すべて」なら全チーム)の最新の試合結果
-                val latest = mainGames()
-                    .filter { (selectedTeam == null || it.team == selectedTeam) && autoResults.containsKey(it.id) }
-                    .maxByOrNull { it.sortKey }
                 if (latest != null && isFreshResult(latest)) {
                     // 試合の当日・翌日は、その結果を「速報」として大きく出す
                     LatestResultHero(latest, autoResults.getValue(latest.id), autoResults, onClick = { onOpenGame(latest.id) })
                 } else {
-                    // 試合の無い日は、日替わりの「特集」(注目選手・数字で見る・決戦まで・順位・ニュースなど)を一面トップに出し、
-                    // 前回の結果は1行だけにする
+                    // 試合の無い日は「特集」(注目選手・数字で見る・決戦まで・順位・ニュースなど)を一面トップに出す。
+                    // 記事はアプリを起動するたびに選び直し、前に見た記事は出さない(FeatureSeen)
                     val teams = selectedTeam?.let { listOf(it) } ?: Team.values().toList()
                     val onSiteIds = remember(logPrefs, GamesRepository.games) {
                         GamesRepository.games.filter { recordedWatchMethod(it.id, logPrefs) == WatchMethod.ON_SITE }.map { it.id }.toSet()
@@ -332,6 +340,7 @@ fun HomeScreen(
                     val buzzForFeature = bbsBuzz.takeIf { bbsSettings?.featureEnabled != false }
                     // 過去の記録(history.json)を読み終えたら、過去の話の記事も作り直す
                     val historyData = com.fukuiteams.app.data.HistoryRepository.data
+                    val seenAtOpen = remember { FeatureSeen.seenAtOpen(appContext) }
                     val stories = remember(teams, autoResults, previews, players, standings, newsResult, invitationsResult, GamesRepository.games, birthdays, onSiteIds, buzzForFeature, historyData) {
                         buildFeatureStories(
                             teams = teams,
@@ -344,51 +353,76 @@ fun HomeScreen(
                             invites = (invitationsResult as? AlertsResult.Success)?.items.orEmpty(),
                             birthdays = birthdays,
                             onSiteIds = onSiteIds,
-                            bbsBuzz = buzzForFeature
+                            bbsBuzz = buzzForFeature,
+                            // アプリを起動するたびに選び直し、前に見た記事は出さない
+                            seedOverride = FeatureSeen.seed,
+                            seen = seenAtOpen,
+                            // 写真の無い記事のうち、図を作れる記事と選手の記事は、代わりの写真ではなく図・選手カードにする
+                            keepWithoutPhoto = { s -> hasFeatureDataGraphic(s) || numberFromCaption(s.photoCaption).isNotEmpty() }
                         )
                     }
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        if (stories.isNotEmpty()) {
-                            FeatureHero(
-                                stories = stories,
-                                onOpenGame = onOpenGame,
-                                onOpenTopics = { onOpenRadar(selectedTeam) },
-                                onOpenBbs = onOpenBbs
-                            )
-                        }
-                        if (latest != null) {
-                            PreviousResultLine(latest, autoResults.getValue(latest.id), onClick = { onOpenGame(latest.id) })
-                        }
+                    if (loadedOnce) LaunchedEffect(stories) { FeatureSeen.noteStories(appContext, stories) }
+                    // 前回の結果は、下の「各チームの近況」にまとめた
+                    if (stories.isNotEmpty()) {
+                        FeatureHero(
+                            stories = stories,
+                            results = autoResults,
+                            standings = standings,
+                            onShown = { s -> FeatureSeen.markShown(appContext, s) },
+                            onOpenGame = onOpenGame,
+                            onOpenTopics = { onOpenRadar(selectedTeam) },
+                            onOpenBbs = onOpenBbs
+                        )
                     }
                 }
             }
 
 
-            item {
-                // 一面の「次の試合」と他チームの近況。
-                // 次の試合の日にほかのチームの試合もあれば、同じ日の試合をすべて「次の試合」に並べる
-                // (並びは開始時刻順。「時間未定」の試合は後ろ)
-                val upcoming = mainGames()
-                    .filter { (selectedTeam == null || it.team == selectedTeam) && it.isUpcoming() }
-                val firstDay = upcoming.minByOrNull { it.sortKey }?.sortKey?.take(8)
-                val nextGames = upcoming
-                    .filter { firstDay != null && it.sortKey.take(8) == firstDay }
-                    .sortedBy { g -> if (Regex("""\d{1,2}:\d{2}""").matches(g.timeLabel.trim())) g.sortKey else g.sortKey.take(8) + "-9999" }
-                val sideTeams = if (selectedTeam != null) {
-                    Team.values().filter { it != selectedTeam }
-                } else {
-                    Team.values().filter { t -> nextGames.none { it.team == t } }
+            // 一面の「次の試合」。次の試合の日にほかのチームの試合もあれば、同じ日の試合をすべて並べる
+            // (並びは開始時刻順。「時間未定」の試合は後ろ)。本日の試合は上に出しているので、ここには出さない
+            val todayIds = todayGames.map { it.id }.toSet()
+            val upcoming = mainGames()
+                .filter { (selectedTeam == null || it.team == selectedTeam) && it.isUpcoming() && it.id !in todayIds }
+            val firstDay = upcoming.minByOrNull { it.sortKey }?.sortKey?.take(8)
+            val nextGames = upcoming
+                .filter { firstDay != null && it.sortKey.take(8) == firstDay }
+                .sortedBy { g -> if (Regex("""\d{1,2}:\d{2}""").matches(g.timeLabel.trim())) g.sortKey else g.sortKey.take(8) + "-9999" }
+            // 本日の試合があって、そのあとの試合がまだ無いときは「次の試合」の欄を出さない
+            if (nextGames.isNotEmpty() || todayIds.isEmpty()) {
+                item {
+                    TwoColumnFront(
+                        nextGames = nextGames,
+                        hasOpenInvite = { g -> g.hasMatchingInvite(openInvites) },
+                        autoResults = autoResults,
+                        previews = previews,
+                        lps = GameLpRepository.latest,
+                        forecasts = forecasts,
+                        onOpenGame = onOpenGame
+                    )
                 }
-                TwoColumnFront(
-                    nextGames = nextGames,
-                    hasOpenInvite = { g -> g.hasMatchingInvite(openInvites) },
-                    sideTeams = sideTeams,
+            }
+
+            // 各チームの近況(前回の結果と次の試合)。上に詳しく出している試合は「(上に掲載)」と短く出す
+            val shownAbove = todayIds + nextGames.map { it.id }
+            val digestNextIds = teamDigestNextIds(selectedTeam, autoResults, shownAbove)
+            item {
+                TeamsDigest(
+                    selectedTeam = selectedTeam,
                     autoResults = autoResults,
-                    previews = previews,
-                    lps = GameLpRepository.latest,
-                    forecasts = forecasts,
+                    openInvites = openInvites,
+                    heroId = heroId,
+                    shownAbove = shownAbove,
                     onOpenGame = onOpenGame
                 )
+            }
+
+            // 選手の誕生日(今日が誕生日の選手と、7日以内に誕生日の選手)。選んでいるチームの選手だけ
+            val teamBirthdays = birthdays.filter { selectedTeam == null || it.team == selectedTeam }
+            val bdToday = BirthdaysRepository.today()
+            val soon = teamBirthdays.filter { it.daysUntilNext(bdToday) in 0..7 }
+                .sortedWith(compareBy<PlayerBirthday> { it.daysUntilNext(bdToday) }.thenBy { it.team?.ordinal ?: 9 })
+            if (soon.isNotEmpty()) {
+                item { BirthdayCard(soon, bdToday) }
             }
 
             item {
@@ -396,15 +430,12 @@ fun HomeScreen(
                     SectionLabel("その後の日程")
                     // 特定のチームを選んだときはそのチームの直近6件、「すべて」のときは全体の直近6件を表示。
                     // 試合スケジュールの一覧は「試合」タブにまとめてあるので、ここでは概要だけ。
-                    // 上の「次の試合」に出ている日の試合は除いて、その次から6件(同じ試合を2回出さない)
-                    val upcomingAll = mainGames()
-                        .filter { (selectedTeam == null || it.team == selectedTeam) && it.isUpcoming() }
-                        .sortedBy { it.sortKey }
-                    val nextDay = upcomingAll.firstOrNull()?.sortKey?.take(8)
-                    val games = upcomingAll.filter { it.sortKey.take(8) != nextDay }.take(6)
+                    // 上の「本日の試合」「次の試合」「各チームの近況」に出した試合は除く(同じ試合を2回出さない)
+                    val listed = shownAbove + digestNextIds
+                    val games = upcoming.filter { it.id !in listed }.sortedBy { it.sortKey }.take(6)
                     if (games.isEmpty()) {
                         Text(
-                            if (nextDay != null) "次の試合のあとの予定は、まだ発表されていません"
+                            if (upcoming.isNotEmpty()) "このあとの予定は、まだ発表されていません"
                             else "このチームの試合データはまだ準備できていません",
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
@@ -457,6 +488,10 @@ private fun MatchDayCard(
     weather: MatchWeather?,
     forecast: GameForecast?,
     lp: GameLp?,
+    /** 対戦成績を数えるための試合結果 */
+    results: Map<String, RemoteGameResult> = emptyMap(),
+    /** データで見る展望(無ければ null) */
+    preview: GamePreview? = null,
     /** 同じ日に2試合以上あるとき。1試合ずつチームの色の枠・上の帯・うっすらチームの色の背景で、区切りが分かるようにする */
     multi: Boolean = false,
     onOpen: () -> Unit
@@ -534,6 +569,9 @@ private fun MatchDayCard(
             ThinRule(modifier = Modifier.padding(vertical = 4.dp))
             GameLpSection(lp, startExpanded = true)
         }
+        // 対戦成績と展望(「次の試合」の欄には本日の試合を出さないので、ここに出す)
+        HeadToHeadBox(game, results)
+        if (preview != null) PreviewSection(game, preview)
     }
     }
 }
@@ -858,7 +896,6 @@ private fun LatestResultHero(
 private fun TwoColumnFront(
     nextGames: List<Game>,
     hasOpenInvite: (Game) -> Boolean,
-    sideTeams: List<Team>,
     autoResults: Map<String, RemoteGameResult>,
     previews: Map<String, GamePreview>,
     lps: Map<String, GameLp>,
@@ -909,25 +946,7 @@ private fun TwoColumnFront(
             }
         }
 
-        // 他チームの近況。1段に2チームずつ並べる(4チームになり、横に3つ並べると狭くなるため)。
-        // 同じ日に全チームとも試合があるときは出さない
-        if (sideTeams.isNotEmpty()) {
-            SectionLabel("各チームの近況", modifier = Modifier.padding(top = 6.dp))
-            sideTeams.chunked(2).forEachIndexed { rowIndex, pair ->
-                if (rowIndex > 0) ThinRule(color = LineGray, modifier = Modifier.padding(vertical = 6.dp))
-                Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-                    pair.forEachIndexed { index, team ->
-                        if (index > 0) Box(modifier = Modifier.padding(horizontal = 8.dp).width(1.dp).fillMaxHeight().background(Ink))
-                        Box(modifier = Modifier.weight(1f)) { TeamBrief(team, autoResults, onOpenGame) }
-                    }
-                    // 奇数のときは右側を空けて、幅をそろえる
-                    if (pair.size == 1) {
-                        Box(modifier = Modifier.padding(horizontal = 8.dp).width(1.dp))
-                        Box(modifier = Modifier.weight(1f))
-                    }
-                }
-            }
-        }
+        // 他チームの近況は、下の「各チームの近況」(TeamsDigest)にまとめた
         DoubleRule(modifier = Modifier.padding(top = 6.dp))
     }
 }
@@ -1029,37 +1048,7 @@ private fun NextGameBlock(
             GameLpSection(lp, startExpanded = false)
         }
 
-        if (preview != null) {
-            DoubleRule(modifier = Modifier.padding(vertical = 6.dp))
-            SectionLabel("データで見る展望")
-            PreviewTable(preview)
-            if (preview.summary.isNotBlank()) {
-                Text(preview.summary, style = MaterialTheme.typography.bodyMedium, color = Ink)
-            }
-
-            ThinRule(modifier = Modifier.padding(vertical = 6.dp))
-            SectionLabel("相手の注目選手")
-            val oppPhotos = TeamPhotos.forOpponent(nextGame)
-            if (preview.keyPlayers.isNotEmpty()) {
-                preview.keyPlayers.forEach { KeyPlayerRow(it, TeamPhotos.findByName(oppPhotos, it.name)) }
-                // 注目選手のほかの相手の選手の写真
-                val others = oppPhotos.filter { p -> preview.keyPlayers.none { TeamPhotos.findByName(listOf(p), it.name) != null } }
-                PlayerPhotoRow(others, count = 4, photoWidth = 52.dp, photoHeight = 65.dp)
-                if (preview.playersNote.isNotBlank()) {
-                    Text("※${preview.playersNote}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
-                }
-            } else {
-                Text("相手の選手データは公開されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
-            }
-            preview.oppLink?.let { link ->
-                Text(
-                    "相手チームの情報を見る ›",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Accent,
-                    modifier = Modifier.clickable { openUrl(context, link) }.padding(top = 2.dp)
-                )
-            }
-        }
+        if (preview != null) PreviewSection(nextGame, preview)
         if (hasOpenInvite) {
             Text("無料招待あり ›", style = MaterialTheme.typography.labelMedium, color = NewsRed, modifier = Modifier.padding(top = 4.dp))
         }
@@ -1083,6 +1072,43 @@ private fun NextGameBlock(
             }
         }
     }
+}
+
+/** データで見る展望と相手の注目選手(「次の試合」と「本日の試合」で使う) */
+@Composable
+private fun PreviewSection(game: Game, preview: GamePreview) {
+    val context = LocalContext.current
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            DoubleRule(modifier = Modifier.padding(vertical = 6.dp))
+            SectionLabel("データで見る展望")
+            PreviewTable(preview)
+            if (preview.summary.isNotBlank()) {
+                Text(preview.summary, style = MaterialTheme.typography.bodyMedium, color = Ink)
+            }
+
+            ThinRule(modifier = Modifier.padding(vertical = 6.dp))
+            SectionLabel("相手の注目選手")
+            val oppPhotos = TeamPhotos.forOpponent(game)
+            if (preview.keyPlayers.isNotEmpty()) {
+                preview.keyPlayers.forEach { KeyPlayerRow(it, TeamPhotos.findByName(oppPhotos, it.name)) }
+                // 注目選手のほかの相手の選手の写真
+                val others = oppPhotos.filter { p -> preview.keyPlayers.none { TeamPhotos.findByName(listOf(p), it.name) != null } }
+                PlayerPhotoRow(others, count = 4, photoWidth = 52.dp, photoHeight = 65.dp)
+                if (preview.playersNote.isNotBlank()) {
+                    Text("※${preview.playersNote}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                }
+            } else {
+                Text("相手の選手データは公開されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            }
+            preview.oppLink?.let { link ->
+                Text(
+                    "相手チームの情報を見る ›",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Accent,
+                    modifier = Modifier.clickable { openUrl(context, link) }.padding(top = 2.dp)
+                )
+            }
+            }
 }
 
 /** 天気予報の表の1列(見出し・時刻・予報) */
@@ -1247,59 +1273,162 @@ private fun KeyPlayerRow(player: KeyPlayer, photo: PhotoRef? = null) {
     }
 }
 
-/** 右段の1チーム分。最新結果(あれば)と次の試合を1〜2行で。 */
+/** 「各チームの近況」に次の試合を詳しく出すチームの、その試合のID(下の「その後の日程」から除くため) */
+private fun teamDigestNextIds(selectedTeam: Team?, autoResults: Map<String, RemoteGameResult>, shownAbove: Set<String>): Set<String> =
+    digestOrder(selectedTeam).mapNotNull { team ->
+        mainGames().filter { it.team == team && it.isUpcoming() && !autoResults.containsKey(it.id) }.minByOrNull { it.sortKey }?.id
+    }.filter { it !in shownAbove }.toSet()
+
+/** 近況に並べるチームの順(上で選んだチームを先頭に) */
+private fun digestOrder(selectedTeam: Team?): List<Team> =
+    if (selectedTeam != null) listOf(selectedTeam) + Team.values().filter { it != selectedTeam } else Team.values().toList()
+
+/**
+ * 「各チームの近況」。4チームそれぞれの前回の結果と次の試合を1チーム1段で並べる
+ * (以前の「前回の結果」の1行と「各チームの近況」をまとめたもの)。押すとその試合を開く。
+ * 上に詳しく出している試合(速報 heroId・本日の試合/次の試合 shownAbove)は、日付と相手だけの短い行にして重ねない。
+ */
 @Composable
-private fun TeamBrief(team: Team, autoResults: Map<String, RemoteGameResult>, onOpenGame: (String) -> Unit) {
-    val teamGames = mainGames().filter { it.team == team }
-    val latest = teamGames.filter { autoResults.containsKey(it.id) }.maxByOrNull { it.sortKey }
-    val next = teamGames.filter { it.isUpcoming() }.minByOrNull { it.sortKey }
+private fun TeamsDigest(
+    selectedTeam: Team?,
+    autoResults: Map<String, RemoteGameResult>,
+    openInvites: List<RemoteInvitationAlert>,
+    heroId: String?,
+    shownAbove: Set<String>,
+    onOpenGame: (String) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .then(
-                (latest ?: next)?.let { g -> Modifier.clickable { onOpenGame(g.id) } } ?: Modifier
-            ),
-        verticalArrangement = Arrangement.spacedBy(1.dp)
+            .border(1.5.dp, Ink)
+            .background(Paper)
+            .padding(horizontal = 10.dp, vertical = 8.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            Box(modifier = Modifier.width(4.dp).height(12.dp).background(team.color))
-            Text(team.shortLabelForFront(), style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
-            // そのチームの選手の写真(日替わりで1人)
-            val candidates = remember(team, TeamPhotos.own, TeamPhotos.scenes) { TeamPhotos.mixed(team, "brief-" + team.name).take(8) }
-            // 選手の写真のときは、名前を写真の左に添える(試合・イベントの写真には付けない)
-            FallbackPhoto(candidates, width = 30.dp, height = 38.dp, nameLabel = com.fukuiteams.app.ui.components.PhotoNameLabel.BESIDE)
-        }
-        if (latest != null) {
-            val r = autoResults.getValue(latest.id)
-            val outcome = when {
-                r.myScore > r.opponentScore -> GameOutcome.WIN
-                r.myScore < r.opponentScore -> GameOutcome.LOSE
-                else -> GameOutcome.DRAW
+        SectionLabel("各チームの近況")
+        digestOrder(selectedTeam).forEachIndexed { index, team ->
+            val teamGames = mainGames().filter { it.team == team }
+            val last = teamGames.filter { autoResults.containsKey(it.id) }.maxByOrNull { it.sortKey }
+            val next = teamGames.filter { it.isUpcoming() && !autoResults.containsKey(it.id) }.minByOrNull { it.sortKey }
+            if (index > 0) ThinRule(color = LineGray)
+            Row(
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min).padding(vertical = 7.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Box(modifier = Modifier.width(5.dp).fillMaxHeight().background(team.color, RoundedCornerShape(2.dp)))
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(team.displayName, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = team.color)
+                    // 前回の結果
+                    if (last != null) {
+                        val r = autoResults.getValue(last.id)
+                        val outcome = when {
+                            r.myScore > r.opponentScore -> GameOutcome.WIN
+                            r.myScore < r.opponentScore -> GameOutcome.LOSE
+                            else -> GameOutcome.DRAW
+                        }
+                        DigestLine("前回", onClick = { onOpenGame(last.id) }) {
+                            Text(
+                                "${resultMark(outcome)} ${r.myScore}-${r.opponentScore}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = if (outcome == GameOutcome.WIN) NewsRed else Ink,
+                                maxLines = 1,
+                                softWrap = false
+                            )
+                            Text(
+                                "${last.monthDayLabel()}(${last.dayOfWeek}) ${last.opponent}戦" + (if (last.id == heroId) "(上の速報)" else ""),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Ink,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                    // 次の試合
+                    when {
+                        next == null -> DigestLine("次", onClick = null) {
+                            Text("次の試合は未発表", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                        }
+                        next.id in shownAbove -> DigestLine("次", onClick = { onOpenGame(next.id) }) {
+                            Text(
+                                "${next.monthDayLabel()}(${next.dayOfWeek}) ${next.opponent}戦(上に掲載)",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Ink,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        else -> DigestLine("次", onClick = { onOpenGame(next.id) }) {
+                            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text(
+                                        "${next.monthDayLabel()}(${next.dayOfWeek}) ${next.timeLabel}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Ink,
+                                        maxLines = 1,
+                                        softWrap = false
+                                    )
+                                    next.countdownLabel()?.let {
+                                        Text(it, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.ExtraBold, color = NewsRed, maxLines = 1, softWrap = false)
+                                    }
+                                    HomeAwayTag(isHome = next.isHome)
+                                    if (next.hasMatchingInvite(openInvites)) {
+                                        Text(
+                                            "招待あり",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = White,
+                                            maxLines = 1,
+                                            softWrap = false,
+                                            modifier = Modifier.background(NewsRed).padding(horizontal = 4.dp, vertical = 1.dp)
+                                        )
+                                    }
+                                }
+                                Text(
+                                    "vs ${next.opponent}・${next.venue}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = InkSoft,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+                }
             }
-            Text(
-                "${resultMark(outcome)}${r.myScore}-${r.opponentScore} ${latest.opponent}",
-                style = MaterialTheme.typography.bodySmall,
-                color = if (outcome == GameOutcome.WIN) NewsRed else Ink,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
         }
-        Text(
-            if (next != null) "次:${next.dateLabel.split("/").drop(1).joinToString("/")} ${next.opponent}" else "次:日程発表待ち",
-            style = MaterialTheme.typography.bodySmall,
-            color = InkSoft,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
     }
 }
 
-private fun Team.shortLabelForFront(): String = when (this) {
-    Team.BLOWINDS -> "ブローウィンズ"
-    Team.RAC -> "丸岡RUCK"
-    Team.UNITED -> "ユナイテッド"
-    Team.THUNDER -> "ブルーサンダー"
+/** 近況の1行(左に「前回」「次」の小さな札)。押すとその試合を開く */
+@Composable
+private fun DigestLine(label: String, onClick: (() -> Unit)?, content: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(vertical = 1.dp),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            label,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.ExtraBold,
+            color = InkSoft,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            modifier = Modifier.padding(top = 2.dp).width(34.dp).border(1.dp, LineGray).padding(vertical = 1.dp)
+        )
+        content()
+    }
 }
+
+/** 「10/31」の形の日付 */
+private fun Game.monthDayLabel(): String = dateLabel.split("/").drop(1).joinToString("/")
+
 
 /**
  * 一面の「誕生日」欄。今日が誕生日の選手は顔写真付きで大きく、7日以内の選手は1行ずつ小さく出す。
@@ -1433,6 +1562,11 @@ private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
 @Composable
 private fun FeatureHero(
     stories: List<FeatureStory>,
+    /** 図(直近の結果・順位・決戦まで)を作るための試合結果と順位 */
+    results: Map<String, RemoteGameResult> = emptyMap(),
+    standings: Map<String, LeagueStandings> = emptyMap(),
+    /** 記事を画面に出したとき(「見た記事」の記録に使う) */
+    onShown: (FeatureStory) -> Unit = {},
     onOpenGame: (String) -> Unit,
     onOpenTopics: () -> Unit,
     onOpenBbs: (Int?) -> Unit
@@ -1448,6 +1582,8 @@ private fun FeatureHero(
         pageCount = { pageCount }
     )
     val currentIndex = pagerState.currentPage.mod(stories.size)
+    // 画面に出した記事を「見た記事」として記録する(次に起動したときから出さない)
+    LaunchedEffect(currentIndex, stories) { stories.getOrNull(currentIndex)?.let(onShown) }
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         androidx.compose.foundation.pager.HorizontalPager(
             state = pagerState,
@@ -1493,28 +1629,10 @@ private fun FeatureHero(
                         Text(it.displayName, style = MaterialTheme.typography.labelMedium, color = it.color, maxLines = 1)
                     }
                 }
-                // 見出しを全幅で先に出し、その下で 本文(左)と縦長の写真(右)を並べる(新聞の囲み記事の形)
+                // 見出しを全幅で先に出し、その下は新聞のように、右の写真(絵)のまわりに本文を回り込ませる
+                // (写真より本文が長いときは、写真の下から全幅で続ける。下に空きができないように)
                 Headline(story.headline, fontSize = 21)
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
-                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        if (story.bigNumber != null) {
-                            Row(verticalAlignment = Alignment.Bottom) {
-                                Headline(story.bigNumber, fontSize = 40, color = NewsRed)
-                                story.bigUnit?.let {
-                                    Text(
-                                        it,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Ink,
-                                        modifier = Modifier.padding(start = 3.dp, bottom = 6.dp)
-                                    )
-                                }
-                            }
-                        }
-                        Text(story.body, style = MaterialTheme.typography.bodyLarge, color = Ink)
-                    }
-                    FeaturePhoto(story)
-                }
+                FeatureWrapBody(story, results, standings)
             }
         }
         if (stories.size > 1) {
@@ -1563,19 +1681,98 @@ private fun FeatureHero(
 private const val LOOP_ROUNDS = 1000
 
 /** 一面の特集の写真の枠(縦長。顔が切れないように) */
-private val FEATURE_PHOTO_WIDTH = 150.dp
-private val FEATURE_PHOTO_HEIGHT = 200.dp
+private val FEATURE_PHOTO_WIDTH = 132.dp
+private val FEATURE_PHOTO_HEIGHT = 176.dp
+/** 写真も図も無い記事の、小さな四角(チームの頭文字) */
+private val FEATURE_TILE_SIZE = 72.dp
+
+/** 特集の右の絵の大きさ(写真・選手カード・図は縦長、どれも無い記事は小さな四角) */
+private fun featurePhotoSize(story: FeatureStory): Pair<androidx.compose.ui.unit.Dp, androidx.compose.ui.unit.Dp> =
+    if (story.photo.isNotBlank() || numberFromCaption(story.photoCaption).isNotEmpty() || hasFeatureDataGraphic(story)) {
+        FEATURE_PHOTO_WIDTH to FEATURE_PHOTO_HEIGHT
+    } else {
+        FEATURE_TILE_SIZE to FEATURE_TILE_SIZE
+    }
 
 /**
- * 一面の特集の縦長の写真。どの記事にも画像を出し、枠の中に余白を作らない。
- * ・選手の写真は顔が切れないよう上を残す。切り抜き写真の周りの透明な余白は切り取り、
- *   それでも見える透明な部分の後ろはチームカラーにする。ニュースの横長の画像は左右を切って枠に合わせる
- * ・代わりに付けた選手の写真には、下に選手名を重ねる
- * ・写真が無い記事・写真を読み込めないときは、チームカラーの札(記事の種類・チームの頭文字・チーム名)にする
+ * 特集の本文。右に写真(絵)を置き、本文をそのまわりに流す(新聞の回り込み)。
+ * 写真の横に入りきらない本文は、写真の下から全幅で続ける。
+ */
+@Composable
+private fun FeatureWrapBody(story: FeatureStory, results: Map<String, RemoteGameResult>, standings: Map<String, LeagueStandings>) {
+    val (photoW, photoH) = featurePhotoSize(story)
+    val gap = 12.dp
+    val bodyStyle = MaterialTheme.typography.bodyLarge.copy(color = Ink)
+    val textMeasurer = androidx.compose.ui.text.rememberTextMeasurer()
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    androidx.compose.foundation.layout.BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val leftW = maxOf(maxWidth - photoW - gap, 80.dp)
+        // 大きな数字の行の高さ(見出しの文字 40sp の行の高さ + すき間)
+        val bigH = if (story.bigNumber != null) with(density) { 48.sp.toDp() } + 4.dp else 0.dp
+        // 写真の横に入る本文の文字数(写真の高さに収まる行まで)
+        val split = remember(story.body, leftW, photoH, bigH, bodyStyle, density) {
+            val leftPx = with(density) { leftW.roundToPx() }
+            val availPx = with(density) { (photoH - bigH).toPx() }
+            val layout = textMeasurer.measure(
+                androidx.compose.ui.text.AnnotatedString(story.body),
+                style = bodyStyle,
+                constraints = androidx.compose.ui.unit.Constraints(maxWidth = leftPx)
+            )
+            var lastLine = -1
+            for (l in 0 until layout.lineCount) {
+                if (layout.getLineBottom(l) <= availPx) lastLine = l else break
+            }
+            when {
+                lastLine >= layout.lineCount - 1 -> story.body.length
+                lastLine < 0 -> 0
+                else -> layout.getLineEnd(lastLine, visibleEnd = false).coerceIn(0, story.body.length)
+            }
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Row(verticalAlignment = Alignment.Top) {
+                Column(modifier = Modifier.width(leftW), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    if (story.bigNumber != null) {
+                        Row(verticalAlignment = Alignment.Bottom) {
+                            Headline(story.bigNumber, fontSize = 40, color = NewsRed)
+                            story.bigUnit?.let {
+                                Text(
+                                    it,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Ink,
+                                    modifier = Modifier.padding(start = 3.dp, bottom = 6.dp)
+                                )
+                            }
+                        }
+                    }
+                    if (split > 0) Text(story.body.substring(0, split).trimEnd(), style = bodyStyle)
+                }
+                Spacer(modifier = Modifier.width(gap))
+                FeaturePhoto(story, photoW, photoH, results, standings)
+            }
+            if (split < story.body.length) {
+                Text(story.body.substring(split).trimStart('\n'), style = bodyStyle, modifier = Modifier.fillMaxWidth())
+            }
+        }
+    }
+}
+
+/**
+ * 一面の特集の右の絵。
+ * ・写真がある記事:写真(顔が切れないよう上を残す。読めなければ次の写真へ)。代わりに付けた選手の写真には、下に選手名を重ねる
+ * ・写真の無い選手の記事:チームカラーの選手カード(斜体の背番号・名前)
+ * ・写真の無い順位・数字・決戦までなどの記事:記事の中身の図(直近の結果・順位表・試合までの日数)と競技のコートの線画
+ * ・どれでもない記事:チームの頭文字の小さな四角
  * ・写真を押しても拡大はせず、記事全体と同じく、その試合・記事・掲示板などを開く
  */
 @Composable
-private fun FeaturePhoto(story: FeatureStory) {
+private fun FeaturePhoto(
+    story: FeatureStory,
+    width: androidx.compose.ui.unit.Dp,
+    height: androidx.compose.ui.unit.Dp,
+    results: Map<String, RemoteGameResult>,
+    standings: Map<String, LeagueStandings>
+) {
     val accent = story.team?.color ?: Ink
     // 試す写真の順番:記事の写真 → 代わりの選手の写真。読めなければ次へ進む
     val photos = remember(story) {
@@ -1587,18 +1784,27 @@ private fun FeaturePhoto(story: FeatureStory) {
     val current = photos.getOrNull(index)
     // ニュースの横長の画像は左右を切って中央を出す(選手の写真は顔が切れないよう上を残す)
     val newsImage = index == 0 && current != null && current.second == null && story.url != null && story.bigNumber == null
+    val isPlayer = numberFromCaption(story.photoCaption).isNotEmpty()
     Box(
         modifier = Modifier
-            .size(FEATURE_PHOTO_WIDTH, FEATURE_PHOTO_HEIGHT)
+            .size(width, height)
             .background(accent)
     ) {
-        // 写真を読み込むまで(どの写真も読み込めないとき)は、色の札を出しておく
-        FeatureGraphic(story, modifier = Modifier.fillMaxSize())
+        // 写真の無いとき(または写真を読み込むまで・どの写真も読み込めないとき)に見える絵
+        when {
+            isPlayer -> FeaturePlayerCard(story, modifier = Modifier.fillMaxSize())
+            story.photo.isBlank() && hasFeatureDataGraphic(story) -> {
+                if (!FeatureDataGraphic(story, mainGames(), results, standings, modifier = Modifier.fillMaxSize())) {
+                    FeatureGraphic(story, modifier = Modifier.fillMaxSize())
+                }
+            }
+            else -> FeatureGraphic(story, modifier = Modifier.fillMaxSize(), compact = width < FEATURE_PHOTO_WIDTH)
+        }
         if (current != null) {
             RemoteThumbnail(
                 current.first,
-                width = FEATURE_PHOTO_WIDTH,
-                height = FEATURE_PHOTO_HEIGHT,
+                width = width,
+                height = height,
                 alignTop = !newsImage,
                 trimTransparent = true,
                 backgroundColor = accent,
@@ -1626,7 +1832,22 @@ private fun FeaturePhoto(story: FeatureStory) {
 
 /** 写真が無いときの色の札:記事の種類・チームの頭文字・チーム名 */
 @Composable
-private fun FeatureGraphic(story: FeatureStory, modifier: Modifier = Modifier) {
+private fun FeatureGraphic(story: FeatureStory, modifier: Modifier = Modifier, compact: Boolean = false) {
+    if (compact) {
+        // 小さな四角:チームの頭文字とチーム名だけ(記事の種類は見出しの上に出ているので省く)
+        Box(modifier = modifier) {
+            story.team?.let { SportLines(it, Modifier.fillMaxSize()) }
+            Column(
+                modifier = Modifier.fillMaxSize().padding(4.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Headline(story.team?.initial ?: "特集", fontSize = if (story.team != null) 36 else 18, color = White)
+                Text(story.team?.shortName ?: "全チーム", style = MaterialTheme.typography.labelSmall, color = White, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        }
+        return
+    }
     Column(
         modifier = modifier.padding(10.dp),
         verticalArrangement = Arrangement.SpaceBetween,
@@ -1663,36 +1884,6 @@ private fun blowindsSurnames(players: Map<String, TeamPlayers>): List<String> =
             else -> listOf(name)
         }
     }.map { it.trim() }.filter { it.length >= 2 }.distinct()
-
-/** 試合の無い日に出す「前回の結果」の1行。押すとその試合を開く。 */
-@Composable
-private fun PreviousResultLine(game: Game, result: RemoteGameResult, onClick: () -> Unit) {
-    val mark = when {
-        result.myScore > result.opponentScore -> "○"
-        result.myScore < result.opponentScore -> "●"
-        else -> "△"
-    }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, LineGray)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text("前回の結果", style = MaterialTheme.typography.labelMedium, color = InkSoft)
-        Text(
-            "${game.team.displayName} ${game.dateLabel.split("/").drop(1).joinToString("/")}(${game.dayOfWeek}) ${game.opponent}戦 $mark ${result.myScore}-${result.opponentScore}",
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.Bold,
-            color = if (mark == "○") NewsRed else Ink,
-            modifier = Modifier.weight(1f),
-            maxLines = 2
-        )
-        Text("›", style = MaterialTheme.typography.titleMedium, color = InkSoft)
-    }
-}
 
 /**
  * 一面で使う試合(トップチームの公式の試合だけ)。

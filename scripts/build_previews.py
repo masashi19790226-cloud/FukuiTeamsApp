@@ -949,6 +949,35 @@ def inherit_scorer_photos(rows, team_key):
     return count
 
 
+def attach_wfl_numbers(rac):
+    """女子Fリーグの得点の表の、背番号が空の行(丸岡RUCK以外のクラブの選手)に、各クラブの選手名簿の背番号を付ける。
+    名簿は1日1回だけ読み直し、それ以外は number_cache(standings.json に保存。アプリは使わない)を使う。
+    名簿を読めなかったときは、前回の名簿の背番号を使う(一時的な失敗で背番号が消えないように)。"""
+    import alumni
+    today = datetime.now(JST).strftime("%Y-%m-%d")
+    old = load_json(STANDINGS_PATH, {}).get("RAC", {}).get("scorers", {}).get("number_cache") or {}
+    numbers = old.get("numbers") or {}
+    if old.get("date") != today or not numbers:
+        try:
+            rosters = alumni.wfl_rosters(fetch)
+            got = {k: v.get("number", "") for k, v in rosters.items() if v.get("number")}
+            if got:
+                numbers = got
+                old = {"date": today, "numbers": numbers}
+        except Exception as e:
+            print(f"[WARN] 背番号: 女子Fリーグの選手名簿の取得に失敗 {e!r}(前回の名簿を使います)")
+    rac["number_cache"] = old if numbers else {}
+    hit = 0
+    for r in rac.get("rows") or []:
+        if r.get("number"):
+            continue
+        n = numbers.get(alumni._key(r.get("name", "")))
+        if n:
+            r["number"] = n
+            hit += 1
+    print(f"[背番号] 女子Fリーグの相手クラブの選手 {hit}人に背番号を付けました(名簿 {len(numbers)}人)")
+
+
 def attach_player_photos():
     """丸岡RUCK・ユナイテッドの得点の表に、公式サイトの選手紹介の顔写真を付ける(読めなければ付けない)"""
     rac = STANDINGS.get("RAC", {}).get("scorers")
@@ -971,6 +1000,11 @@ def attach_player_photos():
             rac["photo_report"].update(report)  # どのクラブの写真が取れたか(確認用。アプリは使わない)
         except Exception as e:
             print(f"[WARN] 写真: 女子Fリーグの相手クラブの写真の取得に失敗 {e!r}")
+        # 相手クラブの選手の背番号(女子Fリーグ公式の各クラブの選手名簿から。1日1回だけ読み直す)
+        try:
+            attach_wfl_numbers(rac)
+        except Exception as e:
+            print(f"[WARN] 背番号: 女子Fリーグの相手クラブの名簿の取得に失敗 {e!r}")
     uni = STANDINGS.get("UNITED", {}).get("scorers")
     if uni:
         try:
@@ -1030,7 +1064,7 @@ def ruck_extra(next_game, preview):
     top = team_scorers("RAC", next_game["opponent"])
     if top:
         preview["key_players"] = [
-            {"number": "", "name": r["name"], "position": "",
+            {"number": r.get("number", ""), "name": r["name"], "position": "",
              "stat": f"今季{r['goals']}得点(リーグ{r['rank']}位)・シュート{r['shots']}本"}
             for r in top
         ]

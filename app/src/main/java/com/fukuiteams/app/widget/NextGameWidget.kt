@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 /**
  * ホーム画面のウィジェット「次の試合」。
  * 4チームそれぞれの次の試合(日付・相手・会場・HOME/AWAY)を1行ずつ出し、その試合向けの招待があれば「招待あり」を出す。
+ * チーム名の行の右には、前回の結果(例「前回 ●64-89」)も出す。
  * 更新のきっかけ: ウィジェットの定期更新(約1時間)・アプリの一面を開いたとき・招待の定期チェック。
  */
 class NextGameWidget : AppWidgetProvider() {
@@ -55,15 +56,17 @@ class NextGameWidget : AppWidgetProvider() {
     /** ウィジェットの1行分(チームごと)の部品。 */
     private class Row(
         val team: Team, val label: String,
-        val bar: Int, val teamLabel: Int, val date: Int, val homeAway: Int, val opponent: Int, val invite: Int
+        val bar: Int, val teamLabel: Int, val date: Int, val homeAway: Int, val opponent: Int, val invite: Int,
+        /** 前回の結果(例「前回 ●64-89」) */
+        val last: Int
     )
 
     companion object {
         private val ROWS = listOf(
-            Row(Team.BLOWINDS, "ブローウィンズ", R.id.bar_b, R.id.team_b, R.id.date_b, R.id.homeaway_b, R.id.opp_b, R.id.invite_b),
-            Row(Team.RAC, "丸岡RUCK", R.id.bar_r, R.id.team_r, R.id.date_r, R.id.homeaway_r, R.id.opp_r, R.id.invite_r),
-            Row(Team.UNITED, "ユナイテッド", R.id.bar_u, R.id.team_u, R.id.date_u, R.id.homeaway_u, R.id.opp_u, R.id.invite_u),
-            Row(Team.THUNDER, "ブルーサンダー", R.id.bar_t, R.id.team_t, R.id.date_t, R.id.homeaway_t, R.id.opp_t, R.id.invite_t)
+            Row(Team.BLOWINDS, "ブローウィンズ", R.id.bar_b, R.id.team_b, R.id.date_b, R.id.homeaway_b, R.id.opp_b, R.id.invite_b, R.id.last_b),
+            Row(Team.RAC, "丸岡RUCK", R.id.bar_r, R.id.team_r, R.id.date_r, R.id.homeaway_r, R.id.opp_r, R.id.invite_r, R.id.last_r),
+            Row(Team.UNITED, "ユナイテッド", R.id.bar_u, R.id.team_u, R.id.date_u, R.id.homeaway_u, R.id.opp_u, R.id.invite_u, R.id.last_u),
+            Row(Team.THUNDER, "ブルーサンダー", R.id.bar_t, R.id.team_t, R.id.date_t, R.id.homeaway_t, R.id.opp_t, R.id.invite_t, R.id.last_t)
         )
 
         private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -92,6 +95,24 @@ class NextGameWidget : AppWidgetProvider() {
                     .filter { it.team == row.team && it.isMainTeamGame() && it.isUpcoming() && !results.containsKey(it.id) }
                     .minByOrNull { it.sortKey }
                 views.setInt(row.bar, "setBackgroundColor", row.team.color.toArgb())
+                // 前回の結果(結果が取れている、いちばん新しい試合)。勝ちは赤
+                val last: Game? = games
+                    .filter { it.team == row.team && it.isMainTeamGame() && results.containsKey(it.id) }
+                    .maxByOrNull { it.sortKey }
+                val lastResult = last?.let { results[it.id] }
+                if (lastResult == null) {
+                    views.setViewVisibility(row.last, View.GONE)
+                } else {
+                    val win = lastResult.myScore > lastResult.opponentScore
+                    val mark = when {
+                        win -> "○"
+                        lastResult.myScore < lastResult.opponentScore -> "●"
+                        else -> "△"
+                    }
+                    views.setTextViewText(row.last, "前回 $mark${lastResult.myScore}-${lastResult.opponentScore}")
+                    views.setTextColor(row.last, if (win) Color.parseColor("#C8102E") else Color.parseColor("#55504A"))
+                    views.setViewVisibility(row.last, View.VISIBLE)
+                }
                 views.setTextViewText(row.teamLabel, row.label)
                 views.setTextColor(row.teamLabel, row.team.color.toArgb())
                 if (next == null) {

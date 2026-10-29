@@ -83,7 +83,13 @@ fun buildFeatureStories(
     /** 自分が「現地観戦」と記録した試合のID */
     onSiteIds: Set<String> = emptySet(),
     /** 掲示板の話題(メニューでオフ・読めなかったときは null) */
-    bbsBuzz: BbsBuzz? = null
+    bbsBuzz: BbsBuzz? = null,
+    /** 記事の選び方を決める数。null なら日付(日替わり)。開くたびに変えると、開くたびに記事が入れかわる */
+    seedOverride: Int? = null,
+    /** 前に見た記事(featureStoryKey)。見ていない記事がじゅうぶんあれば、見た記事は出さない */
+    seen: Set<String> = emptySet(),
+    /** 写真が無くても、代わりの写真を付けない記事(画面のほうで図や選手カードにする記事) */
+    keepWithoutPhoto: (FeatureStory) -> Boolean = { false }
 ): List<FeatureStory> {
     val today = LocalDate.now(JST)
     val out = mutableListOf<FeatureStory>()
@@ -123,9 +129,15 @@ fun buildFeatureStories(
     // (新しいトピックが出れば、日付が変わらなくても入れ替わる)。
     // それ以外の記事は、同じ種類(小見出し)は1日1本だけ(どのチーム・どの記事にするかは日替わり)にして日替わりに並べる。
     // 並びは「日替わりの記事 → トピック → 日替わりの記事 → トピック → …」と交互にし、合計 MAX_STORIES_PER_DAY 本まで
-    val seed = today.toEpochDay().toInt()
-    val topics = bbs + out.filter { it.kicker == TOPIC_KICKER }
-    val onePerKind = out.filter { it.kicker != TOPIC_KICKER }.groupBy { it.kicker }.values.map { group ->
+    val seed = seedOverride ?: today.toEpochDay().toInt()
+    // 前に見た記事を外す(見ていない記事の種類が MIN_UNSEEN_KINDS より少なくなったら、見た記事も出す=ひと回りしたらはじめから)
+    var pool: List<FeatureStory> = out
+    if (seen.isNotEmpty()) {
+        val unseen = out.filterNot { featureStoryKey(it) in seen }
+        if (unseen.filter { it.kicker != TOPIC_KICKER }.map { it.kicker }.distinct().size >= MIN_UNSEEN_KINDS) pool = unseen
+    }
+    val topics = bbs + pool.filter { it.kicker == TOPIC_KICKER }
+    val onePerKind = pool.filter { it.kicker != TOPIC_KICKER }.groupBy { it.kicker }.values.map { group ->
         group[(seed.absoluteValue + group.size) % group.size]
     }.sortedBy { ((it.kicker.hashCode() + seed * 7919).absoluteValue) % 1000 }
     // 過去の話(過去の実績・あの選手は今・今日は何の日・あの日の一戦・歴代の選手・日本代表の歩み)は、毎日 PAST_SLOTS 本を必ず入れる。
@@ -142,8 +154,14 @@ fun buildFeatureStories(
     }
     // 過去の話は2本目・5本目あたりに入れる(先頭は今の話題)
     past.forEachIndexed { k, story -> result.add(minOf(1 + k * 3, result.size), story) }
-    return withFallbackPhotos(result, photoPool(players, birthdays), seed)
+    return withFallbackPhotos(result, photoPool(players, birthdays), seed, keepWithoutPhoto)
 }
+
+/** 見ていない記事の種類がこれより少なくなったら、見た記事も出す */
+private const val MIN_UNSEEN_KINDS = 3
+
+/** 記事を見分けるための文字列(「前に見た記事」の記録に使う。Web版の storyKey と同じ) */
+fun featureStoryKey(s: FeatureStory): String = "${s.kicker}|${s.team?.name ?: ""}|${s.headline}"
 
 /** 記事に写真が無いときに代わりに使う、選手の写真の候補 */
 private data class PhotoCandidate(val team: Team?, val url: String, val label: String)
@@ -183,10 +201,17 @@ private fun photoPool(players: Map<String, TeamPlayers>, birthdays: List<PlayerB
  * どの選手にするかは日替わりで、同じ日の記事どうしで同じ写真が重ならないようにする。
  * 候補が無いとき(読み込み前など)は写真なしのまま(画面では写真の代わりに色の帯を出す)。
  */
-private fun withFallbackPhotos(stories: List<FeatureStory>, pool: List<PhotoCandidate>, seed: Int): List<FeatureStory> {
+private fun withFallbackPhotos(
+    stories: List<FeatureStory>,
+    pool: List<PhotoCandidate>,
+    seed: Int,
+    keepWithoutPhoto: (FeatureStory) -> Boolean = { false }
+): List<FeatureStory> {
     if (pool.isEmpty()) return stories
     val used = stories.map { it.photo }.filter { it.isNotBlank() }.toMutableSet()
     return stories.map { story ->
+        // 写真の無い記事のうち、画面のほうで図や選手カードにする記事には、代わりの写真を付けない
+        if (story.photo.isBlank() && keepWithoutPhoto(story)) return@map story
         val candidates = pool.filter { story.team == null || it.team == story.team }
         if (candidates.isEmpty()) return@map story
         // 日替わりで選手を選び、そこから順に並べる(同じ日の記事どうしで同じ写真が重ならないよう、まだ使っていない写真を先に)
