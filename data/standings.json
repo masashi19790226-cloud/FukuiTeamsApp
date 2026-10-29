@@ -264,7 +264,8 @@
           "pk": 0,
           "shots": 64,
           "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/TSUKAMOTO_Natsuki.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/TSUKAMOTO_Natsuki.jpg",
+          "number": "7"
         },
         {
           "rank": 2,
@@ -274,7 +275,8 @@
           "pk": 0,
           "shots": 47,
           "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/NAKAMURA_Mizuki.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/NAKAMURA_Mizuki.jpg",
+          "number": "8"
         },
         {
           "rank": 2,
@@ -284,7 +286,8 @@
           "pk": 0,
           "shots": 75,
           "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGUCHI_Mika.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGUCHI_Mika.jpg",
+          "number": "3"
         },
         {
           "rank": 4,
@@ -294,7 +297,8 @@
           "pk": 0,
           "shots": 46,
           "games": 10,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg"
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg",
+          "number": "18"
         },
         {
           "rank": 5,
@@ -304,7 +308,8 @@
           "pk": 0,
           "shots": 31,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02914-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02914-768x512.jpg",
+          "number": "31"
         },
         {
           "rank": 5,
@@ -314,7 +319,8 @@
           "pk": 0,
           "shots": 44,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02934-2-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02934-2-768x512.jpg",
+          "number": "32"
         },
         {
           "rank": 7,
@@ -324,7 +330,8 @@
           "pk": 0,
           "shots": 54,
           "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/SHIBUKAWA_Suzuna.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/SHIBUKAWA_Suzuna.jpg",
+          "number": "20"
         },
         {
           "rank": 8,
@@ -334,7 +341,8 @@
           "pk": 0,
           "shots": 41,
           "games": 9,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1545x2318_v-frms_webp_7859de3e-98bc-4707-834e-ac7773cfb098.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1545x2318_v-frms_webp_7859de3e-98bc-4707-834e-ac7773cfb098.jpg",
+          "number": "9"
         },
         {
           "rank": 8,
@@ -344,7 +352,8 @@
           "pk": 0,
           "shots": 48,
           "games": 10,
-          "photo": "https://www.swh2003.com/img/202627-14.jpg"
+          "photo": "https://www.swh2003.com/img/202627-14.jpg",
+          "number": "14"
         },
         {
           "rank": 8,
@@ -354,7 +363,8 @@
           "pk": 0,
           "shots": 72,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02808-2-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02808-2-768x512.jpg",
+          "number": "4"
         },
         {
           "rank": 11,
@@ -363,7 +373,8 @@
           "goals": 6,
           "pk": 0,
           "shots": 21,
-          "games": 7
+          "games": 7,
+          "number": "17"
         },
         {
           "rank": 11,
@@ -372,7 +383,8 @@
           "goals": 6,
           "pk": 0,
           "shots": 23,
-          "games": 7
+          "games": 7,
+          "number": "21"
         },
         {
           "rank": 11,
@@ -382,7 +394,8 @@
           "pk": 0,
           "shots": 25,
           "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/KURAMOCHI_Kyoko.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/KURAMOCHI_Kyoko.jpg",
+          "number": "23"
         },
         {
           "rank": 11,
@@ -391,7 +404,8 @@
           "goals": 6,
           "pk": 0,
           "shots": 35,
-          "games": 7
+          "games": 7,
+          "number": "5"
         },
         {
           "rank": 11,
@@ -401,7 +415,8 @@
           "pk": 0,
           "shots": 36,
           "games": 10,
-          "photo": "https://www.swh2003.com/img/202627-9.jpg"
+          "photo": "https://www.swh2003.com/img/202627-9.jpg",
+          "number": "9"
         },
         {
           "rank": 11,
@@ -411,7 +426,8 @@
           "pk": 0,
           "shots": 43,
           "games": 10,
-          "photo": "https://www.swh2003.com/img/202627-20.jpg"
+          "photo": "https://www.swh2003.com/img/202627-20.jpg",
+          "number": "20"
         },
         {
           "rank": 11,
@@ -421,7 +437,8 @@
           "pk": 0,
           "shots": 44,
           "games": 10,
-          "photo": "https://www.swh2003.com/img/202627-13.jpg"
+          "photo": "https://www.swh2003.com/img/202627-13.jpg",
+          "number": "13"
         },
         {
           "rank": 11,
@@ -431,7 +448,8 @@
           "pk": 0,
           "shots": 48,
           "games": 10,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg"
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
+          "number": "19"
         },
         {
           "rank": 19,
@@ -441,7 +459,8 @@
           "pk": 0,
           "shots": 22,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02887-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02887-768x512.jpg",
+          "number": "20"
         },
         {
           "rank": 19,
@@ -451,7 +470,8 @@
           "pk": 0,
           "shots": 23,
           "games": 10,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_f6e10019-1639-4014-be4d-2e59f0c3926f.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_f6e10019-1639-4014-be4d-2e59f0c3926f.jpg",
+          "number": "21"
         },
         {
           "rank": 19,
@@ -461,7 +481,8 @@
           "pk": 0,
           "shots": 25,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02890-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02890-768x512.jpg",
+          "number": "21"
         },
         {
           "rank": 19,
@@ -495,7 +516,8 @@
           "pk": 1,
           "shots": 30,
           "games": 10,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_60b00a8e-85f7-432c-9a7c-6bbe69a5720d.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_60b00a8e-85f7-432c-9a7c-6bbe69a5720d.jpg",
+          "number": "13"
         },
         {
           "rank": 19,
@@ -517,7 +539,8 @@
           "pk": 0,
           "shots": 37,
           "games": 10,
-          "photo": "https://www.swh2003.com/img/202627-11.jpg"
+          "photo": "https://www.swh2003.com/img/202627-11.jpg",
+          "number": "11"
         },
         {
           "rank": 19,
@@ -527,7 +550,8 @@
           "pk": 0,
           "shots": 38,
           "games": 10,
-          "photo": "https://www.swh2003.com/img/202627-8.jpg"
+          "photo": "https://www.swh2003.com/img/202627-8.jpg",
+          "number": "8"
         },
         {
           "rank": 19,
@@ -536,7 +560,8 @@
           "goals": 5,
           "pk": 0,
           "shots": 38,
-          "games": 10
+          "games": 10,
+          "number": "77"
         },
         {
           "rank": 19,
@@ -546,7 +571,8 @@
           "pk": 0,
           "shots": 41,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2026/05/DSC02829-2-edited-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2026/05/DSC02829-2-edited-768x512.jpg",
+          "number": "8"
         },
         {
           "rank": 19,
@@ -556,7 +582,8 @@
           "pk": 0,
           "shots": 65,
           "games": 10,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l08.jpg"
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l08.jpg",
+          "number": "8"
         },
         {
           "rank": 31,
@@ -566,7 +593,8 @@
           "pk": 0,
           "shots": 10,
           "games": 4,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l23.jpg"
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l23.jpg",
+          "number": "23"
         },
         {
           "rank": 31,
@@ -576,7 +604,8 @@
           "pk": 0,
           "shots": 11,
           "games": 10,
-          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/d942d9d60f6954af06f23785cd842a48.jpg"
+          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/d942d9d60f6954af06f23785cd842a48.jpg",
+          "number": "4"
         },
         {
           "rank": 31,
@@ -586,7 +615,8 @@
           "pk": 0,
           "shots": 16,
           "games": 10,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_26030724-0b8e-4ad2-94cf-1fe287849d98.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_26030724-0b8e-4ad2-94cf-1fe287849d98.jpg",
+          "number": "6"
         },
         {
           "rank": 31,
@@ -595,7 +625,8 @@
           "goals": 4,
           "pk": 0,
           "shots": 16,
-          "games": 6
+          "games": 6,
+          "number": "11"
         },
         {
           "rank": 31,
@@ -604,7 +635,8 @@
           "goals": 4,
           "pk": 0,
           "shots": 17,
-          "games": 10
+          "games": 10,
+          "number": "25"
         },
         {
           "rank": 31,
@@ -614,7 +646,8 @@
           "pk": 0,
           "shots": 25,
           "games": 10,
-          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/84dac01f4466b8da3fd82359eefb2263-1.jpg"
+          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/84dac01f4466b8da3fd82359eefb2263-1.jpg",
+          "number": "16"
         },
         {
           "rank": 31,
@@ -636,7 +669,8 @@
           "pk": 0,
           "shots": 27,
           "games": 6,
-          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/43100d2d48fab57d3435a4fad3f0bd43.jpg"
+          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/43100d2d48fab57d3435a4fad3f0bd43.jpg",
+          "number": "7"
         },
         {
           "rank": 31,
@@ -646,7 +680,8 @@
           "pk": 0,
           "shots": 30,
           "games": 10,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1351x2027_v-frms_webp_1557c84e-0e04-49a3-af04-fe39f5b46670.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1351x2027_v-frms_webp_1557c84e-0e04-49a3-af04-fe39f5b46670.jpg",
+          "number": "14"
         },
         {
           "rank": 40,
@@ -656,7 +691,8 @@
           "pk": 0,
           "shots": 9,
           "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGAWA_Rin.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGAWA_Rin.jpg",
+          "number": "19"
         },
         {
           "rank": 40,
@@ -666,7 +702,8 @@
           "pk": 0,
           "shots": 9,
           "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/YAMAMOTO_Nanami.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/YAMAMOTO_Nanami.jpg",
+          "number": "25"
         },
         {
           "rank": 40,
@@ -675,7 +712,8 @@
           "goals": 3,
           "pk": 0,
           "shots": 12,
-          "games": 5
+          "games": 5,
+          "number": "9"
         },
         {
           "rank": 40,
@@ -685,7 +723,8 @@
           "pk": 0,
           "shots": 16,
           "games": 10,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_2a9a9677-efeb-4987-9160-5ba631879bd7.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_2a9a9677-efeb-4987-9160-5ba631879bd7.jpg",
+          "number": "10"
         },
         {
           "rank": 40,
@@ -695,7 +734,8 @@
           "pk": 0,
           "shots": 17,
           "games": 10,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_e2eb8ecb-e1a1-4cc8-af7e-1561256e3f22.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_e2eb8ecb-e1a1-4cc8-af7e-1561256e3f22.jpg",
+          "number": "24"
         },
         {
           "rank": 40,
@@ -705,7 +745,8 @@
           "pk": 0,
           "shots": 18,
           "games": 8,
-          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_20.png"
+          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_20.png",
+          "number": "20"
         },
         {
           "rank": 40,
@@ -715,7 +756,8 @@
           "pk": 0,
           "shots": 22,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02836-2-1-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02836-2-1-768x512.jpg",
+          "number": "9"
         },
         {
           "rank": 40,
@@ -724,7 +766,8 @@
           "goals": 3,
           "pk": 0,
           "shots": 22,
-          "games": 10
+          "games": 10,
+          "number": "17"
         },
         {
           "rank": 40,
@@ -743,7 +786,8 @@
           "pk": 0,
           "shots": 23,
           "games": 8,
-          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_19.png"
+          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_19.png",
+          "number": "19"
         },
         {
           "rank": 40,
@@ -753,7 +797,8 @@
           "pk": 0,
           "shots": 24,
           "games": 9,
-          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/1feb5f5f55177029ad0f8e5a77d1bb70.jpg"
+          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/1feb5f5f55177029ad0f8e5a77d1bb70.jpg",
+          "number": "31"
         },
         {
           "rank": 40,
@@ -763,7 +808,8 @@
           "pk": 0,
           "shots": 26,
           "games": 8,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_14ed1885-e058-4ed0-9374-e36f533c5299.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_14ed1885-e058-4ed0-9374-e36f533c5299.jpg",
+          "number": "23"
         },
         {
           "rank": 40,
@@ -772,7 +818,8 @@
           "goals": 3,
           "pk": 0,
           "shots": 46,
-          "games": 10
+          "games": 10,
+          "number": "24"
         },
         {
           "rank": 40,
@@ -782,7 +829,8 @@
           "pk": 0,
           "shots": 63,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02824-2-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02824-2-768x512.jpg",
+          "number": "7"
         },
         {
           "rank": 54,
@@ -792,7 +840,8 @@
           "pk": 0,
           "shots": 4,
           "games": 10,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_9482903a-6bac-46fc-a156-a4421cceb0ef.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_9482903a-6bac-46fc-a156-a4421cceb0ef.jpg",
+          "number": "2"
         },
         {
           "rank": 54,
@@ -801,7 +850,8 @@
           "goals": 2,
           "pk": 0,
           "shots": 5,
-          "games": 10
+          "games": 10,
+          "number": "7"
         },
         {
           "rank": 54,
@@ -811,7 +861,8 @@
           "pk": 0,
           "shots": 6,
           "games": 9,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/OKABE_Maho.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/OKABE_Maho.jpg",
+          "number": "5"
         },
         {
           "rank": 54,
@@ -821,7 +872,8 @@
           "pk": 0,
           "shots": 8,
           "games": 4,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2026/05/DSC02862-2-edited-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2026/05/DSC02862-2-edited-768x512.jpg",
+          "number": "17"
         },
         {
           "rank": 54,
@@ -831,7 +883,8 @@
           "pk": 0,
           "shots": 10,
           "games": 6,
-          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_87.png"
+          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_87.png",
+          "number": "87"
         },
         {
           "rank": 54,
@@ -863,7 +916,8 @@
           "pk": 0,
           "shots": 18,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02816-2-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02816-2-768x512.jpg",
+          "number": "5"
         },
         {
           "rank": 54,
@@ -885,7 +939,8 @@
           "pk": 0,
           "shots": 21,
           "games": 10,
-          "photo": "https://www.swh2003.com/img/202627-39.jpg"
+          "photo": "https://www.swh2003.com/img/202627-39.jpg",
+          "number": "39"
         },
         {
           "rank": 54,
@@ -894,7 +949,8 @@
           "goals": 2,
           "pk": 1,
           "shots": 21,
-          "games": 5
+          "games": 5,
+          "number": "8"
         },
         {
           "rank": 54,
@@ -903,7 +959,8 @@
           "goals": 2,
           "pk": 1,
           "shots": 21,
-          "games": 5
+          "games": 5,
+          "number": "10"
         },
         {
           "rank": 54,
@@ -912,7 +969,8 @@
           "goals": 2,
           "pk": 0,
           "shots": 22,
-          "games": 8
+          "games": 8,
+          "number": "2"
         },
         {
           "rank": 54,
@@ -921,7 +979,8 @@
           "goals": 2,
           "pk": 0,
           "shots": 23,
-          "games": 7
+          "games": 7,
+          "number": "10"
         },
         {
           "rank": 54,
@@ -940,7 +999,8 @@
           "pk": 0,
           "shots": 24,
           "games": 10,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l05.jpg"
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l05.jpg",
+          "number": "5"
         },
         {
           "rank": 54,
@@ -950,7 +1010,8 @@
           "pk": 0,
           "shots": 26,
           "games": 10,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l04.jpg"
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l04.jpg",
+          "number": "4"
         },
         {
           "rank": 54,
@@ -960,7 +1021,8 @@
           "pk": 0,
           "shots": 30,
           "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/YAMAMOTO_Kokoro.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/YAMAMOTO_Kokoro.jpg",
+          "number": "9"
         },
         {
           "rank": 54,
@@ -970,7 +1032,8 @@
           "pk": 0,
           "shots": 35,
           "games": 10,
-          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/61669d949cfbd29869b930a16972233b.jpg"
+          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/61669d949cfbd29869b930a16972233b.jpg",
+          "number": "42"
         },
         {
           "rank": 54,
@@ -980,7 +1043,8 @@
           "pk": 0,
           "shots": 38,
           "games": 9,
-          "photo": "https://www.swh2003.com/img/202627-10.jpg"
+          "photo": "https://www.swh2003.com/img/202627-10.jpg",
+          "number": "10"
         },
         {
           "rank": 54,
@@ -990,7 +1054,8 @@
           "pk": 0,
           "shots": 43,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02880-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02880-768x512.jpg",
+          "number": "19"
         },
         {
           "rank": 75,
@@ -1000,7 +1065,8 @@
           "pk": 0,
           "shots": 1,
           "games": 10,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l25.jpg"
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l25.jpg",
+          "number": "25"
         },
         {
           "rank": 75,
@@ -1009,7 +1075,8 @@
           "goals": 1,
           "pk": 0,
           "shots": 2,
-          "games": 10
+          "games": 10,
+          "number": "3"
         },
         {
           "rank": 75,
@@ -1031,7 +1098,8 @@
           "pk": 0,
           "shots": 3,
           "games": 9,
-          "photo": "https://www.swh2003.com/img/202627-2.jpg"
+          "photo": "https://www.swh2003.com/img/202627-2.jpg",
+          "number": "2"
         },
         {
           "rank": 75,
@@ -1041,7 +1109,8 @@
           "pk": 0,
           "shots": 4,
           "games": 3,
-          "photo": "https://www.swh2003.com/img/202627-17.jpg"
+          "photo": "https://www.swh2003.com/img/202627-17.jpg",
+          "number": "17"
         },
         {
           "rank": 75,
@@ -1051,7 +1120,8 @@
           "pk": 0,
           "shots": 4,
           "games": 5,
-          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_29.png"
+          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_29.png",
+          "number": "29"
         },
         {
           "rank": 75,
@@ -1061,7 +1131,8 @@
           "pk": 0,
           "shots": 4,
           "games": 5,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l33.jpg"
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l33.jpg",
+          "number": "33"
         },
         {
           "rank": 75,
@@ -1070,7 +1141,8 @@
           "goals": 1,
           "pk": 0,
           "shots": 4,
-          "games": 5
+          "games": 5,
+          "number": "8"
         },
         {
           "rank": 75,
@@ -1079,7 +1151,8 @@
           "goals": 1,
           "pk": 0,
           "shots": 5,
-          "games": 5
+          "games": 5,
+          "number": "15"
         },
         {
           "rank": 75,
@@ -1089,7 +1162,8 @@
           "pk": 0,
           "shots": 6,
           "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02796-2-768x512.jpg"
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02796-2-768x512.jpg",
+          "number": "1"
         },
         {
           "rank": 75,
@@ -1117,7 +1191,8 @@
           "pk": 0,
           "shots": 7,
           "games": 8,
-          "photo": "https://www.swh2003.com/img/202627-18.jpg"
+          "photo": "https://www.swh2003.com/img/202627-18.jpg",
+          "number": "18"
         },
         {
           "rank": 75,
@@ -1127,7 +1202,8 @@
           "pk": 0,
           "shots": 9,
           "games": 9,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_99b69d5a-dbd8-4bc5-b37a-eced47148ab7.jpg"
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_99b69d5a-dbd8-4bc5-b37a-eced47148ab7.jpg",
+          "number": "7"
         },
         {
           "rank": 75,
@@ -1137,7 +1213,8 @@
           "pk": 0,
           "shots": 11,
           "games": 10,
-          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/05/bc9a45d35a68a4011bfa3cc1a7cd09f2-1.jpg"
+          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/05/bc9a45d35a68a4011bfa3cc1a7cd09f2-1.jpg",
+          "number": "3"
         },
         {
           "rank": 75,
@@ -1147,7 +1224,8 @@
           "pk": 0,
           "shots": 11,
           "games": 10,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l07.jpg"
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l07.jpg",
+          "number": "7"
         },
         {
           "rank": 75,
@@ -1156,7 +1234,8 @@
           "goals": 1,
           "pk": 0,
           "shots": 12,
-          "games": 10
+          "games": 10,
+          "number": "15"
         },
         {
           "rank": 75,
@@ -1166,7 +1245,8 @@
           "pk": 0,
           "shots": 13,
           "games": 7,
-          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_77.png"
+          "photo": "https://www.minerva-ube.jp/image/2026_minervaube_77.png",
+          "number": "77"
         },
         {
           "rank": 75,
@@ -1176,7 +1256,8 @@
           "pk": 0,
           "shots": 15,
           "games": 10,
-          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/d5a2cf2850983753fb75585ee7ab68a2-1.jpg"
+          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/d5a2cf2850983753fb75585ee7ab68a2-1.jpg",
+          "number": "17"
         },
         {
           "rank": 75,
@@ -1198,7 +1279,8 @@
           "pk": 0,
           "shots": 16,
           "games": 9,
-          "photo": "https://www.swh2003.com/img/202627-6.jpg"
+          "photo": "https://www.swh2003.com/img/202627-6.jpg",
+          "number": "6"
         },
         {
           "rank": 75,
@@ -1207,7 +1289,8 @@
           "goals": 1,
           "pk": 0,
           "shots": 17,
-          "games": 10
+          "games": 10,
+          "number": "13"
         },
         {
           "rank": 75,
@@ -1217,7 +1300,8 @@
           "pk": 0,
           "shots": 18,
           "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/IKEUCHI_Aki.jpg"
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/IKEUCHI_Aki.jpg",
+          "number": "10"
         },
         {
           "rank": 75,
@@ -1227,7 +1311,8 @@
           "pk": 0,
           "shots": 19,
           "games": 9,
-          "photo": "https://www.swh2003.com/img/202627-7.jpg"
+          "photo": "https://www.swh2003.com/img/202627-7.jpg",
+          "number": "7"
         },
         {
           "rank": 75,
@@ -1261,7 +1346,8 @@
           "pk": 0,
           "shots": 27,
           "games": 10,
-          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/ab0081e78f58eb95dcf61c057666b79e-1.jpg"
+          "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/ab0081e78f58eb95dcf61c057666b79e-1.jpg",
+          "number": "25"
         }
       ],
       "photo_report": {
@@ -1386,9 +1472,186 @@
             "馬場紗月": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1388x2082_v-frms_webp_ceb38528-e335-4ea5-870e-c6ab6995886b.jpg"
           }
         }
+      },
+      "number_cache": {
+        "date": "2026-10-29",
+        "numbers": {
+          "伊藤唯": "2",
+          "齊藤日向子": "3",
+          "伊藤沙莉": "4",
+          "勝谷玲子": "5",
+          "矢津田明莉": "7",
+          "高橋比奈子": "9",
+          "千葉愛": "14",
+          "大西恋花": "16",
+          "太田涼日": "17",
+          "山本楓果": "21",
+          "武井柚香": "25",
+          "松原芽生": "29",
+          "土谷美晴": "31",
+          "長木希果": "42",
+          "白鳥咲瑛": "1",
+          "稲垣遙": "2",
+          "福井美月": "4",
+          "高橋菜津希": "5",
+          "遠藤瑚子": "8",
+          "米田夢宝": "9",
+          "倉元美鈴": "10",
+          "高田夏恋": "11",
+          "吉家香晴": "13",
+          "佐藤水紀": "14",
+          "大濱あみ": "15",
+          "小皆陽菜": "16",
+          "新垣杏奈": "17",
+          "峯崎夏海": "18",
+          "山本すみれ": "22",
+          "松本仁那": "23",
+          "小林夏那子": "26",
+          "相楽亜子": "28",
+          "宮越杏純": "30",
+          "玉井優莉": "33",
+          "武井瑞希": "34",
+          "柴田羅夢": "35",
+          "嘉藤莉緒": "38",
+          "野村奈央": "39",
+          "加藤理江": "1",
+          "外村美空": "3",
+          "村上小都里": "5",
+          "後藤穂香": "7",
+          "菅原ななみ": "9",
+          "後藤伊史": "11",
+          "村越可奈": "12",
+          "大川夏音": "13",
+          "笠井美里": "14",
+          "山田ひかる": "15",
+          "仲井里奈": "17",
+          "三谷宥乃": "22",
+          "片山杏美": "30",
+          "青木友梨香": "36",
+          "時高美紅": "39",
+          "若松杏海": "2",
+          "江口未珂": "3",
+          "岡部茉帆": "5",
+          "水谷有希": "6",
+          "塚本夏希": "7",
+          "中村美月": "8",
+          "山本想": "9",
+          "池内天紀": "10",
+          "村田莉菜": "11",
+          "鈴江紗希": "16",
+          "川尻真由": "18",
+          "江川凜": "19",
+          "澁川鈴菜": "20",
+          "倉持杏子": "23",
+          "山本奈波": "25",
+          "工藤歩希": "28",
+          "蔀萌香": "1",
+          "庄子彩": "2",
+          "布施絢葉": "5",
+          "吉田恋々菜": "6",
+          "本間桃": "7",
+          "岩崎裕加": "9",
+          "中野瑞己": "10",
+          "大河原凜": "11",
+          "黒田茉耶": "13",
+          "肥尾明里": "14",
+          "中村瑞希": "16",
+          "豊川季絵": "17",
+          "阿部菜摘": "18",
+          "原川菜々子": "19",
+          "勝俣里穗": "21",
+          "玉川華帆": "23",
+          "若尾和美": "24",
+          "馬場紗月": "32",
+          "米山涼美": "4",
+          "鈴木里歩": "5",
+          "勝又野乃花": "7",
+          "中村みづき": "8",
+          "森田美紅": "9",
+          "小野田果歩": "11",
+          "佐藤沙彩": "12",
+          "藤田実桜": "14",
+          "佐藤果林": "16",
+          "平井成美": "18",
+          "尾田緩奈": "19",
+          "杉本結月": "21",
+          "小倉杏梨沙": "23",
+          "愛沢南": "25",
+          "佐々木日菜乃": "27",
+          "宮下みのり": "33",
+          "川島桜子": "39",
+          "鈴木睦未": "99",
+          "渡邊純子": "1",
+          "白戸愛華": "5",
+          "小澤弥奈": "7",
+          "小笹璃緒": "8",
+          "長谷川ほの": "11",
+          "大西紗瑛": "13",
+          "宮崎世梨奈": "14",
+          "山田しおり": "18",
+          "下入佐優樹": "19",
+          "川谷明日香": "21",
+          "小塚美稲": "23",
+          "舘山香緒里": "24",
+          "小川汐音": "25",
+          "加藤心愛": "41",
+          "川村このは": "77",
+          "中田凪咲": "1",
+          "塚本明日香": "2",
+          "奥田愛理": "3",
+          "井戸里咲": "6",
+          "宮崎愛": "7",
+          "吉野遥菜": "8",
+          "江川涼": "9",
+          "網城安奈": "10",
+          "井口優": "11",
+          "高尾茜利": "13",
+          "尾川奈穂": "14",
+          "秋原美優": "17",
+          "岡野未央": "18",
+          "飯干絵里": "20",
+          "藤本奈津子": "23",
+          "加藤鈴菜": "39",
+          "見矢明日香": "1",
+          "伊藤沙世": "4",
+          "三宅怜": "5",
+          "田中ちひろ": "7",
+          "中島菜月": "8",
+          "野田桜菜": "9",
+          "高橋楓姫": "10",
+          "成田凜可": "11",
+          "山本彩加": "12",
+          "島田有嘉": "17",
+          "山川里佳子": "19",
+          "木村美桜": "20",
+          "高畠早奈恵": "21",
+          "青山葵": "22",
+          "鈴木心菜": "31",
+          "高橋京花": "32",
+          "タイスデリマオリベイラ": "8",
+          "伊崎有那": "9",
+          "パオラニコリレオンアラウジョ": "10",
+          "押立莉舞": "12",
+          "山口玲奈": "13",
+          "玉木賀子": "15",
+          "須藤優理亜": "18",
+          "田中夢": "19",
+          "浜田莉那": "20",
+          "アナシュルハ": "21",
+          "小森麻結": "23",
+          "堀田倖路": "25",
+          "田上晄妃": "26",
+          "伊東美遥": "27",
+          "西澤結菜": "29",
+          "清水ゆづき": "30",
+          "久保こころ": "32",
+          "柴帆七海": "48",
+          "伊藤かの果": "77",
+          "野口はな": "87"
+        }
       }
     },
-    "updated_at": "2026-10-29T13:22:30.491898+00:00"
+    "updated_at": "2026-10-29T13:43:16.484671+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3130,7 +3393,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-29T13:22:30.491898+00:00"
+    "updated_at": "2026-10-29T13:43:16.484671+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-10-29",
@@ -6081,7 +6344,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-29T13:22:30.491898+00:00"
+    "updated_at": "2026-10-29T13:43:16.484671+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -7607,7 +7870,7 @@
         }
       }
     },
-    "updated_at": "2026-10-29T13:22:30.491898+00:00"
+    "updated_at": "2026-10-29T13:43:16.484671+00:00"
   },
   "ALUMNI": {
     "date": "2026-10-29",
