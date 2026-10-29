@@ -2,12 +2,13 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-29T14:42:24.429399+00:00",
+    "updated_at": "2026-10-29T15:08:41.172632+00:00",
     "players": [
       {
         "number": "1",
         "name": "藤永 佳昭",
         "position": "PG",
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=8736",
         "photo": "https://www.fukuiblowinds.com/v=1790295991/files/user/common/1_Fujinaga_2026-27_HP.jpg"
       },
       {
@@ -138,12 +139,14 @@
             "eff": "0"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000439",
         "photo": "https://www.fukuiblowinds.com/v=1790296089/files/user/common/3_Tsukamoto_2026-27_HP.jpg"
       },
       {
         "number": "8",
         "name": "岡本 飛竜",
         "position": "PG",
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=8839",
         "photo": "https://www.fukuiblowinds.com/v=1791251129/files/user/common/8_Okamoto_2026-27_HP.jpg"
       },
       {
@@ -274,6 +277,7 @@
             "eff": "-2"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000579",
         "photo": "https://www.fukuiblowinds.com/v=1790296126/files/user/common/10_Khishigbaar_2026-27_HP.jpg"
       },
       {
@@ -404,6 +408,7 @@
             "eff": "0"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000471",
         "photo": "https://www.fukuiblowinds.com/v=1790296327/files/user/common/11_Naito_2026-27_HP.jpg"
       },
       {
@@ -534,6 +539,7 @@
             "eff": "10"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=30468",
         "photo": "https://www.fukuiblowinds.com/v=1790296426/files/user/common/12_Nishino_2026-27_HP.jpg"
       },
       {
@@ -664,6 +670,7 @@
             "eff": "7"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000115",
         "photo": "https://www.fukuiblowinds.com/v=1790296532/files/user/common/13_Kawashima_2026-27_HP.jpg"
       },
       {
@@ -794,6 +801,7 @@
             "eff": "24"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000494",
         "photo": "https://www.fukuiblowinds.com/v=1790296621/files/user/common/14_Dusan_2026-27_HP.jpg"
       },
       {
@@ -924,6 +932,7 @@
             "eff": "12"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000417",
         "photo": "https://www.fukuiblowinds.com/v=1790296734/files/user/common/15_BrownJr_2026-27_HP.jpg"
       },
       {
@@ -1054,6 +1063,7 @@
             "eff": "-3"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=5100000040",
         "photo": "https://www.fukuiblowinds.com/v=1790296771/files/user/common/17_Tsuneta_2026-27_HP.jpg"
       },
       {
@@ -1184,6 +1194,7 @@
             "eff": "-2"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=10844",
         "photo": "https://www.fukuiblowinds.com/v=1790296812/files/user/common/21_Mitsuda_2026-27_HP.jpg"
       },
       {
@@ -1314,6 +1325,7 @@
             "eff": "21"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000668",
         "photo": "https://www.fukuiblowinds.com/v=1790296847/files/user/common/41_WilliamsTawatari_2026-27_HP.jpg"
       },
       {
@@ -1444,6 +1456,7 @@
             "eff": "0"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=8571",
         "photo": "https://www.fukuiblowinds.com/v=1790296882/files/user/common/73_Tawatari_2026-27_HP.jpg"
       },
       {
@@ -1574,6 +1587,7 @@
             "eff": "0"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=40142",
         "photo": "https://www.fukuiblowinds.com/v=1790296914/files/user/common/93_Takahashi_2026-27_HP.jpg"
       }
     ],
@@ -3142,7 +3156,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=1363&tab=1",
-    "updated_at": "2026-10-29T14:42:25.623147+00:00",
+    "updated_at": "2026-10-29T15:08:42.477597+00:00",
     "players": [
       {
         "number": "0",
@@ -3272,6 +3286,7 @@
             "eff": "3"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000684",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/51000684_03.png"
       },
       {
@@ -3402,6 +3417,7 @@
             "eff": "-2"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=39518",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/39518_03.png"
       },
       {
@@ -3532,6 +3548,7 @@
             "eff": "30"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000162",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/51000162_03.png"
       },
       {
@@ -3662,6 +3679,7 @@
             "eff": "18"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=9246",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/9246_03.png"
       },
       {
@@ -3792,6 +3810,7 @@
             "eff": "7"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000644",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/51000644_03.png"
       },
       {
@@ -3922,6 +3941,7 @@
             "eff": "2"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=47047",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/47047_03.png"
       },
       {
@@ -4052,6 +4072,7 @@
             "eff": "3"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=32978",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/32978_03.png"
       },
       {
@@ -4182,6 +4203,7 @@
             "eff": "13"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=20022",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/20022_03.png"
       },
       {
@@ -4310,6 +4332,7 @@
             "eff": "8"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=52471",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/52471_03.png"
       },
       {
@@ -4438,6 +4461,7 @@
             "eff": "0"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=30470",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/30470_03.png"
       },
       {
@@ -4567,6 +4591,7 @@
             "eff": "1"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=15835",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/15835_03.png"
       },
       {
@@ -4697,6 +4722,7 @@
             "eff": "14"
           }
         ],
+        "url": "https://www.bleague.jp/roster_detail/?PlayerID=46901",
         "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/1363/2026-27/46901_03.png"
       }
     ],
