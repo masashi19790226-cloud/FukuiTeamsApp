@@ -147,6 +147,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.fukuiteams.app.data.TeamSelection
 import com.fukuiteams.app.data.openLabel
 import com.fukuiteams.app.data.DataRefresher
+import com.fukuiteams.app.data.PlayersRepository
 import com.fukuiteams.app.model.Team
 import com.fukuiteams.app.ui.components.TeamBadge
 import com.fukuiteams.app.ui.theme.Accent
@@ -1233,6 +1234,7 @@ private fun PastGameInline(
     val watchMethod = recordedWatchMethod(game.id, prefs)
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         PastGameResultCard(game, autoResult)
+        if (game.team == Team.BLOWINDS) GamePlayersCard(game)
         if (photos.isNotEmpty()) {
             GamePhotoSpread(
                 game = game,
@@ -1249,6 +1251,64 @@ private fun PastGameInline(
             outcome = outcome,
             photoCaption = photoCaption(game, autoResult, outcome, watchMethod)
         )
+    }
+}
+
+/**
+ * ブローウィンズの過去の試合で、この試合に出た福井の選手(得点の多い順に5人まで)。
+ * 押すとその選手の Bリーグ公式ページ(ハイライト動画)が開く。選手の試合ごとの成績(players.json)から、試合日が同じものを探す。
+ */
+@Composable
+private fun GamePlayersCard(game: Game) {
+    val context = LocalContext.current
+    // 選手データがまだ読めていなければ読む(一面などで読めていればそれを使う)
+    LaunchedEffect(Unit) {
+        if (PlayersRepository.latest.isEmpty()) runCatching { PlayersRepository.fetch() }
+    }
+    val date = runCatching {
+        "${game.sortKey.substring(0, 4)}-${game.sortKey.substring(4, 6)}-${game.sortKey.substring(6, 8)}"
+    }.getOrNull() ?: return
+    val rows = PlayersRepository.latest[Team.BLOWINDS.name]?.players.orEmpty()
+        .mapNotNull { p -> p.gameLog.firstOrNull { it.date == date }?.let { p to it } }
+        .sortedByDescending { it.second.points?.toIntOrNull() ?: -1 }
+        .take(5)
+    if (rows.isEmpty()) return
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        SectionTitle("この試合の福井の選手")
+        rows.forEach { (p, g) ->
+            val enabled = p.url.isNotBlank()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(if (enabled) Modifier.clickable { openUrl(context, p.url) } else Modifier)
+                    .padding(vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    (if (p.number.isNotBlank()) "#${p.number} " else "") + p.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    listOfNotNull(
+                        g.points?.let { "${it}点" },
+                        g.rebounds?.let { "${it}R" },
+                        g.assists?.let { "${it}A" }
+                    ).joinToString("・"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = InkSoft,
+                    maxLines = 1
+                )
+                if (enabled) {
+                    Text("▶ハイライト", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = Accent, maxLines = 1)
+                }
+            }
+            ThinRule(color = LineGray)
+        }
     }
 }
 
@@ -1452,10 +1512,18 @@ private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
+                val sourceUrl = game.resultSourceUrl(result)
                 OutlinedButton(
-                    onClick = { openUrl(context, game.resultSourceUrl(result)) },
+                    onClick = { openUrl(context, sourceUrl) },
                     modifier = Modifier.fillMaxWidth()
-                ) { Text("取得元のページで詳報を見る") }
+                ) {
+                    // ブローウィンズの試合は Bリーグ公式の試合ページ(試合のハイライト動画・ボックススコアがある)
+                    Text(
+                        if (game.team == Team.BLOWINDS && sourceUrl.contains("bleague.jp/game_detail")) "▶ ハイライト動画・ボックススコア(Bリーグ公式)"
+                        else "取得元のページで詳報を見る",
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
                 return@Column
             }
 

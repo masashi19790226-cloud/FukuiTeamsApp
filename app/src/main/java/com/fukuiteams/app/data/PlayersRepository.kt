@@ -1,5 +1,7 @@
 package com.fukuiteams.app.data
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -31,6 +33,8 @@ data class PlayerStats(
     val efficiency: String?,
     /** 顔写真のURL(Bリーグ公式の画像)。無ければ空 */
     val photo: String = "",
+    /** Bリーグ公式の選手ページ(成績・ハイライト動画)。無ければ空 */
+    val url: String = "",
     /** 今季のシュートの成功数・試投数(合計)。Bリーグ公式の選手ページから。無ければ null */
     val fieldGoalsMade: String? = null,
     val fieldGoalsAttempted: String? = null,
@@ -95,6 +99,9 @@ const val BLOWINDS_OPP_KEY = "BLOWINDS_OPP"
 
 object PlayersRepository {
 
+    /** 最後に読めた選手一覧(試合の詳細で「この試合の福井の選手」を出すのに使う。読めるまでは空) */
+    var latest by androidx.compose.runtime.mutableStateOf<Map<String, TeamPlayers>>(emptyMap())
+
     /** チーム名(Team.name)→ 選手一覧。取得できなければ空。 */
     suspend fun fetch(): Map<String, TeamPlayers> = withContext(Dispatchers.IO) {
         try {
@@ -128,6 +135,7 @@ object PlayersRepository {
                         freeThrowPct = v("ft_pct"),
                         efficiency = v("eff"),
                         photo = p.optString("photo"),
+                        url = v("url").orEmpty(),
                         fieldGoalsMade = v("fgm"),
                         fieldGoalsAttempted = v("fga"),
                         threesMade = v("three_m"),
@@ -164,6 +172,7 @@ object PlayersRepository {
                     leagueTeams = o.optInt("league_teams", 0)
                 )
             }
+            if (map.isNotEmpty()) latest = map
             map
         } catch (e: Exception) {
             emptyMap()

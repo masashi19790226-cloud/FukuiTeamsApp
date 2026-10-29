@@ -1633,6 +1633,18 @@ private fun FeatureHero(
                 // (写真より本文が長いときは、写真の下から全幅で続ける。下に空きができないように)
                 Headline(story.headline, fontSize = 21)
                 FeatureWrapBody(story, results, standings)
+                // ブローウィンズの選手の記事は、その選手の Bリーグ公式ページ(ハイライト動画)へ
+                if (story.playerUrl.isNotBlank()) {
+                    Text(
+                        "▶ この選手のハイライト動画(Bリーグ公式) ›",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Accent,
+                        modifier = Modifier
+                            .clickable { openUrl(context, story.playerUrl) }
+                            .padding(vertical = 4.dp)
+                    )
+                }
             }
         }
         if (stories.size > 1) {

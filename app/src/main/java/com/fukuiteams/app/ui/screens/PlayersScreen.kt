@@ -1367,6 +1367,17 @@ private fun RosterCard(
                 }
             )
         }
+        // Bリーグ公式の選手ページ(成績・ハイライト動画)へのリンク
+        if (player.url.isNotBlank()) {
+            val context = LocalContext.current
+            Text(
+                "▶ ハイライト動画・Bリーグ公式の選手ページ ›",
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = Accent,
+                modifier = Modifier.clickable { openPlayersUrl(context, player.url) }.padding(vertical = 2.dp)
+            )
+        }
         if (!hasStats) {
             Text(
                 "今季の出場なし",

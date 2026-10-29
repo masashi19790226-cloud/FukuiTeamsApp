@@ -631,6 +631,9 @@ def build_team_players(team_id, label):
     for p in players:
         p.pop("_type", None)
         pid = p.pop("pid", None)
+        # Bリーグ公式の選手ページ(成績・ハイライト動画がある)。アプリの選手カードからリンクする
+        if pid:
+            p["url"] = f"{BLEAGUE}/roster_detail/?PlayerID={pid}"
         club_photo = club.get(("pid", pid)) or club.get(("name", standings._name_key(p.get("name", ""))))
         if club_photo:
             p["photo"] = club_photo

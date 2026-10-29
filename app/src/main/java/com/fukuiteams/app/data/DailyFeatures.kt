@@ -40,7 +40,9 @@ data class FeatureStory(
      * 記事の写真が読み込めなかったときに順に試す、代わりの選手の写真(URL と選手名)。
      * ニュースの画像は直リンクを断られて読めないことがあるため、必ず何かの写真を出せるようにする。
      */
-    val photoAlternates: List<Pair<String, String>> = emptyList()
+    val photoAlternates: List<Pair<String, String>> = emptyList(),
+    /** ブローウィンズの選手の記事のときの、その選手の Bリーグ公式ページ(ハイライト動画)。無ければ空 */
+    val playerUrl: String = ""
 )
 
 private val JST: ZoneId = ZoneId.of("Asia/Tokyo")
@@ -431,6 +433,7 @@ private fun spotlight(
                     (p.minutesPerGame?.let { "(出場${it})" } ?: "") + "。$lastLine" +
                     (trend?.let { "$it。" } ?: ""),
                 photo = p.photo,
+                playerUrl = p.url,
                 // 写真の選手の名前(一面の写真には必ず名前を出す)
                 photoCaption = head,
                 bigNumber = p.points,
@@ -910,6 +913,7 @@ private fun teamLeaders(team: Team, players: Map<String, TeamPlayers>): List<Fea
                 (reb?.let { "リバウンドは${it.name}(平均${it.rebounds})、" } ?: "") +
                 (ast?.let { "アシストは${it.name}(平均${it.assists})がチーム1位。" } ?: ""),
             photo = pts.photo,
+            playerUrl = pts.url,
             // 写真の選手の名前(一面の写真には必ず名前を出す)
             photoCaption = pts.head(),
             bigNumber = pts.points,
@@ -934,6 +938,7 @@ private fun sharpshooter(team: Team, players: Map<String, TeamPlayers>): List<Fe
                 body = "今季の3ポイント成功率は${p.threePct}(${p.threesMade}/${p.threesAttempted})で、チーム1位(10本以上打った選手の中で)。" +
                     "外からの一撃に注目したい。",
                 photo = p.photo,
+                playerUrl = p.url,
                 // 写真の選手の名前(一面の写真には必ず名前を出す)
                 photoCaption = p.head(),
                 bigNumber = p.threePct?.removeSuffix("%"),
@@ -950,6 +955,7 @@ private fun sharpshooter(team: Team, players: Map<String, TeamPlayers>): List<Fe
                 body = "今季のフリースロー成功率は${p.freeThrowPct}(${p.freeThrowsMade}/${p.freeThrowsAttempted})でチーム1位(10本以上打った選手の中で)。" +
                     "接戦の終盤で頼りになる。",
                 photo = p.photo,
+                playerUrl = p.url,
                 // 写真の選手の名前(一面の写真には必ず名前を出す)
                 photoCaption = p.head(),
                 bigNumber = p.freeThrowPct?.removeSuffix("%"),
@@ -981,6 +987,7 @@ private fun lastGameHeroes(team: Team, players: Map<String, TeamPlayers>, games:
             body = "$dateText の${opp}戦で二桁得点を挙げたのは、" +
                 doubles.joinToString("、") { "${it.first.name}(${it.second.points}点)" } + "。",
             photo = doubles.first().first.photo,
+            playerUrl = doubles.first().first.url,
             // 写真の選手の名前(一面の写真には必ず名前を出す)
             photoCaption = doubles.first().first.head(),
             bigNumber = "${doubles.size}",
@@ -998,6 +1005,7 @@ private fun lastGameHeroes(team: Team, players: Map<String, TeamPlayers>, games:
                 body = "$dateText の${opp}戦、ベンチから出た${p.head()}が${g.minutes ?: "-"}の出場で${g.points}点" +
                     (g.fieldGoalsMade?.let { m -> g.fieldGoalsAttempted?.let { a -> "(FG $m/$a)" } } ?: "") + "。流れを変える働きを見せた。",
                 photo = p.photo,
+                playerUrl = p.url,
                 // 写真の選手の名前(一面の写真には必ず名前を出す)
                 photoCaption = p.head(),
                 bigNumber = g.points,
@@ -1021,6 +1029,7 @@ private fun ironman(team: Team, players: Map<String, TeamPlayers>): List<Feature
             headline = "出場時間トップは${p.head()}",
             body = "1試合平均${p.minutesPerGame}の出場はチームで最長。その間に平均${p.points ?: "-"}点・${p.rebounds ?: "-"}リバウンド・${p.assists ?: "-"}アシストを記録している。",
             photo = p.photo,
+            playerUrl = p.url,
             // 写真の選手の名前(一面の写真には必ず名前を出す)
             photoCaption = p.head()
         )
