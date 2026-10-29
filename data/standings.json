@@ -1267,7 +1267,7 @@
       "photo_report": {
         "福井丸岡ラック": "ok",
         "エスポラーダ北海道イルネーヴェ": "8人(前回の分)・得点表に8人",
-        "バルドラール浦安ラス・ボニータス": "10人・得点表に10人",
+        "バルドラール浦安ラス・ボニータス": "10人(前回の分)・得点表に10人",
         "立川アスレティックFCレディース": "10人(前回の分)・得点表に10人",
         "SWHレディース西宮": "13人(前回の分)・得点表に13人",
         "アルコ神戸": "12人(前回の分)・得点表に12人",
@@ -1388,7 +1388,7 @@
         }
       }
     },
-    "updated_at": "2026-10-28T20:28:58.660711+00:00"
+    "updated_at": "2026-10-29T00:28:56.000392+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3130,7 +3130,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-28T20:28:58.660711+00:00"
+    "updated_at": "2026-10-29T00:28:56.000392+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-10-29",
@@ -5062,7 +5062,7 @@
             "home": "4-1",
             "away": "3-1",
             "last5": "3-2",
-            "streak": "W4",
+            "streak": "L1",
             "games": 9,
             "progress": "15%",
             "clinch": ""
@@ -5167,7 +5167,7 @@
             "home": "5-0",
             "away": "1-3",
             "last5": "3-2",
-            "streak": "L1",
+            "streak": "W2",
             "games": 9,
             "progress": "15%",
             "clinch": ""
@@ -5187,7 +5187,7 @@
             "home": "4-1",
             "away": "3-3",
             "last5": "3-2",
-            "streak": "W1",
+            "streak": "L2",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5207,7 +5207,7 @@
             "home": "4-2",
             "away": "1-2",
             "last5": "4-1",
-            "streak": "L1",
+            "streak": "W4",
             "games": 9,
             "progress": "15%",
             "clinch": ""
@@ -5227,7 +5227,7 @@
             "home": "2-4",
             "away": "1-4",
             "last5": "0-5",
-            "streak": "L1",
+            "streak": "L6",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5272,7 +5272,7 @@
             "home": "3-3",
             "away": "3-2",
             "last5": "4-1",
-            "streak": "L2",
+            "streak": "W1",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5292,7 +5292,7 @@
             "home": "2-2",
             "away": "3-4",
             "last5": "2-3",
-            "streak": "W2",
+            "streak": "L1",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5332,7 +5332,7 @@
             "home": "1-4",
             "away": "0-6",
             "last5": "0-5",
-            "streak": "W1",
+            "streak": "L9",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5357,7 +5357,7 @@
             "home": "5-1",
             "away": "3-2",
             "last5": "3-2",
-            "streak": "W1",
+            "streak": "L2",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5397,7 +5397,7 @@
             "home": "2-3",
             "away": "4-2",
             "last5": "4-1",
-            "streak": "L1",
+            "streak": "W4",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5417,7 +5417,7 @@
             "home": "2-4",
             "away": "3-2",
             "last5": "2-3",
-            "streak": "L1",
+            "streak": "W2",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5437,7 +5437,7 @@
             "home": "1-6",
             "away": "0-4",
             "last5": "0-5",
-            "streak": "W1",
+            "streak": "L9",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5502,7 +5502,7 @@
             "home": "3-2",
             "away": "2-4",
             "last5": "2-3",
-            "streak": "W1",
+            "streak": "W2",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5522,7 +5522,7 @@
             "home": "3-2",
             "away": "2-4",
             "last5": "3-2",
-            "streak": "L2",
+            "streak": "W1",
             "games": 11,
             "progress": "18.33%",
             "clinch": ""
@@ -5632,7 +5632,7 @@
           "home": "4-1",
           "away": "3-1",
           "last5": "3-2",
-          "streak": "W4",
+          "streak": "L1",
           "games": 9,
           "progress": "15%",
           "clinch": "",
@@ -5674,7 +5674,7 @@
           "home": "5-1",
           "away": "3-2",
           "last5": "3-2",
-          "streak": "W1",
+          "streak": "L2",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -5695,7 +5695,7 @@
           "home": "5-0",
           "away": "1-3",
           "last5": "3-2",
-          "streak": "L1",
+          "streak": "W2",
           "games": 9,
           "progress": "15%",
           "clinch": "",
@@ -5716,7 +5716,7 @@
           "home": "4-1",
           "away": "3-3",
           "last5": "3-2",
-          "streak": "W1",
+          "streak": "L2",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -5779,7 +5779,7 @@
           "home": "4-2",
           "away": "1-2",
           "last5": "4-1",
-          "streak": "L1",
+          "streak": "W4",
           "games": 9,
           "progress": "15%",
           "clinch": "",
@@ -5800,7 +5800,7 @@
           "home": "3-3",
           "away": "3-2",
           "last5": "4-1",
-          "streak": "L2",
+          "streak": "W1",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -5821,7 +5821,7 @@
           "home": "2-3",
           "away": "4-2",
           "last5": "4-1",
-          "streak": "L1",
+          "streak": "W4",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -5863,7 +5863,7 @@
           "home": "2-4",
           "away": "3-2",
           "last5": "2-3",
-          "streak": "L1",
+          "streak": "W2",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -5884,7 +5884,7 @@
           "home": "3-2",
           "away": "2-4",
           "last5": "2-3",
-          "streak": "W1",
+          "streak": "W2",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -5905,7 +5905,7 @@
           "home": "2-2",
           "away": "3-4",
           "last5": "2-3",
-          "streak": "W2",
+          "streak": "L1",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -5926,7 +5926,7 @@
           "home": "3-2",
           "away": "2-4",
           "last5": "3-2",
-          "streak": "L2",
+          "streak": "W1",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -6010,7 +6010,7 @@
           "home": "2-4",
           "away": "1-4",
           "last5": "0-5",
-          "streak": "L1",
+          "streak": "L6",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -6031,7 +6031,7 @@
           "home": "1-4",
           "away": "0-6",
           "last5": "0-5",
-          "streak": "W1",
+          "streak": "L9",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -6052,7 +6052,7 @@
           "home": "1-6",
           "away": "0-4",
           "last5": "0-5",
-          "streak": "W1",
+          "streak": "L9",
           "games": 11,
           "progress": "18.33%",
           "clinch": "",
@@ -6081,7 +6081,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-28T20:28:58.660711+00:00"
+    "updated_at": "2026-10-29T00:28:56.000392+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -7607,7 +7607,7 @@
         }
       }
     },
-    "updated_at": "2026-10-28T20:28:58.660711+00:00"
+    "updated_at": "2026-10-29T00:28:56.000392+00:00"
   },
   "ALUMNI": {
     "date": "2026-10-29",
