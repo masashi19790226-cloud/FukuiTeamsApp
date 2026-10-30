@@ -5562,5 +5562,15 @@
     "source": "ORICON NEWS",
     "image": "https://www.bing.com/th?id=ONUT.kHyROLpEo_bYp9rJ8tA_Bw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-30T07:01:07.659526+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51827",
+    "team": "BLOWINDS",
+    "title": "【ウインターカップ2026】福井県代表順位決定戦を福井ブローウィンズ ホームゲーム会場で開催！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51827",
+    "published": "2026-10-30T09:00:00+09:00",
+    "detected_at": "2026-10-30T08:01:09.234188+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
   }
 ]
