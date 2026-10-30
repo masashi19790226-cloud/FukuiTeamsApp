@@ -5464,5 +5464,29 @@
     "source": "ライブドアニュース",
     "image": "https://www.bing.com/th?id=ONUT.pCWCvs9AndaybWZpSUp7ow&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-30T03:41:09.000927+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17775611872596707297",
+    "team": "BLOWINDS",
+    "title": "【参加者募集】小浜から行く！福井ブローウィンズ応援バスツアー",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www1.city.obama.fukui.jp/kanko-bunka/ibento/p007279.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3ymteCzCuHpbTPWF7XVc7d",
+    "published": "2026-10-30T03:02:55Z",
+    "detected_at": "2026-10-30T04:01:08.077662+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12026626044564055006",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合を実施 - 紀伊民報",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.agara.co.jp/article/706068&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0UjFFT0h87HuBopKr5ulrU",
+    "published": "2026-10-30T02:52:15Z",
+    "detected_at": "2026-10-30T04:01:08.077726+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:311148715241840067",
+    "team": "BLOWINDS",
+    "title": "【福井ブローウィンズ Girls U15】第3回 練習体験会 開催のお知らせ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51814&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2yL4_BoyaUXWIbVObHUvRE",
+    "published": "2026-10-30T02:28:15Z",
+    "detected_at": "2026-10-30T04:01:08.077749+00:00"
   }
 ]
