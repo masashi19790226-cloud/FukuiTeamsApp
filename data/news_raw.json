@@ -5508,5 +5508,29 @@
     "source": "news.dellows.jp",
     "image": "https://www.bing.com/th?id=ONUT.lqxR0mB4vbBVGJ9uHk47Cg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-30T04:21:11.348625+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6283400091349906631",
+    "team": "BLOWINDS",
+    "title": "アトムがB.LEAGUE福井ブローウィンズ冠試合ATOM CUPを実施 - Dellows News",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.dellows.jp/964404/%3Ffrom%3Dtop_category_area&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3jpBaHYSvd1QkuKjO_i8_n",
+    "published": "2026-10-30T04:26:56Z",
+    "detected_at": "2026-10-30T04:41:07.946871+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4279979197240171213",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合を実施",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.livedoor.com/pr_topics/detail/32690964/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1TEWIOhELf_YBcYaeDGtk0",
+    "published": "2026-10-30T04:00:26Z",
+    "detected_at": "2026-10-30T04:41:07.946894+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11669253277665479550",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合を実施 | Digital PR ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.okinawatimes.co.jp/articles/-/1955963&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0DCUIIFlX5uwsLYlG5sIt9",
+    "published": "2026-10-30T03:18:12Z",
+    "detected_at": "2026-10-30T04:41:07.946908+00:00"
   }
 ]
