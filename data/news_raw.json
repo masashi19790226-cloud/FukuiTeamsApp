@@ -5552,5 +5552,15 @@
     "source": "CNET Japan",
     "image": "https://www.bing.com/th?id=ONUT.eA7FagLbdt__eXpDsa_vIg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-30T06:21:09.288354+00:00"
+  },
+  {
+    "id": "bing:https://www.oricon.co.jp/pressrelease/3062889/",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合を実施",
+    "link": "https://www.oricon.co.jp/pressrelease/3062889/",
+    "published": "2026-10-23T17:00:00+00:00",
+    "source": "ORICON NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.kHyROLpEo_bYp9rJ8tA_Bw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-30T07:01:07.659526+00:00"
   }
 ]
