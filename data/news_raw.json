@@ -5582,5 +5582,21 @@
     "source": "Yahoo!ニュース",
     "image": "https://www.bing.com/th?id=ONUT.2w82wZD0OaBjjrZW-0g4Vg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-30T10:01:08.207355+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3908690072341366230",
+    "team": "BLOWINDS",
+    "title": "【ウインターカップ2026】福井県代表順位決定戦を福井ブローウィンズ ホームゲーム会場で開催！",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51827&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1GFboPYZMwvqLf9OlEX_50",
+    "published": "2026-10-30T08:58:22Z",
+    "detected_at": "2026-10-30T11:01:10.425091+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3158995826749432093",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合を実施 - PR TIMES",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://prtimes.jp/main/html/rd/p/000000785.000043111.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw194Z2V3orn7Pr2cq-UqREA",
+    "published": "2026-10-30T08:03:25Z",
+    "detected_at": "2026-10-30T11:01:10.425139+00:00"
   }
 ]
