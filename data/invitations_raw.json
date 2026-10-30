@@ -120,5 +120,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51824&ct=ga&cd=CAIyGmQxOGI1ZDQ5YjkwYjMxNzM6Y29tOmphOlVT&usg=AOvVaw10F2ZRW8B2VdRdbIMJLAnh",
     "published": "2026-10-29T10:07:28Z",
     "detected_at": "2026-10-29T17:41:06.719686+00:00"
+  },
+  {
+    "id": "official:https://www.fukuiblowinds.com/news/detail/id=51823",
+    "team": "BLOWINDS",
+    "title": "【イベント情報】ソフトバンク主催イベント参加のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51823",
+    "published": "2026-10-30T09:00:00+09:00",
+    "detected_at": "2026-10-30T01:41:09.140789+00:00",
+    "snippet": "※特典チケットはご契約当日にお渡しいたします",
+    "source": "ブローウィンズ公式"
   }
 ]

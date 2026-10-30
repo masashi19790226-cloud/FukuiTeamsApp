@@ -5396,5 +5396,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2115624661560222130&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2dvl4nj6DhJARClOr6tOUJ",
     "published": "2026-10-29T09:42:55Z",
     "detected_at": "2026-10-29T18:41:08.624809+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51823",
+    "team": "BLOWINDS",
+    "title": "【イベント情報】ソフトバンク主催イベント参加のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51823",
+    "published": "2026-10-30T09:00:00+09:00",
+    "detected_at": "2026-10-30T01:41:09.140789+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_EVENT.JPG"
   }
 ]
