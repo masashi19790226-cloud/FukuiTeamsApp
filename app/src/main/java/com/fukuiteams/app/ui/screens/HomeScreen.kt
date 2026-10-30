@@ -377,6 +377,14 @@ fun HomeScreen(
                 }
             }
 
+            // 節目達成(最近の試合で通算の節目に届いた選手。試合の日から2日まで)
+            // (過去の記録 history.json を読み終えたら数え直す。無いときは欄ごと出さない)
+            val achToday = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"))
+            val achievements = (selectedTeam?.let { listOf(it) } ?: Team.values().toList())
+                .flatMap { com.fukuiteams.app.data.recentAchievements(it, achToday) }
+            if (achievements.isNotEmpty()) {
+                item { AchievementCard(achievements) }
+            }
 
             // 一面の「次の試合」。次の試合の日にほかのチームの試合もあれば、同じ日の試合をすべて並べる
             // (並びは開始時刻順。「時間未定」の試合は後ろ)。本日の試合は上に出しているので、ここには出さない
@@ -1498,12 +1506,15 @@ private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
             .padding(horizontal = 8.dp, vertical = 5.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
+        // この試合で節目に届くかもしれない選手(過去の記録の通算から)
+        val reach = remember(game.team, history) { com.fukuiteams.app.data.reachableNextGame(game.team) }
         if (h2h == null) {
             Text(
                 "${game.opponent}とは、アプリの記録では初対戦",
                 style = MaterialTheme.typography.labelMedium,
                 color = InkSoft
             )
+            ReachableLines(reach)
             return@Column
         }
         Text(
@@ -1545,12 +1556,56 @@ private fun HeadToHeadBox(game: Game, results: Map<String, RemoteGameResult>) {
                 )
             }
         }
+        ReachableLines(reach)
         Text(
             if (h2h.usesHistory) "※公式サイトの過去の試合の記録と、このアプリが記録している試合から数えています(公式戦)"
             else "※このアプリが記録している試合(今季など)から数えています",
             style = MaterialTheme.typography.labelSmall,
             color = InkSoft
         )
+    }
+}
+
+/** 「この試合で節目に届くかも」(対戦成績の欄の中) */
+@Composable
+private fun ReachableLines(list: List<com.fukuiteams.app.data.ReachableMilestone>) {
+    if (list.isEmpty()) return
+    Text("この試合で節目に届くかも", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = NewsRed)
+    list.forEach { r ->
+        Text("・${r.player.name} ${r.text}", style = MaterialTheme.typography.bodySmall, color = Ink)
+    }
+}
+
+/** 一面の「節目達成」の欄(最近の試合で通算の節目に届いた選手) */
+@Composable
+private fun AchievementCard(list: List<com.fukuiteams.app.data.Achievement>) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        SectionLabel("節目達成")
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Paper)
+                .border(1.dp, Ink)
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            list.forEach { a ->
+                Row(modifier = Modifier.height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Box(modifier = Modifier.width(5.dp).fillMaxHeight().background(a.team.color))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(a.team.displayName, style = MaterialTheme.typography.labelMedium, color = a.team.color)
+                        Text("${a.player.name}、${a.text}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = Ink)
+                        val d = runCatching { java.time.LocalDate.parse(a.date) }.getOrNull()
+                        Text(
+                            "${d?.let { "${it.monthValue}/${it.dayOfMonth}" } ?: a.date}の${a.opponent}戦で",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = InkSoft
+                        )
+                    }
+                }
+            }
+            Text("公式の試合の記録から数えた、クラブでの通算の記録です。", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+        }
     }
 }
 

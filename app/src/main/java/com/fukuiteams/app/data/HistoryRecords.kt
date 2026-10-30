@@ -231,3 +231,187 @@ fun upcomingMilestones(team: Team): List<Milestone> {
     }
     return near.sortedBy { it.left }
 }
+
+// ---------- 記録への挑戦(Web版の history.js の milestoneBoard など) ----------
+
+/** 得点の節目(表の先は同じ間隔で続ける)。ブローウィンズは点、ほかはゴール */
+private fun goalStepAfter(team: Team, v: Int): Int {
+    val (list, every) = when (team) {
+        Team.BLOWINDS -> listOf(500, 1000, 1500, 2000, 2500, 3000) to 500
+        Team.THUNDER -> listOf(50, 100, 150, 200, 300) to 100
+        else -> listOf(10, 20, 30, 50, 100, 150, 200) to 50
+    }
+    list.firstOrNull { it > v }?.let { return it }
+    val last = list.last()
+    return last + (Math.floorDiv(v - last, every) + 1) * every
+}
+
+/** 出場試合数の節目 */
+private fun appsStepAfter(v: Int): Int {
+    val list = listOf(50, 100, 150, 200, 250, 300)
+    list.firstOrNull { it > v }?.let { return it }
+    return 300 + (Math.floorDiv(v - 300, 100) + 1) * 100
+}
+
+/** 節目の得点の単位 */
+fun goalUnit(team: Team): String = if (team == Team.BLOWINDS) "点" else "得点"
+
+/** 次の節目(step)まであと left。games は通算の1試合平均で数えた「早ければ何試合後」(平均が0なら null) */
+data class NextStep(val step: Int, val left: Int, val games: Int? = null)
+
+/** 歴代の得点の順位で、ひとつ上の選手(抜くまでの数 gap) */
+data class AbovePlayer(val name: String, val goals: Int, val gap: Int, val rank: Int)
+
+/** 「記録への挑戦」の1人分 */
+data class MilestoneRow(
+    val player: HistoryPlayer,
+    /** 通算の1試合平均の得点(得点÷出場) */
+    val avg: Double,
+    val goal: NextStep,
+    /** 出場の節目(丸岡RUCKで出場が分からないときは null) */
+    val apps: NextStep?,
+    /** 歴代の得点の順位(得点が0なら null) */
+    val rank: Int?,
+    val above: AbovePlayer?,
+    val near: Int
+)
+
+/**
+ * 今の選手の「記録への挑戦」の一覧(次の節目までの近い順)。
+ * 1人ずつ:通算の出場・得点、次の得点の節目まであといくつか(通算の1試合平均から、早ければ何試合後か)、
+ * 次の出場の節目、歴代の得点の順位と、ひとつ上の選手までの差。
+ */
+fun milestoneBoard(team: Team): List<MilestoneRow> {
+    val data = HistoryRepository.data[team] ?: return emptyList()
+    val all = data.players
+    val knowApps = team != Team.RAC || data.playersFromLineup
+    val byGoals = all.filter { it.goals > 0 }.sortedWith(compareByDescending<HistoryPlayer> { it.goals }.thenBy { it.name })
+    val rows = all.filter { it.now == true }.map { p ->
+        val avg = if (p.apps > 0) p.goals.toDouble() / p.apps else 0.0
+        val gStep = goalStepAfter(team, p.goals)
+        val gLeft = gStep - p.goals
+        val goal = NextStep(gStep, gLeft, if (avg > 0) kotlin.math.ceil(gLeft / avg).toInt() else null)
+        val apps = if (knowApps) appsStepAfter(p.apps).let { NextStep(it, it - p.apps) } else null
+        var rank: Int? = null
+        var above: AbovePlayer? = null
+        if (p.goals > 0) {
+            rank = byGoals.indexOfFirst { it.goals == p.goals } + 1
+            val higher = byGoals.filter { it.goals > p.goals }
+            if (higher.isNotEmpty()) {
+                val a = higher.last()
+                above = AbovePlayer(a.name, a.goals, a.goals - p.goals + 1, byGoals.indexOfFirst { it.goals == a.goals } + 1)
+            }
+        }
+        val near = minOf(goal.games ?: 9999, apps?.left ?: 9999)
+        MilestoneRow(p, avg, goal, apps, rank, above, near)
+    }
+    return rows.sortedWith(compareBy<MilestoneRow> { it.near }.thenByDescending { it.player.goals }.thenBy { it.player.name })
+}
+
+/** 次の試合で節目に届くかもしれない選手1人分(例「通算150得点まであと2」) */
+data class ReachableMilestone(val player: HistoryPlayer, val text: String, val left: Int)
+
+/**
+ * 次の試合で節目に届くかもしれない選手(「次の試合」の欄に出す)。
+ * 得点:残りが通算の1試合平均(四捨五入)以下。出場:あと1試合。歴代最多得点:2位で、1位を抜くのに必要な数が平均以下。
+ * 最近出場していない選手は出さない(チームの最後の試合から30日より前が最後の出場)。
+ */
+fun reachableNextGame(team: Team): List<ReachableMilestone> {
+    val data = HistoryRepository.data[team] ?: return emptyList()
+    val lastTeam = data.matches.lastOrNull()?.localDate ?: return emptyList()
+    val unit = goalUnit(team)
+    val out = mutableListOf<ReachableMilestone>()
+    for (r in milestoneBoard(team)) {
+        val p = r.player
+        val pl = runCatching { java.time.LocalDate.parse(p.last) }.getOrNull() ?: continue
+        if (java.time.temporal.ChronoUnit.DAYS.between(pl, lastTeam) > 30) continue
+        val per = Math.round(r.avg).toInt()
+        val ab = r.above
+        if (ab != null && ab.rank == 1 && ab.gap <= per) {
+            out += ReachableMilestone(p, "歴代最多得点まであと${ab.gap}", ab.gap)
+        } else if (per >= 1 && r.goal.left <= per) {
+            out += ReachableMilestone(p, "通算${r.goal.step}${unit}まであと${r.goal.left}", r.goal.left)
+        }
+        if (r.apps != null && r.apps.left == 1) out += ReachableMilestone(p, "通算${r.apps.step}試合出場まであと1", 1)
+    }
+    return out.take(3)
+}
+
+/** 最近の試合での節目達成1つ分 */
+data class Achievement(
+    val team: Team,
+    val player: HistoryPlayer,
+    /** 例「通算1000点を達成」 */
+    val text: String,
+    val date: String,
+    val dateLabel: String,
+    val opponent: String,
+    /** goals・apps・top */
+    val kind: String
+)
+
+/**
+ * 最近の試合で節目を達成した選手(試合の日から2日まで。一面に出す)。
+ * 選手の試合ごとの記録の最後の試合で、通算の得点・出場が節目を越えたか、歴代最多得点になったか。
+ */
+fun recentAchievements(team: Team, today: java.time.LocalDate): List<Achievement> {
+    val data = HistoryRepository.data[team] ?: return emptyList()
+    val unit = goalUnit(team)
+    val knowApps = team != Team.RAC || data.playersFromLineup
+    val out = mutableListOf<Achievement>()
+    for (p in data.players.filter { it.now == true && it.log.isNotEmpty() }) {
+        val last = p.log.sortedBy { it.date }.last()
+        val d = last.localDate ?: continue
+        val diff = java.time.temporal.ChronoUnit.DAYS.between(d, today)
+        if (diff < 0 || diff > 2) continue
+        val before = p.goals - last.points
+        val step = goalStepAfter(team, before)
+        fun add(text: String, kind: String) {
+            out += Achievement(team, p, text, last.date, last.dateLabel, last.opponent, kind)
+        }
+        if (last.points > 0 && step <= p.goals) add("通算${step}${unit}を達成", "goals")
+        if (knowApps && p.apps == appsStepAfter(p.apps - 1)) add("通算${p.apps}試合出場を達成", "apps")
+        if (last.points > 0) {
+            val best = data.players.filter { it !== p }.maxOfOrNull { it.goals } ?: 0
+            if (p.goals > best && before <= best && best > 0) add("歴代最多得点に(通算${p.goals}${unit})", "top")
+        }
+    }
+    return out.sortedWith(compareByDescending<Achievement> { it.date }.thenBy { it.player.name })
+}
+
+/** シーズンのペースの1項目(例 勝率 40% / 最高 92%(2023-24 46勝4敗)) */
+data class PaceRow(val label: String, val now: String, val best: String, val bestSeason: String, val ahead: Boolean)
+
+/** 今季のリーグ戦のペース */
+data class SeasonPace(val season: String, val leagueName: String?, val record: String, val rows: List<PaceRow>)
+
+/**
+ * 今季のリーグ戦のペースを、クラブの過去のシーズン(リーグ戦10試合以上)の最高とくらべる。
+ * 今季=いちばん新しいシーズンで、最後の試合が今日から60日以内・リーグ戦3試合以上のとき。
+ */
+fun seasonPace(team: Team, today: java.time.LocalDate): SeasonPace? {
+    val matches = HistoryRepository.matchesFor(team)
+    if (matches.isEmpty()) return null
+    val sums = seasonSummaries(team, matches).filter { (it.league?.games ?: 0) > 0 }
+    if (sums.size < 2) return null
+    val cur = sums[0]
+    val curLeague = cur.league ?: return null
+    val lastD = matches.filter { it.season == cur.season }.sortedBy { it.date }.lastOrNull()?.localDate ?: return null
+    if (java.time.temporal.ChronoUnit.DAYS.between(lastD, today) > 60 || curLeague.games < 3) return null
+    val past = sums.drop(1).filter { (it.league?.games ?: 0) >= 10 }
+    if (past.isEmpty()) return null
+    fun rate(w: WinLoss) = w.win.toDouble() / w.games
+    fun sc(w: WinLoss) = w.scored.toDouble() / w.games
+    fun co(w: WinLoss) = w.conceded.toDouble() / w.games
+    fun pct(x: Double) = "${Math.round(x * 100)}%"
+    fun f1(x: Double) = "%.1f".format(x)
+    val unit = if (team == Team.BLOWINDS) "点" else ""
+    val rows = mutableListOf<PaceRow>()
+    val bestRate = past.maxWithOrNull(compareBy<SeasonSummary>({ rate(it.league!!) }, { it.season }))!!
+    rows += PaceRow("勝率", pct(rate(curLeague)), pct(rate(bestRate.league!!)), "${bestRate.season} ${bestRate.league.label}", rate(curLeague) > rate(bestRate.league))
+    val bestSc = past.maxWithOrNull(compareBy<SeasonSummary>({ sc(it.league!!) }, { it.season }))!!
+    rows += PaceRow("1試合平均の得点", f1(sc(curLeague)) + unit, f1(sc(bestSc.league!!)) + unit, bestSc.season, sc(curLeague) > sc(bestSc.league))
+    val bestCo = past.maxWithOrNull(compareBy<SeasonSummary>({ -co(it.league!!) }, { it.season }))!!
+    rows += PaceRow("1試合平均の失点", f1(co(curLeague)) + unit, f1(co(bestCo.league!!)) + unit, bestCo.season, co(curLeague) < co(bestCo.league))
+    return SeasonPace(cur.season, cur.leagueName, curLeague.label, rows)
+}

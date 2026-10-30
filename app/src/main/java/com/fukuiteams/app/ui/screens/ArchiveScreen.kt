@@ -81,6 +81,7 @@ import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.components.openExternalUrl
 import com.fukuiteams.app.ui.components.shortLabel
 import com.fukuiteams.app.ui.theme.Ink
+import com.fukuiteams.app.ui.components.ThinRule
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.NewsRed
@@ -326,6 +327,8 @@ fun ArchiveScreen(
                     photoHeight = 70.dp
                 )
             }
+            // 今季のリーグ戦のペースを、クラブの過去最高のシーズンとくらべる
+            add { SeasonPaceBox(team) }
             // 今季のチームの数字(ブローウィンズ。Bリーグ公式のクラブ成績を、次の対戦相手と並べて比べる)
             val roster = teamPlayers[team.name]
             if (roster != null && roster.teamStats.isNotEmpty()) {
@@ -1020,6 +1023,7 @@ private fun RecordsSection(team: Team, onOpenUrl: (String) -> Unit) {
                 Text(r.detail, style = MaterialTheme.typography.bodySmall, color = InkSoft)
             }
         }
+        ChallengeSection(team)
         if (individual.isNotEmpty()) {
             SectionLabel("個人の1試合の記録", modifier = Modifier.padding(top = 4.dp))
             individual.forEach { (label, rows) ->
@@ -1063,6 +1067,96 @@ private fun RecordsSection(team: Team, onOpenUrl: (String) -> Unit) {
             }
         }
     }
+}
+
+/** 今季のリーグ戦のペースを、クラブの過去最高のシーズンとくらべる(今季の欄)。くらべられなければ何も出さない */
+@Composable
+private fun SeasonPaceBox(team: Team) {
+    val history = HistoryRepository.data
+    val pace = remember(team, history) {
+        com.fukuiteams.app.data.seasonPace(team, java.time.LocalDate.now(java.time.ZoneId.of("Asia/Tokyo")))
+    } ?: return
+    Column(
+        modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper).padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text("クラブ最高のシーズンとくらべると(${pace.leagueName ?: "リーグ戦"})", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
+        Text(
+            "今季 ${pace.record}。それぞれの項目で、これまでのシーズン(リーグ戦10試合以上)のいちばん良い数字とくらべます。",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
+        pace.rows.forEach { r ->
+            ThinRule(color = LineGray)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(r.label, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodySmall, color = Ink)
+                Text(r.now, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
+                Column(horizontalAlignment = Alignment.End) {
+                    Text("最高 ${r.best}(${r.bestSeason})", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                    if (r.ahead) Text("▲上回るペース", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = NewsRed)
+                }
+            }
+        }
+    }
+}
+
+/** 記録への挑戦(今の選手の、次の節目まで。記録集の中) */
+@Composable
+private fun ChallengeSection(team: Team) {
+    val history = HistoryRepository.data
+    val rows = remember(team, history) { com.fukuiteams.app.data.milestoneBoard(team).take(8) }
+    if (rows.isEmpty()) return
+    val unit = com.fukuiteams.app.data.goalUnit(team)
+    SectionLabel("記録への挑戦", modifier = Modifier.padding(top = 4.dp))
+    Text(
+        "今の選手の、${team.shortName}での通算の記録と次の節目まで(近い順)。「早ければ」は通算の1試合平均で数えた目安です。",
+        style = MaterialTheme.typography.bodySmall,
+        color = InkSoft
+    )
+    rows.forEach { r ->
+        val p = r.player
+        Column(
+            modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper).padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(p.name, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    "通算${p.apps}試合・${p.goals}$unit" + (r.rank?.let { "・歴代${it}位" } ?: ""),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = InkSoft,
+                    maxLines = 1
+                )
+            }
+            ChallengeLine(
+                "通算${r.goal.step}${unit}まで あと",
+                r.goal.left,
+                r.goal.games?.let { "(平均${"%.1f".format(r.avg)}$unit・早ければ${it}試合後)" } ?: ""
+            )
+            r.apps?.let { ChallengeLine("通算${it.step}試合出場まで あと", it.left, "") }
+            r.above?.let { ChallengeLine("歴代${it.rank}位の${it.name}(${it.goals}$unit)を抜くまで あと", it.gap, "") }
+        }
+    }
+}
+
+/** 「〜まで あと 49 (補足)」の1行。数字を赤く太く */
+@Composable
+private fun ChallengeLine(lead: String, value: Int, note: String) {
+    Text(
+        androidx.compose.ui.text.buildAnnotatedString {
+            append(lead)
+            pushStyle(androidx.compose.ui.text.SpanStyle(color = NewsRed, fontWeight = FontWeight.Bold))
+            append(value.toString())
+            pop()
+            if (note.isNotEmpty()) {
+                pushStyle(androidx.compose.ui.text.SpanStyle(color = InkSoft, fontSize = 11.sp))
+                append(note)
+                pop()
+            }
+        },
+        style = MaterialTheme.typography.bodySmall,
+        color = Ink
+    )
 }
 
 /** 過去の試合1つ。押すと公式の結果のページを開く */
