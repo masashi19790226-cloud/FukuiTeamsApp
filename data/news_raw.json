@@ -5454,5 +5454,15 @@
     "source": "朝日新聞デジタル",
     "image": "",
     "detected_at": "2026-10-30T02:41:08.156814+00:00"
+  },
+  {
+    "id": "bing:https://news.livedoor.com/pr_topics/detail/32690964/",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合…",
+    "link": "https://news.livedoor.com/pr_topics/detail/32690964/",
+    "published": "2026-10-29T17:01:00+00:00",
+    "source": "ライブドアニュース",
+    "image": "https://www.bing.com/th?id=ONUT.pCWCvs9AndaybWZpSUp7ow&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-30T03:41:09.000927+00:00"
   }
 ]
