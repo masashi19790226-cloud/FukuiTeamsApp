@@ -492,7 +492,9 @@
           "pk": 0,
           "shots": 27,
           "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-17-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-17-150x150.jpg",
+          "number": "17",
+          "position": "FP"
         },
         {
           "rank": 19,
@@ -502,7 +504,9 @@
           "pk": 0,
           "shots": 27,
           "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-10-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-10-150x150.jpg",
+          "number": "10",
+          "position": "FP"
         },
         {
           "rank": 19,
@@ -523,7 +527,9 @@
           "pk": 0,
           "shots": 34,
           "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-09-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-09-150x150.jpg",
+          "number": "9",
+          "position": "FP"
         },
         {
           "rank": 19,
@@ -651,7 +657,9 @@
           "pk": 0,
           "shots": 26,
           "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-06-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-06-150x150.jpg",
+          "number": "6",
+          "position": "FP"
         },
         {
           "rank": 31,
@@ -896,7 +904,9 @@
           "pk": 0,
           "shots": 15,
           "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-11-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-11-150x150.jpg",
+          "number": "11",
+          "position": "FP"
         },
         {
           "rank": 54,
@@ -917,7 +927,9 @@
           "pk": 0,
           "shots": 21,
           "games": 9,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-04-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-04-150x150.jpg",
+          "number": "4",
+          "position": "FP"
         },
         {
           "rank": 54,
@@ -1074,7 +1086,9 @@
           "pk": 0,
           "shots": 3,
           "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-19-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-19-150x150.jpg",
+          "number": "19",
+          "position": "FP"
         },
         {
           "rank": 75,
@@ -1253,7 +1267,9 @@
           "pk": 0,
           "shots": 16,
           "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-05-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-05-150x150.jpg",
+          "number": "5",
+          "position": "FP"
         },
         {
           "rank": 75,
@@ -1306,7 +1322,9 @@
           "pk": 0,
           "shots": 21,
           "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-07-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-07-150x150.jpg",
+          "number": "7",
+          "position": "FP"
         },
         {
           "rank": 75,
@@ -1316,7 +1334,9 @@
           "pk": 0,
           "shots": 21,
           "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-01-150x150.jpg"
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-01-150x150.jpg",
+          "number": "1",
+          "position": "GK"
         },
         {
           "rank": 75,
@@ -1331,14 +1351,14 @@
         }
       ],
       "photo_report": {
-        "福井丸岡ラック": "取得失敗 URLError(前回の写真を78人分引き継ぎ)",
-        "エスポラーダ北海道イルネーヴェ": "8人(前回の分)・得点表に0人",
-        "バルドラール浦安ラス・ボニータス": "10人(前回の分)・得点表に0人",
-        "立川アスレティックFCレディース": "10人(前回の分)・得点表に0人",
-        "SWHレディース西宮": "13人(前回の分)・得点表に0人",
-        "アルコ神戸": "12人(前回の分)・得点表に0人",
-        "ミネルバ宇部": "5人(前回の分)・得点表に0人",
-        "フウガドールすみだレディース": "18人(前回の分)・得点表に0人"
+        "福井丸岡ラック": "ok",
+        "エスポラーダ北海道イルネーヴェ": "8人(前回の分)・得点表に8人",
+        "バルドラール浦安ラス・ボニータス": "10人(前回の分)・得点表に10人",
+        "立川アスレティックFCレディース": "10人(前回の分)・得点表に10人",
+        "SWHレディース西宮": "13人(前回の分)・得点表に13人",
+        "アルコ神戸": "12人(前回の分)・得点表に12人",
+        "ミネルバ宇部": "5人(前回の分)・得点表に5人",
+        "フウガドールすみだレディース": "18人(前回の分)・得点表に10人"
       },
       "club_photo_cache": {
         "エスポラーダ北海道イルネーヴェ": {
@@ -1631,7 +1651,7 @@
         }
       }
     },
-    "updated_at": "2026-10-30T10:04:08.879413+00:00"
+    "updated_at": "2026-10-30T10:22:30.842495+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3373,7 +3393,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-30T10:04:08.879413+00:00"
+    "updated_at": "2026-10-30T10:22:30.842495+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-10-30",
@@ -6324,7 +6344,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-30T10:04:08.879413+00:00"
+    "updated_at": "2026-10-30T10:22:30.842495+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -7850,7 +7870,7 @@
         }
       }
     },
-    "updated_at": "2026-10-30T10:04:08.879413+00:00"
+    "updated_at": "2026-10-30T10:22:30.842495+00:00"
   },
   "ALUMNI": {
     "date": "2026-10-30",
