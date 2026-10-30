@@ -1,8 +1,8 @@
 {
- "date": "2026-10-30",
+ "date": "2026-10-31",
  "v": 5,
  "pending": false,
- "updated_at": "2026-10-29T15:08:38.798705+00:00",
+ "updated_at": "2026-10-30T15:08:54.993947+00:00",
  "teams": {
   "UNITED": {
    "source": "ユナイテッド公式サイトの試合情報",
@@ -45128,10 +45128,10 @@
      "now": false,
      "pid": "30954",
      "now_team": "大同フェニックス東海",
-     "now_checked": "2026-10-24",
-     "photo": "https://leagueh.jp/files/2026/player/daido/p30954.jpg",
+     "now_checked": "2026-10-31",
      "birthday": "1997-11-28",
-     "bd_checked": true
+     "bd_checked": true,
+     "photo": "https://leagueh.jp/files/2026/player/daido/p30954.jpg"
     },
     {
      "name": "家田 幹太",
@@ -46873,10 +46873,10 @@
      "now": false,
      "pid": "31643",
      "now_team": "豊田合成ブルーファルコン名古屋",
-     "now_checked": "2026-10-24",
-     "photo": "https://leagueh.jp/files/2026/player/toyodagosei/p31643.jpg",
+     "now_checked": "2026-10-31",
      "birthday": "2003-10-14",
-     "bd_checked": true
+     "bd_checked": true,
+     "photo": "https://leagueh.jp/files/2026/player/toyodagosei/p31643.jpg"
     },
     {
      "name": "安川 大地",
@@ -62887,7 +62887,7 @@
        0
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "宮本 夏奈",
@@ -63736,7 +63736,7 @@
        6
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "荒井 一花",
@@ -65338,7 +65338,7 @@
        1
       ]
      ],
-     "now_checked": "2026-10-30",
+     "now_checked": "2026-10-31",
      "now_team": "バルドラール浦安ラス・ボニータス",
      "birthday": "2001-10-12"
     },
@@ -69298,7 +69298,7 @@
        3
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "横山 凜花",
@@ -69832,7 +69832,7 @@
        2
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "高尾 純奈",
@@ -70346,7 +70346,7 @@
        1
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "平田 梨豊",
@@ -71743,7 +71743,7 @@
        10
       ]
      ],
-     "now_checked": "2026-10-30",
+     "now_checked": "2026-10-31",
      "now_team": "SWHレディース西宮",
      "birthday": "1999-03-13"
     },
@@ -73281,7 +73281,7 @@
        3
       ]
      ],
-     "now_checked": "2026-10-30",
+     "now_checked": "2026-10-31",
      "now_team": "SWHレディース西宮",
      "birthday": "2007-12-01"
     },
@@ -73474,7 +73474,7 @@
        2
       ]
      ],
-     "now_checked": "2026-10-30",
+     "now_checked": "2026-10-31",
      "now_team": "アルコ神戸",
      "birthday": "2002-01-11"
     },
@@ -73648,7 +73648,7 @@
        0
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "山本 彩可",
@@ -73798,7 +73798,7 @@
        0
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "西端 円麻",
@@ -74068,7 +74068,7 @@
        0
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "長谷川 詩花",
@@ -74465,7 +74465,7 @@
        4
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "福田 心悠",
@@ -74556,7 +74556,7 @@
        0
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "鵜飼 真也子",
@@ -74647,7 +74647,7 @@
        0
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "田中 悠香",
@@ -74726,7 +74726,7 @@
        1
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "小林 心",
@@ -74795,7 +74795,7 @@
        2
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "山口 陽愛",
@@ -74903,7 +74903,7 @@
        1
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "五十嵐 愛海",
@@ -74942,7 +74942,7 @@
        1
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "今村 結里",
@@ -75009,7 +75009,7 @@
        0
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     },
     {
      "name": "福田 真悠",
@@ -75038,7 +75038,7 @@
        0
       ]
      ],
-     "now_checked": "2026-10-30"
+     "now_checked": "2026-10-31"
     }
    ],
    "players_from": "lineup",
@@ -134095,7 +134095,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/5100000019_03.png",
      "now_team": "熊本ヴォルターズ",
      "now_team_id": "724",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1998-06-19",
      "height": "172",
      "bd_checked": true
@@ -136224,7 +136224,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/22522_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1993-09-14",
      "height": "202",
      "bd_checked": true
@@ -142121,7 +142121,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/8712_03.png",
      "now_team": "鹿児島レブナイズ",
      "now_team_id": "725",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1989-10-02",
      "height": "173",
      "bd_checked": true
@@ -145226,7 +145226,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/18398_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1991-04-09",
      "height": "211",
      "bd_checked": true
@@ -146628,7 +146628,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/9329_03.png",
      "now_team": "京都ハンナリーズ",
      "now_team_id": "699",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1994-08-24",
      "height": "189",
      "bd_checked": true
@@ -147958,7 +147958,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/8577_03.png",
      "now_team": "新潟アルビレックスBB",
      "now_team_id": "695",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1990-11-09",
      "height": "183",
      "bd_checked": true
@@ -149192,7 +149192,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/18442_03.png",
      "now_team": "横浜エクセレンス",
      "now_team_id": "714",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1995-06-12",
      "height": "216",
      "bd_checked": true
@@ -150349,7 +150349,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/9283_03.png",
      "now_team": "シーホース三河",
      "now_team_id": "728",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1992-02-22",
      "height": "198",
      "bd_checked": true
@@ -152127,7 +152127,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/51000150_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "2001-12-05",
      "height": "193",
      "bd_checked": true
@@ -152934,7 +152934,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/51000272_03.png",
      "now_team": "徳島ガンバロウズ",
      "now_team_id": "2890",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1998-02-15",
      "height": "208",
      "bd_checked": true
@@ -154549,7 +154549,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/5100000066_03.png",
      "now_team": "神戸ストークス",
      "now_team_id": "718",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "2000-11-08",
      "height": "188",
      "bd_checked": true
@@ -155344,7 +155344,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/9456_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1984-08-07",
      "height": "206",
      "bd_checked": true
@@ -156079,7 +156079,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/5100000087_03.png",
      "now_team": "信州ブレイブウォリアーズ",
      "now_team_id": "716",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "2001-03-07",
      "height": "198",
      "bd_checked": true
@@ -156778,7 +156778,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/43445_03.png",
      "now_team": "横浜エクセレンス",
      "now_team_id": "714",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1998-12-08",
      "height": "193",
      "bd_checked": true,
@@ -157394,7 +157394,7 @@
      "photo": "",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "2000-05-03",
      "height": "185",
      "bd_checked": true
@@ -157973,7 +157973,7 @@
      "photo": "",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1994-05-06",
      "height": "182",
      "bd_checked": true
@@ -158832,7 +158832,7 @@
      "photo": "",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1982-08-09",
      "height": "204",
      "bd_checked": true
@@ -159087,7 +159087,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/51000556_03.png",
      "now_team": "新潟アルビレックスBB",
      "now_team_id": "695",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "1990-11-05",
      "height": "205",
      "bd_checked": true
@@ -160236,7 +160236,7 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/51000580_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "2004-05-17",
      "height": "184",
      "bd_checked": true
@@ -160311,7 +160311,7 @@
      "photo": "",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-10-24",
+     "now_checked": "2026-10-31",
      "birthday": "2006-04-05",
      "height": "188",
      "bd_checked": true

@@ -1352,17 +1352,17 @@
       ],
       "photo_report": {
         "福井丸岡ラック": "ok",
-        "エスポラーダ北海道イルネーヴェ": "8人(前回の分)・得点表に8人",
-        "バルドラール浦安ラス・ボニータス": "10人(前回の分)・得点表に10人",
-        "立川アスレティックFCレディース": "10人(前回の分)・得点表に10人",
-        "SWHレディース西宮": "13人(前回の分)・得点表に13人",
-        "アルコ神戸": "12人(前回の分)・得点表に12人",
-        "ミネルバ宇部": "5人(前回の分)・得点表に5人",
-        "フウガドールすみだレディース": "18人(前回の分)・得点表に10人"
+        "エスポラーダ北海道イルネーヴェ": "8人・得点表に8人",
+        "バルドラール浦安ラス・ボニータス": "10人・得点表に10人",
+        "立川アスレティックFCレディース": "10人・得点表に10人",
+        "SWHレディース西宮": "13人・得点表に13人",
+        "アルコ神戸": "12人・得点表に12人",
+        "ミネルバ宇部": "5人・得点表に5人",
+        "フウガドールすみだレディース": "18人・得点表に10人"
       },
       "club_photo_cache": {
         "エスポラーダ北海道イルネーヴェ": {
-          "date": "2026-10-30",
+          "date": "2026-10-31",
           "photos": {
             "伊藤沙莉": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/d942d9d60f6954af06f23785cd842a48.jpg",
             "大西恋花": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/84dac01f4466b8da3fd82359eefb2263-1.jpg",
@@ -1375,7 +1375,7 @@
           }
         },
         "バルドラール浦安ラス・ボニータス": {
-          "date": "2026-10-30",
+          "date": "2026-10-31",
           "photos": {
             "塚本夏希": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/TSUKAMOTO_Natsuki.jpg",
             "中村美月": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/NAKAMURA_Mizuki.jpg",
@@ -1390,7 +1390,7 @@
           }
         },
         "立川アスレティックFCレディース": {
-          "date": "2026-10-30",
+          "date": "2026-10-31",
           "photos": {
             "平井成美": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg",
             "尾田緩奈": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
@@ -1405,7 +1405,7 @@
           }
         },
         "SWHレディース西宮": {
-          "date": "2026-10-30",
+          "date": "2026-10-31",
           "photos": {
             "尾川奈穂": "https://www.swh2003.com/img/202627-14.jpg",
             "江川涼": "https://www.swh2003.com/img/202627-9.jpg",
@@ -1423,7 +1423,7 @@
           }
         },
         "アルコ神戸": {
-          "date": "2026-10-30",
+          "date": "2026-10-31",
           "photos": {
             "鈴木心菜": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02914-768x512.jpg",
             "高橋京花": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02934-2-768x512.jpg",
@@ -1440,7 +1440,7 @@
           }
         },
         "ミネルバ宇部": {
-          "date": "2026-10-30",
+          "date": "2026-10-31",
           "photos": {
             "浜田莉那": "https://www.minerva-ube.jp/image/2026_minervaube_20.png",
             "田中夢": "https://www.minerva-ube.jp/image/2026_minervaube_19.png",
@@ -1450,7 +1450,7 @@
           }
         },
         "フウガドールすみだレディース": {
-          "date": "2026-10-30",
+          "date": "2026-10-31",
           "photos": {
             "蔀萌香": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1340x2010_v-frms_webp_f83c1416-bd26-4caa-87cb-cc5c6d1fd86f.jpg",
             "庄子彩": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_9482903a-6bac-46fc-a156-a4421cceb0ef.jpg",
@@ -1474,7 +1474,7 @@
         }
       },
       "number_cache": {
-        "date": "2026-10-30",
+        "date": "2026-10-31",
         "numbers": {
           "伊藤唯": "2",
           "齊藤日向子": "3",
@@ -1651,7 +1651,7 @@
         }
       }
     },
-    "updated_at": "2026-10-30T14:42:22.679268+00:00"
+    "updated_at": "2026-10-30T15:08:55.076549+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3393,13 +3393,13 @@
         }
       ]
     },
-    "updated_at": "2026-10-30T14:42:22.679268+00:00"
+    "updated_at": "2026-10-30T15:08:55.076549+00:00"
   },
   "BIRTHDAYS": {
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "v": 7,
     "manual": "d8535a448782",
-    "updated_at": "2026-10-29T15:08:38.890707+00:00",
+    "updated_at": "2026-10-30T15:08:55.076549+00:00",
     "players": [
       {
         "team": "UNITED",
@@ -6344,7 +6344,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-30T14:42:22.679268+00:00"
+    "updated_at": "2026-10-30T15:08:55.076549+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -7870,12 +7870,12 @@
         }
       }
     },
-    "updated_at": "2026-10-30T14:42:22.679268+00:00"
+    "updated_at": "2026-10-30T15:08:55.076549+00:00"
   },
   "ALUMNI": {
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "v": 4,
-    "updated_at": "2026-10-29T15:08:38.890707+00:00",
+    "updated_at": "2026-10-30T15:08:55.076549+00:00",
     "players": [
       {
         "team": "RAC",
@@ -7885,7 +7885,7 @@
         "kind": "移籍",
         "dest": "バルドラール浦安ラス・ボニータス",
         "link": "https://ruck-fukui.com/archives/5721",
-        "photo": "",
+        "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/IKEUCHI_Aki.jpg",
         "now": "バルドラール浦安ラス・ボニータス",
         "now_number": "10",
         "now_url": "https://w-fleague.jp/club/urayasu/",
@@ -8037,9 +8037,9 @@
     ]
   },
   "PHOTOS": {
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "v": 2,
-    "updated_at": "2026-10-29T15:08:38.890707+00:00",
+    "updated_at": "2026-10-30T15:08:55.076549+00:00",
     "teams": {
       "RAC": [
         {
