@@ -5616,5 +5616,33 @@
     "source": "産経ニュース",
     "image": "https://www.bing.com/th?id=ONUT.vC__Hm5aJtuVNXAtMQlCbA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-30T12:21:09.328390+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5169332434060424852",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合を実施：北海道新聞 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.hokkaido-np.co.jp/article_photo/list/%3Farticle_id%3D1399589%26pid%3D15898956&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1ow5e0VSO5OguhdlYsXocz",
+    "published": "2026-10-30T05:24:31Z",
+    "detected_at": "2026-10-30T13:01:09.058392+00:00"
+  },
+  {
+    "id": "bing:https://mantan-web.jp/prtimes/article/20261030prt00m200000494a.html",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合を実施",
+    "link": "https://mantan-web.jp/prtimes/article/20261030prt00m200000494a.html",
+    "published": "2026-10-30T04:00:00+00:00",
+    "source": "MANTANWEB（まんたんウェブ）",
+    "image": "https://www.bing.com/th?id=ONUT.ZtYJxeBE3pKJ1NXln1VQcg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-30T13:01:09.625698+00:00"
+  },
+  {
+    "id": "bing:https://mantan-web.jp/prtimes/article/20261030prt00m200000494a/photopage/001.html",
+    "team": "BLOWINDS",
+    "title": "HOME PR TIMES B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠 ...",
+    "link": "https://mantan-web.jp/prtimes/article/20261030prt00m200000494a/photopage/001.html",
+    "published": "2026-10-30T04:00:00+00:00",
+    "source": "MANTANWEB（まんたんウェブ）",
+    "image": "https://www.bing.com/th?id=ONUT.ZtYJxeBE3pKJ1NXln1VQcg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-30T13:01:09.625788+00:00"
   }
 ]
