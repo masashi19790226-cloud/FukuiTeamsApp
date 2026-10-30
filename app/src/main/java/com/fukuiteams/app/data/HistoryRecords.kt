@@ -202,7 +202,7 @@ fun upcomingMilestones(team: Team): List<Milestone> {
                 val left = step - p.apps
                 if (left in 1..3) near += Milestone(
                     p, "${team.name}|${p.name}|apps|$step",
-                    "${p.name}、通算${step}試合出場まであと$left",
+                    "${p.name}、福井で通算${step}試合出場まであと$left",
                     "これまで${p.seasonsLabel}に${p.apps}試合に出場。あと${left}試合で通算${step}試合に届きます。", left, "試合"
                 )
             }
@@ -211,7 +211,7 @@ fun upcomingMilestones(team: Team): List<Milestone> {
             val left = step - p.goals
             if (left in 1..goalSteps.second) near += Milestone(
                 p, "${team.name}|${p.name}|goals|$step",
-                "${p.name}、通算${step}${unit}まであと$left",
+                "${p.name}、福井で通算${step}${unit}まであと$left",
                 "これまで${p.seasonsLabel}に通算${p.goals}$unit。あと${left}で通算${step}${unit}に届きます。", left, unit
             )
         }
@@ -224,7 +224,7 @@ fun upcomingMilestones(team: Team): List<Milestone> {
             val p = byGoals[1]
             near += Milestone(
                 p, "${team.name}|${p.name}|top|${byGoals[0].goals}",
-                "${p.name}、歴代最多得点まであと$gap",
+                "${p.name}、クラブ歴代最多得点まであと$gap",
                 "通算${p.goals}${unit}で歴代2位。1位は${byGoals[0].name}の${byGoals[0].goals}${unit}で、あと${gap}で歴代最多になります。", gap, unit
             )
         }
@@ -328,11 +328,11 @@ fun reachableNextGame(team: Team): List<ReachableMilestone> {
         val per = Math.round(r.avg).toInt()
         val ab = r.above
         if (ab != null && ab.rank == 1 && ab.gap <= per) {
-            out += ReachableMilestone(p, "歴代最多得点まであと${ab.gap}", ab.gap)
+            out += ReachableMilestone(p, "クラブ歴代最多得点まであと${ab.gap}", ab.gap)
         } else if (per >= 1 && r.goal.left <= per) {
-            out += ReachableMilestone(p, "通算${r.goal.step}${unit}まであと${r.goal.left}", r.goal.left)
+            out += ReachableMilestone(p, "福井で通算${r.goal.step}${unit}まであと${r.goal.left}", r.goal.left)
         }
-        if (r.apps != null && r.apps.left == 1) out += ReachableMilestone(p, "通算${r.apps.step}試合出場まであと1", 1)
+        if (r.apps != null && r.apps.left == 1) out += ReachableMilestone(p, "福井で通算${r.apps.step}試合出場まであと1", 1)
     }
     return out.take(3)
 }
@@ -369,11 +369,11 @@ fun recentAchievements(team: Team, today: java.time.LocalDate): List<Achievement
         fun add(text: String, kind: String) {
             out += Achievement(team, p, text, last.date, last.dateLabel, last.opponent, kind)
         }
-        if (last.points > 0 && step <= p.goals) add("通算${step}${unit}を達成", "goals")
-        if (knowApps && p.apps == appsStepAfter(p.apps - 1)) add("通算${p.apps}試合出場を達成", "apps")
+        if (last.points > 0 && step <= p.goals) add("福井で通算${step}${unit}を達成", "goals")
+        if (knowApps && p.apps == appsStepAfter(p.apps - 1)) add("福井で通算${p.apps}試合出場を達成", "apps")
         if (last.points > 0) {
             val best = data.players.filter { it !== p }.maxOfOrNull { it.goals } ?: 0
-            if (p.goals > best && before <= best && best > 0) add("歴代最多得点に(通算${p.goals}${unit})", "top")
+            if (p.goals > best && before <= best && best > 0) add("クラブ歴代最多得点に(福井で通算${p.goals}${unit})", "top")
         }
     }
     return out.sortedWith(compareByDescending<Achievement> { it.date }.thenBy { it.player.name })

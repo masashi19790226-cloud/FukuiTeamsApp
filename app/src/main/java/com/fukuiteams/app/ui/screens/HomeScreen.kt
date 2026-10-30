@@ -1604,7 +1604,7 @@ private fun AchievementCard(list: List<com.fukuiteams.app.data.Achievement>) {
                     }
                 }
             }
-            Text("公式の試合の記録から数えた、クラブでの通算の記録です。", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+            Text("公式の試合の記録から数えた、福井のクラブでの通算の記録です(ほかのクラブでの試合は含みません)。", style = MaterialTheme.typography.labelSmall, color = InkSoft)
         }
     }
 }

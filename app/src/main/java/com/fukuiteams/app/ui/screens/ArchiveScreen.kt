@@ -1109,7 +1109,7 @@ private fun ChallengeSection(team: Team) {
     val unit = com.fukuiteams.app.data.goalUnit(team)
     SectionLabel("記録への挑戦", modifier = Modifier.padding(top = 4.dp))
     Text(
-        "今の選手の、${team.shortName}での通算の記録と次の節目まで(近い順)。「早ければ」は通算の1試合平均で数えた目安です。",
+        "今の選手の、${team.shortName}での通算の記録(ほかのクラブでの試合は含みません)と次の節目まで(近い順)。「クラブ歴代」は${team.shortName}でプレーした選手の中での順位です。「早ければ」は通算の1試合平均で数えた目安です。",
         style = MaterialTheme.typography.bodySmall,
         color = InkSoft
     )
@@ -1119,22 +1119,20 @@ private fun ChallengeSection(team: Team) {
             modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper).padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(p.name, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(
-                    "通算${p.apps}試合・${p.goals}$unit" + (r.rank?.let { "・歴代${it}位" } ?: ""),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = InkSoft,
-                    maxLines = 1
-                )
-            }
+            // 名前が長い選手もいるので、名前と通算の記録は2行に分ける
+            Text(p.name, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
+            Text(
+                "福井で通算${p.apps}試合・${p.goals}$unit" + (r.rank?.let { "・クラブ歴代${it}位" } ?: ""),
+                style = MaterialTheme.typography.labelSmall,
+                color = InkSoft
+            )
             ChallengeLine(
                 "通算${r.goal.step}${unit}まで あと",
                 r.goal.left,
                 r.goal.games?.let { "(平均${"%.1f".format(r.avg)}$unit・早ければ${it}試合後)" } ?: ""
             )
             r.apps?.let { ChallengeLine("通算${it.step}試合出場まで あと", it.left, "") }
-            r.above?.let { ChallengeLine("歴代${it.rank}位の${it.name}(${it.goals}$unit)を抜くまで あと", it.gap, "") }
+            r.above?.let { ChallengeLine("クラブ歴代${it.rank}位の${it.name}(${it.goals}$unit)を抜くまで あと", it.gap, "") }
         }
     }
 }
