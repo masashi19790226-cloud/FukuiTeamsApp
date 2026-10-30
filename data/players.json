@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-10-30T21:42:34.186871+00:00",
+    "updated_at": "2026-10-30T22:02:41.175231+00:00",
     "players": [
       {
         "number": "1",
@@ -1637,14 +1637,14 @@
       {
         "key": "BPG",
         "label": "平均ブロック数",
-        "rank": 19,
+        "rank": 20,
         "value": "2",
         "unit": "本"
       },
       {
         "key": "SPG",
         "label": "平均スティール数",
-        "rank": 24,
+        "rank": 23,
         "value": "5.91",
         "unit": "本"
       }
@@ -3156,7 +3156,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=1363&tab=1",
-    "updated_at": "2026-10-30T21:42:36.034021+00:00",
+    "updated_at": "2026-10-30T22:02:42.395101+00:00",
     "players": [
       {
         "number": "0",
