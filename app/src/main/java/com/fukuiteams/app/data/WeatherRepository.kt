@@ -133,11 +133,51 @@ object WeatherRepository {
         }
     }
 
+    /**
+     * 会場の場所の表(会場名の一部・緯度と経度・表示する地名)。Open-Meteo の地名検索は施設名を探せないことが多いので、
+     * 日程に出てくる会場は先にこの表で探す(Web版の weather.js の VENUES と同じ)。位置は会場のある市区町村のあたり
+     */
+    private val VENUES: List<Triple<String, Pair<Double, Double>, String>> = listOf(
+        Triple("セーレン・ドリームアリーナ", 36.064 to 136.22, "福井市"),
+        Triple("北陸電力福井体育館", 36.064 to 136.22, "福井市"),
+        Triple("飛騨高山ビッグアリーナ", 36.146 to 137.252, "高山市"),
+        Triple("敦賀市総合運動公園", 35.645 to 136.055, "敦賀市"),
+        Triple("越前市アイシン", 35.903 to 136.169, "越前市"),
+        Triple("このはなアリーナ", 34.987 to 138.436, "静岡市"),
+        Triple("山形県総合運動公園", 38.36 to 140.378, "天童市"),
+        Triple("国立代々木競技場", 35.668 to 139.7, "渋谷区"),
+        Triple("鹿児島県総合体育センター", 31.56 to 130.548, "鹿児島市"),
+        Triple("アオーレ長岡", 37.446 to 138.851, "長岡市"),
+        Triple("いしかわ総合スポーツセンター", 36.582 to 136.618, "金沢市"),
+        Triple("エスフォルタアリーナ八王子", 35.656 to 139.338, "八王子市"),
+        Triple("マエダアリーナ", 40.8 to 140.69, "青森市"),
+        Triple("熊本県立総合体育館", 32.803 to 130.708, "熊本市"),
+        Triple("横浜BUNTAI", 35.443 to 139.637, "横浜市"),
+        Triple("バルドラール浦安アリーナ", 35.653 to 139.902, "浦安市"),
+        Triple("俵田翁記念体育館", 33.951 to 131.247, "宇部市"),
+        Triple("生駒市", 34.692 to 135.7, "生駒市"),
+        Triple("和光市", 35.781 to 139.606, "和光市"),
+        Triple("本宮市", 37.513 to 140.394, "本宮市"),
+        Triple("富山県西部体育センター", 36.754 to 137.026, "高岡市"),
+        Triple("エントリオ", 35.254 to 136.822, "稲沢市"),
+        Triple("枇杷島スポーツセンター", 35.19 to 136.875, "名古屋市"),
+        Triple("クロコくんホール", 35.103 to 136.917, "名古屋市"),
+        Triple("ウィングアリーナ刈谷", 34.989 to 136.997, "刈谷市"),
+        Triple("アリーナ立川立飛", 35.712 to 139.416, "立川市"),
+        Triple("大田区総合体育館", 35.561 to 139.716, "大田区"),
+        Triple("豊見城市民体育館", 26.161 to 127.669, "豊見城市")
+    )
+
     /** 対戦相手の本拠地ではなく、試合会場を優先する。ホーム会場が未登録なら従来の福井市座標を使う。 */
     private suspend fun gameLocation(game: Game): Triple<Double, Double, String>? {
         val venue = game.venue.trim()
-        if (venue.isNotBlank() && venue != "会場未定" && !venue.contains("調整中")) {
+        if (venue.isNotBlank() && venue != "会場未定" && !venue.contains("調整中") && !venue.contains("未定")) {
+            VENUES.firstOrNull { venue.contains(it.first) }?.let { return Triple(it.second.first, it.second.second, it.third) }
             geocode(venue)?.let { return it }
+            // 会場名に市区町村の名前があれば、その地名で探す(例「○○市総合体育館」)
+            Regex("([^\\s　0-9A-Za-z()（）・]{1,5}?[市区町村])").find(venue)?.groupValues?.get(1)?.let { city ->
+                (geocode(city) ?: geocode(city.dropLast(1)))?.let { return it }
+            }
             // Open-Meteoの地名検索で施設名が見つからない場合、県内の市区町村名を含む会場のみ地域を補助検索。
             Regex("(福井|坂井|敦賀|鯖江|越前|大野|勝山|あわら|小浜|三国)").find(venue)?.value?.let { city ->
                 geocode(city)?.let { return it }

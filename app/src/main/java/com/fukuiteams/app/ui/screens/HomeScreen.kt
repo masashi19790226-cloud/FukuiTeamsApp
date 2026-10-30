@@ -8,6 +8,7 @@ import com.fukuiteams.app.ui.components.PlayerPhotoRow
 import com.fukuiteams.app.model.shortName
 import com.fukuiteams.app.ui.components.HomeAwayLabel
 import com.fukuiteams.app.ui.components.openExternalUrl
+import com.fukuiteams.app.data.fanPlaylistUrl
 import com.fukuiteams.app.data.isGoing
 import com.fukuiteams.app.ui.components.GoingBadge
 import com.fukuiteams.app.data.publicViewings
@@ -535,6 +536,15 @@ private fun MatchDayCard(
                     java.net.URLEncoder.encode(game.venue, "UTF-8"))
             }
         )
+        // 試合前に聴く、制作者が作った応援プレイリスト(ブローウィンズ。公式のものではない)
+        game.team.fanPlaylistUrl?.let { pl ->
+            Text(
+                "♪ 試合前に聴く 応援プレイリスト(Spotify) ›",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Accent,
+                modifier = Modifier.clickable { openUrl(context, pl) }
+            )
+        }
         val weatherColumns = forecast?.toColumns().orEmpty().ifEmpty {
             listOfNotNull(weather?.let { ForecastColumn("試合開始", game.timeLabel, it) })
         }

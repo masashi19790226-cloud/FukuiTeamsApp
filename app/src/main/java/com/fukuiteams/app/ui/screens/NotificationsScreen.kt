@@ -27,6 +27,7 @@ import com.fukuiteams.app.ui.components.MenuLinkRow
 import com.fukuiteams.app.ui.components.NewsChip
 import com.fukuiteams.app.ui.components.openExternalUrl
 import com.fukuiteams.app.data.officialXUrl
+import com.fukuiteams.app.data.fanPlaylistUrl
 import com.fukuiteams.app.data.officialInstagramUrl
 import com.fukuiteams.app.ui.components.UiScale
 import androidx.compose.foundation.BorderStroke
@@ -185,6 +186,10 @@ fun NotificationsScreen(
                         team.officialInstagramUrl?.let { ig ->
                             NewsChip("公式インスタグラム", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, ig) }
                         }
+                    }
+                    // 制作者が作った応援プレイリスト(公式のものではない)
+                    team.fanPlaylistUrl?.let { pl ->
+                        NewsChip("♪ 応援プレイリスト(Spotify・制作者が作成)", false, modifier = Modifier.fillMaxWidth()) { openExternalUrl(context, pl) }
                     }
                 }
             }

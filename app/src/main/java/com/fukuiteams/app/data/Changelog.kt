@@ -14,6 +14,27 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年10月31日",
+        title = "天気予報の修正",
+        items = listOf(
+            "アウェイの試合など、会場の名前から場所が分からず天気予報が出ていなかった試合で、天気予報が出るようにしました(例:飛騨高山ビッグアリーナ・生駒市の体育館)"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月31日",
+        title = "順位の見通し",
+        items = listOf(
+            "チームタブの「今季」に「順位の見通し」を追加しました。1位・ひとつ上の順位・プレーオフ(ブローウィンズは地区2位以内とワイルドカードの目安、ブルーサンダーは6位以内)までの差と、残りの試合、今の地区2位のペースに並ぶのに必要な勝ち数(ブローウィンズ)が分かります"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月30日",
+        title = "応援プレイリスト",
+        items = listOf(
+            "制作者が作ったブローウィンズの応援プレイリスト(Spotify)へのリンクを付けました。メニューの「公式サイト・SNS」のブローウィンズの欄、チームタブ(ブローウィンズ)、試合の日の一面の「本日の試合」から開けます。公式のものではありません"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年10月30日",
         title = "記録への挑戦",
         items = listOf(

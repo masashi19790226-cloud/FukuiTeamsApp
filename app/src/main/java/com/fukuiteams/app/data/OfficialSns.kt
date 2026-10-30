@@ -25,3 +25,10 @@ val Team.officialInstagramUrl: String?
         Team.UNITED -> "https://www.instagram.com/fukuiunited_official/"
         Team.THUNDER -> "https://www.instagram.com/fukui_eiheiji_bluethunder/"
     }
+
+/** 制作者(追い風はBOOZ)が作った応援プレイリスト(Spotify。公式のものではない)。無いチームは null */
+val Team.fanPlaylistUrl: String?
+    get() = when (this) {
+        Team.BLOWINDS -> "https://open.spotify.com/playlist/5Pfdndtu2Czn7TvM9tDvf9"
+        else -> null
+    }

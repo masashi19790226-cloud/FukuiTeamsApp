@@ -79,6 +79,9 @@ import com.fukuiteams.app.ui.components.ScrollJumpButtons
 import com.fukuiteams.app.ui.components.SectionLabel
 import com.fukuiteams.app.ui.components.TeamSelectorRow
 import com.fukuiteams.app.ui.components.openExternalUrl
+import com.fukuiteams.app.data.fanPlaylistUrl
+import com.fukuiteams.app.data.isUpcoming
+import com.fukuiteams.app.model.isMainTeamGame
 import com.fukuiteams.app.ui.components.shortLabel
 import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.components.ThinRule
@@ -313,6 +316,18 @@ fun ArchiveScreen(
             }
             // チームの写真(公式サイトのお知らせの試合・イベントの写真。日替わりで1枚。無ければ出さない。選手の写真は「今季」の下に並べる)
             add(key = "banner-${team.name}") { com.fukuiteams.app.ui.components.TeamPhotoBanner(team, "team-tab") }
+            // 制作者が作った応援プレイリスト(ブローウィンズ。公式のものではない)
+            team.fanPlaylistUrl?.let { pl ->
+                add(key = "playlist-${team.name}") {
+                    Text(
+                        "♪ 応援プレイリストを聴く(Spotify・制作者が作った非公式のもの) ›",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = com.fukuiteams.app.ui.theme.Accent,
+                        modifier = Modifier.clickable { openExternalUrl(context, pl) }.padding(vertical = 4.dp)
+                    )
+                }
+            }
 
             // 今季の順位・勝敗(4チームとも。試合タブの「順位」と同じデータを、数字のます目で)
             anchors["season"] = n
@@ -327,6 +342,8 @@ fun ArchiveScreen(
                     photoHeight = 70.dp
                 )
             }
+            // 順位の見通し(上の順位・プレーオフまでの差と、残りの試合)
+            add { OutlookBox(team, standings[team.name]) }
             // 今季のリーグ戦のペースを、クラブの過去最高のシーズンとくらべる
             add { SeasonPaceBox(team) }
             // 今季のチームの数字(ブローウィンズ。Bリーグ公式のクラブ成績を、次の対戦相手と並べて比べる)
@@ -1066,6 +1083,37 @@ private fun RecordsSection(team: Team, onOpenUrl: (String) -> Unit) {
                 )
             }
         }
+    }
+}
+
+/** 順位の見通し(上の順位・プレーオフまでの差と、残りの試合。今季の欄)。出せなければ何も出さない */
+@Composable
+private fun OutlookBox(team: Team, league: com.fukuiteams.app.data.LeagueStandings?) {
+    val games = com.fukuiteams.app.data.GamesRepository.games
+    val outlook = remember(team, league, games) {
+        val upcoming = games.count { it.team == team && it.isMainTeamGame() && it.isUpcoming() }
+        com.fukuiteams.app.data.standingOutlook(team, league, upcoming)
+    } ?: return
+    if (outlook.rows.isEmpty()) return
+    Column(
+        modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper).padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(outlook.title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
+        outlook.rows.forEach { r ->
+            ThinRule(color = LineGray)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(r.label, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodySmall, color = Ink)
+                Text(
+                    r.value,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = if (r.value.startsWith("圏内") || r.value == "首位") NewsRed else Ink
+                )
+            }
+            if (r.note.isNotEmpty()) Text(r.note, style = MaterialTheme.typography.labelSmall, color = InkSoft)
+        }
+        outlook.notes.forEach { n -> Text("※$n", style = MaterialTheme.typography.labelSmall, color = InkSoft) }
     }
 }
 
