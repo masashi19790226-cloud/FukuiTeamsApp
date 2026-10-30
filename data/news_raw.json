@@ -5488,5 +5488,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51814&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2yL4_BoyaUXWIbVObHUvRE",
     "published": "2026-10-30T02:28:15Z",
     "detected_at": "2026-10-30T04:01:08.077749+00:00"
+  },
+  {
+    "id": "bing:https://news.3rd-in.co.jp/article/47616ac4-d40b-11f1-a8eb-9ca3ba09c411",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの冠試合",
+    "link": "https://news.3rd-in.co.jp/article/47616ac4-d40b-11f1-a8eb-9ca3ba09c411",
+    "published": "2026-10-29T21:21:00+00:00",
+    "source": "news.3rd-in",
+    "image": "https://www.bing.com/th?id=ONUT.TOnhi6rGWKOXNUviAIni7A&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-30T04:21:11.348598+00:00"
+  },
+  {
+    "id": "bing:https://news.dellows.jp/964404/",
+    "team": "BLOWINDS",
+    "title": "アトムがB.LEAGUE福井ブローウィンズ冠試合ATOM CUPを実施",
+    "link": "https://news.dellows.jp/964404/",
+    "published": "2026-10-23T17:00:00+00:00",
+    "source": "news.dellows.jp",
+    "image": "https://www.bing.com/th?id=ONUT.lqxR0mB4vbBVGJ9uHk47Cg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-30T04:21:11.348625+00:00"
   }
 ]
