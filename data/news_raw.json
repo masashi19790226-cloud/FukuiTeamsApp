@@ -5416,5 +5416,33 @@
     "source": "AFPBB News",
     "image": "https://www.bing.com/th?id=ONUT.nPnlgJ4oszeD2Jw3NhDKnA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-30T02:01:08.837476+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13650220860686634918",
+    "team": "BLOWINDS",
+    "title": "2026.10.24 VSさいたまブロンコス #福井ブローウィンズ #デヴィンウィリアムズ - Instagram",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/DfEAdWyIcan/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1QlMgsE7B8LPLO2R7lSe0X",
+    "published": "2026-10-29T18:39:32Z",
+    "detected_at": "2026-10-30T02:21:06.405860+00:00"
+  },
+  {
+    "id": "bing:https://digitalpr.jp/r/147219",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合を実施",
+    "link": "https://digitalpr.jp/r/147219",
+    "published": "2026-10-29T17:01:00+00:00",
+    "source": "Degital PR Platform",
+    "image": "https://www.bing.com/th?id=ONUT.YKGYJzn8ah5p5jqqTu1anQ&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-30T02:21:08.010377+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51814",
+    "team": "BLOWINDS",
+    "title": "【福井ブローウィンズ Girls U15】第3回 練習体験会 開催のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51814",
+    "published": "2026-10-30T09:00:00+09:00",
+    "detected_at": "2026-10-30T02:21:11.404624+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/HP%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9%E7%94%BB%E5%83%8F-3.jpeg"
   }
 ]
