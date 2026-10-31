@@ -5904,5 +5904,15 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.ifdQDt0JX135MdVtG8bBDA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-31T20:21:08.385669+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2736351",
+    "team": "THUNDER",
+    "title": "福井永平寺 開幕3連敗 ハンドボールリーグH",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2736351",
+    "published": "2026-10-31T03:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.VekTwm8XxMrRZO6i7gvd0Q&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-31T20:41:09.540526+00:00"
   }
 ]
