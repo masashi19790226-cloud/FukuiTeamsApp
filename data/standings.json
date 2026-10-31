@@ -1651,7 +1651,7 @@
         }
       }
     },
-    "updated_at": "2026-10-31T06:22:21.289747+00:00"
+    "updated_at": "2026-10-31T06:42:36.529383+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3393,7 +3393,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-31T06:22:21.289747+00:00"
+    "updated_at": "2026-10-31T06:42:36.529383+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-10-31",
@@ -6344,7 +6344,7 @@
         }
       ]
     },
-    "updated_at": "2026-10-31T06:22:21.289747+00:00"
+    "updated_at": "2026-10-31T06:42:36.529383+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -6397,6 +6397,20 @@
         },
         {
           "rank": 4,
+          "team": "レッドトルネード佐賀",
+          "slug": "redtornado",
+          "points": 4,
+          "played": 4,
+          "win": 2,
+          "draw": 0,
+          "lose": 2,
+          "gf": 125,
+          "ga": 115,
+          "gd": 10,
+          "record": "2勝2敗"
+        },
+        {
+          "rank": 5,
           "team": "大同フェニックス東海",
           "slug": "daido",
           "points": 4,
@@ -6410,7 +6424,7 @@
           "record": "2勝0敗"
         },
         {
-          "rank": 5,
+          "rank": 6,
           "team": "富山ドリームス",
           "slug": "dreams",
           "points": 4,
@@ -6424,7 +6438,7 @@
           "record": "2勝1敗"
         },
         {
-          "rank": 6,
+          "rank": 7,
           "team": "大崎オーソル埼玉",
           "slug": "osaki",
           "points": 3,
@@ -6438,7 +6452,7 @@
           "record": "1勝1敗1分"
         },
         {
-          "rank": 7,
+          "rank": 8,
           "team": "安芸高田わくながハンドボールクラブ",
           "slug": "wakunaga",
           "points": 3,
@@ -6452,7 +6466,7 @@
           "record": "1勝1敗1分"
         },
         {
-          "rank": 8,
+          "rank": 9,
           "team": "堺リエゾン",
           "slug": "liaison",
           "points": 3,
@@ -6466,35 +6480,7 @@
           "record": "1勝1敗1分"
         },
         {
-          "rank": 9,
-          "team": "レッドトルネード佐賀",
-          "slug": "redtornado",
-          "points": 2,
-          "played": 3,
-          "win": 1,
-          "draw": 0,
-          "lose": 2,
-          "gf": 96,
-          "ga": 98,
-          "gd": -2,
-          "record": "1勝2敗"
-        },
-        {
           "rank": 10,
-          "team": "アルバモス大阪高石",
-          "slug": "alvamos",
-          "points": 2,
-          "played": 3,
-          "win": 1,
-          "draw": 0,
-          "lose": 2,
-          "gf": 88,
-          "ga": 108,
-          "gd": -20,
-          "record": "1勝2敗"
-        },
-        {
-          "rank": 11,
           "team": "トヨタ自動車東日本レガロッソ宮城",
           "slug": "toyotaej",
           "points": 2,
@@ -6506,6 +6492,20 @@
           "ga": 48,
           "gd": 18,
           "record": "1勝1敗"
+        },
+        {
+          "rank": 11,
+          "team": "アルバモス大阪高石",
+          "slug": "alvamos",
+          "points": 2,
+          "played": 3,
+          "win": 1,
+          "draw": 0,
+          "lose": 2,
+          "gf": 88,
+          "ga": 108,
+          "gd": -20,
+          "record": "1勝2敗"
         },
         {
           "rank": 12,
@@ -6541,14 +6541,14 @@
           "team": "ゴールデンウルヴス福岡",
           "slug": "goldenwolves",
           "points": 0,
-          "played": 3,
+          "played": 4,
           "win": 0,
           "draw": 0,
-          "lose": 3,
-          "gf": 62,
-          "ga": 89,
-          "gd": -27,
-          "record": "0勝3敗"
+          "lose": 4,
+          "gf": 79,
+          "ga": 118,
+          "gd": -39,
+          "record": "0勝4敗"
         },
         {
           "rank": 15,
@@ -7870,7 +7870,7 @@
         }
       }
     },
-    "updated_at": "2026-10-31T06:22:21.289747+00:00"
+    "updated_at": "2026-10-31T06:42:36.529383+00:00"
   },
   "ALUMNI": {
     "date": "2026-10-31",
