@@ -55,7 +55,7 @@
     "my_players_note": "今季11試合の成績から",
     "opp_team_id": "1363",
     "summary": "福井は直近5試合で1勝4敗。岐阜は1勝10敗。前回対戦は10/31 ○83-62。岐阜は#2 エリック・マクリー(平均19.4点)に注意。",
-    "updated_at": "2026-10-31T10:22:36.231451+00:00"
+    "updated_at": "2026-10-31T10:42:47.937597+00:00"
   },
   "rc16": {
     "game_id": "rc16",
@@ -96,7 +96,7 @@
     "players_note": "女子Fリーグ公式の得点ランキングから",
     "opp_link": "https://w-fleague.jp/club/urayasu/",
     "summary": "丸岡は直近5試合で2勝2敗1分。バルドラール浦安ラス・ボニータスは9勝0敗1分。前回対戦は7/25 ●0-4。バルドラール浦安ラス・ボニータスは#7 塚本 夏希(今季13得点)に注意。",
-    "updated_at": "2026-10-31T10:22:36.231606+00:00"
+    "updated_at": "2026-10-31T10:42:47.937764+00:00"
   },
   "un21": {
     "game_id": "un21",
@@ -118,10 +118,10 @@
     "players_note": "",
     "opp_link": null,
     "summary": "福井は直近5試合で3勝2敗。福井のチーム得点王は杉浦 秀謙(5得点)。",
-    "updated_at": "2026-10-31T10:22:36.231692+00:00"
+    "updated_at": "2026-10-31T10:42:47.937844+00:00"
   },
-  "th03": {
-    "game_id": "th03",
+  "th04": {
+    "game_id": "th04",
     "team": "THUNDER",
     "my": {
       "label": "福井永平寺",
@@ -130,24 +130,31 @@
       "rank": "13位(勝ち点0)"
     },
     "opp": {
-      "label": "アルバモス大阪高石",
-      "record": "2勝2敗",
-      "rank": "10位(勝ち点4)",
+      "label": "大崎オーソル埼玉",
+      "record": "2勝1敗1分",
+      "rank": "5位(勝ち点5)",
       "form": ""
     },
     "last_meeting": null,
     "key_players": [
       {
-        "number": "2",
-        "name": "前田 理玖",
+        "number": "23",
+        "name": "渡邉 雄大",
         "position": "CB",
         "stat": "今季39得点(リーグ1位)",
-        "photo": "https://leagueh.jp/files/2026/player/alvamos/p31070.jpg"
+        "photo": "https://leagueh.jp/files/2026/player/osaki/p31837.jpg"
+      },
+      {
+        "number": "20",
+        "name": "野尻 雄偉",
+        "position": "LB",
+        "stat": "今季23得点(リーグ7位)",
+        "photo": "https://leagueh.jp/files/2026/player/osaki/p31528.jpg"
       }
     ],
     "players_note": "リーグH公式の個人ランキング(得点)から",
-    "opp_link": "https://leagueh.jp/team/alvamos/profile/",
-    "summary": "13位の福井永平寺と10位のアルバモス大阪高石の対戦。福井永平寺は直近3試合で0勝3敗。アルバモス大阪高石は2勝2敗。アルバモス大阪高石は#2 前田 理玖(今季39得点)に注意。",
-    "updated_at": "2026-10-31T10:22:36.231846+00:00"
+    "opp_link": "https://leagueh.jp/team/osaki/profile/",
+    "summary": "13位の福井永平寺と5位の大崎オーソル埼玉の対戦。福井永平寺は直近3試合で0勝3敗。大崎オーソル埼玉は2勝1敗1分。大崎オーソル埼玉は#23 渡邉 雄大(今季39得点)に注意。",
+    "updated_at": "2026-10-31T10:42:47.938013+00:00"
   }
 }
