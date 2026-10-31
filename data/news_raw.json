@@ -5788,5 +5788,15 @@
     "source": "Yahoo!ニュース",
     "image": "https://www.bing.com/th?id=ONUT.mhiQOlSd80jC6vlsL4x2dQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-31T10:41:10.247270+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261031de69010",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ 岐阜に大勝で5試合ぶり勝利",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261031de69010",
+    "published": "2026-10-30T21:56:00+00:00",
+    "source": "news.web",
+    "image": "",
+    "detected_at": "2026-10-31T11:01:07.312592+00:00"
   }
 ]
