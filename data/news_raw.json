@@ -5822,5 +5822,29 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.hokkaido-np.co.jp/article_photo/list/%3Farticle_id%3D1399589%26pid%3D15898957&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1ahUvJVF5dEJg-aOnjlY4l",
     "published": "2026-10-30T03:05:58Z",
     "detected_at": "2026-10-31T13:01:09.150357+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17343081450680955707",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ 岐阜に大勝で５試合ぶり勝利 - NHKニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.web.nhk/newsweb/na/nd-20261031de69010&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3G5K_tXYEorPrONpftjFyi",
+    "published": "2026-10-31T13:33:02Z",
+    "detected_at": "2026-10-31T14:01:08.225008+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13927977696757293176",
+    "team": "BLOWINDS",
+    "title": "今季初プレーの司令塔が躍動…福井ブローウィンズ、後半から攻勢 Bワン第7節、岐阜スゥープス戦",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15166683.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0SbxX7kvixFMg8vh9RDWF5",
+    "published": "2026-10-31T12:49:54Z",
+    "detected_at": "2026-10-31T14:01:08.225041+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10577221961063459789",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ逆転、連敗止める Ｂリーグワン第10節・岐阜戦",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2736172&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3KlL0pOlFpqguj7q1XqRCs",
+    "published": "2026-10-31T08:22:58Z",
+    "detected_at": "2026-10-31T14:01:08.225110+00:00"
   }
 ]
