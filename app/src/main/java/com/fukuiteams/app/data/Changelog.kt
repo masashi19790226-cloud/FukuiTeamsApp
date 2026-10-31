@@ -15,6 +15,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月31日",
+        title = "天気予報の見直し",
+        items = listOf(
+            "天気予報で、入場の時刻が分からない試合は、試合開始の1時間前ではなく3時間前の天気を出すようにしました(会場へ向かうころの天気)",
+            "天気予報の降水確率を、気象庁の予報(6時間ごと・地方ごと)に変えました。これまでの降水確率は、山あいの会場などで天気(晴れ)と食いちがうことがありました。表の下に、どの地方・時間帯の予報かを出します"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月31日",
         title = "天気予報の修正",
         items = listOf(
             "アウェイの試合など、会場の名前から場所が分からず天気予報が出ていなかった試合で、天気予報が出るようにしました(例:飛騨高山ビッグアリーナ・生駒市の体育館)"

@@ -1054,7 +1054,7 @@ private fun NextGameBlock(
                     "天気予報(${(forecast.start ?: forecast.entry)?.placeLabel ?: ""})",
                     forecast.toColumns()
                 )
-                // 時刻ごとに列を分けた表(入場の1時間前 → 入場 → 試合開始)。行は天気・気温・降水確率・降水量など
+                // 時刻ごとに列を分けた表(入場の1時間前(入場が分からなければ試合開始の3時間前) → 入場 → 試合開始)。行は天気・気温・降水確率・降水量など
                 ForecastTable(forecast.toColumns())
             }
         }
@@ -1135,7 +1135,7 @@ private data class ForecastColumn(val title: String, val time: String, val w: Ma
 /** 試合前予報を、本日の試合カードと次の試合カードで共通の表形式にする。 */
 private fun GameForecast.toColumns(): List<ForecastColumn> = listOfNotNull(
     before?.takeIf { beforeTime != null }?.let {
-        ForecastColumn(if (beforeLabel.startsWith("入場")) "入場1時間前" else "開始1時間前", beforeTime.orEmpty(), it)
+        ForecastColumn(if (beforeLabel.startsWith("入場")) "入場1時間前" else "開始3時間前", beforeTime.orEmpty(), it)
     },
     entry?.takeIf { entryTime != null }?.let { ForecastColumn("入場", entryTime.orEmpty(), it) },
     start?.let { ForecastColumn("試合開始", startTime, it) }
@@ -1215,6 +1215,16 @@ private fun ForecastTable(cols: List<ForecastColumn>) {
                     )
                 }
             }
+        }
+        // 降水確率のもと(気象庁の予報。地域と6時間ごとの時間帯)
+        val sources = cols.map { it.w.rainSource }.filter { it.isNotEmpty() }.distinct()
+        if (sources.isNotEmpty()) {
+            Text(
+                "※降水確率は気象庁の予報(${sources.joinToString("・")})。出典:気象庁ホームページ",
+                style = MaterialTheme.typography.labelSmall,
+                color = InkSoft,
+                modifier = Modifier.padding(top = 2.dp)
+            )
         }
     }
 }

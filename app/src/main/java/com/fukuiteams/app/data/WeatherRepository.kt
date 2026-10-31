@@ -11,7 +11,7 @@ import java.time.Instant
 
 /**
  * 試合当日の天気(Open-Meteo。登録やAPIキー不要の無料の天気予報)。
- * 会場名から場所を決め、試合開始の時刻の予報を返す。
+ * 会場名から場所を決め、試合開始の時刻の予報を返す。降水確率だけは気象庁の予報(6時間ごと)を使う。
  */
 data class MatchWeather(
     val placeLabel: String,
@@ -24,6 +24,8 @@ data class MatchWeather(
     val snowfallCm: Double? = null,
     /** 積雪の深さ(cm)。取れなければ null */
     val snowDepthCm: Int? = null,
+    /** 降水確率のもと(気象庁の予報の地域と時間帯。例「飛騨地方 12〜18時」)。降水確率が無ければ "" */
+    val rainSource: String = "",
     /** この予報をアプリが取得した日時(予報の発表日時とは別) */
     val retrievedAt: Instant = Instant.now()
 ) {
@@ -44,7 +46,7 @@ data class GameForecast(
     val entry: MatchWeather?,
     val startTime: String,
     val start: MatchWeather?,
-    /** 入場の1時間前(入場の時刻が分からなければ試合開始の1時間前)の時刻(例「11:00」)と、その名前・予報。取れなければ null */
+    /** 入場の1時間前(入場の時刻が分からなければ試合開始の3時間前)の時刻(例「11:00」)と、その名前・予報。取れなければ null */
     val beforeTime: String? = null,
     val beforeLabel: String = "",
     val before: MatchWeather? = null
@@ -60,9 +62,8 @@ object WeatherRepository {
         val startHour = Regex("""^(\d{1,2}):\d{2}$""").find(game.timeLabel.trim())?.groupValues?.get(1)?.toIntOrNull()
             ?: return null
         val entryHour = entryTime?.let { Regex("""^(\d{1,2}):\d{2}$""").find(it.trim())?.groupValues?.get(1)?.toIntOrNull() }
-        // 会場へ向かうころの天気:入場の1時間前(入場の時刻が分からなければ試合開始の1時間前)
-        val baseHour = entryHour ?: startHour
-        val beforeHour = (baseHour - 1).takeIf { it >= 0 }
+        // 会場へ向かうころの天気:入場の1時間前(入場の時刻が分からなければ試合開始の3時間前)
+        val beforeHour = (if (entryHour != null) entryHour - 1 else startHour - 3).takeIf { it >= 0 }
         val map = forGameHours(game, listOfNotNull(beforeHour, entryHour, startHour))
         val start = map[startHour]
         val entry = entryHour?.let { map[it] }
@@ -71,7 +72,7 @@ object WeatherRepository {
         return GameForecast(
             entryTime?.takeIf { entry != null }, entry, game.timeLabel.trim(), start,
             beforeTime = beforeHour?.takeIf { before != null }?.let { "%d:00".format(it) },
-            beforeLabel = if (entryHour != null) "入場の1時間前" else "試合開始の1時間前",
+            beforeLabel = if (entryHour != null) "入場の1時間前" else "試合開始の3時間前",
             before = before
         )
     }
@@ -97,9 +98,10 @@ object WeatherRepository {
             val target = "%sT%02d:00".format(date, hour)
             val idx = (0 until times.length()).firstOrNull { times.getString(it) == target } ?: return@withContext null
             val temp = hourly.getJSONArray("temperature_2m").optDouble(idx)
-            val rain = hourly.optJSONArray("precipitation_probability")?.optInt(idx, -1)?.takeIf { it >= 0 }
+            // 降水確率は気象庁の予報(6時間ごと)から。Open-Meteo の降水確率は、山あいなどで天気と食いちがうことがあるため使わない
+            val pop = jmaPop(game, date, hour)
             val code = hourly.getJSONArray("weather_code").optInt(idx)
-            MatchWeather(label, weatherLabel(code), Math.round(temp).toInt(), rain, amounts(hourly, idx).first, amounts(hourly, idx).second, amounts(hourly, idx).third)
+            MatchWeather(label, weatherLabel(code), Math.round(temp).toInt(), pop?.first, amounts(hourly, idx).first, amounts(hourly, idx).second, amounts(hourly, idx).third, rainSource = pop?.second.orEmpty())
         } catch (e: Exception) {
             null
         }
@@ -123,10 +125,11 @@ object WeatherRepository {
                 val idx = (0 until times.length()).firstOrNull { times.getString(it) == target } ?: return@mapNotNull null
                 val temp = hourly.getJSONArray("temperature_2m").optDouble(idx)
                 if (temp.isNaN()) return@mapNotNull null
-                val rain = hourly.optJSONArray("precipitation_probability")?.optInt(idx, -1)?.takeIf { it >= 0 }
+                // 降水確率は気象庁の予報(6時間ごと)から
+                val pop = jmaPop(game, date, hour)
                 val code = hourly.getJSONArray("weather_code").optInt(idx)
                 val (precip, snow, depth) = amounts(hourly, idx)
-                hour to MatchWeather(label, weatherLabel(code), Math.round(temp).toInt(), rain, precip, snow, depth)
+                hour to MatchWeather(label, weatherLabel(code), Math.round(temp).toInt(), pop?.first, precip, snow, depth, rainSource = pop?.second.orEmpty())
             }.toMap()
         } catch (e: Exception) {
             emptyMap()
@@ -167,6 +170,95 @@ object WeatherRepository {
         Triple("大田区総合体育館", 35.561 to 139.716, "大田区"),
         Triple("豊見城市民体育館", 26.161 to 127.669, "豊見城市")
     )
+
+    /**
+     * 気象庁の天気予報の地域(会場名の一部・府県予報区のコード・一次細分区域の名前)。降水確率に使う。
+     * ホームの試合で会場が表に無いときは、福井県の嶺北にする(Web版の weather.js の JMA_AREAS と同じ)
+     */
+    private val JMA_AREAS: List<Triple<String, String, String>> = listOf(
+        Triple("セーレン・ドリームアリーナ", "180000", "嶺北"),
+        Triple("北陸電力福井体育館", "180000", "嶺北"),
+        Triple("飛騨高山ビッグアリーナ", "210000", "飛騨地方"),
+        Triple("敦賀市総合運動公園", "180000", "嶺南"),
+        Triple("越前市アイシン", "180000", "嶺北"),
+        Triple("このはなアリーナ", "220000", "中部"),
+        Triple("山形県総合運動公園", "060000", "村山"),
+        Triple("国立代々木競技場", "130000", "東京地方"),
+        Triple("鹿児島県総合体育センター", "460100", "薩摩地方"),
+        Triple("アオーレ長岡", "150000", "中越"),
+        Triple("いしかわ総合スポーツセンター", "170000", "加賀"),
+        Triple("エスフォルタアリーナ八王子", "130000", "東京地方"),
+        Triple("マエダアリーナ", "020000", "津軽"),
+        Triple("熊本県立総合体育館", "430000", "熊本地方"),
+        Triple("横浜BUNTAI", "140000", "東部"),
+        Triple("バルドラール浦安アリーナ", "120000", "北西部"),
+        Triple("俵田翁記念体育館", "350000", "西部"),
+        Triple("生駒市", "290000", "北部"),
+        Triple("和光市", "110000", "南部"),
+        Triple("本宮市", "070000", "中通り"),
+        Triple("富山県西部体育センター", "160000", "西部"),
+        Triple("エントリオ", "230000", "西部"),
+        Triple("枇杷島スポーツセンター", "230000", "西部"),
+        Triple("クロコくんホール", "230000", "西部"),
+        Triple("ウィングアリーナ刈谷", "230000", "西部"),
+        Triple("アリーナ立川立飛", "130000", "東京地方"),
+        Triple("大田区総合体育館", "130000", "東京地方"),
+        Triple("豊見城市民体育館", "471000", "本島中南部")
+    )
+
+    private fun jmaAreaFor(game: Game): Pair<String, String>? {
+        val venue = game.venue.trim()
+        JMA_AREAS.firstOrNull { venue.contains(it.first) }?.let { return it.second to it.third }
+        return if (game.isHome) "180000" to "嶺北" else null
+    }
+
+    /** 気象庁の府県予報(府県予報区のコードごと)。10分間は前に取ったものを使う */
+    private val jmaCache = mutableMapOf<String, Pair<Long, org.json.JSONArray>>()
+
+    private fun jmaForecast(office: String): org.json.JSONArray? {
+        val now = System.currentTimeMillis()
+        synchronized(jmaCache) { jmaCache[office]?.let { if (now - it.first < 10 * 60 * 1000) return it.second } }
+        return try {
+            val arr = org.json.JSONArray(get("https://www.jma.go.jp/bosai/forecast/data/forecast/$office.json"))
+            synchronized(jmaCache) { jmaCache[office] = now to arr }
+            arr
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    /**
+     * 気象庁の降水確率(%)と、そのもと(例「飛騨地方 12〜18時」)。date は「2026-10-31」、hour はその時刻(時)。
+     * 気象庁の予報は6時間ごと(0・6・12・18時から)で、今日・明日の分だけ。取れなければ null
+     */
+    private fun jmaPop(game: Game, date: String, hour: Int): Pair<Int, String>? = try {
+        val (office, areaName) = jmaAreaFor(game) ?: return null
+        val arr = jmaForecast(office) ?: return null
+        val series = arr.getJSONObject(0).getJSONArray("timeSeries")
+        var out: Pair<Int, String>? = null
+        for (i in 0 until series.length()) {
+            val ts = series.getJSONObject(i)
+            val areas = ts.optJSONArray("areas") ?: continue
+            val area = (0 until areas.length()).map { areas.getJSONObject(it) }
+                .firstOrNull { it.optJSONObject("area")?.optString("name") == areaName && it.has("pops") } ?: continue
+            val times = ts.getJSONArray("timeDefines")
+            val pops = area.getJSONArray("pops")
+            for (j in 0 until minOf(times.length(), pops.length())) {
+                val t = times.getString(j)
+                if (t.length < 13 || t.substring(0, 10) != date) continue
+                val h = t.substring(11, 13).toIntOrNull() ?: continue
+                if (hour in h until h + 6) {
+                    val v = pops.optString(j).trim().toIntOrNull() ?: break
+                    out = v to "$areaName ${h}〜${h + 6}時"
+                    break
+                }
+            }
+            if (out != null) break
+        }
+        out
+    } catch (e: Exception) {
+        null
+    }
 
     /** 対戦相手の本拠地ではなく、試合会場を優先する。ホーム会場が未登録なら従来の福井市座標を使う。 */
     private suspend fun gameLocation(game: Game): Triple<Double, Double, String>? {
