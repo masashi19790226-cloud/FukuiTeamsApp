@@ -5914,5 +5914,47 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.VekTwm8XxMrRZO6i7gvd0Q&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-31T20:41:09.540526+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4298782878347878160",
+    "team": "UNITED",
+    "title": "サッカー地域CL2026組み合わせ決定 福井ユナイテッドは関西代表、全社1位と同組 - 47NEWS",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15166550.html&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw040I5u2utDezbRQOmflvm1",
+    "published": "2026-10-31T19:50:09Z",
+    "detected_at": "2026-10-31T21:01:08.599254+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15102961988908147319",
+    "team": "UNITED",
+    "title": "福井ユナイテッド、初戦は関西代表 地域CL2026組み合わせ決定",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2736144&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw28nErqouEDf604pQrxqxVd",
+    "published": "2026-10-31T19:35:48Z",
+    "detected_at": "2026-10-31T21:01:08.599296+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5539661136991540346",
+    "team": "UNITED",
+    "title": "JFL昇格に挑む福井ユナイテッド 1次ラウンド対戦カード決定 全国地域サッカーチャンピオンズ ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.ntv.co.jp/n/fbc/category/society/fbf6abe3a7102b462aaba121de7a424aa7&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw26GNmSXc-Bfdd8ze9LZtP3",
+    "published": "2026-10-31T19:06:46Z",
+    "detected_at": "2026-10-31T21:01:08.599331+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3103659474998240122",
+    "team": "UNITED",
+    "title": "サッカー地域CL2026組み合わせ決定 福井ユナイテッドは関西代表、全社1位と同組",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2736147&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2OFP06duZbDeYAdI_hciOH",
+    "published": "2026-10-31T17:17:47Z",
+    "detected_at": "2026-10-31T21:01:08.599370+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2736439",
+    "team": "UNITED",
+    "title": "サッカー全国地域CL・1次L 福井U 関西代表と初戦 JFL昇格へ13日開幕",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2736439",
+    "published": "2026-10-31T03:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.VekTwm8XxMrRZO6i7gvd0Q&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-31T21:01:10.005212+00:00"
   }
 ]
