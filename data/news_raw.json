@@ -394,16 +394,6 @@
     "image": ""
   },
   {
-    "id": "official-news:https://ruck-fukui.com/archives/6426",
-    "team": "RAC",
-    "title": "【第11節】メットライフ生命日本女子Fリーグ2026-27 のお知らせ",
-    "link": "https://ruck-fukui.com/archives/6426",
-    "published": "2026-09-16T22:29:05+00:00",
-    "detected_at": "2026-09-16T22:29:05+00:00",
-    "source": "丸岡RUCK公式",
-    "image": ""
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -5966,5 +5956,13 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.VekTwm8XxMrRZO6i7gvd0Q&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-31T21:27:23.501165+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12330116965655944857",
+    "team": "UNITED",
+    "title": "ソフィー على X: \"福井ユナイテッドのことも推してるから、ASC北海道",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/ss10skab136/status/2116343353688330635%3Flang%3Dar&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw16zSaZmxI4RcpaegnvtHwI",
+    "published": "2026-10-31T14:24:14Z",
+    "detected_at": "2026-10-31T22:41:07.128504+00:00"
   }
 ]
