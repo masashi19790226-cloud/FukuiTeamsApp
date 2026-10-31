@@ -231,33 +231,35 @@ object WeatherRepository {
      * 気象庁の降水確率(%)と、そのもと(例「飛騨地方 12〜18時」)。date は「2026-10-31」、hour はその時刻(時)。
      * 気象庁の予報は6時間ごと(0・6・12・18時から)で、今日・明日の分だけ。取れなければ null
      */
-    private fun jmaPop(game: Game, date: String, hour: Int): Pair<Int, String>? = try {
+    private fun jmaPop(game: Game, date: String, hour: Int): Pair<Int, String>? {
         val (office, areaName) = jmaAreaFor(game) ?: return null
         val arr = jmaForecast(office) ?: return null
-        val series = arr.getJSONObject(0).getJSONArray("timeSeries")
-        var out: Pair<Int, String>? = null
-        for (i in 0 until series.length()) {
-            val ts = series.getJSONObject(i)
-            val areas = ts.optJSONArray("areas") ?: continue
-            val area = (0 until areas.length()).map { areas.getJSONObject(it) }
-                .firstOrNull { it.optJSONObject("area")?.optString("name") == areaName && it.has("pops") } ?: continue
-            val times = ts.getJSONArray("timeDefines")
-            val pops = area.getJSONArray("pops")
-            for (j in 0 until minOf(times.length(), pops.length())) {
-                val t = times.getString(j)
-                if (t.length < 13 || t.substring(0, 10) != date) continue
-                val h = t.substring(11, 13).toIntOrNull() ?: continue
-                if (hour in h until h + 6) {
-                    val v = pops.optString(j).trim().toIntOrNull() ?: break
-                    out = v to "$areaName ${h}〜${h + 6}時"
-                    break
+        return try {
+            val series = arr.getJSONObject(0).getJSONArray("timeSeries")
+            var out: Pair<Int, String>? = null
+            for (i in 0 until series.length()) {
+                val ts = series.getJSONObject(i)
+                val areas = ts.optJSONArray("areas") ?: continue
+                val area = (0 until areas.length()).map { areas.getJSONObject(it) }
+                    .firstOrNull { it.optJSONObject("area")?.optString("name") == areaName && it.has("pops") } ?: continue
+                val times = ts.getJSONArray("timeDefines")
+                val pops = area.getJSONArray("pops")
+                for (j in 0 until minOf(times.length(), pops.length())) {
+                    val t = times.getString(j)
+                    if (t.length < 13 || t.substring(0, 10) != date) continue
+                    val h = t.substring(11, 13).toIntOrNull() ?: continue
+                    if (hour in h until h + 6) {
+                        val v = pops.optString(j).trim().toIntOrNull() ?: break
+                        out = v to "$areaName ${h}〜${h + 6}時"
+                        break
+                    }
                 }
+                if (out != null) break
             }
-            if (out != null) break
+            out
+        } catch (e: Exception) {
+            null
         }
-        out
-    } catch (e: Exception) {
-        null
     }
 
     /** 対戦相手の本拠地ではなく、試合会場を優先する。ホーム会場が未登録なら従来の福井市座標を使う。 */
