@@ -298,5 +298,11 @@
         "opp": 17
       }
     ]
+  },
+  "bw13": {
+    "my_score": 80,
+    "opponent_score": 78,
+    "checked_at": "2026-11-01T08:41:36.758437",
+    "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507306"
   }
 }
