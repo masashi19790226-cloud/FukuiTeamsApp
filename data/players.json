@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-01T18:42:35.151169+00:00",
+    "updated_at": "2026-11-01T19:03:30.117210+00:00",
     "players": [
       {
         "number": "1",
@@ -404,6 +404,26 @@
         "fta": "2",
         "game_log": [
           {
+            "date": "2026-11-01",
+            "opp": "岐阜",
+            "ha": "A",
+            "wl": "W",
+            "start": false,
+            "pts": "0",
+            "fgm": "0",
+            "fga": "0",
+            "tpm": "0",
+            "tpa": "0",
+            "ftm": "0",
+            "fta": "0",
+            "reb": "0",
+            "ast": "0",
+            "stl": "0",
+            "blk": "0",
+            "tov": "0",
+            "eff": "0"
+          },
+          {
             "date": "2026-10-31",
             "opp": "岐阜",
             "ha": "A",
@@ -486,27 +506,6 @@
             "blk": "0",
             "tov": "0",
             "eff": "-2"
-          },
-          {
-            "date": "2026-10-17",
-            "opp": "新潟",
-            "ha": "A",
-            "wl": "L",
-            "start": false,
-            "min": "04:51",
-            "pts": "6",
-            "fgm": "2",
-            "fga": "2",
-            "tpm": "2",
-            "tpa": "2",
-            "ftm": "0",
-            "fta": "0",
-            "reb": "0",
-            "ast": "0",
-            "stl": "0",
-            "blk": "0",
-            "tov": "2",
-            "eff": "3"
           }
         ],
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000471",
@@ -1583,6 +1582,26 @@
         "fta": "6",
         "game_log": [
           {
+            "date": "2026-11-01",
+            "opp": "岐阜",
+            "ha": "A",
+            "wl": "W",
+            "start": false,
+            "pts": "0",
+            "fgm": "0",
+            "fga": "0",
+            "tpm": "0",
+            "tpa": "0",
+            "ftm": "0",
+            "fta": "0",
+            "reb": "0",
+            "ast": "0",
+            "stl": "0",
+            "blk": "0",
+            "tov": "0",
+            "eff": "0"
+          },
+          {
             "date": "2026-10-31",
             "opp": "岐阜",
             "ha": "A",
@@ -1665,27 +1684,6 @@
             "blk": "0",
             "tov": "0",
             "eff": "6"
-          },
-          {
-            "date": "2026-10-17",
-            "opp": "新潟",
-            "ha": "A",
-            "wl": "L",
-            "start": false,
-            "min": "10:12",
-            "pts": "0",
-            "fgm": "0",
-            "fga": "0",
-            "tpm": "0",
-            "tpa": "0",
-            "ftm": "0",
-            "fta": "0",
-            "reb": "1",
-            "ast": "0",
-            "stl": "0",
-            "blk": "0",
-            "tov": "1",
-            "eff": "-1"
           }
         ],
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=40142",
@@ -2163,6 +2161,26 @@
         },
         "log": [
           {
+            "date": "2026-11-01",
+            "opp": "岐阜",
+            "ha": "A",
+            "wl": "W",
+            "start": false,
+            "pts": "0",
+            "fgm": "0",
+            "fga": "0",
+            "tpm": "0",
+            "tpa": "0",
+            "ftm": "0",
+            "fta": "0",
+            "reb": "0",
+            "ast": "0",
+            "stl": "0",
+            "blk": "0",
+            "tov": "0",
+            "eff": "0"
+          },
+          {
             "date": "2026-10-31",
             "opp": "岐阜",
             "ha": "A",
@@ -2245,27 +2263,6 @@
             "blk": "0",
             "tov": "0",
             "eff": "-2"
-          },
-          {
-            "date": "2026-10-17",
-            "opp": "新潟",
-            "ha": "A",
-            "wl": "L",
-            "start": false,
-            "min": "04:51",
-            "pts": "6",
-            "fgm": "2",
-            "fga": "2",
-            "tpm": "2",
-            "tpa": "2",
-            "ftm": "0",
-            "fta": "0",
-            "reb": "0",
-            "ast": "0",
-            "stl": "0",
-            "blk": "0",
-            "tov": "2",
-            "eff": "3"
           }
         ]
       },
@@ -3243,6 +3240,26 @@
         },
         "log": [
           {
+            "date": "2026-11-01",
+            "opp": "岐阜",
+            "ha": "A",
+            "wl": "W",
+            "start": false,
+            "pts": "0",
+            "fgm": "0",
+            "fga": "0",
+            "tpm": "0",
+            "tpa": "0",
+            "ftm": "0",
+            "fta": "0",
+            "reb": "0",
+            "ast": "0",
+            "stl": "0",
+            "blk": "0",
+            "tov": "0",
+            "eff": "0"
+          },
+          {
             "date": "2026-10-31",
             "opp": "岐阜",
             "ha": "A",
@@ -3325,27 +3342,6 @@
             "blk": "0",
             "tov": "0",
             "eff": "6"
-          },
-          {
-            "date": "2026-10-17",
-            "opp": "新潟",
-            "ha": "A",
-            "wl": "L",
-            "start": false,
-            "min": "10:12",
-            "pts": "0",
-            "fgm": "0",
-            "fga": "0",
-            "tpm": "0",
-            "tpa": "0",
-            "ftm": "0",
-            "fta": "0",
-            "reb": "1",
-            "ast": "0",
-            "stl": "0",
-            "blk": "0",
-            "tov": "1",
-            "eff": "-1"
           }
         ]
       }
@@ -3354,7 +3350,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=725&tab=1",
-    "updated_at": "2026-11-01T18:42:36.633796+00:00",
+    "updated_at": "2026-11-01T19:04:04.829313+00:00",
     "players": [
       {
         "number": "0",
