@@ -6008,5 +6008,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DfMV4UDzH67/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0Kj5h6rho8CcyZY7RQHT0h",
     "published": "2026-11-01T08:52:49Z",
     "detected_at": "2026-11-01T09:41:07.214724+00:00"
+  },
+  {
+    "id": "bing:https://www.msn.com/ja-jp/news/other/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA-2%E7%82%B9%E5%B7%AE%E3%81%AB%E8%BF%AB%E3%82%89%E3%82%8C%E3%82%8B%E3%82%82%E9%80%83%E3%81%92%E5%88%87%E3%82%8A%E9%80%A3%E5%8B%9D-b%E3%83%AA%E3%83%BC%E3%82%B0%E3%83%AF%E3%83%B3%E7%AC%AC7%E7%AF%80-%E5%B2%90%E9%98%9C%E3%82%B9%E3%82%A5%E3%83%BC%E3%83%97%E3%82%B9%E6%88%A6/ar-AA2gvIQe",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、2点差に迫られるも逃げ切り連勝 Bリーグワン ...",
+    "link": "https://www.msn.com/ja-jp/news/other/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA-2%E7%82%B9%E5%B7%AE%E3%81%AB%E8%BF%AB%E3%82%89%E3%82%8C%E3%82%8B%E3%82%82%E9%80%83%E3%81%92%E5%88%87%E3%82%8A%E9%80%A3%E5%8B%9D-b%E3%83%AA%E3%83%BC%E3%82%B0%E3%83%AF%E3%83%B3%E7%AC%AC7%E7%AF%80-%E5%B2%90%E9%98%9C%E3%82%B9%E3%82%A5%E3%83%BC%E3%83%97%E3%82%B9%E6%88%A6/ar-AA2gvIQe",
+    "published": "2026-11-01T01:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "",
+    "detected_at": "2026-11-01T10:01:11.334317+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261101de69252",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ 岐阜に2連勝",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261101de69252",
+    "published": "2026-10-31T21:27:00+00:00",
+    "source": "news.web",
+    "image": "https://www.bing.com/th?id=ONUT.XfIioheOr_hZN_iGeEQLZw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-01T10:01:11.334332+00:00"
   }
 ]
