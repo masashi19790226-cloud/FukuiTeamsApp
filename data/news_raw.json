@@ -6086,5 +6086,25 @@
     "source": "47NEWS",
     "image": "https://www.bing.com/th?id=ONUT.EcL0P8xeuswQ0tis-X3NQQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-01T17:21:09.843895+00:00"
+  },
+  {
+    "id": "bing:https://www.msn.com/ja-jp/sports/basketball/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA-%E4%BB%8A%E5%AD%A3%E5%88%9D%E3%81%AE4%E9%80%A3%E6%95%97-%E3%81%95%E3%81%84%E3%81%9F%E3%81%BE%E3%83%96%E3%83%AD%E3%83%B3%E3%82%B3%E3%82%B9%E3%81%AE%E5%AE%88%E5%82%99%E9%99%A3%E5%B4%A9%E3%81%9B%E3%81%9A-%E3%83%90%E3%82%B9%E3%82%B1b%E3%83%AA%E3%83%BC%E3%82%B0%E3%83%AF%E3%83%B3/ar-AA2g0Vg8",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季初の4連敗 さいたまブロンコスの守備陣 ...",
+    "link": "https://www.msn.com/ja-jp/sports/basketball/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA-%E4%BB%8A%E5%AD%A3%E5%88%9D%E3%81%AE4%E9%80%A3%E6%95%97-%E3%81%95%E3%81%84%E3%81%9F%E3%81%BE%E3%83%96%E3%83%AD%E3%83%B3%E3%82%B3%E3%82%B9%E3%81%AE%E5%AE%88%E5%82%99%E9%99%A3%E5%B4%A9%E3%81%9B%E3%81%9A-%E3%83%90%E3%82%B9%E3%82%B1b%E3%83%AA%E3%83%BC%E3%82%B0%E3%83%AF%E3%83%B3/ar-AA2g0Vg8",
+    "published": "2026-10-25T02:30:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.ztz9_bKYPxhxRW2Qr1UDig&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-01T17:41:08.111126+00:00"
+  },
+  {
+    "id": "bing:https://www.oricon.co.jp/article/3415227/",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの「ぶーず」が11月1日、カルビ大将春江店の ...",
+    "link": "https://www.oricon.co.jp/article/3415227/",
+    "published": "2026-10-23T05:32:00+00:00",
+    "source": "ORICON NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.-9I1kGZnk42ZKrQp6g4stQ&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-01T17:41:08.111161+00:00"
   }
 ]
