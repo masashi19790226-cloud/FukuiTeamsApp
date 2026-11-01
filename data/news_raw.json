@@ -6028,5 +6028,29 @@
     "source": "news.web",
     "image": "https://www.bing.com/th?id=ONUT.XfIioheOr_hZN_iGeEQLZw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-01T10:01:11.334332+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8063694322842570315",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、2点差に迫られるも逃げ切り連勝 Bリーグワン第7節・岐阜スゥープス戦",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2736727&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2OidEFgLKkPO_fqAVh2eX_",
+    "published": "2026-11-01T12:56:44Z",
+    "detected_at": "2026-11-01T13:21:06.219585+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:114936054377362883",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ 岐阜に２連勝 - NHKニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.web.nhk/newsweb/na/nd-20261101de69252&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw00yzAjLqy3szggfVE3AsDT",
+    "published": "2026-11-01T09:35:28Z",
+    "detected_at": "2026-11-01T13:21:06.219659+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1634793162052980040",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、逃げ切り連勝 Bリーグワン第7節・岐阜スゥープス戦 | スポーツ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2736723&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1vQPfrBXeDCt9xJCB9U6U9",
+    "published": "2026-11-01T08:15:38Z",
+    "detected_at": "2026-11-01T13:21:06.219706+00:00"
   }
 ]
