@@ -6106,5 +6106,21 @@
     "source": "ORICON NEWS",
     "image": "https://www.bing.com/th?id=ONUT.-9I1kGZnk42ZKrQp6g4stQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-01T17:41:08.111161+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:18267953531916301908",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、2点差に迫られるも逃げ切り連勝 Bリーグワン第7節・岐阜スゥープス戦",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://article.auone.jp/94e0821f-c866-49d9-8db4-3d51f78a00bf&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0cu7mST_GoBWME8UzHOiKp",
+    "published": "2026-11-01T15:07:40Z",
+    "detected_at": "2026-11-01T20:01:08.948143+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2555713391975370311",
+    "team": "UNITED",
+    "title": "地域リーグ 福井ユナイテッドFC vs 福山シティFC 日時 - スポカレ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://spocale.com/sports/2/game/369675&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw22CXJjproDARYB-WJhsSrF",
+    "published": "2026-11-01T14:11:51Z",
+    "detected_at": "2026-11-01T20:01:08.948189+00:00"
   }
 ]
