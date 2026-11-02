@@ -1,5 +1,24 @@
 [
   {
+    "id": "bing:https://www.rbbtoday.com/release/prtimes2-today/20260918/1359621.html",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ vs 金沢サムライズ 北陸ダービーWESTER全力応援 ...",
+    "link": "https://www.rbbtoday.com/release/prtimes2-today/20260918/1359621.html",
+    "published": "2026-09-18T09:45:00+00:00",
+    "source": "RBB TODAY",
+    "detected_at": "2026-10-04T13:52:12.766181+00:00"
+  },
+  {
+    "id": "bing:https://www.excite.co.jp/news/article/Prtimes_2026-09-18-95753-2295/",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ vs 金沢サムライズ 北陸ダービーWESTER全力応援 ...",
+    "link": "https://www.excite.co.jp/news/article/Prtimes_2026-09-18-95753-2295/",
+    "published": "2026-09-18T09:45:00+00:00",
+    "source": "Excite エキサイト",
+    "image": "",
+    "detected_at": "2026-10-29T14:21:13.304064+00:00"
+  },
+  {
     "id": "bing:https://prtimes.jp/main/html/rd/p/000000014.000110956.html",
     "team": "BLOWINDS",
     "title": "スポーツ・グルメ・音楽・地域の魅力がひとつになった「BLOWINDS FES ...",
