@@ -6429,5 +6429,15 @@
     "source": "Yahoo!ニュース",
     "image": "",
     "detected_at": "2026-11-03T11:21:08.956961+00:00"
+  },
+  {
+    "id": "bing:https://news.livedoor.com/article/detail/32723431/",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズがルビオHCとの契約解除を発表…後任は32歳の ...",
+    "link": "https://news.livedoor.com/article/detail/32723431/",
+    "published": "2026-11-03T02:24:00+00:00",
+    "source": "livedoor ニュース",
+    "image": "",
+    "detected_at": "2026-11-03T12:01:07.783361+00:00"
   }
 ]
