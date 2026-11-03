@@ -6375,5 +6375,25 @@
     "detected_at": "2026-11-03T09:01:12.011395+00:00",
     "source": "ブローウィンズ公式",
     "image": "https://www.fukuiblowinds.com/files/user/KV_3rd%20uniform.jpg"
+  },
+  {
+    "id": "bing:https://basketballking.jp/news/japan/20261103/641245.html",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズがルビオHCとの契約解除を発表…後任は32歳の ...",
+    "link": "https://basketballking.jp/news/japan/20261103/641245.html",
+    "published": "2026-11-03T02:24:00+00:00",
+    "source": "BASKETBALLKING VIDEO",
+    "image": "",
+    "detected_at": "2026-11-03T11:01:09.566382+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51836",
+    "team": "BLOWINDS",
+    "title": "マテオ・ルビオ ヘッドコーチ 契約解除 および 中堀 純希 ヘッドコーチ就任のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51836",
+    "published": "2026-11-03T09:00:00+09:00",
+    "detected_at": "2026-11-03T11:01:11.737284+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TOPTEAM.JPG"
   }
 ]
