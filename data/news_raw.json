@@ -6439,5 +6439,51 @@
     "source": "livedoor ニュース",
     "image": "",
     "detected_at": "2026-11-03T12:01:07.783361+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15388959269606250225",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズがルビオHCとの契約解除を発表…後任は32歳の中堀TAC、11月4日から指揮",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.livedoor.com/article/detail/32723431/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3w7RMmvgpGiqAmVV6XnE0g",
+    "published": "2026-11-03T11:43:45Z",
+    "detected_at": "2026-11-03T12:21:08.350246+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16600350402593489676",
+    "team": "BLOWINDS",
+    "title": "マテオ･ルビオHC契約解除 福井ブローウィンズ 6勝7敗で中地区3位 後任は中堀AC",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.ntv.co.jp/category/sports/fb34667992680348e5a5c4c0a19546c6d9&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1TKLYhc9c6BbtAeFkyYv6I",
+    "published": "2026-11-03T11:41:26Z",
+    "detected_at": "2026-11-03T12:21:08.350313+00:00"
+  },
+  {
+    "id": "bing:https://www.bleague.jp/media_news/detail/id=667132",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズがルビオHCとの契約解除を発表…後任は32歳の ...",
+    "link": "https://www.bleague.jp/media_news/detail/id=667132",
+    "published": "2026-11-02T16:00:00+00:00",
+    "source": "bleague",
+    "image": "",
+    "detected_at": "2026-11-03T12:21:08.765623+00:00"
+  },
+  {
+    "id": "bing:https://news.livedoor.com/article/image_detail/32723431/?img_id=57360133",
+    "team": "BLOWINDS",
+    "title": "【画像】福井ブローウィンズがルビオHCとの契約解除を発表…後任 ...",
+    "link": "https://news.livedoor.com/article/image_detail/32723431/?img_id=57360133",
+    "published": "2026-11-03T02:24:00+00:00",
+    "source": "livedoor ニュース",
+    "image": "",
+    "detected_at": "2026-11-03T12:21:08.765648+00:00"
+  },
+  {
+    "id": "bing:https://news.yahoo.co.jp/articles/52e213765c7fd27543586f1ba9685adf2ca1613f/images/000",
+    "team": "BLOWINDS",
+    "title": "マテオ･ルビオHC契約解除 福井ブローウィンズ 6勝7敗で中地区3位 ...",
+    "link": "https://news.yahoo.co.jp/articles/52e213765c7fd27543586f1ba9685adf2ca1613f/images/000",
+    "published": "2026-11-03T03:33:00+00:00",
+    "source": "Yahoo!ニュース",
+    "image": "",
+    "detected_at": "2026-11-03T12:21:08.765671+00:00"
   }
 ]
