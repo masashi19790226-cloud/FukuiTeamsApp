@@ -6555,5 +6555,13 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.YIzTFgJK6CoiJkeeXByLeA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-03T20:21:11.429329+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2047392759053706619",
+    "team": "BLOWINDS",
+    "title": "マテオ･ルビオHC契約解除 福井ブローウィンズ 6勝7敗で中地区3位 後任は中堀AC",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/52e213765c7fd27543586f1ba9685adf2ca1613f&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0_F6DBUbvgDYnYf_sqLvL5",
+    "published": "2026-11-03T18:22:13Z",
+    "detected_at": "2026-11-03T20:41:09.091243+00:00"
   }
 ]
