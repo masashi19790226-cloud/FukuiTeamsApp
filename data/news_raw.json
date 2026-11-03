@@ -6537,5 +6537,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DfRPmi-H7hD/&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw1ZBRi9XqTmqnkanEbvpJ68",
     "published": "2026-11-03T07:20:44Z",
     "detected_at": "2026-11-03T20:01:19.239015+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5251207962352853853",
+    "team": "BLOWINDS",
+    "title": "ルビオＨＣ契約解除 後任に中堀氏、きょう初陣 ブローウィンズ | スポーツ - 福井新聞",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2738268&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0c7cXKIjSmh6cR6G_e44c5",
+    "published": "2026-11-03T20:05:20Z",
+    "detected_at": "2026-11-03T20:21:10.938637+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2738268",
+    "team": "BLOWINDS",
+    "title": "ルビオHC契約解除 後任に中堀氏、きょう初陣 ブローウィンズ",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2738268",
+    "published": "2026-11-03T02:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.YIzTFgJK6CoiJkeeXByLeA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-03T20:21:11.429329+00:00"
   }
 ]
