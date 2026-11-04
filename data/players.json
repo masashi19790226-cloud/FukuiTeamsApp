@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-04T14:02:27.060185+00:00",
+    "updated_at": "2026-11-04T14:22:36.017205+00:00",
     "players": [
       {
         "number": "1",
@@ -1694,61 +1694,61 @@
       {
         "key": "PPG",
         "label": "平均得点数",
-        "rank": 22,
-        "value": "76.2",
+        "rank": 20,
+        "value": "76.3",
         "unit": "点"
       },
       {
         "key": "FG%",
         "label": "フィールドゴール成功率",
-        "rank": 17,
-        "value": "43.4",
+        "rank": 15,
+        "value": "43.6",
         "unit": "%"
       },
       {
         "key": "3FG%",
         "label": "3ポイント成功率",
-        "rank": 21,
-        "value": "29.1",
+        "rank": 22,
+        "value": "28.7",
         "unit": "%"
       },
       {
         "key": "FT%",
         "label": "フリースロー成功率",
         "rank": 23,
-        "value": "63.2",
+        "value": "64.4",
         "unit": "%"
       },
       {
         "key": "RPG",
         "label": "平均リバウンド数",
-        "rank": 10,
-        "value": "40.2",
+        "rank": 11,
+        "value": "40.1",
         "unit": "本"
       },
       {
         "key": "APG",
         "label": "平均アシスト数",
-        "rank": 17,
-        "value": "19.5",
+        "rank": 18,
+        "value": "19.3",
         "unit": "本"
       },
       {
         "key": "BPG",
         "label": "平均ブロック数",
         "rank": 21,
-        "value": "2.15",
+        "value": "2.07",
         "unit": "本"
       },
       {
         "key": "SPG",
         "label": "平均スティール数",
         "rank": 23,
-        "value": "5.92",
+        "value": "5.86",
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年11月01日20:46",
+    "team_stats_updated": "2026年11月04日22:49",
     "league": "B.ONE",
     "league_teams": 25,
     "club_photos": {
@@ -3350,7 +3350,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=1639&tab=1",
-    "updated_at": "2026-11-04T14:02:29.620226+00:00",
+    "updated_at": "2026-11-04T14:22:38.386772+00:00",
     "players": [
       {
         "number": "0",
