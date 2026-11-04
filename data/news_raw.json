@@ -6562,5 +6562,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DfTH2jwvI1c/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0bDUt0ILRBwRd7Bm_Hqa-T",
     "published": "2026-11-04T00:04:02Z",
     "detected_at": "2026-11-04T00:41:07.891639+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4243418472179797964",
+    "team": "BLOWINDS",
+    "title": "「福井ブローウィンズ」マテオ・ルビオHC契約解除 後任は福井市出身の中堀純希氏 4日の鹿児島戦 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukui-tv.co.jp/%3Fpost_type%3Dfukui_news%26p%3D203342&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3W6UUJTCo8KoYWvmLawAVD",
+    "published": "2026-11-04T01:45:21Z",
+    "detected_at": "2026-11-04T02:01:09.777003+00:00"
+  },
+  {
+    "id": "bing:https://www.fnn.jp/articles/-/1145546",
+    "team": "BLOWINDS",
+    "title": "「福井ブローウィンズ」マテオ・ルビオHC契約解除 後任は福井市 ...",
+    "link": "https://www.fnn.jp/articles/-/1145546",
+    "published": "2026-11-03T16:00:00+00:00",
+    "source": "FNNプライムオンライン",
+    "image": "https://www.bing.com/th?id=ONUT.H98Lpa9Np-V9YrutKEtlIw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-04T02:01:10.737336+00:00"
   }
 ]
