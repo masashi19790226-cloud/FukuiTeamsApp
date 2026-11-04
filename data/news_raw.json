@@ -1140,15 +1140,6 @@
     "detected_at": "2026-10-04T13:52:13.392614+00:00"
   },
   {
-    "id": "bing:https://topics.smt.docomo.ne.jp/article/fukui/region/fukui-20260921083127759",
-    "team": "UNITED",
-    "title": "福井ユナイテッドが2年ぶり6度目の優勝、サッカーの北信越リーグ1 ...",
-    "link": "https://topics.smt.docomo.ne.jp/article/fukui/region/fukui-20260921083127759",
-    "published": "2026-09-20T16:30:00+00:00",
-    "source": "dメニューニュース",
-    "detected_at": "2026-10-04T13:52:13.392651+00:00"
-  },
-  {
     "id": "bing:https://www.sankei.com/pressrelease/prtimes/2QSVQG4GSNJTJFES47WBSBO3IQ/",
     "team": "BLOWINDS",
     "title": "【(株)アトム×福井ブローウィンズ】目指せ全選手コンプリート ...",
@@ -3377,16 +3368,6 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://media.unisba.ac.id/65320286/005f98cflOvkQ5Qdh5w&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw09dsxmlpkjuZxfuKU-O2ct",
     "published": "2026-10-17T09:54:15Z",
     "detected_at": "2026-10-18T05:10:49.803080+00:00"
-  },
-  {
-    "id": "bing:https://news.yahoo.co.jp/articles/a1ca77c17a8d7afb92c9ec932d0a67ff9f8dc1d5",
-    "team": "UNITED",
-    "title": "福井ユナイテッドが2年ぶり6度目の優勝、サッカーの北信越リーグ1 ...",
-    "link": "https://news.yahoo.co.jp/articles/a1ca77c17a8d7afb92c9ec932d0a67ff9f8dc1d5",
-    "published": "2026-09-20T16:29:00+00:00",
-    "source": "Yahoo!ニュース",
-    "image": "",
-    "detected_at": "2026-10-18T05:10:51.448241+00:00"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:14311484316261087693",
@@ -6753,5 +6734,13 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2739075&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1mNvMRL8lEok1GXpJiuaOj",
     "published": "2026-11-04T12:54:20Z",
     "detected_at": "2026-11-04T15:01:10.032737+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10498734547288955626",
+    "team": "BLOWINDS",
+    "title": "これまで積み上げてきたすべての思いを胸に。 これからも、ともに戦おう。 #福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DfUxbfSBGkF/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3y0byvoX1XhAKnHPo3K7qp",
+    "published": "2026-11-04T15:25:43Z",
+    "detected_at": "2026-11-04T16:41:11.915561+00:00"
   }
 ]
