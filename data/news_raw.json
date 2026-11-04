@@ -1149,15 +1149,6 @@
     "detected_at": "2026-10-04T13:52:13.392651+00:00"
   },
   {
-    "id": "bing:https://www.47news.jp/14971652.html",
-    "team": "UNITED",
-    "title": "福井ユナイテッドが優勝、2年ぶり6度目 サッカーの北信越リーグ1部 ...",
-    "link": "https://www.47news.jp/14971652.html",
-    "published": "2026-09-20T04:55:00+00:00",
-    "source": "47NEWS",
-    "detected_at": "2026-10-04T13:52:13.392667+00:00"
-  },
-  {
     "id": "bing:https://www.sankei.com/pressrelease/prtimes/2QSVQG4GSNJTJFES47WBSBO3IQ/",
     "team": "BLOWINDS",
     "title": "【(株)アトム×福井ブローウィンズ】目指せ全選手コンプリート ...",
@@ -1206,16 +1197,6 @@
     "source": "FNNプライムオンライン",
     "image": "",
     "detected_at": "2026-10-04T17:14:14.143636+00:00"
-  },
-  {
-    "id": "bing:https://www.msn.com/ja-jp/sports/soccer/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89%E3%81%8C%E5%84%AA%E5%8B%9D-2%E5%B9%B4%E3%81%B6%E3%82%8A6%E5%BA%A6%E7%9B%AE-%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E3%81%AE%E5%8C%97%E4%BF%A1%E8%B6%8A%E3%83%AA%E3%83%BC%E3%82%B01%E9%83%A8-2%E8%A9%A6%E5%90%88%E6%AE%8B%E3%81%97%E6%B1%BA%E5%AE%9A/ar-AA2cC8yY",
-    "team": "UNITED",
-    "title": "福井ユナイテッドが優勝、2年ぶり6度目 サッカーの北信越リーグ1部 ...",
-    "link": "https://www.msn.com/ja-jp/sports/soccer/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89%E3%81%8C%E5%84%AA%E5%8B%9D-2%E5%B9%B4%E3%81%B6%E3%82%8A6%E5%BA%A6%E7%9B%AE-%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E3%81%AE%E5%8C%97%E4%BF%A1%E8%B6%8A%E3%83%AA%E3%83%BC%E3%82%B01%E9%83%A8-2%E8%A9%A6%E5%90%88%E6%AE%8B%E3%81%97%E6%B1%BA%E5%AE%9A/ar-AA2cC8yY",
-    "published": "2026-09-20T04:55:00+00:00",
-    "source": "福井新聞ONLINE",
-    "image": "https://www.bing.com/th?id=ONUT.YWEOAaiwDqJQD7rZ75YNLw&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-04T17:14:14.738733+00:00"
   },
   {
     "id": "bing:https://www.yomiuri.co.jp/local/fukui/news/20261004-GYTNT00070/",
@@ -6618,5 +6599,29 @@
     "source": "news.web",
     "image": "",
     "detected_at": "2026-11-04T04:01:07.697620+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2725743432935474935",
+    "team": "BLOWINDS",
+    "title": "ブローウィンズの藤永佳昭選手が激励 バスケ全国高校選手権出場の北陸高校を訪問 - 47NEWS",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15181818.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2IQYF51ngZW31_Gi2Xo6cG",
+    "published": "2026-11-04T04:22:11Z",
+    "detected_at": "2026-11-04T05:01:09.858122+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13185321470131834657",
+    "team": "BLOWINDS",
+    "title": "ブローウィンズの藤永佳昭選手が激励 バスケ全国高校選手権出場の北陸高校を訪問 - 中日新聞",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.chunichi.co.jp/article/1334469%3Frct%3Df_local&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3yJbk7QBHrDigWvPpe29_f",
+    "published": "2026-11-04T04:06:14Z",
+    "detected_at": "2026-11-04T05:01:09.858151+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16762053374040467866",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ ルビオヘッドコーチとの契約を解除 - NHKニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.web.nhk/newsweb/na/nd-20261104de70252&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw15SwYFAjGgvNbWDUSwv_G-",
+    "published": "2026-11-04T03:36:54Z",
+    "detected_at": "2026-11-04T05:01:09.858165+00:00"
   }
 ]
