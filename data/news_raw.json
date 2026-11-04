@@ -6649,5 +6649,15 @@
     "source": "中日新聞Web",
     "image": "https://www.bing.com/th?id=ONUT.nEer5915UWYfQvBhzwrneA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-04T07:41:08.740750+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51842",
+    "team": "BLOWINDS",
+    "title": "藤原 隆充 アソシエイトヘッドコーチ 役職変更のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51842",
+    "published": "2026-11-04T09:00:00+09:00",
+    "detected_at": "2026-11-04T08:21:09.606015+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TOPTEAM.JPG"
   }
 ]
