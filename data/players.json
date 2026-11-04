@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-04T13:42:28.918481+00:00",
+    "updated_at": "2026-11-04T14:02:27.060185+00:00",
     "players": [
       {
         "number": "1",
@@ -3350,7 +3350,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=1639&tab=1",
-    "updated_at": "2026-11-04T13:42:31.417031+00:00",
+    "updated_at": "2026-11-04T14:02:29.620226+00:00",
     "players": [
       {
         "number": "0",
@@ -5063,35 +5063,35 @@
         "key": "PPG",
         "label": "平均得点数",
         "rank": 14,
-        "value": "79.8",
+        "value": "79.6",
         "unit": "点"
       },
       {
         "key": "FG%",
         "label": "フィールドゴール成功率",
-        "rank": 11,
-        "value": "44.0",
+        "rank": 13,
+        "value": "43.8",
         "unit": "%"
       },
       {
         "key": "3FG%",
         "label": "3ポイント成功率",
-        "rank": 20,
-        "value": "29.1",
+        "rank": 19,
+        "value": "29.3",
         "unit": "%"
       },
       {
         "key": "FT%",
         "label": "フリースロー成功率",
-        "rank": 13,
-        "value": "69.4",
+        "rank": 9,
+        "value": "70.5",
         "unit": "%"
       },
       {
         "key": "RPG",
         "label": "平均リバウンド数",
-        "rank": 5,
-        "value": "41.0",
+        "rank": 6,
+        "value": "41.1",
         "unit": "本"
       },
       {
@@ -5104,19 +5104,19 @@
       {
         "key": "BPG",
         "label": "平均ブロック数",
-        "rank": 7,
-        "value": "3.08",
+        "rank": 5,
+        "value": "3.36",
         "unit": "本"
       },
       {
         "key": "SPG",
         "label": "平均スティール数",
-        "rank": 8,
-        "value": "8.46",
+        "rank": 9,
+        "value": "8.5",
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年11月01日20:46",
+    "team_stats_updated": "2026年11月04日22:49",
     "league": "B.ONE",
     "league_teams": 25,
     "shot_cache": {
