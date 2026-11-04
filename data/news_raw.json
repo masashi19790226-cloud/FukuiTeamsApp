@@ -6608,5 +6608,15 @@
     "source": "FNNプライムオンライン",
     "image": "https://www.bing.com/th?id=ONUT.4morUiONXmPPprAzpLOdLA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-04T02:38:33.480656+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261104de70252",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ ルビオヘッドコーチとの契約を解除",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261104de70252",
+    "published": "2026-11-03T14:30:00+00:00",
+    "source": "news.web",
+    "image": "",
+    "detected_at": "2026-11-04T04:01:07.697620+00:00"
   }
 ]
