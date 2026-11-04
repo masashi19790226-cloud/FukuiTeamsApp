@@ -6580,5 +6580,23 @@
     "source": "FNNプライムオンライン",
     "image": "https://www.bing.com/th?id=ONUT.H98Lpa9Np-V9YrutKEtlIw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-04T02:01:10.737336+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14379770534149775093",
+    "team": "BLOWINDS",
+    "title": "鹿児島レブナイズ vs 福井ブローウィンズ - B.LEAGUE ONE(ビーリーグワン)のリセールチケット ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.ticket.co.jp/sys/d/122720.htm%3Fki%3D127450&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0gkm5PhP5SDxfP2JytuoLf",
+    "published": "2026-11-03T21:47:38Z",
+    "detected_at": "2026-11-04T02:21:09.053828+00:00"
+  },
+  {
+    "id": "bing:https://www.fnn.jp/articles/-/1128605",
+    "team": "THUNDER",
+    "title": "プレーオフ進出目指し本番へ ハンドボール福井永平寺ブルー ...",
+    "link": "https://www.fnn.jp/articles/-/1128605",
+    "published": "2026-10-07T02:45:00+00:00",
+    "source": "FNNプライムオンライン",
+    "image": "https://www.bing.com/th?id=ONUT.AoKcUXAbQgrrPnUt3enOnQ&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-04T02:21:12.118688+00:00"
   }
 ]
