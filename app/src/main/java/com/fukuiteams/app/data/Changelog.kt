@@ -15,6 +15,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年10月31日",
+        title = "ユナイテッドの地域CLの日程",
+        items = listOf(
+            "福井ユナイテッドの全国地域サッカーチャンピオンズリーグ1次ラウンド(11/13〜15・兵庫県洲本市のアスパ五色)の対戦相手とキックオフ時刻を入れました。会場の天気予報も出ます"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年10月31日",
         title = "天気予報の見直し",
         items = listOf(
             "天気予報で、入場の時刻が分からない試合は、試合開始の1時間前ではなく3時間前の天気を出すようにしました(会場へ向かうころの天気)",
