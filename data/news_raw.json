@@ -6872,5 +6872,15 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.sKnu_v6SKkTTHdq7ENwNmg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-05T08:01:06.830869+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261105de71183",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ ヘッドコーチ交代後の初戦で勝利し3連勝",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261105de71183",
+    "published": "2026-11-04T20:32:00+00:00",
+    "source": "news.web",
+    "image": "",
+    "detected_at": "2026-11-05T10:01:07.163663+00:00"
   }
 ]
