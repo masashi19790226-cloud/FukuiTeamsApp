@@ -556,7 +556,7 @@ private fun MatchDayCard(
                     .padding(horizontal = 8.dp, vertical = 5.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                val place = forecast?.let { it.start ?: it.entry ?: it.before }?.placeLabel ?: weather?.placeLabel.orEmpty()
+                val place = forecast?.let { it.start ?: it.entry ?: it.before ?: it.after }?.placeLabel ?: weather?.placeLabel.orEmpty()
                 WeatherForecastHeading("天気予報($place)", weatherColumns)
                 ForecastTable(weatherColumns)
             }
@@ -1138,7 +1138,9 @@ private fun GameForecast.toColumns(): List<ForecastColumn> = listOfNotNull(
         ForecastColumn(if (beforeLabel.startsWith("入場")) "入場1時間前" else "開始3時間前", beforeTime.orEmpty(), it)
     },
     entry?.takeIf { entryTime != null }?.let { ForecastColumn("入場", entryTime.orEmpty(), it) },
-    start?.let { ForecastColumn("試合開始", startTime, it) }
+    start?.let { ForecastColumn("試合開始", startTime, it) },
+    // 試合が終わって帰るころの天気(試合開始の約2時間後)
+    after?.takeIf { afterTime != null }?.let { ForecastColumn("約2時間後", afterTime.orEmpty(), it) }
 )
 
 /** 天気予報の見出しとアプリ取得時刻を同じ行に表示する。 */
@@ -1172,7 +1174,7 @@ private fun WeatherForecastHeading(title: String, cols: List<ForecastColumn>) {
 }
 
 /**
- * 天気予報の表。列が時刻(入場の1時間前・入場・試合開始)、行が 天気・気温・降水確率・降水量(・降雪・積雪)。
+ * 天気予報の表。列が時刻(入場の1時間前・入場・試合開始・約2時間後)、行が 天気・気温・降水確率・降水量(・降雪・積雪)。
  * 降水量・降雪・積雪は、どれかの時刻で降る(積もっている)ときだけ行を出す
  */
 @Composable
@@ -1184,8 +1186,8 @@ private fun ForecastTable(cols: List<ForecastColumn>) {
         add("天気" to { w: MatchWeather -> w.summary })
         add("気温" to { w: MatchWeather -> "${w.temperature}℃" })
         if (cols.any { it.w.rainChance != null }) add("降水確率" to { w: MatchWeather -> w.rainChance?.let { "$it%" } ?: "-" })
-        if (cols.any { (it.w.precipitationMm ?: 0.0) >= 0.1 }) add("降水量(1時間)" to { w: MatchWeather -> mm(w.precipitationMm) })
-        if (cols.any { (it.w.snowfallCm ?: 0.0) >= 0.1 }) add("降雪(1時間)" to { w: MatchWeather -> cm(w.snowfallCm) })
+        if (cols.any { (it.w.precipitationMm ?: 0.0) >= 0.1 }) add("降水量" to { w: MatchWeather -> mm(w.precipitationMm) })
+        if (cols.any { (it.w.snowfallCm ?: 0.0) >= 0.1 }) add("降雪" to { w: MatchWeather -> cm(w.snowfallCm) })
         if (cols.any { (it.w.snowDepthCm ?: 0) >= 1 }) add("積雪" to { w: MatchWeather -> w.snowDepthCm?.takeIf { it >= 1 }?.let { "${it}cm" } ?: "0" })
     }
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -1225,6 +1227,10 @@ private fun ForecastTable(cols: List<ForecastColumn>) {
                 color = InkSoft,
                 modifier = Modifier.padding(top = 2.dp)
             )
+        }
+        // 列が4つになると「降水量(1時間)」が入りきらないので、行の名前は短くして、ここに書く
+        if (rows.any { it.first == "降水量" || it.first == "降雪" }) {
+            Text("※降水量・降雪は、その時刻の1時間の量です。", style = MaterialTheme.typography.labelSmall, color = InkSoft)
         }
     }
 }

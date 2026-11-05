@@ -201,8 +201,9 @@ fun GameDetailScreen(
     // カレンダー(見ている月・押した日と、表示するチーム。null = 4チームすべて)
     val calendarState = remember { CalendarState(java.time.LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"))) }
     var calendarTeam by remember { mutableStateOf<Team?>(null) }
-    // カレンダーを開いているか(上のチームを切り替えても、カレンダーのままにする)
-    var calendarMode by remember { mutableStateOf(false) }
+    // カレンダーを開いているか(上のチームを切り替えても、カレンダーのままにする)。
+    // 試合タブを開いたときはカレンダーから(一面などから試合を指定して開いたときは、その試合の一覧)
+    var calendarMode by remember { mutableStateOf(gameId == null) }
     // カレンダーで押した試合(チームを切り替えてから、その試合を一覧で開く)
     var pendingOpenGameId by remember { mutableStateOf<String?>(null) }
     // 観戦方法・勝敗の記録は、変更されるたびに観戦成績カードへ即反映させる
@@ -390,7 +391,7 @@ fun GameDetailScreen(
                 EmptyTeamState(selectedTeam)
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    // 4つのボタンを画面の幅に収める(幅は文字数に合わせて分け合う)。
+                    // 4つのボタン(左からカレンダー・今後・過去・行く予定)を画面の幅に収める(幅は文字数に合わせて分け合う)。
                     // 入りきらないときは、4つとも同じだけ文字を小さくする(「行く予定」が途中で切れないように)
                     var tabFontSize by remember { mutableStateOf(13f) }
                     val shrinkTabs: () -> Unit = { if (tabFontSize > 9f) tabFontSize *= 0.92f }
@@ -403,7 +404,9 @@ fun GameDetailScreen(
                         "カレンダー"
                     )
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        tabLabels.forEachIndexed { i, label ->
+                        // 並びは左から カレンダー・今後の試合・過去の試合・行く予定(番号は 3・0・1・2)
+                        listOf(3, 0, 1, 2).forEach { i ->
+                            val label = tabLabels[i]
                             ScheduleTabChip(
                                 label = label,
                                 selected = if (calendarMode) i == 3 else scheduleTabIndex == i,

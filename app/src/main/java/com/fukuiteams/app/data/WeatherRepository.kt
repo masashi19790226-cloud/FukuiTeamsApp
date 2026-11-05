@@ -49,7 +49,10 @@ data class GameForecast(
     /** 入場の1時間前(入場の時刻が分からなければ試合開始の3時間前)の時刻(例「11:00」)と、その名前・予報。取れなければ null */
     val beforeTime: String? = null,
     val beforeLabel: String = "",
-    val before: MatchWeather? = null
+    val before: MatchWeather? = null,
+    /** 試合開始の約2時間後(試合が終わって帰るころ)の時刻(例「16:00」)と予報。取れなければ null */
+    val afterTime: String? = null,
+    val after: MatchWeather? = null
 )
 
 object WeatherRepository {
@@ -64,16 +67,21 @@ object WeatherRepository {
         val entryHour = entryTime?.let { Regex("""^(\d{1,2}):\d{2}$""").find(it.trim())?.groupValues?.get(1)?.toIntOrNull() }
         // 会場へ向かうころの天気:入場の1時間前(入場の時刻が分からなければ試合開始の3時間前)
         val beforeHour = (if (entryHour != null) entryHour - 1 else startHour - 3).takeIf { it >= 0 }
-        val map = forGameHours(game, listOfNotNull(beforeHour, entryHour, startHour))
+        // 試合が終わって帰るころの天気:試合開始の約2時間後(日をまたぐときは出さない)
+        val afterHour = (startHour + 2).takeIf { it <= 23 }
+        val map = forGameHours(game, listOfNotNull(beforeHour, entryHour, startHour, afterHour))
         val start = map[startHour]
         val entry = entryHour?.let { map[it] }
         val before = beforeHour?.let { map[it] }
-        if (start == null && entry == null && before == null) return null
+        val after = afterHour?.let { map[it] }
+        if (start == null && entry == null && before == null && after == null) return null
         return GameForecast(
             entryTime?.takeIf { entry != null }, entry, game.timeLabel.trim(), start,
             beforeTime = beforeHour?.takeIf { before != null }?.let { "%d:00".format(it) },
             beforeLabel = if (entryHour != null) "入場の1時間前" else "試合開始の3時間前",
-            before = before
+            before = before,
+            afterTime = afterHour?.takeIf { after != null }?.let { "%d:00".format(it) },
+            after = after
         )
     }
 
