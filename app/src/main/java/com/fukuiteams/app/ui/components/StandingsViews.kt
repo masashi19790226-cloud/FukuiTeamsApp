@@ -35,12 +35,12 @@ import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.Paper
 
 /*
- * 4チームのリーグの順位表(試合タブの「順位」で使う)。
+ * 4チームのリーグの順位表(チームタブの「今季」の「▼ 順位表」で使う)。
  * - ブローウィンズ: Bリーグ公式の地区別の順位表(BleagueStandingsSection)
  * - 丸岡RUCK・ユナイテッド: 女子Fリーグ公式の結果から計算した順位表/ユナイテッド公式の順位表(LeagueStandingsSection)
  */
 
-/** 試合タブの「順位」の要点(例「中地区 2位・4勝4敗・首位とゲーム差2」)。順位表がまだ無ければ、その旨 */
+/** 順位の要点(例「中地区 2位・4勝4敗・首位とゲーム差2」)。順位表がまだ無ければ、その旨 */
 fun teamStandingsSummary(team: Team, standings: LeagueStandings?): String {
     val bleague = standings?.bleague?.takeIf { team == Team.BLOWINDS }
     return when {
@@ -50,7 +50,7 @@ fun teamStandingsSummary(team: Team, standings: LeagueStandings?): String {
     }
 }
 
-/** 試合タブの「順位」を押したときに開く順位表。順位表がまだ無ければ何も出さない */
+/** チームタブの「▼ 順位表」を押したときに開く順位表。順位表がまだ無ければ何も出さない */
 @Composable
 fun TeamStandingsContent(team: Team, standings: LeagueStandings?, nextOpponent: String?, onOpenUrl: (String) -> Unit) {
     if (standings == null) return
@@ -460,7 +460,6 @@ fun TeamSeasonCard(team: Team, standings: LeagueStandings?) {
         } else {
             Text(teamStandingsSummary(team, standings), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Ink)
         }
-        Text("順位表は試合タブの「順位」で見られます。", style = MaterialTheme.typography.labelSmall, color = InkSoft)
     }
 }
 

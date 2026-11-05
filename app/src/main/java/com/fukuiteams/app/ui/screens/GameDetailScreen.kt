@@ -3,14 +3,10 @@ package com.fukuiteams.app.ui.screens
 import com.fukuiteams.app.ui.components.NewsChip
 import com.fukuiteams.app.ui.components.AddFromXSheet
 import com.fukuiteams.app.ui.components.MyGameEditSheet
-import com.fukuiteams.app.ui.components.TeamStandingsContent
-import com.fukuiteams.app.ui.components.teamStandingsSummary
 import com.fukuiteams.app.model.isMainTeamGame
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.icons.filled.Add
-import com.fukuiteams.app.data.LeagueStandings
-import com.fukuiteams.app.data.StandingsRepository
 import com.fukuiteams.app.data.MyGamesRepository
 import com.fukuiteams.app.data.SharedPostRequest
 import com.fukuiteams.app.ui.components.HomeAwayLabel
@@ -28,12 +24,10 @@ import com.fukuiteams.app.data.specialDay
 import com.fukuiteams.app.ui.components.SpecialDayBanner
 import com.fukuiteams.app.ui.components.SpecialDayBadge
 import com.fukuiteams.app.ui.components.photoCaption
-import com.fukuiteams.app.ui.components.HomeAwayRecordCard
 import com.fukuiteams.app.ui.components.MenuLinkRow
 import com.fukuiteams.app.ui.components.PackingChecklistCard
 import com.fukuiteams.app.ui.components.GameCommentEditor
 import com.fukuiteams.app.ui.components.GameShareCard
-import com.fukuiteams.app.data.computeHomeAwaySummary
 import com.fukuiteams.app.data.isToday
 import com.fukuiteams.app.data.GameLpRepository
 import com.fukuiteams.app.ui.components.GameLpSection
@@ -114,7 +108,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.fukuiteams.app.data.HomeAwaySummary
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.LayoutCoordinates
@@ -161,8 +154,9 @@ import java.net.URLEncoder
 import kotlinx.coroutines.launch
 
 /**
- * 「試合」タブ。上から: チーム選択 → 譲渡・招待チケット検索(チーム単位) →
- * (試合を選んでいればその詳細) → 試合スケジュール一覧、の並び。
+ * 「試合」タブ(日程と自分の観戦)。上から: チーム選択 → チームの写真 → 観戦成績 →
+ * 「今後の試合」「過去の試合」「行く予定」「カレンダー」の切り替え → 一覧(試合を押すとその下に詳細)。
+ * チームの順位表・ホーム/アウェイ別の成績はチームタブ(ArchiveScreen)にある。
  * 「直近の試合」の概要はホーム画面にあるため、ここではタブを開いた時点では
  * 特定の試合を自動選択しない(スケジュールから選んだときだけ詳細が出る)。
  */
@@ -202,10 +196,15 @@ fun GameDetailScreen(
     val context = LocalContext.current
 
     var autoResults by remember { mutableStateOf<Map<String, RemoteGameResult>>(emptyMap()) }
-    // 「成績」「順位」のどちらを開いているか(チームを切り替えたら閉じる)
+    // 「観戦成績」を開いているか(チームを切り替えたら閉じる)
     var topPanel by remember(selectedTeam) { mutableStateOf(TopPanel.NONE) }
-    // 4チームのリーグの順位表(「順位」で使う)
-    var leagueStandings by remember { mutableStateOf<Map<String, LeagueStandings>>(emptyMap()) }
+    // カレンダー(見ている月・押した日と、表示するチーム。null = 4チームすべて)
+    val calendarState = remember { CalendarState(java.time.LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"))) }
+    var calendarTeam by remember { mutableStateOf<Team?>(initialTeam) }
+    // カレンダーを開いているか(上のチームを切り替えても、カレンダーのままにする)
+    var calendarMode by remember { mutableStateOf(false) }
+    // カレンダーで押した試合(チームを切り替えてから、その試合を一覧で開く)
+    var pendingOpenGameId by remember { mutableStateOf<String?>(null) }
     // 観戦方法・勝敗の記録は、変更されるたびに観戦成績カードへ即反映させる
     val gameLogPrefs by context.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
     // 「行く予定」にした今後の試合(4チームまとめて、日付順)
@@ -215,17 +214,28 @@ fun GameDetailScreen(
     val watchRecords = remember(allTeamGames, gameLogPrefs, autoResults) {
         computeWatchRecords(allTeamGames, gameLogPrefs, autoResults)
     }
-    // ホーム・アウェイ別成績(観戦成績と同じ勝敗の決め方で集計)
-    // (U-20・サテライトなどの試合と、自分で追加した予定は入れない。リーグの成績と合わせるため)
-    val homeAwaySummary = remember(allTeamGames, gameLogPrefs, autoResults) {
-        computeHomeAwaySummary(allTeamGames.filter { it.isMainTeamGame() }, gameLogPrefs, autoResults)
-    }
     // 一面などから特定の試合を開いたときに、その試合の位置まで画面を動かすための情報
     val listScroll = rememberScrollState()
     val jumpMarks = remember { ListJumpMarks() }
     LaunchedEffect(gameId) {
         if (gameId == null) return@LaunchedEffect
         // 一覧が描かれるのを少し待ってから動かす
+        kotlinx.coroutines.delay(350)
+        val viewport = jumpMarks.viewport
+        val target = jumpMarks.selected
+        if (viewport != null && target != null && viewport.isAttached && target.isAttached) {
+            val dy = target.positionInRoot().y - viewport.positionInRoot().y
+            listScroll.animateScrollTo((listScroll.value + dy - 8f).toInt().coerceAtLeast(0))
+        }
+    }
+    // カレンダーで押した試合を、そのチームの「今後の試合」「過去の試合」で開いて、その位置まで画面を動かす
+    LaunchedEffect(pendingOpenGameId, selectedTeam) {
+        val id = pendingOpenGameId ?: return@LaunchedEffect
+        val g = allTeamGames.firstOrNull { it.id == id } ?: return@LaunchedEffect
+        pendingOpenGameId = null
+        calendarMode = false
+        scheduleTabIndex = if (g.isUpcoming()) 0 else 1
+        selectedGameId = g.id
         kotlinx.coroutines.delay(350)
         val viewport = jumpMarks.viewport
         val target = jumpMarks.selected
@@ -272,14 +282,12 @@ fun GameDetailScreen(
     }
 
     LaunchedEffect(Unit) { refreshResults() }
-    LaunchedEffect(Unit) { leagueStandings = StandingsRepository.fetch() }
 
     // 手動で更新したときは、アプリのすべての情報を読み直す
     if (pullToRefreshState.isRefreshing) {
         LaunchedEffect(true) {
             val d = DataRefresher.refreshAll(context)
             autoResults = d.results
-            leagueStandings = d.standings
             pullToRefreshState.endRefresh()
         }
     }
@@ -332,15 +340,18 @@ fun GameDetailScreen(
         ) {
         // チームの切り替えボタンは一番上に固定し、下にスクロールしても常に表示する
         Column(modifier = Modifier.fillMaxSize()) {
+        val isCalendarTab = calendarMode
         TeamSelectorRow(
-            selectedTeam = selectedTeam,
+            // カレンダーのときは「すべて」(4チームまとめて)も選べる
+            selectedTeam = if (isCalendarTab) calendarTeam else selectedTeam,
             onSelect = { t ->
+                if (isCalendarTab) calendarTeam = t
                 if (t != null) {
                     selectedTeam = t
                     TeamSelection.select(t)
                 }
             },
-            showAll = false,
+            showAll = isCalendarTab,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
         )
         Column(
@@ -353,68 +364,62 @@ fun GameDetailScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            // チームの写真(公式サイトのお知らせの試合・イベントの写真。日替わりで1枚。無ければ選手の写真を名前付きで並べる)。
-            // 文字と表だけでさみしかったため、日程の上に1枚だけ出す
-            com.fukuiteams.app.ui.components.TeamPhotoBanner(selectedTeam, "game-tab", height = 130.dp, fallbackToPlayers = true)
+            if (!isCalendarTab) {
+                // チームの写真(公式サイトのお知らせの試合・イベントの写真。日替わりで1枚。無ければ選手の写真を名前付きで並べる)。
+                // 文字と表だけでさみしかったため、日程の上に1枚だけ出す
+                com.fukuiteams.app.ui.components.TeamPhotoBanner(selectedTeam, "game-tab", height = 130.dp, fallbackToPlayers = true)
 
-            // 「成績」と「順位」は横に並べた小さな囲みにし、押した方の中身をその下に開く
-            // (日程の一覧をなるべく上に出すため)
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
+                // 自分の観戦成績(押すと中身を開く)。チームの順位表・ホーム/アウェイ別の成績はチームタブにある
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     SummaryTile(
-                        title = "成績",
-                        summary = statsSummaryText(watchRecords, homeAwaySummary),
+                        title = "観戦成績",
+                        summary = statsSummaryText(watchRecords),
                         open = topPanel == TopPanel.STATS,
-                        modifier = Modifier.weight(1f).fillMaxHeight()
+                        modifier = Modifier.fillMaxWidth()
                     ) { topPanel = if (topPanel == TopPanel.STATS) TopPanel.NONE else TopPanel.STATS }
-                    SummaryTile(
-                        title = "順位",
-                        summary = teamStandingsSummary(selectedTeam, leagueStandings[selectedTeam.name]),
-                        open = topPanel == TopPanel.STANDINGS,
-                        modifier = Modifier.weight(1f).fillMaxHeight()
-                    ) { topPanel = if (topPanel == TopPanel.STANDINGS) TopPanel.NONE else TopPanel.STANDINGS }
-                }
-                when (topPanel) {
-                    TopPanel.STATS -> {
-                        WatchStatsCard(watchRecords) { statsFilter = it }
-                        HomeAwayRecordCard(homeAwaySummary)
-                    }
-                    TopPanel.STANDINGS -> TeamStandingsContent(
-                        team = selectedTeam,
-                        standings = leagueStandings[selectedTeam.name],
-                        nextOpponent = upcomingTeamGames.firstOrNull { it.isMainTeamGame() }?.opponent,
-                        onOpenUrl = { url -> openUrl(context, url) }
+                    if (topPanel == TopPanel.STATS) WatchStatsCard(watchRecords) { statsFilter = it }
+                    Text(
+                        "順位表・ホーム/アウェイ別の成績は「チーム」タブにあります",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
                     )
-                    TopPanel.NONE -> {}
                 }
             }
 
-            if (allTeamGames.isEmpty()) {
+            if (allTeamGames.isEmpty() && !isCalendarTab) {
                 EmptyTeamState(selectedTeam)
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    // 3つのボタンを画面の幅に収める(幅は文字数に合わせて分け合う)。
-                    // 入りきらないときは、3つとも同じだけ文字を小さくする(「行く予定」が途中で切れないように)
+                    // 4つのボタンを画面の幅に収める(幅は文字数に合わせて分け合う)。
+                    // 入りきらないときは、4つとも同じだけ文字を小さくする(「行く予定」が途中で切れないように)
                     var tabFontSize by remember { mutableStateOf(13f) }
                     val shrinkTabs: () -> Unit = { if (tabFontSize > 9f) tabFontSize *= 0.92f }
                     val tabLabels = listOf(
                         "今後の試合 ${upcomingTeamGames.size}",
                         "過去の試合 ${pastTeamGames.size}",
                         // 「行く予定」にした今後の試合だけ(4チームまとめて)
-                        "行く予定 ${goingGames.size}"
+                        "行く予定 ${goingGames.size}",
+                        // 月ごとのカレンダー(4チームまとめても見られる)
+                        "カレンダー"
                     )
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         tabLabels.forEachIndexed { i, label ->
                             ScheduleTabChip(
                                 label = label,
-                                selected = scheduleTabIndex == i,
+                                selected = if (calendarMode) i == 3 else scheduleTabIndex == i,
                                 fontSizeSp = tabFontSize,
                                 onOverflow = shrinkTabs,
                                 modifier = Modifier.weight(label.length + 2f),
-                                onClick = { scheduleTabIndex = i }
+                                onClick = {
+                                    if (i == 3) {
+                                        // カレンダーを開くときは、いま見ているチームから
+                                        if (!calendarMode) calendarTeam = selectedTeam
+                                        calendarMode = true
+                                    } else {
+                                        calendarMode = false
+                                        scheduleTabIndex = i
+                                    }
+                                }
                             )
                         }
                     }
@@ -425,7 +430,31 @@ fun GameDetailScreen(
                         isGoingTab -> goingGames
                         else -> upcomingTeamGames
                     }
-                    if (listToShow.isEmpty()) {
+                    if (isCalendarTab) {
+                        GameCalendar(
+                            games = allGames,
+                            team = calendarTeam,
+                            state = calendarState,
+                            outcomeOf = { g -> resolveOutcome(g.id, gameLogPrefs, autoResults) }
+                        ) { g ->
+                            val past = !g.isUpcoming()
+                            ScheduleRow(
+                                game = g,
+                                selected = false,
+                                onClick = {
+                                    // その試合のチームの「今後の試合」「過去の試合」で開く
+                                    pendingOpenGameId = g.id
+                                    selectedTeam = g.team
+                                    TeamSelection.select(g.team)
+                                },
+                                score = if (past) autoResults[g.id] else null,
+                                outcome = if (past) resolveOutcome(g.id, gameLogPrefs, autoResults) else null,
+                                showResult = past,
+                                going = !past && isGoing(g.id, gameLogPrefs),
+                                showTeam = true
+                            )
+                        }
+                    } else if (listToShow.isEmpty()) {
                         Text(
                             when {
                                 isGoingTab -> "行く予定の試合はまだありません。今後の試合を押して「この試合に行く」を押すと、ここに並びます。"
@@ -1373,19 +1402,20 @@ private fun MonthHeader(
 }
 
 /** 試合タブの上の「成績」「順位」のどちらを開いているか */
-private enum class TopPanel { NONE, STATS, STANDINGS }
+private enum class TopPanel { NONE, STATS }
 
 /** 「成績」の要点(2行):全体の勝敗と、現地観戦の勝敗 */
-private fun statsSummaryText(records: Map<WatchMethod, WatchRecord>, homeAway: HomeAwaySummary): String {
+private fun statsSummaryText(records: Map<WatchMethod, WatchRecord>): String {
     val onSite = records[WatchMethod.ON_SITE] ?: WatchRecord()
-    return if (homeAway.total.games == 0 && onSite.watched == 0) {
-        "まだ終了した試合はありません"
-    } else {
-        "全体 ${homeAway.total.recordLabel()}(勝率 ${homeAway.total.winRatePercentLabel()})\n現地観戦 ${onSite.summaryLabel()}"
+    val all = records.values.fold(WatchRecord()) { acc, r -> acc + r }
+    return when {
+        all.watched == 0 -> "まだ終了した試合はありません"
+        onSite.watched == 0 -> "現地観戦の記録はまだありません。過去の試合で観戦方法を「現地」にすると勝率が出ます"
+        else -> "現地観戦 ${onSite.summaryLabel()}(勝率 ${onSite.winRateLabel()})"
     }
 }
 
-/** 「成績」「順位」の小さな囲み(見出しと要点)。押すと、その中身が囲みの下に開く */
+/** 「観戦成績」の囲み(見出しと要点)。押すと、その中身が囲みの下に開く */
 @Composable
 private fun SummaryTile(title: String, summary: String, open: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(

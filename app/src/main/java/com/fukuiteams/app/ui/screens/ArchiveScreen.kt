@@ -32,6 +32,8 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import com.fukuiteams.app.data.gameLogDataStore
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -214,10 +216,24 @@ fun ArchiveScreen(
     // 今季のチームの数字(ブローウィンズ:Bリーグ公式のクラブ成績。次の相手の分も並べる。以前は選手タブにあったもの)
     var teamPlayers by remember { mutableStateOf<Map<String, com.fukuiteams.app.data.TeamPlayers>>(emptyMap()) }
     var previews by remember { mutableStateOf<Map<String, com.fukuiteams.app.data.GamePreview>>(emptyMap()) }
-    // 今季の順位・勝敗(試合タブの「順位」と同じデータ)
+    // 今季の順位・勝敗と順位表(以前は試合タブの「順位」にあったもの)
     var standings by remember { mutableStateOf<Map<String, com.fukuiteams.app.data.LeagueStandings>>(emptyMap()) }
+    // 「▼ 順位表」を開いているか(チームを切り替えたら閉じる)
+    var standingsOpen by remember(team) { mutableStateOf(false) }
+    // ホーム・アウェイ別の成績に使う、試合の結果(自動取得)と自分で記録した勝敗(以前は試合タブの「成績」にあったもの)
+    var autoResults by remember { mutableStateOf<Map<String, com.fukuiteams.app.data.RemoteGameResult>>(emptyMap()) }
+    val gameLogPrefs by context.gameLogDataStore.data.collectAsState<androidx.datastore.preferences.core.Preferences, androidx.datastore.preferences.core.Preferences?>(initial = null)
+    val homeAwaySummary = remember(team, com.fukuiteams.app.data.GamesRepository.games, gameLogPrefs, autoResults) {
+        // U-20・サテライトなどの試合と、自分で追加した予定は入れない(リーグの成績と合わせるため)
+        com.fukuiteams.app.data.computeHomeAwaySummary(
+            com.fukuiteams.app.data.GamesRepository.games.filter { it.team == team && it.isMainTeamGame() },
+            gameLogPrefs,
+            autoResults
+        )
+    }
     LaunchedEffect(Unit) {
         standings = runCatching { StandingsRepository.fetch() }.getOrDefault(emptyMap())
+        autoResults = runCatching { com.fukuiteams.app.data.GameResultsRepository.fetch() }.getOrDefault(emptyMap())
         teamPlayers = runCatching { com.fukuiteams.app.data.PlayersRepository.fetch() }.getOrDefault(emptyMap())
         previews = runCatching { com.fukuiteams.app.data.GamePreviewRepository.fetch() }.getOrDefault(emptyMap())
     }
@@ -227,6 +243,7 @@ fun ArchiveScreen(
             teamPlayers = d.players
             previews = d.previews
             standings = d.standings
+            autoResults = d.results
             pullToRefreshState.endRefresh()
         }
     }
@@ -307,7 +324,7 @@ fun ArchiveScreen(
                 Column(modifier = Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Headline("チームの数字と記録", fontSize = 22)
                     Text(
-                        "今季のチームの数字と、これまでのシーズンの成績・相手ごとの通算の対戦成績・過去の試合・チームの歩みを見られます。選手ごとの数字は「選手」タブにあります。",
+                        "今季の順位・順位表・ホーム/アウェイ別の成績・チームの数字と、これまでのシーズンの成績・相手ごとの通算の対戦成績・過去の試合・チームの歩みを見られます。選手ごとの数字は「選手」タブにあります。",
                         style = MaterialTheme.typography.bodySmall,
                         color = InkSoft
                     )
@@ -329,10 +346,35 @@ fun ArchiveScreen(
                 }
             }
 
-            // 今季の順位・勝敗(4チームとも。試合タブの「順位」と同じデータを、数字のます目で)
+            // 今季の順位・勝敗(4チームとも。数字のます目で)
             anchors["season"] = n
             add { SectionLabel("今季", modifier = Modifier.padding(top = 4.dp)) }
             add { com.fukuiteams.app.ui.components.TeamSeasonCard(team, standings[team.name]) }
+            // リーグ全体の順位表(押すと開く。以前は試合タブの「順位」にあったもの)
+            standings[team.name]?.let { st ->
+                add(key = "standings-${team.name}") {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().clickable { standingsOpen = !standingsOpen }.padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Text("${if (standingsOpen) "▲" else "▼"} 順位表", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.ExtraBold, color = Ink)
+                            Text("リーグ全体の順位を見る", style = MaterialTheme.typography.bodySmall, color = InkSoft)
+                        }
+                        if (standingsOpen) {
+                            com.fukuiteams.app.ui.components.TeamStandingsContent(
+                                team = team,
+                                standings = st,
+                                nextOpponent = com.fukuiteams.app.data.GamesRepository.games
+                                    .filter { it.team == team && it.isMainTeamGame() && it.isUpcoming() }
+                                    .minByOrNull { it.sortKey }?.opponent,
+                                onOpenUrl = { url -> openExternalUrl(context, url) }
+                            )
+                        }
+                    }
+                }
+            }
             // 今の選手の写真(日替わりで5人。名前を添える)
             add(key = "players-${team.name}") {
                 com.fukuiteams.app.ui.components.PlayerPhotoRow(
@@ -346,6 +388,8 @@ fun ArchiveScreen(
             add { OutlookBox(team, standings[team.name]) }
             // 今季のリーグ戦のペースを、クラブの過去最高のシーズンとくらべる
             add { SeasonPaceBox(team) }
+            // ホーム・アウェイ別の成績(以前は試合タブの「成績」にあったもの)
+            add(key = "homeaway-${team.name}") { com.fukuiteams.app.ui.components.HomeAwayRecordCard(homeAwaySummary) }
             // 今季のチームの数字(ブローウィンズ。Bリーグ公式のクラブ成績を、次の対戦相手と並べて比べる)
             val roster = teamPlayers[team.name]
             if (roster != null && roster.teamStats.isNotEmpty()) {

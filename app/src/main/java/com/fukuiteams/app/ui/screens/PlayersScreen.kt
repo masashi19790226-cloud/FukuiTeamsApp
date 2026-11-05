@@ -339,7 +339,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
             } else {
                 val st = leagueStandings[selectedTeam.name]
                 if (selectedTeam != Team.BLOWINDS && st != null) {
-                    // 丸岡RUCK・ユナイテッド・ブルーサンダーは、選手の得点(取れたとき)を出す。リーグの順位表は試合タブの「順位」にある
+                    // 丸岡RUCK・ユナイテッド・ブルーサンダーは、選手の得点(取れたとき)を出す。リーグの順位表はチームタブの「▼ 順位表」にある
                     val scorers = st.scorers
                     if (scorers != null) {
                         SectionLabel("${selectedTeam.displayName}の得点ランキング", modifier = Modifier.onGloballyPositioned { marks.own = it })
@@ -361,7 +361,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                         NoDataBox("得点のデータはまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。")
                     }
                     Text(
-                        "${st.league.ifBlank { "リーグ" }}の順位表は、試合タブの「順位」で見られます。",
+                        "${st.league.ifBlank { "リーグ" }}の順位表は、チームタブの「▼ 順位表」で見られます。",
                         style = MaterialTheme.typography.bodySmall,
                         color = InkSoft
                     )
