@@ -6844,5 +6844,23 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.sKnu_v6SKkTTHdq7ENwNmg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-05T07:01:08.029584+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13551823460647177468",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの新ヘッドコーチに中堀純希氏が就任、初采配飾る 今後のチームづくりへ ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15187680.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0wVNOI_Dc4ZoE1mVc7c2vw",
+    "published": "2026-11-05T06:48:02Z",
+    "detected_at": "2026-11-05T07:41:06.737498+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51847",
+    "team": "BLOWINDS",
+    "title": "【FUKUI CONNECTED SERIES 開幕記念】 「#21 満田丈太郎 選手 集合写真撮影会」へご招待！BWZRS新規入会＆アップグレードキャンペーン実施のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51847",
+    "published": "2026-11-05T09:00:00+09:00",
+    "detected_at": "2026-11-05T07:41:09.192701+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/11.7-11.8_KV_yoko.jpg"
   }
 ]
