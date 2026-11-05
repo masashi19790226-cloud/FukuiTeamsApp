@@ -6882,5 +6882,13 @@
     "source": "news.web",
     "image": "",
     "detected_at": "2026-11-05T10:01:07.163663+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2990023854796483915",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ ヘッドコーチ交代後の初戦で勝利し3連勝 - NHKニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.web.nhk/newsweb/na/nd-20261105de71183&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2hs9gjWkDHUBZ3haQ3vg6D",
+    "published": "2026-11-05T09:34:41Z",
+    "detected_at": "2026-11-05T14:01:09.267956+00:00"
   }
 ]
