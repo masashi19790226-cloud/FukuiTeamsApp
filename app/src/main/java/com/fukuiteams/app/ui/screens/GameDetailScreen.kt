@@ -200,7 +200,7 @@ fun GameDetailScreen(
     var topPanel by remember(selectedTeam) { mutableStateOf(TopPanel.NONE) }
     // カレンダー(見ている月・押した日と、表示するチーム。null = 4チームすべて)
     val calendarState = remember { CalendarState(java.time.LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"))) }
-    var calendarTeam by remember { mutableStateOf<Team?>(initialTeam) }
+    var calendarTeam by remember { mutableStateOf<Team?>(null) }
     // カレンダーを開いているか(上のチームを切り替えても、カレンダーのままにする)
     var calendarMode by remember { mutableStateOf(false) }
     // カレンダーで押した試合(チームを切り替えてから、その試合を一覧で開く)
@@ -412,8 +412,8 @@ fun GameDetailScreen(
                                 modifier = Modifier.weight(label.length + 2f),
                                 onClick = {
                                     if (i == 3) {
-                                        // カレンダーを開くときは、いま見ているチームから
-                                        if (!calendarMode) calendarTeam = selectedTeam
+                                        // カレンダーを開くときは、いつも「すべて」(4チームまとめて)から
+                                        if (!calendarMode) calendarTeam = null
                                         calendarMode = true
                                     } else {
                                         calendarMode = false

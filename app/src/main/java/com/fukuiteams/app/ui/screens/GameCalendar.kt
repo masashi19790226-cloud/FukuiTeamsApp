@@ -89,7 +89,7 @@ fun GameCalendar(
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(
-            "日付を押すと、その日の試合が下に出ます。試合を押すと詳細を開きます。上の「すべて」で4チームまとめて見られます。",
+            "日付を押すと、その日の試合が下に出ます。試合を押すと詳細を開きます。上のチームのボタンで1チームだけにもできます。",
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
