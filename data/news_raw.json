@@ -6908,5 +6908,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/DfW8WZKq4zs/&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1opwTtYFHBSPYm-4Kj9qk5",
     "published": "2026-11-05T11:42:10Z",
     "detected_at": "2026-11-06T01:21:07.885926+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13378090693431001710",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの新ヘッドコーチに中堀純希氏が就任、語った率直な思い バスケBリーグワン ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/27ce71beb31942189fde48a3b09ea7ff4efbe8a6&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3IrbVG60Ey7O93PX3z_MzN",
+    "published": "2026-11-06T02:34:46Z",
+    "detected_at": "2026-11-06T03:01:07.655424+00:00"
+  },
+  {
+    "id": "bing:https://news.yahoo.co.jp/articles/27ce71beb31942189fde48a3b09ea7ff4efbe8a6",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの新ヘッドコーチに中堀純希氏が就任、語った ...",
+    "link": "https://news.yahoo.co.jp/articles/27ce71beb31942189fde48a3b09ea7ff4efbe8a6",
+    "published": "2026-11-05T19:01:00+00:00",
+    "source": "Yahoo!ニュース",
+    "image": "https://www.bing.com/th?id=ONUT.doU7T7AhzOMd0a0I3Lk2Vg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-06T03:01:08.039314+00:00"
   }
 ]
