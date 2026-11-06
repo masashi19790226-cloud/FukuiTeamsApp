@@ -6926,5 +6926,15 @@
     "source": "Yahoo!ニュース",
     "image": "https://www.bing.com/th?id=ONUT.doU7T7AhzOMd0a0I3Lk2Vg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-06T03:01:08.039314+00:00"
+  },
+  {
+    "id": "bing:https://topics.smt.docomo.ne.jp/article/fukui/region/fukui-20261106113822532",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの新ヘッドコーチに中堀純希氏が就任、語った ...",
+    "link": "https://topics.smt.docomo.ne.jp/article/fukui/region/fukui-20261106113822532",
+    "published": "2026-11-05T19:41:00+00:00",
+    "source": "dメニューニュース",
+    "image": "https://www.bing.com/th?id=ONUT.JX3_EJtI5c_9ZPWL9lxc6w&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-06T03:41:08.608559+00:00"
   }
 ]
