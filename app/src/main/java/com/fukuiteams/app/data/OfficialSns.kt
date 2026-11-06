@@ -27,6 +27,9 @@ val Team.officialInstagramUrl: String?
     }
 
 /** 制作者(追い風はBOOZ)が作った応援プレイリスト(Spotify。公式のものではない)。無いチームは null */
+/** 制作者(追い風はBOOZ)が作った、試合の待ち時間に遊べるクイズのWebアプリ「ふくスポLab」(Web版の teams.js の FUKUSPO_LAB_URL) */
+const val FUKUSPO_LAB_URL = "https://fukuspo-lab.pages.dev/"
+
 val Team.fanPlaylistUrl: String?
     get() = when (this) {
         Team.BLOWINDS -> "https://open.spotify.com/playlist/5Pfdndtu2Czn7TvM9tDvf9"

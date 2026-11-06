@@ -14,6 +14,20 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年11月6日",
+        title = "ふくスポLabへのリンク",
+        items = listOf(
+            "一面の「本日の試合」に、試合の待ち時間に遊べるクイズ「ふくスポLab」へのリンクを入れました(制作者が作ったWebアプリ。クイズ・チームずかん)"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年11月6日",
+        title = "カレンダーの今日を分かりやすく",
+        items = listOf(
+            "カレンダーの今日のマスを、薄い黄色と「今日」の札で分かりやすくしました(これまでの黒い丸はやめました)。押して選んだ日は枠で囲みます(今日を選んでいるときは枠なし)"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年11月5日",
         title = "天気予報に帰るころの天気・試合タブはカレンダーから",
         items = listOf(

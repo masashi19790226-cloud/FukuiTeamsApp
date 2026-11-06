@@ -9,6 +9,7 @@ import com.fukuiteams.app.model.shortName
 import com.fukuiteams.app.ui.components.HomeAwayLabel
 import com.fukuiteams.app.ui.components.openExternalUrl
 import com.fukuiteams.app.data.fanPlaylistUrl
+import com.fukuiteams.app.data.FUKUSPO_LAB_URL
 import com.fukuiteams.app.data.isGoing
 import com.fukuiteams.app.ui.components.GoingBadge
 import com.fukuiteams.app.data.publicViewings
@@ -545,6 +546,13 @@ private fun MatchDayCard(
                 modifier = Modifier.clickable { openUrl(context, pl) }
             )
         }
+        // 試合の待ち時間に遊べるクイズ(制作者が作った「ふくスポLab」。4チームとも)
+        Text(
+            "🧪 待ち時間に ふくスポLab(クイズ) ›",
+            style = MaterialTheme.typography.bodyMedium,
+            color = Accent,
+            modifier = Modifier.clickable { openUrl(context, FUKUSPO_LAB_URL) }
+        )
         val weatherColumns = forecast?.toColumns().orEmpty().ifEmpty {
             listOfNotNull(weather?.let { ForecastColumn("試合開始", game.timeLabel, it) })
         }

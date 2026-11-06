@@ -54,6 +54,8 @@ class CalendarState(today: LocalDate) {
 
 private val SunColor = Color(0xFFC0392B)
 private val SatColor = Color(0xFF2457A6)
+/** 今日のマスの色(薄い黄色) */
+private val TodayColor = Color(0xFFFFF3C4)
 private val WEEK = listOf("日", "月", "火", "水", "木", "金", "土")
 
 /** 試合の日付(sort_key の先頭8文字。読めなければ null) */
@@ -163,35 +165,50 @@ fun GameCalendar(
                         val list = byDay[date].orEmpty()
                         val main = list.filter { it.isMainTeamGame() }
                         val others = list.size - main.size
-                        val selected = date == state.day
+                        val isToday = date == today
+                        // 押して選んでいる日は枠で囲む(今日は薄い黄色と「今日」の札で分かるので、枠は付けない)
+                        val selected = date == state.day && !isToday
                         Column(
                             modifier = Modifier
                                 .weight(1f)
                                 .heightIn(min = 58.dp)
                                 .border(if (selected) 2.dp else 0.5.dp, if (selected) Accent else LineGray)
-                                .background(if (list.isNotEmpty()) Color(0xFFF7F5F0) else White)
+                                .background(
+                                    when {
+                                        isToday -> TodayColor
+                                        list.isNotEmpty() -> Color(0xFFF7F5F0)
+                                        else -> White
+                                    }
+                                )
                                 .clickable { state.day = date }
                                 .padding(horizontal = 2.dp, vertical = 3.dp),
                             verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
-                            val isToday = date == today
-                            Box(
-                                modifier = Modifier
-                                    .size(20.dp)
-                                    .then(if (isToday) Modifier.background(Ink, CircleShape) else Modifier),
-                                contentAlignment = Alignment.Center
-                            ) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(1.dp)) {
                                 Text(
                                     "$d",
+                                    modifier = Modifier.padding(horizontal = 1.dp),
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = when {
-                                        isToday -> White
-                                        c == 0 -> SunColor
-                                        c == 6 -> SatColor
+                                    color = when (c) {
+                                        0 -> SunColor
+                                        6 -> SatColor
                                         else -> Ink
-                                    }
+                                    },
+                                    maxLines = 1,
+                                    softWrap = false
                                 )
+                                if (isToday) {
+                                    Text(
+                                        "今日",
+                                        modifier = Modifier.background(Ink, RoundedCornerShape(2.dp)).padding(horizontal = 2.dp),
+                                        color = White,
+                                        fontSize = 8.5.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        maxLines = 1,
+                                        softWrap = false
+                                    )
+                                }
                             }
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(2.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                                 main.forEach { g -> CalendarPill(g, single, if (g.isUpcoming()) null else outcomeOf(g)) }
