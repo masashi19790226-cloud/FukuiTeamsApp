@@ -7062,5 +7062,13 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.EtvUY-bfD0GXXIu-qRAuKg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-06T18:21:09.679408+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14371603322422605115",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ vs 越谷アルファーズ - チケット流通センター",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.ticket.co.jp/sys/d/67789.htm%3Fki%3D248025&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3-27QSdSTnjW6VDo2qp1P8",
+    "published": "2026-11-06T11:05:52Z",
+    "detected_at": "2026-11-06T18:41:08.626006+00:00"
   }
 ]
