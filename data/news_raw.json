@@ -7144,5 +7144,25 @@
     "source": "KSBニュース",
     "image": "https://www.bing.com/th?id=ONUT.J8VrnylHnbZUR-_ZJA-5qQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-07T10:21:07.952719+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2741573",
+    "team": "BLOWINDS",
+    "title": "第4Qに追い上げも福井ブローウィンズ連勝ストップ Bリーグワン第9 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2741573",
+    "published": "2026-11-07T02:16:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.vNnX4ZREuXejc8jHIZVI8A&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-07T10:41:10.175012+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261107de72205",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ 岡山に負け4連勝ならず",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261107de72205",
+    "published": "2026-11-06T20:50:00+00:00",
+    "source": "news.web",
+    "image": "",
+    "detected_at": "2026-11-07T10:41:10.175028+00:00"
   }
 ]
