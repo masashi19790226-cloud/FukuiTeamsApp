@@ -14,6 +14,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年11月7日",
+        title = "出発の目安",
+        items = listOf(
+            "ブローウィンズのホームゲームで、開場時刻の下に「出発の目安」(シルバー会員の先行入場の2時間半前)を出すようにしました(一面の本日の試合・次の試合、試合の詳細)"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年11月6日",
         title = "ふくスポLabへのリンク",
         items = listOf(

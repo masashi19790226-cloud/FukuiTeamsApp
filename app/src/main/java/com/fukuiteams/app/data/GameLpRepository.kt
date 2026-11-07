@@ -44,6 +44,20 @@ val GameLp.openLabel: String?
         }
     }
 
+/**
+ * 出発の目安(シルバー会員の先行入場の2時間半前)。「11:30」の形。
+ * シルバー会員の先行入場の時刻が分からないとき(一般の開場時刻しか無いときも)は null
+ */
+val GameLp.departureTime: String?
+    get() {
+        val silver = timeline.firstOrNull { it.text.contains("シルバー") && it.text.contains("入場") && it.time.isNotBlank() }?.time
+            ?: return null
+        val m = Regex("""^(\d{1,2}):(\d{2})""").find(silver.trim()) ?: return null
+        val minutes = m.groupValues[1].toInt() * 60 + m.groupValues[2].toInt() - 150
+        if (minutes < 0) return null
+        return "%d:%02d".format(minutes / 60, minutes % 60)
+    }
+
 /** 天気予報に使う入場の時刻(シルバー会員の先行入場、無ければ一般の開場)。「13:00」の形。分からなければ null */
 val GameLp.entryTime: String?
     get() = timeline.firstOrNull { it.text.contains("シルバー") && it.text.contains("入場") && it.time.isNotBlank() }?.time

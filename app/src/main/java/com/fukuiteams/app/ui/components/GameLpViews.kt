@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fukuiteams.app.data.GameLp
 import com.fukuiteams.app.data.openLabel
+import com.fukuiteams.app.data.departureTime
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
@@ -41,6 +42,15 @@ fun GameLpSection(lp: GameLp, startExpanded: Boolean) {
         // シルバー会員の先行入場の時刻(無ければ一般の開場時刻)
         lp.openLabel?.let { label ->
             Text(label, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.ExtraBold, color = Ink)
+        }
+        // 出発の目安(シルバー会員の先行入場の2時間半前。アプリ版だけ)
+        lp.departureTime?.let { dep ->
+            Text(
+                "🚗 出発の目安 $dep(シルバー入場の2時間半前)",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = Ink
+            )
         }
         if (lp.timeline.isNotEmpty()) {
             ToggleHeading("当日のスケジュール(公式)", showSchedule) { showSchedule = !showSchedule }
