@@ -1,5 +1,25 @@
 [
   {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=6979",
+    "team": "UNITED",
+    "title": "【 9/27 新福FC戦 】試合観戦について",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=6979",
+    "published": "2026-09-23T09:00:00+09:00",
+    "detected_at": "2026-09-23T00:00:00+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=6980",
+    "team": "UNITED",
+    "title": "「ファン交流会2026」開催のお知らせ",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=6980",
+    "published": "2026-09-23T09:00:00+09:00",
+    "detected_at": "2026-09-23T00:00:00+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
+  },
+  {
     "id": "bing:https://www.47news.jp/14978339.html",
     "team": "THUNDER",
     "title": "ハンド・ブルーサンダー上位争いへ勝ちきる力を",

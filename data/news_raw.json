@@ -364,26 +364,6 @@
     "image": "https://fukuiunited.co.jp/img/ogp.jpg"
   },
   {
-    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=6979",
-    "team": "UNITED",
-    "title": "【 9/27 新福FC戦 】試合観戦について",
-    "link": "https://fukuiunited.co.jp/news/detail.php?id=6979",
-    "published": "2026-09-23T09:00:00+09:00",
-    "detected_at": "2026-09-23T00:00:00+00:00",
-    "source": "ユナイテッド公式",
-    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
-  },
-  {
-    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=6980",
-    "team": "UNITED",
-    "title": "「ファン交流会2026」開催のお知らせ",
-    "link": "https://fukuiunited.co.jp/news/detail.php?id=6980",
-    "published": "2026-09-23T09:00:00+09:00",
-    "detected_at": "2026-09-23T00:00:00+00:00",
-    "source": "ユナイテッド公式",
-    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -7070,5 +7050,13 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.ticket.co.jp/sys/d/67789.htm%3Fki%3D248025&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3-27QSdSTnjW6VDo2qp1P8",
     "published": "2026-11-06T11:05:52Z",
     "detected_at": "2026-11-06T18:41:08.626006+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13331007621155936878",
+    "team": "THUNDER",
+    "title": "お知らせ #福井永平寺ブルーサンダー さんの試合オープニングに リミピンが出演させていただき ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/LIMITLESS_PINK/status/2118693701241512231/video/1&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw0hvypWtHrDBvqSgJTizf83",
+    "published": "2026-11-06T15:14:17Z",
+    "detected_at": "2026-11-07T00:01:09.332227+00:00"
   }
 ]
