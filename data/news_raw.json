@@ -7164,5 +7164,15 @@
     "source": "news.web",
     "image": "",
     "detected_at": "2026-11-07T10:41:10.175028+00:00"
+  },
+  {
+    "id": "bing:https://www.47news.jp/15198160.html",
+    "team": "BLOWINDS",
+    "title": "第4Qに追い上げも福井ブローウィンズ連勝ストップ Bリーグワン第9 ...",
+    "link": "https://www.47news.jp/15198160.html",
+    "published": "2026-11-07T02:16:00+00:00",
+    "source": "47NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.6-yUa1ieFKkm9SO31b22aw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-07T14:41:06.243999+00:00"
   }
 ]
