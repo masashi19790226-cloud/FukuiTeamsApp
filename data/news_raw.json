@@ -7118,5 +7118,31 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.OFquNnQCq4LGjFk8jPDHyg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-07T10:01:09.071616+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4968804410760223195",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ追い上げ実らず連勝ストップ バスケBリーグワン、ホームでトライフープ岡山戦",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/reader/2741567&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw37kqIUxG0I8IlPixR2e0Hp",
+    "published": "2026-11-07T09:46:41Z",
+    "detected_at": "2026-11-07T10:21:07.237609+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4764641773065519631",
+    "team": "BLOWINDS",
+    "title": "【速報】バスケB.ONE・トライフープ岡山 福井ブローウィンズに勝利 7日 | KSB QUICK",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://quick.ksb.co.jp/article-46013e53/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0oLGBlvhKS-984p580ru-Z",
+    "published": "2026-11-07T08:51:21Z",
+    "detected_at": "2026-11-07T10:21:07.237640+00:00"
+  },
+  {
+    "id": "bing:https://news.ksb.co.jp/article/17031108",
+    "team": "BLOWINDS",
+    "title": "【速報】バスケB.ONE・トライフープ岡山 福井ブローウィンズに勝利 7日",
+    "link": "https://news.ksb.co.jp/article/17031108",
+    "published": "2026-11-06T19:31:00+00:00",
+    "source": "KSBニュース",
+    "image": "https://www.bing.com/th?id=ONUT.J8VrnylHnbZUR-_ZJA-5qQ&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-07T10:21:07.952719+00:00"
   }
 ]
