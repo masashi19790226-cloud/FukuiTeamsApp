@@ -7082,5 +7082,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/reel/DfZjqgQqnkY/&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0TnkOdgh021tANNyvPGCP9",
     "published": "2026-11-06T12:03:09Z",
     "detected_at": "2026-11-07T06:21:07.769053+00:00"
+  },
+  {
+    "id": "bing:https://news.yahoo.co.jp/articles/e88d44fcf5859ac5cd5b64f278616ced85512cdf",
+    "team": "BLOWINDS",
+    "title": "【速報】バスケB.ONE・トライフープ岡山 福井ブローウィンズに勝利 7日",
+    "link": "https://news.yahoo.co.jp/articles/e88d44fcf5859ac5cd5b64f278616ced85512cdf",
+    "published": "2026-11-07T00:31:00+00:00",
+    "source": "Yahoo!ニュース",
+    "image": "https://www.bing.com/th?id=ONUT.KtsTC5-ocWpz5M3tcCrgow&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-07T08:41:07.873468+00:00"
   }
 ]
