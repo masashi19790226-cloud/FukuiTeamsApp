@@ -7326,5 +7326,13 @@
     "source": "news.web",
     "image": "",
     "detected_at": "2026-11-08T13:01:08.734925+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10263775094005339038",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、ホーム連敗 トライフープ岡山の堅守崩せず バスケBワン第9節 | スポーツ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/reader/2742051&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0XkxbHKJGMBaHdPW7TwqbG",
+    "published": "2026-11-08T10:12:05Z",
+    "detected_at": "2026-11-08T13:41:07.326002+00:00"
   }
 ]
