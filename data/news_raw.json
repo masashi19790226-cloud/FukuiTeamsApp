@@ -7286,5 +7286,15 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.Bus0zrceOgf4LG-2tkjq4Q&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-08T11:01:08.215500+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2742075",
+    "team": "BLOWINDS",
+    "title": "1点差に詰め寄るも…福井ブローウィンズ、ホーム2連敗 トライ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2742075",
+    "published": "2026-11-08T03:10:00+00:00",
+    "source": "Fukui Shimbun",
+    "image": "",
+    "detected_at": "2026-11-08T11:21:07.552064+00:00"
   }
 ]
