@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-08T18:42:19.471765+00:00",
+    "updated_at": "2026-11-08T19:03:30.519913+00:00",
     "players": [
       {
         "number": "1",
@@ -1072,9 +1072,9 @@
         "ft_pct": "68.8%",
         "eff": "2.0",
         "fgm": "13",
-        "fga": "44",
+        "fga": "45",
         "three_m": "5",
-        "three_a": "26",
+        "three_a": "27",
         "ftm": "11",
         "fta": "16",
         "game_log": [
@@ -1333,12 +1333,12 @@
         "three_pct": "27.3%",
         "ft_pct": "50.8%",
         "eff": "16.7",
-        "fgm": "81",
-        "fga": "153",
-        "three_m": "5",
-        "three_a": "20",
-        "ftm": "30",
-        "fta": "58",
+        "fgm": "85",
+        "fga": "162",
+        "three_m": "6",
+        "three_a": "22",
+        "ftm": "32",
+        "fta": "63",
         "game_log": [
           {
             "date": "2026-11-08",
@@ -2794,9 +2794,9 @@
         "g": "16",
         "v": {
           "fgm": "13",
-          "fga": "44",
+          "fga": "45",
           "three_m": "5",
-          "three_a": "26",
+          "three_a": "27",
           "ftm": "11",
           "fta": "16"
         },
@@ -3033,12 +3033,12 @@
         "type": "BO",
         "g": "16",
         "v": {
-          "fgm": "81",
-          "fga": "153",
-          "three_m": "5",
-          "three_a": "20",
-          "ftm": "30",
-          "fta": "58"
+          "fgm": "85",
+          "fga": "162",
+          "three_m": "6",
+          "three_a": "22",
+          "ftm": "32",
+          "fta": "63"
         },
         "log": [
           {
@@ -3392,7 +3392,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=695&tab=1",
-    "updated_at": "2026-11-08T18:42:20.772993+00:00",
+    "updated_at": "2026-11-08T19:04:05.477777+00:00",
     "players": [
       {
         "number": "1",
