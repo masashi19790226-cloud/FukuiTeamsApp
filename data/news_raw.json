@@ -7306,5 +7306,25 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.jD_JcgR4VgyK8KLpYOA1QA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-08T11:41:07.647409+00:00"
+  },
+  {
+    "id": "bing:https://www.oricon.co.jp/article/3431172/",
+    "team": "BLOWINDS",
+    "title": "1点差に詰め寄るも…福井ブローウィンズ、ホーム2連敗 トライ ...",
+    "link": "https://www.oricon.co.jp/article/3431172/",
+    "published": "2026-11-08T03:17:00+00:00",
+    "source": "ORICON NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.E3niA0Ews3fSqS344qtSaA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-08T13:01:08.734909+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261108de72568",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ 岡山に連敗",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261108de72568",
+    "published": "2026-11-07T23:23:00+00:00",
+    "source": "news.web",
+    "image": "",
+    "detected_at": "2026-11-08T13:01:08.734925+00:00"
   }
 ]
