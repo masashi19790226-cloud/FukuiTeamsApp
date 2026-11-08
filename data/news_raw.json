@@ -7384,5 +7384,15 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.VyTCE0sN3pCvTkMiCVFeeA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-08T19:42:25.966891+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuieiheijihand.co.jp/topics/%e3%80%90%e9%87%8d%e8%a6%81%e3%80%91%e3%83%81%e3%82%b1%e3%83%83%e3%83%88%e8%b2%a9%e5%a3%b2%e3%82%b5%e3%82%a4%e3%83%88%e3%80%8c%ef%bd%94%ef%bd%85%ef%bd%8b%ef%bd%85%ef%bd%94%e3%80%8d%e3%81%ae%e3%82%b7/",
+    "team": "THUNDER",
+    "title": "【重要】チケット販売サイト「ｔｅｋｅｔ」のシステムメンテナンスについて",
+    "link": "https://www.fukuieiheijihand.co.jp/topics/%e3%80%90%e9%87%8d%e8%a6%81%e3%80%91%e3%83%81%e3%82%b1%e3%83%83%e3%83%88%e8%b2%a9%e5%a3%b2%e3%82%b5%e3%82%a4%e3%83%88%e3%80%8c%ef%bd%94%ef%bd%85%ef%bd%8b%ef%bd%85%ef%bd%94%e3%80%8d%e3%81%ae%e3%82%b7/",
+    "published": "2026-11-08T09:00:00+09:00",
+    "detected_at": "2026-11-08T23:01:10.477816+00:00",
+    "source": "ブルーサンダー公式",
+    "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
   }
 ]
