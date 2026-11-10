@@ -1,5 +1,74 @@
 [
   {
+    "id": "bing:https://www.oricon.co.jp/article/3388657/",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、開幕戦で岐阜と激戦 残り30秒、勝負決めた ...",
+    "link": "https://www.oricon.co.jp/article/3388657/",
+    "published": "2026-09-26T11:02:00+00:00",
+    "source": "ORICON NEWS",
+    "detected_at": "2026-10-04T13:52:12.766195+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51662",
+    "team": "BLOWINDS",
+    "title": "【第9・11・13節】FUKUI CONNECTED SERIES開催のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51662",
+    "published": "2026-09-25T09:00:00+09:00",
+    "detected_at": "2026-09-25T00:00:00+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/FukuiConnected_%E3%83%8F%E3%82%99%E3%83%8A%E3%83%BC02%20(1).jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51660",
+    "team": "BLOWINDS",
+    "title": "【10/2(金)新商品】第2節 金沢サムライズ 新グッズ販売のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51660",
+    "published": "2026-09-25T09:00:00+09:00",
+    "detected_at": "2026-09-25T00:00:00+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_1002_goods.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51663",
+    "team": "BLOWINDS",
+    "title": "【10/3日（土）、4日（日）HOME開幕戦】 公式ファンクラブ『BWZRS』関連情報",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51663",
+    "published": "2026-09-25T09:00:00+09:00",
+    "detected_at": "2026-09-25T00:00:00+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/2026-27%20BWZRS%20KV.jpg"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=6990",
+    "team": "UNITED",
+    "title": "第6回「大人サッカー教室」参加者募集のお知らせ",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=6990",
+    "published": "2026-09-25T09:00:00+09:00",
+    "detected_at": "2026-09-25T00:00:00+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51636",
+    "team": "BLOWINDS",
+    "title": "【お知らせ】クラブ方針・3カ年ロードマップ発表",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51636",
+    "published": "2026-09-24T09:00:00+09:00",
+    "detected_at": "2026-09-24T00:00:00+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
+  },
+  {
+    "id": "bing:https://basketballking.jp/news/japan/20260924/634260.html",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズが内藤英真とのプロ契約を発表…練習生 ...",
+    "link": "https://basketballking.jp/news/japan/20260924/634260.html",
+    "published": "2026-09-24T00:57:00+00:00",
+    "source": "バスケットボールキング",
+    "image": "",
+    "detected_at": "2026-10-23T18:45:11.597613+00:00"
+  },
+  {
     "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=6979",
     "team": "UNITED",
     "title": "【 9/27 新福FC戦 】試合観戦について",
