@@ -1570,7 +1570,9 @@ private fun focusStories(team: Team, games: List<Game>, birthdays: List<PlayerBi
                 (if (b.number.isNotBlank()) "会場ではぜひ背番号${b.number}に注目を。" else "会場でぜひ注目してください。") +
                 "\n※公式サイトの選手紹介・女子Fリーグ公式の記録より",
             bigNumber = b.number.ifBlank { null },
-            bigUnit = if (b.number.isNotBlank()) "番" else null
+            bigUnit = if (b.number.isNotBlank()) "番" else null,
+            // 選手本人のX(公式サイトの選手紹介に載っているときだけ)
+            playerUrl = b.x
         )
     }
 

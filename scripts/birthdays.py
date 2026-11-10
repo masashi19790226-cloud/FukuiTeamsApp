@@ -55,7 +55,8 @@ def _load_manual():
 
 # データの形の版。身長などを足したときに上げると、その日のうちに作り直す
 # 7: ブルーサンダーの選手を追加
-VERSION = 7
+# 8: 丸岡RUCKの選手のXのアカウント(x)を追加
+VERSION = 8
 
 
 def _text(fragment: str) -> str:
@@ -317,6 +318,8 @@ def ruck(fetch, ruck_photos):
             # 身長・出身地は丸岡RUCK公式の選手紹介から(体重・出身校は載っていない)
             "height": _ruck_info(info, "height"), "weight": "",
             "hometown": _ruck_info(info, "hometown"), "school": "", "high_school": "",
+            # 選手本人のXのアカウント(丸岡RUCK公式の選手紹介から。無ければ空)
+            "x": _ruck_info(info, "x"),
             "birthday": f"{int(bd.group(1)):04d}-{int(bd.group(2)):02d}-{int(bd.group(3)):02d}",
         }))
     # 丸岡RUCK公式にいて、女子Fリーグの名簿にいない選手(登録が後からの選手など)
@@ -333,6 +336,7 @@ def ruck(fetch, ruck_photos):
             "number": info.get("number", ""), "position": info.get("position", ""),
             "photo": _ruck_photo(info), "height": info.get("height", ""), "weight": "",
             "hometown": info.get("hometown", ""), "school": "", "high_school": "",
+            "x": info.get("x", ""),
             "birthday": info["birthday"],
         }))
         added += 1

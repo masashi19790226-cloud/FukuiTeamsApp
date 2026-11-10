@@ -420,7 +420,7 @@ def _name_key(name: str) -> str:
 
 
 def ruck_members(fetch):
-    """丸岡RUCK公式の選手紹介から {名前: {photo, number, position, height, hometown, name, reading, birthday}}。
+    """丸岡RUCK公式の選手紹介から {名前: {photo, number, position, height, hometown, name, reading, birthday, x}}。
     <div class="member-item"><p><img src="...profile2026-17-300x300.jpg"></p><h4 class="team-name">荒井 一花(17 FP)</h4>"""
     page = fetch(RUCK_MEMBERS)
     out = {}
@@ -445,7 +445,10 @@ def ruck_members(fetch):
         # 名前のすぐ後の「WATANABE Yuuna」「Hirata Riho」のようなローマ字の名前(読み方)と、「2009年1月26日」の生年月日
         r = re.search(r"(?<![A-Za-z0-9_./@:-])([A-Z][A-Za-z]+(?:[ \u3000]+[A-Z][A-Za-z]+)+)(?![A-Za-z0-9_])", body)
         bd = re.search(r"(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日", body)
-        out[_name_key(name)] = {"photo": photo, "number": m.group(2) if m else "", "position": (m.group(3) or "") if m else "",
+        # 選手本人のXのアカウント(例 https://x.com/kbys1114mitsuki)。載っていなければ空
+        xm = re.search(r"https?://(?:www\.)?(?:x|twitter)\.com/([A-Za-z0-9_]{1,15})(?![A-Za-z0-9_])", block)
+        xurl = f"https://x.com/{xm.group(1)}" if xm and xm.group(1).lower() not in ("intent", "share", "home", "i") else ""
+        out[_name_key(name)] = {"x": xurl, "photo": photo, "number": m.group(2) if m else "", "position": (m.group(3) or "") if m else "",
                                 "height": height, "hometown": b.group(1) if b else "",
                                 "name": name, "reading": r.group(1) if r else "",
                                 "birthday": f"{int(bd.group(1)):04d}-{int(bd.group(2)):02d}-{int(bd.group(3)):02d}" if bd else ""}
