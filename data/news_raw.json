@@ -7554,5 +7554,31 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2120083701778493791&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0fcxz1aBA2pVec9gMXZQG4",
     "published": "2026-11-10T09:41:22Z",
     "detected_at": "2026-11-10T10:41:07.582059+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17945013383377524979",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、来季は西地区に Ｂリーグワン | スポーツ | 福井のニュース | 福井新聞Ｄ刊",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2743600&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1mQ55xFhLyNDHwnNkbCIpa",
+    "published": "2026-11-10T11:04:55Z",
+    "detected_at": "2026-11-10T11:41:08.282071+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12479410070251145444",
+    "team": "BLOWINDS",
+    "title": "【12/19（土、20（日）福井ブローウィンズ観戦者限定】12/20（日）福井丸岡ラックの試合にご招待",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51862&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1jtjSnNcP_mfz9OrRAZVNm",
+    "published": "2026-11-10T10:40:22Z",
+    "detected_at": "2026-11-10T11:41:08.282123+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51862",
+    "team": "BLOWINDS",
+    "title": "【12/19（土、20（日）福井ブローウィンズ観戦者限定】12/20（日）福井丸岡ラックの試合にご招待",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51862",
+    "published": "2026-11-10T09:00:00+09:00",
+    "detected_at": "2026-11-10T11:41:10.356463+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/12.19_yoko_2.jpg"
   }
 ]
