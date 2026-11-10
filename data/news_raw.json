@@ -7583,12 +7583,44 @@
   },
   {
     "id": "official-news:https://ruck-fukui.com/archives/6479",
-    "team": "RAC",
+    "team": "BLOWINDS",
     "title": "福井ブローウィンズの試合ご招待",
     "link": "https://ruck-fukui.com/archives/6479",
     "published": "2026-11-10T12:47:00+00:00",
     "detected_at": "2026-11-10T13:01:09.213527+00:00",
     "source": "丸岡RUCK公式",
     "image": ""
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1299412060901037890",
+    "team": "BLOWINDS",
+    "title": "Bリーグワン、来季は東西2地区制に 26チームの新たな地区分け発表、福井ブローウィンズは西 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15211654.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3CusofRdvLyqP3qVcrvSOS",
+    "published": "2026-11-10T12:24:35Z",
+    "detected_at": "2026-11-10T13:21:10.592700+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8371181925214790578",
+    "team": "BLOWINDS",
+    "title": "Bリーグワン、来季は東西2地区制に 26チームの新たな地区分け発表、福井ブローウィンズは西 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://portal.uqmobile.jp/detail/1/2/5/10211_5_r_20261110_1794311492597234&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2LG2OqBM1cGSf7kb4dp4Hf",
+    "published": "2026-11-10T12:05:24Z",
+    "detected_at": "2026-11-10T13:21:10.592729+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1754138757887591978",
+    "team": "BLOWINDS",
+    "title": "Bリーグワン、来季は東西2地区制に 26チームの新たな地区分け発表、福井ブローウィンズは西 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=http://www.excite.co.jp/news/article/Fukuishimbun_2743626/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3QhJ40B0dabHR0cIK-V3iT",
+    "published": "2026-11-10T11:59:33Z",
+    "detected_at": "2026-11-10T13:21:10.592746+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14751333161468982454",
+    "team": "BLOWINDS",
+    "title": "Bリーグワン、来季は東西2地区制に 26チームの新たな地区分け発表、福井ブローウィンズは西 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2743626&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2Sva54kKO_azFXMSQCi5KX",
+    "published": "2026-11-10T11:52:34Z",
+    "detected_at": "2026-11-10T13:21:10.592761+00:00"
   }
 ]
