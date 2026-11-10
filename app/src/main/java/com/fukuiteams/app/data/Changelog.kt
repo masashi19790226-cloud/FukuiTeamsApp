@@ -14,6 +14,14 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年11月10日",
+        title = "丸岡ラック特集・オープニングショー",
+        items = listOf(
+            "一面の特集を、11/15(日)まで「丸岡ラック特集」にしました。「すべて」のときも丸岡RUCKの記事だけを並べ、観戦ガイド(次のホームゲーム)・選手紹介(写真・年齢・身長・出身地・これまでの出場と得点)・ホームの観客数ランキング・日本代表候補・フットサル入門・今季デビューの選手など、新しい記事も加えました",
+            "ブローウィンズの試合の当日のスケジュールで、「オープニングショー」の時刻を赤い色で目立たせました"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年11月7日",
         title = "出発の目安",
         items = listOf(

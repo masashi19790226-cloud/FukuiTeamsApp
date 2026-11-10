@@ -94,8 +94,11 @@ fun buildFeatureStories(
     keepWithoutPhoto: (FeatureStory) -> Boolean = { false }
 ): List<FeatureStory> {
     val today = LocalDate.now(JST)
+    // 特集期間は、そのチームの記事だけにする
+    val focus = activeFeatureFocus(teams, today)
+    val useTeams = focus?.let { listOf(it.team) } ?: teams
     val out = mutableListOf<FeatureStory>()
-    teams.forEach { team ->
+    useTeams.forEach { team ->
         out += countdown(team, games, results, previews)
         out += numbers(team, games, results, today)
         out += spotlight(team, players, standings, today)
@@ -120,13 +123,14 @@ fun buildFeatureStories(
         out += milestoneStory(team)
         out += recordStory(team, today)
         out += nationalStory(team, today)
+        if (focus != null && focus.team == team) out += focusStories(team, games, birthdays, today)
     }
-    out += topNews(teams, news, today)
-    out += newsDigest(teams, news, today)
-    out += openInvites(teams, invites)
-    out += weekAhead(teams, games)
-    out += birthdayMonth(teams, birthdays, today)
-    val bbs = bbsTalk(teams, bbsBuzz)
+    out += topNews(useTeams, news, today)
+    out += newsDigest(useTeams, news, today)
+    out += openInvites(useTeams, invites)
+    out += weekAhead(useTeams, games)
+    out += birthdayMonth(useTeams, birthdays, today)
+    val bbs = bbsTalk(useTeams, bbsBuzz)
     // 掲示板の話題(書き込みが多いときだけ作る)と、直近のトピック(最大 TOPIC_SLOTS 本)は毎回必ず入れる
     // (新しいトピックが出れば、日付が変わらなくても入れ替わる)。
     // それ以外の記事は、同じ種類(小見出し)は1日1本だけ(どのチーム・どの記事にするかは日替わり)にして日替わりに並べる。
@@ -145,11 +149,12 @@ fun buildFeatureStories(
     // 過去の話(過去の実績・あの選手は今・今日は何の日・あの日の一戦・歴代の選手・日本代表の歩み)は、毎日 PAST_SLOTS 本を必ず入れる。
     // (ほかの記事だけで本数がいっぱいになると、読み込みが進むたびに過去の話が押し出されて、一瞬出て消えていたため)
     val past = onePerKind.filter { it.kicker in PAST_KICKERS }.take(PAST_SLOTS)
-    val others = onePerKind.filterNot { it.kicker in PAST_KICKERS }
+    // 特集期間は、特集期間だけの記事(観戦ガイドなど)を先に並べる
+    val others = onePerKind.filterNot { it.kicker in PAST_KICKERS }.sortedBy { if (focus != null && it.kicker in FOCUS_KICKERS) 0 else 1 }
     val result = mutableListOf<FeatureStory>()
     var i = 0
     var j = 0
-    val limit = MAX_STORIES_PER_DAY - past.size
+    val limit = (if (focus != null) FOCUS_STORIES_PER_DAY else MAX_STORIES_PER_DAY) - past.size
     while (result.size < limit && (i < others.size || j < topics.size)) {
         if (i < others.size) result += others[i++]
         if (result.size < limit && j < topics.size) result += topics[j++]
@@ -254,6 +259,25 @@ private const val BBS_MIN_POSTS = 5
 
 /** 一面の特集として1日に出す記事の最大本数 */
 private const val MAX_STORIES_PER_DAY = 6
+
+/** チームの特集期間に並べる本数(その期間は、そのチームの記事だけで一面の特集をうめる) */
+private const val FOCUS_STORIES_PER_DAY = 8
+
+/** チームの特集期間(Web版の FEATURE_FOCUS と同じ)。日付は「2026-11-10」の形で、from〜until(両端を含む) */
+data class FeatureFocus(val team: Team, val from: String, val until: String, val title: String)
+
+/**
+ * 今の特集期間。期間中は「すべて」のときも、そのチームの記事だけを出し、
+ * 特集期間だけの記事(観戦ガイド・観客数・代表候補・フットサル入門・新しい顔)も加える。期間が過ぎたら自動でふだんの特集に戻る
+ */
+val FEATURE_FOCUS = FeatureFocus(Team.RAC, "2026-11-10", "2026-11-15", "丸岡ラック特集")
+
+/** 今が特集期間で、そのチームを表示しているなら FEATURE_FOCUS。それ以外は null */
+fun activeFeatureFocus(teams: List<Team>, today: LocalDate = LocalDate.now(JST)): FeatureFocus? {
+    val d = today.toString()
+    val f = FEATURE_FOCUS
+    return if (d >= f.from && d <= f.until && f.team in teams) f else null
+}
 
 /** 過去の話の記事の小見出し(毎日 PAST_SLOTS 本は必ず入れる) */
 private val PAST_KICKERS = setOf("過去の実績", "あの選手は今", "今日は何の日", "あの日の一戦", "歴代の選手", "日本代表の歩み")
@@ -1444,4 +1468,138 @@ private fun localPlayers(team: Team, birthdays: List<PlayerBirthday>): List<Feat
             bigUnit = "人"
         )
     )
+}
+
+// ---------- 特集期間だけの記事(Web版の focusStories と同じ) ----------
+
+/** 特集期間だけの記事の種類(先に並べる) */
+private val FOCUS_KICKERS = setOf("観戦ガイド", "選手紹介", "観客数で見る", "代表候補", "フットサル入門", "新しい顔")
+
+/** フットサル入門(公式ルールの基本。毎日1本):見出し・本文・大きな数字・単位 */
+private val FUTSAL_TIPS = listOf(
+    listOf("フットサルは5人対5人", "ゴールキーパーを含む5人ずつで戦います。コートはバスケットボールのコートより一回り大きいくらいで、客席と選手の距離が近いのが魅力。シュートの迫力を間近で感じられます。", "5", "人"),
+    listOf("選手の交代は何度でも自由", "交代の回数に制限がなく、試合中に何度でも入れ替われます。次々にコートに出てくる選手の顔ぶれと、ベンチの動きにも注目です。", null, null),
+    listOf("前後半20分、時計が止まる", "フットサルの公式ルールでは前半・後半20分ずつ。ボールが外に出たときなどは時計が止まる「プレーイングタイム」なので、実際の試合はもっと長くなります。残り時間の攻防は見逃せません。", "20", "分"),
+    listOf("ボールを持てるのは「4秒」", "キックインやフリーキックは4秒以内に、ゴールキーパーは自陣でボールを持てるのも4秒まで(公式ルール)。素早いリスタートからの速攻がフットサルの醍醐味です。", "4", "秒"),
+    listOf("終盤の「パワープレー」", "負けているチームが、ゴールキーパーの代わりにフィールドの選手を入れて5人で攻める作戦。ゴールが空くので、逆に一気に点が入ることも。試合の終わりまで目が離せません。", null, null)
+)
+
+private fun focusStories(team: Team, games: List<Game>, birthdays: List<PlayerBirthday>, today: LocalDate): List<FeatureStory> {
+    val out = mutableListOf<FeatureStory>()
+    val name = team.shortName
+    val data = HistoryRepository.data[team]
+    val matches = data?.matches.orEmpty().filterNot { it.isExhibition }
+    val home = matches.filter { it.homeAway == "H" && (it.visitors ?: 0) > 0 }
+    val lastSeason = matches.lastOrNull()?.season
+    val seasonHome = home.filter { it.season == lastSeason }
+    val avg = if (seasonHome.isNotEmpty()) seasonHome.map { it.visitors!! }.average().toInt() else null
+    val top = home.sortedWith(compareByDescending<HistoryMatch> { it.visitors!! }.thenByDescending { it.date })
+    fun comma(n: Int) = "%,d".format(n)
+
+    // 観戦ガイド:次のホームゲーム(30日以内)
+    val nextHome = games.filter { it.team == team && it.isHome && it.isUpcoming() }.minByOrNull { it.sortKey }
+    val days = nextHome?.daysUntil()
+    if (nextHome != null && days != null && days in 0..30) {
+        out += FeatureStory(
+            kicker = "観戦ガイド",
+            team = team,
+            headline = if (days == 0L) "きょうはホームゲーム、${nextHome.opponent}戦" else "次のホームゲームは${nextHome.shortLabel()}の${nextHome.opponent}戦",
+            body = "${nextHome.shortLabel()} ${nextHome.timeLabel}、${nextHome.venue}で${nextHome.opponent}と対戦します。" +
+                (avg?.let { "今季のホームの観客は1試合平均${comma(it)}人。" } ?: "") +
+                (top.firstOrNull()?.let { "これまでのホームの最多は${comma(it.visitors!!)}人(${it.dateLabel}の${it.opponent}戦)。" } ?: "") +
+                "会場の声援がチームの力になります。押すと試合の詳細が開きます。",
+            bigNumber = if (days == 0L) null else "$days",
+            bigUnit = if (days == 0L) null else "日後",
+            gameId = nextHome.id
+        )
+    }
+
+    // 観客数で見る:ホームの観客数ベスト3
+    if (top.size >= 3) {
+        val (a, b, c) = top
+        out += FeatureStory(
+            kicker = "観客数で見る",
+            team = team,
+            headline = "${name}のホーム最多観客は${comma(a.visitors!!)}人",
+            body = "いちばん多かったのは${a.dateLabel}の${a.opponent}戦(${a.scoreLabel})。2番目は${b.dateLabel}の${b.opponent}戦で${comma(b.visitors!!)}人、" +
+                "3番目は${c.dateLabel}の${c.opponent}戦で${comma(c.visitors!!)}人。" +
+                (avg?.let { "今季のホームは1試合平均${comma(it)}人。" } ?: "") + "記録を塗りかえるのは、会場に行くあなたかもしれません。",
+            bigNumber = comma(a.visitors),
+            bigUnit = "人",
+            url = a.url.ifBlank { null }
+        )
+    }
+
+    // 代表候補:いちばん新しい代表・代表候補の選出(半年以内)
+    val latest = data?.national.orEmpty().filter { it.players.isNotEmpty() }.maxByOrNull { it.date }
+    if (latest != null && latest.date >= today.minusDays(183).toString()) {
+        val ph = nationalPhotos(team, latest).first.firstOrNull()
+        out += FeatureStory(
+            photo = ph?.url.orEmpty(),
+            photoCaption = ph?.label,
+            kicker = "代表候補",
+            team = team,
+            headline = "${latest.kind}に${name}から${latest.players.size}人",
+            body = "${latest.date.replace("-", "/")}、${latest.players.joinToString("・")}が${latest.kind}に選ばれました(${latest.title})。" +
+                "代表クラスのプレーを、福井の会場で間近に見られるチャンスです。押すとお知らせが開きます。",
+            bigNumber = "${latest.players.size}",
+            bigUnit = "人",
+            url = latest.link.ifBlank { null }
+        )
+    }
+
+    // 選手紹介:今の選手(公式サイトの選手紹介)を1人ずつ。開くたびに別の選手
+    fun key(n: String) = n.replace(Regex("[\\s　]"), "")
+    val histPlayers = data?.players.orEmpty()
+    val natNames = (if (latest != null && latest.date >= today.minusDays(183).toString()) latest.players else emptyList()).map { key(it) }.toSet()
+    birthdays.filter { it.team == team }.sortedWith(compareBy<PlayerBirthday> { it.number.toIntOrNull() ?: 999 }.thenBy { it.name }).forEach { b ->
+        val hp = histPlayers.firstOrNull { key(it.name) == key(b.name) }
+        val bd = b.birthday
+        val age = today.year - bd.year - (if (today.monthValue < bd.monthValue || (today.monthValue == bd.monthValue && today.dayOfMonth < bd.dayOfMonth)) 1 else 0)
+        val head = (if (b.number.isNotBlank()) "#${b.number} " else "") + b.name
+        val prof = listOfNotNull("${age}歳", b.height.takeIf { it.isNotBlank() }?.let { "身長${it}cm" }, b.position.takeIf { it.isNotBlank() }).joinToString("・")
+        out += FeatureStory(
+            photo = b.photo,
+            photoCaption = if (b.photo.isNotBlank()) head else null,
+            kicker = "選手紹介",
+            team = team,
+            headline = if (b.hometown.isNotBlank()) "${head}、${b.hometown}出身" else head,
+            body = (if (b.reading.isNotBlank()) "${b.name}(${b.reading})。" else "${b.name}。") + "${prof}。" +
+                (if (hp != null && hp.apps > 0) "${name}では${hp.seasonsLabel}に公式戦${hp.apps}試合に出場し${hp.goals}得点。" else "") +
+                (if (key(b.name) in natNames) "${latest!!.kind}にも選ばれています。" else "") +
+                (if (b.number.isNotBlank()) "会場ではぜひ背番号${b.number}に注目を。" else "会場でぜひ注目してください。") +
+                "\n※公式サイトの選手紹介・女子Fリーグ公式の記録より",
+            bigNumber = b.number.ifBlank { null },
+            bigUnit = if (b.number.isNotBlank()) "番" else null
+        )
+    }
+
+    // フットサル入門
+    FUTSAL_TIPS.forEach { (h, b, n, u) ->
+        out += FeatureStory(kicker = "フットサル入門", team = team, headline = h!!, body = b!!, bigNumber = n, bigUnit = u)
+    }
+
+    // 新しい顔:今季はじめて出場した選手(試合ごとの出場選手から数えたときだけ)
+    if (data?.playersFromLineup == true) {
+        // 今季の始まり(5月1日)
+        val startIso = "${if (today.monthValue >= 5) today.year else today.year - 1}-05-01"
+        val fresh = data.players.filter { it.first >= startIso && it.apps > 0 && it.now != false }
+            .sortedWith(compareByDescending<HistoryPlayer> { it.apps }.thenByDescending { it.goals }.thenBy { it.name })
+        if (fresh.isNotEmpty()) {
+            val p = fresh.first()
+            val head = (if (p.number.isNotBlank()) "#${p.number} " else "") + p.name
+            out += FeatureStory(
+                kicker = "新しい顔",
+                team = team,
+                headline = "${head}、今季デビューで${p.apps}試合出場",
+                body = "今季から${name}の公式戦に出場。ここまで${p.apps}試合(先発${p.starts})に出て${p.goals}得点。" +
+                    (if (fresh.size > 1) "今季デビューした選手はほかに${fresh.drop(1).take(3).joinToString("・") { it.name }}" +
+                        (if (fresh.size > 4) "など${fresh.size - 1}人。" else "。") else "") +
+                    "新しい力の活躍を会場で見届けてください。",
+                bigNumber = "${p.apps}",
+                bigUnit = "試合"
+            )
+        }
+    }
+    return out
 }

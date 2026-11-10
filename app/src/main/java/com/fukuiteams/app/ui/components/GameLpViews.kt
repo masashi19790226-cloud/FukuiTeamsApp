@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import com.fukuiteams.app.data.openLabel
 import com.fukuiteams.app.data.departureTime
 import com.fukuiteams.app.ui.theme.Accent
 import com.fukuiteams.app.ui.theme.Ink
+import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.theme.InkSoft
 
 /**
@@ -57,15 +59,29 @@ fun GameLpSection(lp: GameLp, startExpanded: Boolean) {
             if (showSchedule) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     lp.timeline.forEach { item ->
-                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        // オープニングショーの開始は、見逃さないように色を付けて目立たせる
+                        val highlight = item.text.contains("オープニング")
+                        Row(
+                            modifier = if (highlight) Modifier
+                                .fillMaxWidth()
+                                .background(NewsRed.copy(alpha = 0.10f))
+                                .padding(horizontal = 6.dp, vertical = 3.dp) else Modifier,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
                             Text(
                                 item.time,
                                 modifier = Modifier.width(76.dp),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Ink
+                                color = if (highlight) NewsRed else Ink
                             )
-                            Text(item.text, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, color = Ink)
+                            Text(
+                                if (highlight) "★ ${item.text}" else item.text,
+                                modifier = Modifier.weight(1f),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = if (highlight) FontWeight.Bold else null,
+                                color = if (highlight) NewsRed else Ink
+                            )
                         }
                     }
                     Text("※内容・時間は変更になる場合があります", style = MaterialTheme.typography.labelSmall, color = InkSoft)

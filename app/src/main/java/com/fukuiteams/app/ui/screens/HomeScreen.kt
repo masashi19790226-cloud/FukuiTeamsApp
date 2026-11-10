@@ -365,6 +365,20 @@ fun HomeScreen(
                     }
                     if (loadedOnce) LaunchedEffect(stories) { FeatureSeen.noteStories(appContext, stories) }
                     // 前回の結果は、下の「各チームの近況」にまとめた
+                    // チームの特集期間は、特集の上に帯を出す(例「丸岡ラック特集 11/15(日)まで」)
+                    val focus = com.fukuiteams.app.data.activeFeatureFocus(teams)
+                    if (focus != null && stories.isNotEmpty()) {
+                        val until = java.time.LocalDate.parse(focus.until)
+                        val wd = listOf("月", "火", "水", "木", "金", "土", "日")[until.dayOfWeek.value - 1]
+                        Row(
+                            modifier = Modifier.fillMaxWidth().background(focus.team.color).padding(horizontal = 12.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.Bottom,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(focus.title, color = White, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp)
+                            Text("${until.monthValue}/${until.dayOfMonth}(${wd})まで", color = White, fontSize = 12.sp)
+                        }
+                    }
                     if (stories.isNotEmpty()) {
                         FeatureHero(
                             stories = stories,
