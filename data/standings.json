@@ -1651,7 +1651,7 @@
         }
       }
     },
-    "updated_at": "2026-11-10T12:02:21.505074+00:00"
+    "updated_at": "2026-11-10T12:18:11.077939+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3393,13 +3393,13 @@
         }
       ]
     },
-    "updated_at": "2026-11-10T12:02:21.505074+00:00"
+    "updated_at": "2026-11-10T12:18:11.077939+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-10",
-    "v": 7,
+    "v": 8,
     "manual": "d8535a448782",
-    "updated_at": "2026-11-09T15:08:32.719120+00:00",
+    "updated_at": "2026-11-10T12:18:11.077939+00:00",
     "players": [
       {
         "team": "UNITED",
@@ -3473,6 +3473,7 @@
         "hometown": "広島県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/watanabe_yuna14",
         "birthday": "2009-01-26",
         "_key": "ruck:渡邊優和"
       },
@@ -3563,6 +3564,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/Kato_Haru06",
         "birthday": "2006-02-25",
         "_key": "ruck:加藤はるな"
       },
@@ -3608,6 +3610,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/emi__RUCK18",
         "birthday": "2002-03-06",
         "_key": "ruck:林笑"
       },
@@ -3653,6 +3656,7 @@
         "hometown": "愛知県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/CaiZuli31485",
         "birthday": "2008-03-13",
         "_key": "ruck:足立紗菜"
       },
@@ -3818,6 +3822,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/nishibataema",
         "birthday": "2010-05-21",
         "_key": "ruck:西端円麻"
       },
@@ -3923,6 +3928,7 @@
         "hometown": "東京都",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/ot_6ha",
         "birthday": "2006-06-13",
         "_key": "ruck:長谷川詩花"
       },
@@ -3968,6 +3974,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/imamurayuriii",
         "birthday": "2010-06-15",
         "_key": "ruck:今村結里"
       },
@@ -4028,6 +4035,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/katohono_",
         "birthday": "2004-07-21",
         "_key": "ruck:加藤ほのか"
       },
@@ -4043,6 +4051,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/4_t_s_u_8",
         "birthday": "2007-07-22",
         "_key": "ruck:横川四葉"
       },
@@ -4088,6 +4097,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/Y_HIYORI_728",
         "birthday": "2008-07-28",
         "_key": "ruck:山口陽愛"
       },
@@ -4133,6 +4143,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/Hirata_riho",
         "birthday": "2007-08-28",
         "_key": "ruck:平田梨豊"
       },
@@ -4163,6 +4174,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/arai_ichika17",
         "birthday": "2001-09-02",
         "_key": "ruck:荒井一花"
       },
@@ -4178,6 +4190,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/a_i_m_i0909",
         "birthday": "2007-09-09",
         "_key": "ruck:小林愛心"
       },
@@ -4298,6 +4311,7 @@
         "hometown": "石川県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/SHIONDAYO_1019",
         "birthday": "2002-10-19",
         "_key": "ruck:山森しおん"
       },
@@ -4328,6 +4342,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/misaki_ruck",
         "birthday": "2009-10-25",
         "_key": "ruck:坪川美咲"
       },
@@ -4373,6 +4388,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/7hona110",
         "birthday": "2008-11-07",
         "_key": "ruck:中川穂南"
       },
@@ -4388,6 +4404,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/fukuimaruoka21",
         "birthday": "2001-11-07",
         "_key": "ruck:藤江真尋"
       },
@@ -4433,6 +4450,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/kbys1114mitsuki",
         "birthday": "2001-11-14",
         "_key": "ruck:小林望月"
       },
@@ -4478,6 +4496,7 @@
         "hometown": "宮城県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/ki__ho03",
         "birthday": "1999-12-03",
         "_key": "ruck:佐藤希穂"
       },
@@ -4643,6 +4662,7 @@
         "hometown": "福井県",
         "school": "",
         "high_school": "",
+        "x": "https://x.com/ko___kona",
         "birthday": "2007-12-23",
         "_key": "ruck:嶋﨑心那"
       },
@@ -6344,7 +6364,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-10T12:02:21.505074+00:00"
+    "updated_at": "2026-11-10T12:18:11.077939+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -8206,7 +8226,7 @@
         }
       }
     },
-    "updated_at": "2026-11-10T12:02:21.505074+00:00"
+    "updated_at": "2026-11-10T12:18:11.077939+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-10",
