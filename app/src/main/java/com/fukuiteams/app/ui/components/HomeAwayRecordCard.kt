@@ -48,6 +48,11 @@ fun HomeAwayRecordCard(summary: HomeAwaySummary) {
             RecordColumn(label = "HOME", isHome = true, record = summary.home, modifier = Modifier.weight(1f))
             Box(modifier = Modifier.width(1.dp).fillMaxHeight().background(Ink))
             RecordColumn(label = "AWAY", isHome = false, record = summary.away, modifier = Modifier.weight(1f))
+            // 中立の会場での試合があるチーム(ヴェルコスタ)は「中立」の列も
+            if (summary.neutral.games > 0) {
+                Box(modifier = Modifier.width(1.dp).fillMaxHeight().background(Ink))
+                RecordColumn(label = "中立", isHome = false, record = summary.neutral, modifier = Modifier.weight(1f), neutral = true)
+            }
         }
         Text(
             "勝率=勝利数÷試合数×100(引き分けも試合数に含めます)。公式サイトから自動取得した結果と、自分で記録した勝敗から計算しています。",
@@ -65,7 +70,7 @@ fun HomeAwayRecordCard(summary: HomeAwaySummary) {
 }
 
 @Composable
-private fun RecordColumn(label: String, isHome: Boolean?, record: HomeAwayRecord, modifier: Modifier) {
+private fun RecordColumn(label: String, isHome: Boolean?, record: HomeAwayRecord, modifier: Modifier, neutral: Boolean = false) {
     Column(
         modifier = modifier.padding(horizontal = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -82,7 +87,7 @@ private fun RecordColumn(label: String, isHome: Boolean?, record: HomeAwayRecord
                 softWrap = false
             )
         } else {
-            HomeAwayTag(isHome = isHome)
+            HomeAwayTag(isHome = isHome, neutral = neutral)
         }
         if (record.games == 0) {
             Text("データなし", style = MaterialTheme.typography.bodyMedium, color = InkSoft, maxLines = 1, softWrap = false)

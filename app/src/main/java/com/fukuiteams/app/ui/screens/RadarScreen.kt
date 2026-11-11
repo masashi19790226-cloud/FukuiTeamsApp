@@ -105,6 +105,7 @@ import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.theme.Paper
 import android.widget.Toast
+import com.fukuiteams.app.model.inkColor
 
 /** トピック画面の分類。 */
 // 並び順がそのまま絞り込みボタンの順になる。
@@ -812,7 +813,7 @@ private fun TicketSearchCard(selectedTeam: Team?, onOpen: (String) -> Unit) {
                 "${team.displayName} 公式サイトで確認 ›",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
-                color = team.color,
+                color = team.inkColor,
                 modifier = Modifier.clickable {
                     onOpen(team.officialSiteUrl ?: "https://www.google.com/search?q=" + java.net.URLEncoder.encode("${team.displayName} チケット", "UTF-8"))
                 }.padding(vertical = 4.dp)
@@ -821,7 +822,7 @@ private fun TicketSearchCard(selectedTeam: Team?, onOpen: (String) -> Unit) {
                 "Xで「${team.displayName} チケット」を見る ›",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
-                color = team.color,
+                color = team.inkColor,
                 modifier = Modifier
                     .clickable {
                         val query = java.net.URLEncoder.encode("${team.displayName} チケット", "UTF-8")
@@ -864,7 +865,7 @@ private fun RadarRow(
                     team.displayName,
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.ExtraBold,
-                    color = team.color,
+                    color = team.inkColor,
                     maxLines = 1
                 )
             }
@@ -970,6 +971,7 @@ private fun Team.snsSearchTerms(): SnsTeamSearchTerms {
         Team.RAC -> listOf("福井丸岡RUCK", "丸岡RUCK", "#福井丸岡RUCK")
         Team.UNITED -> listOf("福井ユナイテッド", "#福井ユナイテッド")
         Team.THUNDER -> listOf("福井永平寺ブルーサンダー", "ブルーサンダー", "#福井永平寺ブルーサンダー")
+        Team.VERCOSTA -> listOf("ヴェルコスタ福井", "ヴェルコスタ", "#ヴェルコスタ福井")
     }
     val gameTerms = when (this) {
         Team.RAC -> listOf("試合結果", "観戦")

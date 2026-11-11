@@ -6,6 +6,7 @@ import com.fukuiteams.app.model.Team
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlin.math.absoluteValue
+import com.fukuiteams.app.model.sideWord
 
 /**
  * 一面の「特集」(日替わりの読み物)。試合が無い日も一面が毎日変わるよう、
@@ -60,6 +61,8 @@ private fun seasonStart(team: Team, today: LocalDate): LocalDate = when (team) {
     Team.UNITED -> LocalDate.of(today.year, 3, 1)
     // リーグHは秋から翌年の春
     Team.THUNDER -> LocalDate.of(if (today.monthValue >= 8) today.year else today.year - 1, 8, 1)
+    // ホッケー日本リーグは4月に始まり12月に終わる
+    Team.VERCOSTA -> LocalDate.of(today.year, 4, 1)
 }
 
 /**
@@ -308,10 +311,10 @@ private fun countdown(
         // 今季の試合は「9/26(土)」、過去の記録の試合は年も付けて「2025/10/4(土)」
         val when_ = last.game?.shortLabel() ?: last.dateLabel
         "${next.opponent}とはこれまで${it.wins}勝${it.losses}敗" + (if (it.draws > 0) "${it.draws}分" else "") +
-            "。前回(${when_})は${last.myScore}-${last.opponentScore}" + (if (last.pk.isNotBlank()) "(PK${last.pk})" else "") + "で$mark。"
+            "。前回(${when_})は${last.myScore}-${last.opponentScore}" + last.pkLabel + "で$mark。"
     } ?: "${next.opponent}とは今季(記録上)初めての対戦。"
     val summary = previews[next.id]?.summary?.takeIf { it.isNotBlank() }
-    val where = if (next.isHome) "ホーム・${next.venue}" else "敵地・${next.venue}"
+    val where = if (next.isHome) "ホーム・${next.venue}" else if (next.neutral) next.venue else "敵地・${next.venue}"
     return listOf(
         FeatureStory(
             kicker = "決戦まで",
@@ -357,7 +360,8 @@ private fun numbers(team: Team, games: List<Game>, results: Map<String, RemoteGa
 
     // ホーム・アウェイ別
     val home = rs.filter { it.first.isHome }
-    val away = rs.filterNot { it.first.isHome }
+    // 中立の会場での試合(ヴェルコスタ)は、アウェイに入れない
+    val away = rs.filter { !it.first.isHome && !it.first.neutral }
     if (home.isNotEmpty() && away.isNotEmpty()) {
         fun rec(l: List<Pair<Game, RemoteGameResult>>) =
             "${l.count { it.second.outcome() == GameOutcome.WIN }}勝${l.count { it.second.outcome() == GameOutcome.LOSE }}敗" +
@@ -383,7 +387,7 @@ private fun numbers(team: Team, games: List<Game>, results: Map<String, RemoteGa
                 kicker = "今季のベストゲーム",
                 team = team,
                 headline = "${g.opponent}に${r.myScore}-${r.opponentScore}",
-                body = "今季いちばん大差で勝ったのは${g.shortLabel()}の${g.opponent}戦(${if (g.isHome) "ホーム" else "アウェイ"})。" +
+                body = "今季いちばん大差で勝ったのは${g.shortLabel()}の${g.opponent}戦(${g.sideWord("ホーム", "アウェイ")})。" +
                     "${r.myScore - r.opponentScore}点差の快勝だった。今季は$record。",
                 bigNumber = "+${r.myScore - r.opponentScore}",
                 bigUnit = "点差",
@@ -476,6 +480,9 @@ private fun spotlight(
         "今季${p.goals}得点で、リーグの得点ランキング${p.rank}位" +
             (p.shots?.let { "(シュート${it}本)" } ?: "") + "。" +
             (p.games?.let { "${it}試合に出場。" } ?: "")
+    } else if (team == Team.VERCOSTA) {
+        "今季のサムライリーグで${p.goals}得点(チーム内${p.rank}位)。" +
+            (p.games?.let { "${it}試合に出場" + (p.starts?.let { s -> "(先発$s)" } ?: "") + "。" } ?: "")
     } else if (team == Team.THUNDER) {
         "今季のリーグHで${p.goals}得点(チーム内${p.rank}位)" +
             (p.shots?.takeIf { it > 0 }?.let { "。シュート${it}本で成功率${(p.goals * 100 / it)}%" } ?: "") + "。" +
@@ -504,6 +511,7 @@ private fun spotlight(
 private fun teamWordOf(team: Team): String = when (team) {
     Team.RAC -> "丸岡"
     Team.THUNDER -> "ブルーサンダー"
+    Team.VERCOSTA -> "ヴェルコスタ"
     else -> "ユナイテッド"
 }
 
@@ -593,7 +601,7 @@ private fun onThisDay(team: Team, games: List<Game>, results: Map<String, Remote
             kicker = "今日は何の日",
             team = team,
             headline = "${years}年前の今日、${hit.opponent}$verb",
-            body = "${hit.dateLabel}(${hit.dayOfWeek})、${if (hit.isHome) "ホーム" else "アウェイ"}の${hit.opponent}戦は${r.myScore}-${r.opponentScore}。",
+            body = "${hit.dateLabel}(${hit.dayOfWeek})、${hit.sideWord("ホーム", "アウェイ")}の${hit.opponent}戦は${r.scoreText}。",
             bigNumber = "$years",
             bigUnit = "年前",
             gameId = hit.id
@@ -628,7 +636,7 @@ private fun onThisDayFromHistory(team: Team, today: LocalDate): List<FeatureStor
             team = team,
             headline = "${years}年前の今日、${hit.opponent}$verb",
             body = "${hit.dateLabel}、${hit.title.ifBlank { hit.competition }}。" +
-                "$where${hit.opponent}戦は${hit.myScore}-${hit.opponentScore}" + (if (hit.pk.isNotBlank()) "(PK${hit.pk})" else "") + "。" +
+                "$where${hit.opponent}戦は${hit.myScore}-${hit.opponentScore}" + hit.pkLabel + "。" +
                 (scorers?.let { "得点は$it。" } ?: "") +
                 (hit.visitors?.let { "観客は${"%,d".format(it)}人。" } ?: ""),
             bigNumber = "$years",
@@ -681,7 +689,7 @@ private fun pastMatchStory(team: Team, today: LocalDate): List<FeatureStory> {
             team = team,
             headline = "$lead、${m.opponent}$verb ${m.myScore}-${m.opponentScore}",
             body = "${m.dateLabel}、${m.title.ifBlank { m.competition }}。$where${m.opponent}と対戦し、" +
-                "${m.myScore}-${m.opponentScore}" + (if (m.pk.isNotBlank()) "(PK${m.pk})" else "") + "。" +
+                "${m.myScore}-${m.opponentScore}" + m.pkLabel + "。" +
                 (scorers?.let { "得点は$it。" } ?: "") +
                 (m.visitors?.let { "観客は${"%,d".format(it)}人。" } ?: "") +
                 "下のメニューの「チーム」で、ほかの試合も振り返れます。",
@@ -783,7 +791,7 @@ private fun legendStory(team: Team, today: LocalDate): List<FeatureStory> {
     val p = pool[Math.floorMod(today.toEpochDay().toInt() * 13 + team.ordinal, pool.size)]
     val head = (if (p.number.isNotBlank()) "#${p.number} " else "") + p.name
     val record = when (team) {
-        Team.UNITED, Team.BLOWINDS -> "${p.apps}試合(先発${p.starts})に出場し${p.goals}得点"
+        Team.UNITED, Team.BLOWINDS, Team.VERCOSTA -> "${p.apps}試合(先発${p.starts})に出場し${p.goals}得点"
         Team.RAC -> if (HistoryRepository.data[team]?.playersFromLineup == true)
             "${p.apps}試合(先発${p.starts})に出場し${p.goals}得点"
         else
@@ -807,11 +815,12 @@ private fun legendStory(team: Team, today: LocalDate): List<FeatureStory> {
             photoCaption = photo?.let { p.name },
             kicker = "歴代の選手",
             team = team,
-            headline = "$head、${p.seasonsLabel}で${p.goals}得点",
+            // ヴェルコスタで得点が0の選手(ゴールキーパーなど)は、得点の代わりに出場した試合数を見出しにする
+            headline = if (team == Team.VERCOSTA && p.goals == 0) "$head、${p.seasonsLabel}で${p.apps}試合に出場" else "$head、${p.seasonsLabel}で${p.goals}得点",
             body = "${p.seasonsLabel}(${p.seasons.size}シーズン)に${team.shortName}で$record。$status" +
                 "下のメニューの「選手」の「歴代の選手」で、ほかの選手も見られます。",
-            bigNumber = "${p.goals}",
-            bigUnit = "得点"
+            bigNumber = if (team == Team.VERCOSTA && p.goals == 0) "${p.apps}" else "${p.goals}",
+            bigUnit = if (team == Team.VERCOSTA && p.goals == 0) "試合" else "得点"
         )
     )
 }
@@ -1158,12 +1167,14 @@ private fun remaining(team: Team, games: List<Game>, today: LocalDate): List<Fea
     val left = season.filter { it.isUpcoming() }
     if (season.size < 5 || left.isEmpty()) return emptyList()
     val home = left.count { it.isHome }
+    val neutral = left.count { it.neutral }
     return listOf(
         FeatureStory(
             kicker = "シーズンの行方",
             team = team,
             headline = "${team.shortName}、今季の残りは${left.size}試合",
-            body = "日程に載っている今季${season.size}試合のうち、残りは${left.size}試合(ホーム${home}・アウェイ${left.size - home})。" +
+            body = "日程に載っている今季${season.size}試合のうち、残りは${left.size}試合(ホーム${home}・アウェイ${left.size - home - neutral}" +
+                (if (neutral > 0) "・中立$neutral" else "") + ")。" +
                 "最後の試合は${left.maxByOrNull { it.sortKey }?.let { "${it.shortLabel()}の${it.opponent}戦" } ?: "未定"}。",
             bigNumber = "${left.size}",
             bigUnit = "試合"
@@ -1293,7 +1304,7 @@ private fun biggestComeback(team: Team, games: List<Game>, results: Map<String, 
             kicker = "しびれた一戦",
             team = team,
             headline = "${g.opponent}に${r.myScore}-${r.opponentScore}、${diff}点差で逃げ切り",
-            body = "今季いちばんの接戦の勝利は${g.shortLabel()}の${g.opponent}戦(${if (g.isHome) "ホーム" else "アウェイ"})。最後まで目が離せない試合だった。",
+            body = "今季いちばんの接戦の勝利は${g.shortLabel()}の${g.opponent}戦(${g.sideWord("ホーム", "アウェイ")})。最後まで目が離せない試合だった。",
             bigNumber = "$diff",
             bigUnit = "点差",
             gameId = g.id
@@ -1351,7 +1362,7 @@ private fun weekAhead(teams: List<Team>, games: List<Game>): List<FeatureStory> 
             kicker = "今週の試合",
             team = if (teams.size == 1) teams.first() else null,
             headline = "この1週間で${week.size}試合",
-            body = week.joinToString("\n") { "・${it.shortLabel()} ${it.team.shortName} vs ${it.opponent}(${if (it.isHome) "H" else "A"})" },
+            body = week.joinToString("\n") { "・${it.shortLabel()} ${it.team.shortName} vs ${it.opponent}(${it.sideWord("H", "A", "N")})" },
             bigNumber = "${week.size}",
             bigUnit = "試合",
             gameId = week.first().id

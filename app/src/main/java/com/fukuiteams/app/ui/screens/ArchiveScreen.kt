@@ -678,6 +678,7 @@ fun PastPlayersSection(team: Team, profileOf: (String) -> com.fukuiteams.app.dat
                         "女子Fリーグ公式の試合ごとの記録(出場選手・シュート・得点。2017年〜今季)から数えています。「試合」はコートに立った試合(先発・途中出場)です。"
                     else
                         "女子Fリーグ公式の過去の記録のゴールランキング(1点以上の選手)から数えた得点です。試合ごとの記録を読み込むと、出場試合数も出ます(データの自動更新を待っています)。"
+                    Team.VERCOSTA -> "ホッケージャパンリーグ公式の試合詳細のメンバー表・得点から数えています(2022年〜)。「試合」は試合に出た試合(先発・途中出場)です。"
                     Team.UNITED -> "ユナイテッド公式サイトの試合情報(2019年〜の公式戦)の先発・交代・得点から数えています。"
                 } +
                     (if (hasNow) "「元所属」はいまの選手名簿にいない(以前に所属していた)選手です。" else "") +
@@ -1032,7 +1033,9 @@ private fun OpponentCard(
                         color = Ink,
                         maxLines = 1
                     )
+                    // ヴェルコスタの N は中立の会場での試合(ほかのチームの N はホーム・アウェイが無い大会)
                     if (m.homeAway != "N") HomeAwayTag(isHome = m.homeAway == "H")
+                    else if (m.team == Team.VERCOSTA) HomeAwayTag(isHome = false, neutral = true)
                 }
             }
         }
@@ -1269,6 +1272,7 @@ private fun MatchRow(m: HistoryMatch, onClick: () -> Unit) {
                 color = InkSoft
             )
             if (m.homeAway != "N") HomeAwayTag(isHome = m.homeAway == "H")
+            else if (m.team == Team.VERCOSTA) HomeAwayTag(isHome = false, neutral = true)
         }
         Text(m.title.ifBlank { m.competition }, style = MaterialTheme.typography.labelMedium, color = InkSoft, maxLines = 2)
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {

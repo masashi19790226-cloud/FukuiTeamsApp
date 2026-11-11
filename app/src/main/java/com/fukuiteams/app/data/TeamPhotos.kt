@@ -71,10 +71,11 @@ object TeamPhotos {
         }
         // 得点の表に写真がある自チームの選手(丸岡RUCK・ユナイテッド・ブルーサンダー)
         val opp = mutableMapOf<String, MutableList<PhotoRef>>()
-        listOf(Team.RAC, Team.UNITED, Team.THUNDER).forEach { team ->
+        listOf(Team.RAC, Team.UNITED, Team.THUNDER, Team.VERCOSTA).forEach { team ->
             val word = when (team) {
                 Team.RAC -> "丸岡"
                 Team.UNITED -> "福井ユナイテッド"
+                Team.VERCOSTA -> "ヴェルコスタ"
                 else -> "ブルーサンダー"
             }
             standings[team.name]?.scorers?.rows.orEmpty()

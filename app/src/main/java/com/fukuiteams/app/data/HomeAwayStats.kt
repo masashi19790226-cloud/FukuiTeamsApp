@@ -27,9 +27,11 @@ data class HomeAwaySummary(
     val home: HomeAwayRecord,
     val away: HomeAwayRecord,
     /** 終了済みだが結果が分からない試合の数(集計から除外) */
-    val unknown: Int
+    val unknown: Int,
+    /** 中立の会場での試合(ヴェルコスタのセントラル開催など。ほかのチームは0試合) */
+    val neutral: HomeAwayRecord = HomeAwayRecord()
 ) {
-    val total: HomeAwayRecord get() = home + away
+    val total: HomeAwayRecord get() = home + away + neutral
 }
 
 /** 終了済みの試合について、ホーム・アウェイ別に勝敗を集計する。 */
@@ -40,6 +42,7 @@ fun computeHomeAwaySummary(
 ): HomeAwaySummary {
     var home = HomeAwayRecord()
     var away = HomeAwayRecord()
+    var neutral = HomeAwayRecord()
     var unknown = 0
     games.filterNot { it.isUpcoming() }.forEach { game ->
         val add = when (resolveOutcome(game.id, prefs, autoResults)) {
@@ -52,9 +55,11 @@ fun computeHomeAwaySummary(
             unknown++
         } else if (game.isHome) {
             home += add
+        } else if (game.neutral) {
+            neutral += add
         } else {
             away += add
         }
     }
-    return HomeAwaySummary(home, away, unknown)
+    return HomeAwaySummary(home, away, unknown, neutral)
 }

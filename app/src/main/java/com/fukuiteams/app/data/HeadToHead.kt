@@ -24,12 +24,15 @@ data class HeadToHead(
             MeetingLine(
                 sortDate = g.sortKey.take(8),
                 dateLabel = "${g.dateLabel}(${g.dayOfWeek})",
-                isHome = g.isHome,
+                // 中立の会場での試合(ヴェルコスタ)は、HOME・AWAYを付けない
+                isHome = if (g.neutral) null else g.isHome,
                 myScore = r.myScore,
                 opponentScore = r.opponentScore,
-                pk = "",
+                // SO(シュートアウト)で決着した試合は、そのSOの点数
+                pk = if (r.soMy != null && r.soOpp != null) "${r.soMy}-${r.soOpp}" else "",
                 outcome = r.outcome(),
-                game = g
+                game = g,
+                pkWord = if (g.team == com.fukuiteams.app.model.Team.VERCOSTA) "SO " else "PK"
             )
         } + past.map { m ->
             MeetingLine(
@@ -44,7 +47,8 @@ data class HeadToHead(
                 opponentScore = m.opponentScore,
                 pk = m.pk,
                 outcome = m.outcome,
-                game = null
+                game = null,
+                pkWord = if (m.team == com.fukuiteams.app.model.Team.VERCOSTA) "SO " else "PK"
             )
         }).sortedByDescending { it.sortDate }
 
@@ -66,15 +70,20 @@ data class MeetingLine(
     val pk: String,
     val outcome: GameOutcome,
     /** アプリの記録の試合なら、その試合 */
-    val game: Game?
+    val game: Game?,
+    /** pk の前に付ける言葉(PK戦は「PK」、ヴェルコスタのSOは「SO 」) */
+    val pkWord: String = "PK"
 ) {
+    /** 「(PK3-4)」「(SO 3-2)」。無ければ空 */
+    val pkLabel: String
+        get() = if (pk.isBlank()) "" else "($pkWord$pk)"
     /** 「○2-1」「△1-1(PK3-4)」 */
     val scoreLabel: String
         get() = when (outcome) {
             GameOutcome.WIN -> "○"
             GameOutcome.LOSE -> "●"
             GameOutcome.DRAW -> "△"
-        } + "$myScore-$opponentScore" + (if (pk.isNotBlank()) "(PK$pk)" else "")
+        } + "$myScore-$opponentScore" + pkLabel
 }
 
 /** 相手チーム名を比べるための形(空白や「FC」の有無、全角・半角の違いをそろえる) */

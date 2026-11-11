@@ -166,6 +166,7 @@ fun publicViewingXSearchUrl(team: Team): String {
         Team.RAC -> "丸岡RUCK"
         Team.UNITED -> "福井ユナイテッド"
         Team.THUNDER -> "ブルーサンダー"
+        Team.VERCOSTA -> "ヴェルコスタ福井"
     }
     val q = java.net.URLEncoder.encode("$word (パブリックビューイング OR PV OR 観戦会)", "UTF-8")
     return "https://x.com/search?q=$q&f=live"

@@ -7,13 +7,14 @@ import com.fukuiteams.app.model.Team
  * メニューの「公式サイト・SNS」と、試合タブの「Xの投稿から予定を追加」で使う。
  */
 
-/** 公式Xのアカウント */
-val Team.officialXUrl: String
+/** 公式Xのアカウント(分からないチームは null。ヴェルコスタは公式サイトだけ) */
+val Team.officialXUrl: String?
     get() = when (this) {
         Team.BLOWINDS -> "https://x.com/fukui_blowinds"
         Team.RAC -> "https://x.com/RUCK_PR"
         Team.UNITED -> "https://x.com/fkiutd_official"
         Team.THUNDER -> "https://x.com/fu_ei_bluethun"
+        Team.VERCOSTA -> null
     }
 
 /** 公式インスタグラムのアカウント(無いチームは null)。
@@ -24,6 +25,7 @@ val Team.officialInstagramUrl: String?
         Team.RAC -> "https://www.instagram.com/fukuimaruokaruck/"
         Team.UNITED -> "https://www.instagram.com/fukuiunited_official/"
         Team.THUNDER -> "https://www.instagram.com/fukui_eiheiji_bluethunder/"
+        Team.VERCOSTA -> null
     }
 
 /** 制作者(追い風はBOOZ)が作った応援プレイリスト(Spotify。公式のものではない)。無いチームは null */

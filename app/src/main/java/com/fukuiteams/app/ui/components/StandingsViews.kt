@@ -33,6 +33,8 @@ import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.Paper
+import com.fukuiteams.app.model.inkColor
+import com.fukuiteams.app.data.recordText
 
 /*
  * 4チームのリーグの順位表(チームタブの「今季」の「▼ 順位表」で使う)。
@@ -76,13 +78,14 @@ private fun leagueSummary(st: LeagueStandings, team: Team): String {
     val word = when (team) {
         Team.RAC -> "丸岡"
         Team.THUNDER -> "ブルーサンダー"
+        Team.VERCOSTA -> "ヴェルコスタ"
         else -> "福井ユナイテッド"
     }
     val part = st.final?.takeIf { p -> p.rows.any { (it.played ?: 0) > 0 } } ?: st.regular
         ?: return "順位表を読み取れませんでした"
     val me = part.rows.firstOrNull { it.team.contains(word) } ?: return part.label
     return "${part.label} ${me.rank}位・勝点${me.points}" +
-        (if (me.win != null && me.lose != null) "・${me.win}勝${me.lose}敗" + (if ((me.draw ?: 0) > 0) "${me.draw}分" else "") +
+        (if (me.win != null && me.lose != null) "・${me.recordText}" +
             "(${com.fukuiteams.app.data.winRateLabel(me.win, me.win + me.lose + (me.draw ?: 0))})" else "")
 }
 
@@ -128,6 +131,7 @@ fun LeagueStandingsSection(standings: LeagueStandings, ownTeam: Team, nextOppone
         Team.UNITED -> "福井ユナイテッド"
         Team.BLOWINDS -> "ブローウィンズ"
         Team.THUNDER -> "ブルーサンダー"
+        Team.VERCOSTA -> "ヴェルコスタ"
     }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         StandingsAsOfLine(standings.updatedAt, null)
@@ -143,7 +147,7 @@ fun LeagueStandingsSection(standings: LeagueStandings, ownTeam: Team, nextOppone
             standings.final?.takeIf { p -> p.rows.none { (it.played ?: 0) > 0 } }
         ).forEach { part ->
             Text(part.label, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.ExtraBold, color = Ink)
-            LeagueStandingsTable(part.rows, ownWord, ownTeam.color, nextOpponent)
+            LeagueStandingsTable(part.rows, ownWord, ownTeam.inkColor, nextOpponent)
         }
     }
 }
@@ -353,7 +357,9 @@ private fun BleagueToggle(label: String, onClick: () -> Unit) {
 @Composable
 private fun LeagueStandingsTable(rows: List<StandingRow>, ownWord: String, ownColor: androidx.compose.ui.graphics.Color, nextOpponent: String?) {
     val detailed = rows.any { it.played != null }
-    val headers = if (detailed) listOf("順", "チーム", "勝点", "試合", "勝", "分", "敗", "差") else listOf("順位", "チーム", "勝点")
+    // SOのあるリーグ(ヴェルコスタ)は「分」の列を「SO」(SO勝-SO負)にする
+    val so = rows.any { it.soWin != null }
+    val headers = if (detailed) listOf("順", "チーム", "勝点", "試合", "勝", if (so) "SO" else "分", "敗", "差") else listOf("順位", "チーム", "勝点")
     val weights = if (detailed) listOf(0.7f, 3.4f, 1f, 1f, 0.8f, 0.8f, 0.8f, 1f) else listOf(1f, 4f, 1.2f)
     Column(modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper)) {
         Row(modifier = Modifier.fillMaxWidth().background(Ink).padding(vertical = 5.dp, horizontal = 6.dp)) {
@@ -367,7 +373,7 @@ private fun LeagueStandingsTable(rows: List<StandingRow>, ownWord: String, ownCo
             val next = !own && nextOpponent != null && (r.team.contains(nextOpponent) || nextOpponent.contains(r.team))
             val cells = if (detailed) {
                 listOf("${r.rank}", r.team + if (next) " ◀次" else "", "${r.points}", "${r.played ?: "-"}", "${r.win ?: "-"}",
-                    "${r.draw ?: "-"}", "${r.lose ?: "-"}", r.goalDiff?.let { if (it > 0) "+$it" else "$it" } ?: "-")
+                    if (so) "${r.soWin ?: 0}-${r.soLose ?: 0}" else "${r.draw ?: "-"}", "${r.lose ?: "-"}", r.goalDiff?.let { if (it > 0) "+$it" else "$it" } ?: "-")
             } else {
                 listOf("${r.rank}", r.team + if (next) " ◀次" else "", "${r.points}")
             }
@@ -393,6 +399,13 @@ private fun LeagueStandingsTable(rows: List<StandingRow>, ownWord: String, ownCo
             }
             ThinRule(color = LineGray)
         }
+    }
+    if (detailed && so) {
+        Text(
+            "SO=同点のあとのシュートアウト(SO勝-SO負)。勝点は 勝ち3・SO勝ち2・SO負け1 です。",
+            style = MaterialTheme.typography.bodySmall,
+            color = InkSoft
+        )
     }
 }
 
@@ -432,6 +445,7 @@ fun TeamSeasonCard(team: Team, standings: LeagueStandings?) {
             val word = when (team) {
                 Team.RAC -> "丸岡"
                 Team.THUNDER -> "ブルーサンダー"
+                Team.VERCOSTA -> "ヴェルコスタ"
                 else -> "福井ユナイテッド"
             }
             val part = standings.final?.takeIf { p -> p.rows.any { (it.played ?: 0) > 0 } } ?: standings.regular
@@ -450,7 +464,7 @@ fun TeamSeasonCard(team: Team, standings: LeagueStandings?) {
                     if (row.win != null && row.lose != null) {
                         SeasonCell(
                             "勝敗",
-                            "${row.win}勝${row.lose}敗" + (if ((row.draw ?: 0) > 0) "${row.draw}分" else ""),
+                            row.recordText,
                             Modifier.weight(1.6f)
                         )
                     }

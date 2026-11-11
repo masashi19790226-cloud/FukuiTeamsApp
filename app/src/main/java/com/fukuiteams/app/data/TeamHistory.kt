@@ -55,6 +55,7 @@ private const val ALLCONNECT_ATTEND = "https://all-connect.co.jp/?p=3186"
 private const val JFA_EMPEROR_2025 = "https://jfa.jp/match/emperorscup_2025/team_detail/05.html"
 private const val JFA_EMPEROR_2026 = "https://jfa.jp/match/emperorscup_2026/team_detail/85.html"
 private const val LEAGUEH_MATRIX = "https://leagueh.jp/rankings/matrix/"
+private const val HJL_TEAM_VERCOSTA = "https://hjl-hockey.tv/teams?teamID=4&teamYear=2026"
 private const val WIKI_THUNDER = "https://ja.wikipedia.org/wiki/%E7%A6%8F%E4%BA%95%E6%B0%B8%E5%B9%B3%E5%AF%BA%E3%83%96%E3%83%AB%E3%83%BC%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC"
 
 val TEAM_HISTORY: List<HistoryItem> = listOf(
@@ -100,5 +101,13 @@ val TEAM_HISTORY: List<HistoryItem> = listOf(
     HistoryItem(Team.THUNDER, 2022, "運営会社ができ、マスコットも発表", "2022年7月に運営会社「株式会社永平寺町ハンドボールまちづくり推進機構」が設立され、10月にはチームのマスコットも発表されました。", "Wikipedia", WIKI_THUNDER, month = 7),
     HistoryItem(Team.THUNDER, 2024, "リーグHの初年度を戦う", "2024年9月に始まった新しいリーグ「リーグH」の最初のシーズン(2024-25)に参加し、リーグ戦は12勝14敗でした。", "リーグH公式 星取表", LEAGUEH_MATRIX, season = "2024-25シーズン"),
     HistoryItem(Team.THUNDER, 2025, "リーグH2年目を戦う", "リーグHの2年目(2025-26シーズン)は、リーグ戦を8勝2分16敗で終えました。", "リーグH公式 星取表", LEAGUEH_MATRIX, season = "2025-26シーズン"),
-    HistoryItem(Team.THUNDER, 2023, "福井永平寺ブルーサンダーが発足", "2023年4月25日に福井市で発足式を行い、地元の企業約50社の支えで新しいチームが動き出しました。前身の北陸電力ブルーサンダーは同じ年の3月に活動を終えています。", "Wikipedia", WIKI_THUNDER, month = 4)
+    HistoryItem(Team.THUNDER, 2023, "福井永平寺ブルーサンダーが発足", "2023年4月25日に福井市で発足式を行い、地元の企業約50社の支えで新しいチームが動き出しました。前身の北陸電力ブルーサンダーは同じ年の3月に活動を終えています。", "Wikipedia", WIKI_THUNDER, month = 4),
+
+    // ---------- ヴェルコスタ ----------
+    HistoryItem(Team.VERCOSTA, 1963, "前身の「福井クラブ」が誕生", "1963年に丹生高校のOBを中心に「福井クラブ」が誕生しました。今のヴェルコスタ福井の始まりです。", "ホッケージャパンリーグ公式 チーム紹介", HJL_TEAM_VERCOSTA),
+    HistoryItem(Team.VERCOSTA, 2012, "日本リーグに参戦", "2012年にホッケー日本リーグに参戦しました。", "ホッケージャパンリーグ公式 チーム紹介", HJL_TEAM_VERCOSTA),
+    HistoryItem(Team.VERCOSTA, 2014, "日本リーグで3位", "日本リーグ参戦3年目の2014年に3位に入りました。", "ホッケージャパンリーグ公式 チーム紹介", HJL_TEAM_VERCOSTA),
+    HistoryItem(Team.VERCOSTA, 2021, "「ヴェルコスタ福井」に改名", "2021年に「福井クラブ」から今の「ヴェルコスタ福井」に名前を変えました。", "ホッケージャパンリーグ公式 チーム紹介", HJL_TEAM_VERCOSTA),
+    HistoryItem(Team.VERCOSTA, 2024, "運営する法人を設立", "2024年に、チームを運営する一般社団法人Field Visionを設立しました。", "ホッケージャパンリーグ公式 チーム紹介", HJL_TEAM_VERCOSTA),
+    HistoryItem(Team.VERCOSTA, 2026, "福井工業大学と連携協定", "2026年に福井工業大学と連携協定を結び、ベテランと若手が一緒に戦うチームになりました。", "ホッケージャパンリーグ公式 チーム紹介", HJL_TEAM_VERCOSTA)
 )

@@ -171,6 +171,10 @@ import com.fukuiteams.app.ui.theme.Paper
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
+import com.fukuiteams.app.model.inkColor
+import com.fukuiteams.app.model.onColor
+import com.fukuiteams.app.data.outcome
+import com.fukuiteams.app.data.scoreText
 
 @Composable
 fun HomeScreen(
@@ -375,8 +379,8 @@ fun HomeScreen(
                             verticalAlignment = Alignment.Bottom,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text(focus.title, color = White, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp)
-                            Text("${until.monthValue}/${until.dayOfMonth}(${wd})まで", color = White, fontSize = 12.sp)
+                            Text(focus.title, color = focus.team.onColor, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp)
+                            Text("${until.monthValue}/${until.dayOfMonth}(${wd})まで", color = focus.team.onColor, fontSize = 12.sp)
                         }
                     }
                     if (stories.isNotEmpty()) {
@@ -536,10 +540,10 @@ private fun MatchDayCard(
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         SectionLabel("本日の試合", red = true)
-        Text(game.team.displayName, style = MaterialTheme.typography.labelMedium, color = game.team.color)
+        Text(game.team.displayName, style = MaterialTheme.typography.labelMedium, color = game.team.inkColor)
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Headline("${game.timeLabel} 試合開始", fontSize = 20)
-            HomeAwayTag(isHome = game.isHome)
+            HomeAwayTag(isHome = game.isHome, neutral = game.neutral)
         }
         Headline("vs ${game.opponent}", fontSize = 17)
         Text(
@@ -722,7 +726,7 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
                     maxLines = 1,
                     softWrap = false
                 )
-                HomeAwayLabel(isHome = game.isHome)
+                HomeAwayLabel(isHome = game.isHome, neutral = game.neutral)
             }
             TeamBadge(game.team, size = 34.dp, fontSize = 14.sp)
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -734,7 +738,7 @@ private fun GameCard(game: Game, hasOpenInvite: Boolean, onClick: () -> Unit) {
                 if (isGoing(game.id, cardLogPrefs)) GoingBadge()
                 Text(
                     game.team.displayName,
-                    color = game.team.color,
+                    color = game.team.inkColor,
                     style = MaterialTheme.typography.labelMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -789,7 +793,7 @@ private fun NewsRow(news: RemoteInvitationAlert, onClick: () -> Unit) {
                 .background(team?.color ?: InkSoft),
             contentAlignment = Alignment.Center
         ) {
-            Text(team?.initial ?: "?", color = White, style = MaterialTheme.typography.titleMedium)
+            Text(team?.initial ?: "?", color = team?.onColor ?: White, style = MaterialTheme.typography.titleMedium)
             // 記事の画像(無い・読めないときは、そのチームの選手の写真を日替わりで)を、チームの頭文字の上に重ねる
             val candidates = remember(news.id, news.image, TeamPhotos.own) {
                 listOfNotNull(news.image.takeIf { it.isNotBlank() }?.let { PhotoRef(it, "") }) +
@@ -830,11 +834,8 @@ private fun LatestResultHero(
     val ctx = remember(game.id, allResults, GamesRepository.games) {
         buildResultContext(game, mainGames(), allResults)
     }
-    val outcome = when {
-        result.myScore > result.opponentScore -> GameOutcome.WIN
-        result.myScore < result.opponentScore -> GameOutcome.LOSE
-        else -> GameOutcome.DRAW
-    }
+    // 勝ち負け(SOで決着した試合は、SOの勝ち負け)
+    val outcome = result.outcome()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -844,7 +845,7 @@ private fun LatestResultHero(
         val context = LocalContext.current
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             SectionLabel("速報", red = true)
-            HomeAwayTag(isHome = game.isHome)
+            HomeAwayTag(isHome = game.isHome, neutral = game.neutral)
             Text(
                 "${game.dateLabel.split("/").drop(1).joinToString("/")}(${game.dayOfWeek}) ${game.timeLabel} 試合開始",
                 style = MaterialTheme.typography.bodySmall,
@@ -867,7 +868,7 @@ private fun LatestResultHero(
                 "${game.team.displayName} $resultLine",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.ExtraBold,
-                color = game.team.color
+                color = game.team.inkColor
             )
         } else {
             Headline("${game.team.displayName}\n$resultLine", fontSize = 26)
@@ -917,6 +918,16 @@ private fun LatestResultHero(
             Text("-", style = MaterialTheme.typography.titleLarge)
             Headline("${result.opponentScore}", fontSize = 34)
             Text(game.opponent, style = MaterialTheme.typography.labelMedium, modifier = Modifier.width(72.dp))
+        }
+        // SO(シュートアウト)で決着した試合(ヴェルコスタ)
+        if (result.soMy != null && result.soOpp != null) {
+            Text(
+                "SO ${result.soMy}-${result.soOpp}で" + if (outcome == GameOutcome.WIN) "勝利" else "敗戦",
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
         }
         Text(
             "スコアをタップで詳報(取得元のページ)",
@@ -1015,7 +1026,7 @@ private fun NextGameBlock(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            HomeAwayTag(isHome = nextGame.isHome, fontSize = 14.sp)
+            HomeAwayTag(isHome = nextGame.isHome, fontSize = 14.sp, neutral = nextGame.neutral)
             // チェックインした試合は「行く予定」の札
             val nextLogPrefs by LocalContext.current.gameLogDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
             if (isGoing(nextGame.id, nextLogPrefs)) GoingBadge()
@@ -1025,7 +1036,7 @@ private fun NextGameBlock(
                 nextGame.team.displayName,
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.labelMedium,
-                color = nextGame.team.color,
+                color = nextGame.team.inkColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -1372,18 +1383,18 @@ private fun TeamsDigest(
             ) {
                 Box(modifier = Modifier.width(5.dp).fillMaxHeight().background(team.color, RoundedCornerShape(2.dp)))
                 Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text(team.displayName, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = team.color)
+                    Text(team.displayName, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = team.inkColor)
                     // 前回の結果
                     if (last != null) {
                         val r = autoResults.getValue(last.id)
                         val outcome = when {
                             r.myScore > r.opponentScore -> GameOutcome.WIN
                             r.myScore < r.opponentScore -> GameOutcome.LOSE
-                            else -> GameOutcome.DRAW
+                            else -> r.outcome()
                         }
                         DigestLine("前回", onClick = { onOpenGame(last.id) }) {
                             Text(
-                                "${resultMark(outcome)} ${r.myScore}-${r.opponentScore}",
+                                "${resultMark(outcome)} ${r.scoreText}",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = if (outcome == GameOutcome.WIN) NewsRed else Ink,
@@ -1429,7 +1440,7 @@ private fun TeamsDigest(
                                     next.countdownLabel()?.let {
                                         Text(it, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.ExtraBold, color = NewsRed, maxLines = 1, softWrap = false)
                                     }
-                                    HomeAwayTag(isHome = next.isHome)
+                                    HomeAwayTag(isHome = next.isHome, neutral = next.neutral)
                                     if (next.hasMatchingInvite(openInvites)) {
                                         Text(
                                             "招待あり",
@@ -1509,7 +1520,7 @@ private fun BirthdayCard(players: List<PlayerBirthday>, today: java.time.LocalDa
                     Text(
                         p.team?.displayName ?: "",
                         style = MaterialTheme.typography.labelMedium,
-                        color = p.team?.color ?: InkSoft
+                        color = p.team?.inkColor ?: InkSoft
                     )
                     Headline("${p.label}選手", fontSize = 19)
                     Text(
@@ -1641,7 +1652,7 @@ private fun AchievementCard(list: List<com.fukuiteams.app.data.Achievement>) {
                 Row(modifier = Modifier.height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Box(modifier = Modifier.width(5.dp).fillMaxHeight().background(a.team.color))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(a.team.displayName, style = MaterialTheme.typography.labelMedium, color = a.team.color)
+                        Text(a.team.displayName, style = MaterialTheme.typography.labelMedium, color = a.team.inkColor)
                         Text("${a.player.name}、${a.text}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = Ink)
                         val d = runCatching { java.time.LocalDate.parse(a.date) }.getOrNull()
                         Text(
@@ -1729,7 +1740,7 @@ private fun FeatureHero(
                         modifier = Modifier.weight(1f)
                     )
                     story.team?.let {
-                        Text(it.displayName, style = MaterialTheme.typography.labelMedium, color = it.color, maxLines = 1)
+                        Text(it.displayName, style = MaterialTheme.typography.labelMedium, color = it.inkColor, maxLines = 1)
                     }
                 }
                 // 見出しを全幅で先に出し、その下は新聞のように、右の写真(絵)のまわりに本文を回り込ませる
@@ -1951,14 +1962,15 @@ private fun FeatureGraphic(story: FeatureStory, modifier: Modifier = Modifier, c
     if (compact) {
         // 小さな四角:チームの頭文字とチーム名だけ(記事の種類は見出しの上に出ているので省く)
         Box(modifier = modifier) {
-            story.team?.let { SportLines(it, Modifier.fillMaxSize()) }
+            story.team?.let { SportLines(it, Modifier.fillMaxSize(), lineColor = it.onColor) }
             Column(
                 modifier = Modifier.fillMaxSize().padding(4.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Headline(story.team?.initial ?: "特集", fontSize = if (story.team != null) 36 else 18, color = White)
-                Text(story.team?.shortName ?: "全チーム", style = MaterialTheme.typography.labelSmall, color = White, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                // チームの色の上の文字は白(黄色のヴェルコスタは黒)
+                Headline(story.team?.initial ?: "特集", fontSize = if (story.team != null) 36 else 18, color = story.team?.onColor ?: White)
+                Text(story.team?.shortName ?: "全チーム", style = MaterialTheme.typography.labelSmall, color = story.team?.onColor ?: White, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
         return
@@ -1972,15 +1984,15 @@ private fun FeatureGraphic(story: FeatureStory, modifier: Modifier = Modifier, c
             story.kicker,
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Bold,
-            color = White,
+            color = story.team?.onColor ?: White,
             maxLines = 2,
             textAlign = TextAlign.Center
         )
-        Headline(story.team?.initial ?: "特集", fontSize = if (story.team != null) 64 else 34, color = White)
+        Headline(story.team?.initial ?: "特集", fontSize = if (story.team != null) 64 else 34, color = story.team?.onColor ?: White)
         Text(
             story.team?.displayName ?: "全チーム",
             style = MaterialTheme.typography.labelSmall,
-            color = White.copy(alpha = 0.85f),
+            color = (story.team?.onColor ?: White).copy(alpha = 0.85f),
             maxLines = 1
         )
     }

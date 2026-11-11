@@ -125,7 +125,10 @@ object GamesRepository {
                 isHome = o.optBoolean("is_home", true),
                 sortKey = o.optString("sort_key").ifBlank { fallbackSortKey },
                 resultPageUrl = o.optString("result_page_url").ifBlank { null },
-                category = o.optString("category").takeIf { it.isNotBlank() && it != "null" }
+                category = o.optString("category").takeIf { it.isNotBlank() && it != "null" },
+                // 中立の会場での試合(ヴェルコスタのセントラル開催など。ホームの試合には付けない)
+                neutral = o.optBoolean("neutral", false) && !o.optBoolean("is_home", true),
+                stage = o.optString("stage").takeIf { it.isNotBlank() && it != "null" }
             )
         }
         return list

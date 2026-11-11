@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,8 +45,11 @@ import com.fukuiteams.app.data.LeagueStandings
 import com.fukuiteams.app.data.RemoteGameResult
 import com.fukuiteams.app.data.daysUntil
 import com.fukuiteams.app.data.headToHead
+import com.fukuiteams.app.data.outcome
+import com.fukuiteams.app.data.GameOutcome
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.model.Team
+import com.fukuiteams.app.model.onColorFor
 import com.fukuiteams.app.ui.theme.Ink
 
 // 特集で、写真の代わりに出す絵(すべてアプリの中で描く。Web版の graphics.js と同じ考え方)
@@ -60,6 +65,12 @@ fun numberFromCaption(text: String?): String =
 /** 写真説明の最後の「(相手チーム名)」。相手チームの選手なら、そのチーム名。福井側の選手なら null */
 private fun opponentFromCaption(text: String?): String? =
     Regex("""[(（]([^)）]+)[)）]\s*$""").find(text.orEmpty())?.groupValues?.get(1)
+
+/**
+ * 絵の中の文字・線の色。チームの色の上に描くので、ふつうは白。
+ * チームの色が明るいとき(ヴェルコスタの黄色)は黒にする(FeaturePlayerCard・FeatureDataGraphic で決める)
+ */
+val LocalGraphicOn = compositionLocalOf { Color.White }
 
 /** 背番号の数字のフォント(太い斜体) */
 private val NumberFont = FontFamily.SansSerif
@@ -88,10 +99,14 @@ fun FeaturePlayerCard(story: FeatureStory, modifier: Modifier = Modifier) {
         story.bigNumber != null -> "${story.kicker}・${story.bigNumber}${story.bigUnit.orEmpty()}"
         else -> story.kicker
     }
+    val on = onColorFor(base)
+    // 明るい色(ヴェルコスタの黄色)は、下のほうを暗くしすぎない(黒い文字が読めるように)
+    val dark = if (on == Color.White) 0.32f else 0.18f
+    CompositionLocalProvider(LocalGraphicOn provides on) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(0.dp))
-            .background(Brush.linearGradient(listOf(base, lerp(base, Color.Black, 0.32f))))
+            .background(Brush.linearGradient(listOf(base, lerp(base, Color.Black, dark))))
     ) {
         Band()
         if (number.isNotEmpty()) {
@@ -99,7 +114,7 @@ fun FeaturePlayerCard(story: FeatureStory, modifier: Modifier = Modifier) {
             Text(
                 number,
                 modifier = Modifier.align(Alignment.TopEnd).offset(x = 10.dp, y = (-14).dp),
-                color = Color.White.copy(alpha = 0.14f),
+                color = LocalGraphicOn.current.copy(alpha = 0.14f),
                 fontFamily = NumberFont,
                 fontWeight = FontWeight.Black,
                 fontStyle = FontStyle.Italic,
@@ -111,7 +126,7 @@ fun FeaturePlayerCard(story: FeatureStory, modifier: Modifier = Modifier) {
         Text(
             if (number.isNotEmpty()) "#$number" else "#−",
             modifier = Modifier.padding(start = 10.dp, top = 8.dp),
-            color = Color.White,
+            color = LocalGraphicOn.current,
             fontFamily = NumberFont,
             fontWeight = FontWeight.Black,
             fontStyle = FontStyle.Italic,
@@ -126,16 +141,17 @@ fun FeaturePlayerCard(story: FeatureStory, modifier: Modifier = Modifier) {
         ) {
             Text(
                 if (parts.size >= 2) parts.first() + "\n" + parts.drop(1).joinToString("") else name,
-                color = Color.White,
+                color = LocalGraphicOn.current,
                 fontWeight = FontWeight.Black,
                 fontSize = nameSize.sp,
                 lineHeight = (nameSize * 1.15).sp,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
-            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(alpha = 0.6f)))
-            Text(sub, color = Color.White.copy(alpha = 0.92f), fontSize = 10.5.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(LocalGraphicOn.current.copy(alpha = 0.6f)))
+            Text(sub, color = LocalGraphicOn.current.copy(alpha = 0.92f), fontSize = 10.5.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
+    }
     }
 }
 
@@ -150,7 +166,7 @@ private fun Band() {
                 .fillMaxWidth()
                 .height(40.dp)
                 .graphicsLayer(rotationZ = -18f, scaleX = 1.8f)
-                .background(Color.White.copy(alpha = 0.12f))
+                .background(LocalGraphicOn.current.copy(alpha = 0.12f))
         )
     }
 }
@@ -182,10 +198,12 @@ fun FeatureDataGraphic(
         else -> null
     }
     if (content == null) return false
-    Box(modifier = modifier.background(team.color)) {
-        SportLines(team, Modifier.fillMaxSize())
-        Column(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 9.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-            content()
+    CompositionLocalProvider(LocalGraphicOn provides onColorFor(team.color)) {
+        Box(modifier = modifier.background(team.color)) {
+            SportLines(team, Modifier.fillMaxSize())
+            Column(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 9.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                content()
+            }
         }
     }
     return true
@@ -195,16 +213,17 @@ fun FeatureDataGraphic(
 @Composable
 private fun GraphicTitle(text: String) {
     Column {
-        Text(text, color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(text, color = LocalGraphicOn.current, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
         Spacer(Modifier.height(3.dp))
-        Box(Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(alpha = 0.55f)))
+        Box(Modifier.fillMaxWidth().height(1.dp).background(LocalGraphicOn.current.copy(alpha = 0.55f)))
     }
 }
 
-private fun mark(r: RemoteGameResult): String = when {
-    r.myScore > r.opponentScore -> "○"
-    r.myScore < r.opponentScore -> "●"
-    else -> "△"
+/** 勝敗の印(SOで決着した試合は、SOの勝ち負け) */
+private fun mark(r: RemoteGameResult): String = when (r.outcome()) {
+    GameOutcome.WIN -> "○"
+    GameOutcome.LOSE -> "●"
+    GameOutcome.DRAW -> "△"
 }
 
 private fun monthDay(g: Game): String = g.dateLabel.split("/").drop(1).joinToString("/")
@@ -218,15 +237,15 @@ private fun recentForm(team: Team, games: List<Game>, results: Map<String, Remot
         GraphicTitle("直近の結果")
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             last.forEach { g ->
-                Text(mark(results.getValue(g.id)), color = Color.White, fontSize = 16.sp, lineHeight = 18.sp)
+                Text(mark(results.getValue(g.id)), color = LocalGraphicOn.current, fontSize = 16.sp, lineHeight = 18.sp)
             }
         }
         last.takeLast(4).reversed().forEach { g ->
             val r = results.getValue(g.id)
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(monthDay(g), color = Color.White.copy(alpha = 0.8f), fontSize = 10.5.sp, maxLines = 1, softWrap = false)
-                Text("${r.myScore}-${r.opponentScore}", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1, softWrap = false)
-                Text(g.opponent, color = Color.White, fontSize = 10.5.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                Text(monthDay(g), color = LocalGraphicOn.current.copy(alpha = 0.8f), fontSize = 10.5.sp, maxLines = 1, softWrap = false)
+                Text("${r.myScore}-${r.opponentScore}", color = LocalGraphicOn.current, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1, softWrap = false)
+                Text(g.opponent, color = LocalGraphicOn.current, fontSize = 10.5.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
             }
         }
     }
@@ -237,6 +256,7 @@ private fun teamWord(team: Team): String = when (team) {
     Team.THUNDER -> "ブルーサンダー"
     Team.UNITED -> "ユナイテッド"
     Team.BLOWINDS -> "ブローウィンズ"
+    Team.VERCOSTA -> "ヴェルコスタ"
 }
 
 private data class LadderRow(val rank: Int, val name: String, val value: String, val own: Boolean)
@@ -269,7 +289,7 @@ private fun standingLadder(team: Team, standings: Map<String, LeagueStandings>):
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val c = if (r.own) Ink else Color.White
+                val c = if (r.own) Ink else LocalGraphicOn.current
                 Text("${r.rank}", color = c.copy(alpha = if (r.own) 1f else 0.85f), fontSize = 10.5.sp, modifier = Modifier.width(16.dp), maxLines = 1)
                 Text(r.name, color = c, fontSize = 10.5.sp, fontWeight = if (r.own) FontWeight.ExtraBold else FontWeight.Normal,
                     maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
@@ -289,40 +309,40 @@ private fun countdown(gameId: String, games: List<Game>, results: Map<String, Re
         GraphicTitle("${monthDay(g)} ${g.opponent}戦")
         Spacer(Modifier.height(4.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.Bottom) {
-            Text("あと", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(bottom = 6.dp))
-            Text("$days", color = Color.White, fontSize = 50.sp, lineHeight = 52.sp, fontWeight = FontWeight.Black, maxLines = 1, softWrap = false)
-            Text("日", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(bottom = 6.dp))
+            Text("あと", color = LocalGraphicOn.current, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(bottom = 6.dp))
+            Text("$days", color = LocalGraphicOn.current, fontSize = 50.sp, lineHeight = 52.sp, fontWeight = FontWeight.Black, maxLines = 1, softWrap = false)
+            Text("日", color = LocalGraphicOn.current, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(bottom = 6.dp))
         }
         Spacer(Modifier.weight(1f))
         if (h2h != null && h2h.wins + h2h.losses + h2h.draws > 0) {
             Text(
                 "対戦成績 ${h2h.wins}勝${h2h.losses}敗" + (if (h2h.draws > 0) "${h2h.draws}分" else ""),
-                color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()
+                color = LocalGraphicOn.current, fontSize = 11.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()
             )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .border(1.dp, Color.White, RoundedCornerShape(4.dp))
+                    .border(1.dp, LocalGraphicOn.current, RoundedCornerShape(4.dp))
             ) {
-                if (h2h.wins > 0) Box(Modifier.weight(h2h.wins.toFloat()).height(8.dp).background(Color.White))
-                if (h2h.draws > 0) Box(Modifier.weight(h2h.draws.toFloat()).height(8.dp).background(Color.White.copy(alpha = 0.5f)))
+                if (h2h.wins > 0) Box(Modifier.weight(h2h.wins.toFloat()).height(8.dp).background(LocalGraphicOn.current))
+                if (h2h.draws > 0) Box(Modifier.weight(h2h.draws.toFloat()).height(8.dp).background(LocalGraphicOn.current.copy(alpha = 0.5f)))
                 if (h2h.losses > 0) Box(Modifier.weight(h2h.losses.toFloat()).height(8.dp))
             }
         } else {
-            Text("記録上は初対戦", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            Text("記録上は初対戦", color = LocalGraphicOn.current, fontSize = 11.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         }
     }
 }
 
 /** チームの競技のコート・ピッチの線画(縦長 150×200 を基準に、枠に合わせて伸ばす)。背景に薄く敷く */
 @Composable
-fun SportLines(team: Team, modifier: Modifier = Modifier) {
+fun SportLines(team: Team, modifier: Modifier = Modifier, lineColor: Color = LocalGraphicOn.current) {
     Canvas(modifier = modifier) {
         val sx = size.width / 150f
         val sy = size.height / 200f
-        val c = Color.White.copy(alpha = 0.22f)
+        val c = lineColor.copy(alpha = 0.22f)
         val w = 1.6f * minOf(sx, sy)
         fun p(x: Float, y: Float) = Offset(x * sx, y * sy)
         fun line(x1: Float, y1: Float, x2: Float, y2: Float, dashed: Boolean = false) =
@@ -361,6 +381,13 @@ fun SportLines(team: Team, modifier: Modifier = Modifier) {
                 line(8f, 100f, 142f, 100f); circle(75f, 100f, 20f)
                 quad(listOf(40f to 8f, 40f to 40f, 66f to 40f)); line(66f, 40f, 84f, 40f); quad(listOf(84f to 40f, 110f to 40f, 110f to 8f))
                 quad(listOf(40f to 192f, 40f to 160f, 66f to 160f)); line(66f, 160f, 84f, 160f); quad(listOf(84f to 160f, 110f to 160f, 110f to 192f))
+            }
+            Team.VERCOSTA -> { // ホッケー(ゴール前の半円のシューティングサークルと点線、23mライン)
+                line(8f, 100f, 142f, 100f); line(8f, 52f, 142f, 52f); line(8f, 148f, 142f, 148f)
+                quad(listOf(30f to 8f, 30f to 44f, 66f to 44f)); line(66f, 44f, 84f, 44f); quad(listOf(84f to 44f, 120f to 44f, 120f to 8f))
+                quad(listOf(18f to 8f, 18f to 56f, 66f to 56f), true); line(66f, 56f, 84f, 56f, true); quad(listOf(84f to 56f, 132f to 56f, 132f to 8f), true)
+                quad(listOf(30f to 192f, 30f to 156f, 66f to 156f)); line(66f, 156f, 84f, 156f); quad(listOf(84f to 156f, 120f to 156f, 120f to 192f))
+                quad(listOf(18f to 192f, 18f to 144f, 66f to 144f), true); line(66f, 144f, 84f, 144f, true); quad(listOf(84f to 144f, 132f to 144f, 132f to 192f), true)
             }
             Team.UNITED -> { // サッカー
                 line(8f, 100f, 142f, 100f); circle(75f, 100f, 20f)

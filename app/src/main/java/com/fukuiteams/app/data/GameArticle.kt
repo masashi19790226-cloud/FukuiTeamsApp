@@ -1,6 +1,7 @@
 package com.fukuiteams.app.data
 
 import com.fukuiteams.app.model.Game
+import com.fukuiteams.app.model.sideWord
 
 /**
  * 試合結果と、自分で書いたコメント(観戦メモ)から文章を組み立てる。
@@ -36,7 +37,8 @@ fun resultLead(
     weather: MatchWeather? = null
 ): String {
     val venue = game.venue.takeIf { it.isNotBlank() && !it.contains("調整中") }
-    val where = if (game.isHome) "ホームの" else "敵地・"
+    // 中立の会場での試合(ヴェルコスタ)は、場所の言葉を付けない
+    val where = if (game.isHome) "ホームの" else if (game.neutral) "" else "敵地・"
     val opener = when {
         ctx?.seasonOpener == true -> "今季の開幕戦。"
         ctx?.homeOpener == true -> "今季のホーム開幕戦。"
@@ -49,6 +51,7 @@ fun resultLead(
                 "${game.shortDate()}、${venue}での${game.opponent}戦。",
                 "${game.shortDate()}の${game.opponent}戦(${venue})。",
                 "${venue}に${game.opponent}を迎えた${game.shortDate()}の一戦。".takeIf { game.isHome }
+                    ?: "${game.shortDate()}、${venue}で行われた${game.opponent}との一戦。".takeIf { game.neutral }
                     ?: "${game.shortDate()}、敵地${venue}に乗り込んでの${game.opponent}戦。",
                 "${game.shortDate()}、${game.team.displayName}は${venue}で${game.opponent}と対戦した。"
             ),
@@ -57,7 +60,8 @@ fun resultLead(
     } else {
         "${game.shortDate()}の${game.opponent}戦。"
     }
-    val score = result?.let { "${it.myScore}-${it.opponentScore}" }.orEmpty()
+    // SOで決着した試合は「1-1(SO 3-2)」
+    val score = result?.scoreText.orEmpty()
     // 2文目で主語を繰り返さないよう、1文目にチーム名を書いたときは「福井は」にする
     val team = if (first.contains(game.team.displayName)) "福井" else game.team.displayName
     val second = when {
@@ -156,7 +160,7 @@ fun resultLead(
         val vl = ctx.venueLose
         val vd = ctx.venueDraw ?: 0
         if (vw != null && vl != null && vw + vl + vd >= 3) {
-            extra.append("${if (game.isHome) "ホーム" else "アウェイ"}では${vw}勝${vl}敗" + (if (vd > 0) "${vd}分" else "") + "。")
+            extra.append("${game.sideWord("ホーム", "アウェイ", "中立の会場")}では${vw}勝${vl}敗" + (if (vd > 0) "${vd}分" else "") + "。")
         }
     }
 
@@ -165,7 +169,7 @@ fun resultLead(
         val nd = "${n.dateLabel.split("/").drop(1).joinToString("/")}(${n.dayOfWeek})"
         game.pick(
             listOf(
-                "次戦は${nd}、${if (n.isHome) "ホーム" else "アウェイ"}で${n.opponent}と対戦する。",
+                "次戦は${nd}、${n.sideWord("ホーム", "アウェイ", "中立の会場")}で${n.opponent}と対戦する。",
                 "次は${nd}に${n.opponent}と戦う。"
             ),
             salt = 5
@@ -216,6 +220,7 @@ private fun Game.hashtag(): String = when (team) {
     com.fukuiteams.app.model.Team.RAC -> "#福井丸岡RUCK"
     com.fukuiteams.app.model.Team.UNITED -> "#福井ユナイテッド"
     com.fukuiteams.app.model.Team.THUNDER -> "#福井永平寺ブルーサンダー"
+    com.fukuiteams.app.model.Team.VERCOSTA -> "#ヴェルコスタ福井"
 }
 
 /** 投稿用の日付「2026年9月27日(土)」。 */
@@ -235,9 +240,9 @@ fun shareText(game: Game, result: RemoteGameResult?, outcome: GameOutcome?, comm
         null -> ""
     }
     // 1行目:日付とHOME/AWAY 2行目:スコア(結果が取れていれば「福井ブローウィンズ 85-80 金沢」)と勝敗
-    val dateLine = "【試合結果】${game.fullDate()} ${if (game.isHome) "HOME" else "AWAY"}"
+    val dateLine = "【試合結果】${game.fullDate()} ${game.sideWord("HOME", "AWAY", "中立")}"
     val scoreLine = if (result != null) {
-        "${game.team.displayName} ${result.myScore}-${result.opponentScore} ${game.opponent} $mark"
+        "${game.team.displayName} ${result.scoreText} ${game.opponent} $mark"
     } else {
         "${game.team.displayName} vs ${game.opponent} $mark"
     }.trim()

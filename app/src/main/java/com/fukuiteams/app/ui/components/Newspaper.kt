@@ -43,6 +43,8 @@ import com.fukuiteams.app.data.GameOutcome
 import com.fukuiteams.app.data.pick
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.model.Team
+import com.fukuiteams.app.model.onColorFor
+import com.fukuiteams.app.data.outcome
 import com.fukuiteams.app.ui.theme.Ink
 import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.Ivory
@@ -246,6 +248,7 @@ private fun Team.chipWeight(): Float = when (this) {
     Team.RAC -> 1f
     Team.UNITED -> 1.15f
     Team.THUNDER -> 1.35f
+    Team.VERCOSTA -> 1.25f
 }
 
 @Composable
@@ -276,7 +279,8 @@ private fun TeamSelectorChip(
             Text(
                 label,
                 modifier = Modifier.fillMaxWidth(),
-                color = if (selected) White else Ink,
+                // 選んでいるボタンはチームの色で塗るので、その上の文字は白(黄色のヴェルコスタは黒)
+                color = if (selected) onColorFor(color) else Ink,
                 fontSize = fontSizeSp.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -322,27 +326,20 @@ fun resultHeadline(
     val close = when { basketball -> diff <= 3; handball -> diff <= 2; else -> diff <= 1 }
     val big = when { basketball -> diff >= 15; handball -> diff >= 8; else -> diff >= 3 }
     val huge = when { basketball -> diff >= 25; handball -> diff >= 12; else -> diff >= 5 }
-    val prev = ctx?.prevMeetingResult?.let {
-        when {
-            it.myScore > it.opponentScore -> GameOutcome.WIN
-            it.myScore < it.opponentScore -> GameOutcome.LOSE
-            else -> GameOutcome.DRAW
-        }
-    }
+    // 勝ち負け(SOで決着した試合は、SOの勝ち負け)
+    val prev = ctx?.prevMeetingResult?.outcome()
     // 前日など(2日以内)にも同じ相手と戦っていれば、その結果
-    val b2b = ctx?.backToBackResult?.let {
-        when {
-            it.myScore > it.opponentScore -> GameOutcome.WIN
-            it.myScore < it.opponentScore -> GameOutcome.LOSE
-            else -> GameOutcome.DRAW
-        }
-    }
+    val b2b = ctx?.backToBackResult?.outcome()
     val streak = ctx?.streak ?: 0
     val broken = ctx?.brokenStreak ?: 0
     val seasonGames = (ctx?.seasonWin ?: 0) + (ctx?.seasonLose ?: 0) + (ctx?.seasonDraw ?: 0)
     // ホーム・アウェイで言い回しを変える(「ホームで」「敵地で」)
-    val at = if (game.isHome) "ホームで" else "敵地で"
+    // 中立の会場の試合(ヴェルコスタ)は、場所の言葉を付けない
+    val at = if (game.isHome) "ホームで" else if (game.neutral) "" else "敵地で"
     val sum = myScore + opponentScore
+    // 同点のあとのSO(シュートアウト)で決着した試合(ヴェルコスタ)
+    if (myScore == opponentScore && outcome == GameOutcome.WIN) return game.pick(listOf("${opp}にSO戦で勝利", "SO戦制し${opp}下す", "${opp}とのSO戦制す"))
+    if (myScore == opponentScore && outcome == GameOutcome.LOSE) return game.pick(listOf("${opp}にSO戦で敗れる", "SO戦の末${opp}に惜敗", "${opp}とのSO戦落とす"))
     return when (outcome) {
         GameOutcome.WIN -> when {
             streak >= 3 -> game.pick(listOf("${opp}下し${streak}連勝", "${streak}連勝 ${opp}を撃破", "${opp}破り${streak}連勝", "止まらない${streak}連勝"))
@@ -399,18 +396,20 @@ fun resultMark(outcome: GameOutcome?): String = when (outcome) {
 }
 
 
-/** HOME/AWAY の表示。HOMEは赤地に白抜き、AWAYは紺の枠と文字で、ひと目で区別できるようにする。 */
+/** HOME/AWAY の表示。HOMEは赤地に白抜き、AWAYは紺の枠と文字で、ひと目で区別できるようにする。
+ *  neutral(中立の会場での試合。ヴェルコスタのセントラル開催)は「中立」とAWAYと同じ色の枠で出す */
 @androidx.compose.runtime.Composable
 fun HomeAwayTag(
     isHome: Boolean,
     modifier: androidx.compose.ui.Modifier = androidx.compose.ui.Modifier,
     // 文字の大きさ(一面の「次の試合」では大きめにして目立たせる)
-    fontSize: androidx.compose.ui.unit.TextUnit = 10.sp
+    fontSize: androidx.compose.ui.unit.TextUnit = 10.sp,
+    neutral: Boolean = false
 ) {
     // AWAYの色は着せ替えで変わる(標準は紺。チームの色の着せ替えでは、HOMEの札と見分けやすい灰色)
     val away = com.fukuiteams.app.ui.theme.AwayColor
     androidx.compose.material3.Text(
-        if (isHome) "HOME" else "AWAY",
+        if (isHome) "HOME" else if (neutral) "中立" else "AWAY",
         modifier = modifier
             .then(androidx.compose.ui.Modifier.border(1.dp, if (isHome) com.fukuiteams.app.ui.theme.NewsRed else away))
             .background(if (isHome) com.fukuiteams.app.ui.theme.NewsRed else com.fukuiteams.app.ui.theme.Paper)

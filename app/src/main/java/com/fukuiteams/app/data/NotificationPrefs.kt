@@ -12,6 +12,8 @@ val Context.notificationDataStore: DataStore<Preferences> by preferencesDataStor
 
 object NotificationPrefsKeys {
     fun teamKey(teamId: String) = booleanPreferencesKey("team_$teamId")
+    /** チームの通知を、まだ設定していないときの値。あとから加えたヴェルコスタは、今の利用者に急に通知が増えないようオフ */
+    fun teamDefault(teamId: String): Boolean = teamId != "VERCOSTA"
     fun kindKey(kindId: String) = booleanPreferencesKey("kind_$kindId")
     val LAST_SEEN_INVITE_AT = stringPreferencesKey("last_seen_invite_at")
     val LAST_SEEN_NEWS_AT = stringPreferencesKey("last_seen_news_at")

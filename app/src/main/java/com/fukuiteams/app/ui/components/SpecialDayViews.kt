@@ -27,6 +27,7 @@ import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.Ivory
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.theme.Paper
+import com.fukuiteams.app.model.inkColor
 
 /** カウントダウン(「あと○日」)を出し始める日数 */
 private const val COUNTDOWN_DAYS = 10L
@@ -113,7 +114,7 @@ fun SpecialDayBanner(day: SpecialDay, showCountdown: Boolean = true, onOpenGame:
                                 game.team.displayName,
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
-                                color = game.team.color
+                                color = game.team.inkColor
                             )
                             Text(
                                 "${game.timeLabel}  vs ${game.opponent}",

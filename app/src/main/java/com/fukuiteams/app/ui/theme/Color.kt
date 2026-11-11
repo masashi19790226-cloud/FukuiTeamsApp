@@ -35,3 +35,6 @@ val TeamUnited = Color(0xFF2541B2)   // 福井ユナイテッド:鮮やかな青
 val TeamRac = Color(0xFFC42E22)      // 福井丸岡ラック:赤とオレンジの中間色(濃いめ・赤寄り。2026年10月に赤みを強くした。以前は #C23A1F)
 // 福井永平寺ブルーサンダー(ハンドボール):空色寄りの青(ブローウィンズの濃紺・ユナイテッドの青と見分けられる色)
 val TeamThunder = Color(0xFF0089C8)
+// ヴェルコスタ福井(ホッケー):黄色。黄色の上の文字は黒、白い紙の上にチームの色で文字を書くときは濃い黄土色にする
+val TeamVercosta = Color(0xFFF2C200)
+val TeamVercostaInk = Color(0xFF8A6D00)

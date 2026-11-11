@@ -36,7 +36,7 @@ class AlertsCheckWorker(
 
         fun teamEnabled(teamId: String): Boolean {
             val team = Team.values().find { it.name == teamId } ?: return true
-            return prefs[NotificationPrefsKeys.teamKey(team.name)] ?: true
+            return prefs[NotificationPrefsKeys.teamKey(team.name)] ?: NotificationPrefsKeys.teamDefault(team.name)
         }
 
         val inviteEnabled = prefs[NotificationPrefsKeys.kindKey("invite")] ?: true

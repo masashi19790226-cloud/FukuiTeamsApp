@@ -14,6 +14,15 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年11月11日",
+        title = "ヴェルコスタ福井を追加",
+        items = listOf(
+            "ホッケー日本リーグ(サムライリーグD1)のヴェルコスタ福井を加えました。試合日程・結果・順位表・選手・過去の記録(2022年から)・特集に出ます",
+            "ヴェルコスタはホームでもアウェイでもない会場の試合があるため、「中立」と表示します。SO(シュートアウト)で決着した試合は「SO勝ち」「SO負け」と点数を出します",
+            "ヴェルコスタの通知は、はじめは「オフ」です。通知の設定でオンにできます。ホーム画面のウィジェットはこれまでどおり4チームです"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年11月10日",
         title = "特集の名前",
         items = listOf(

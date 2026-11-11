@@ -89,6 +89,7 @@ import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.Paper
 import kotlinx.coroutines.launch
+import com.fukuiteams.app.model.inkColor
 
 private const val NO_DATA = "データなし"
 
@@ -344,13 +345,17 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                     if (scorers != null) {
                         SectionLabel("${selectedTeam.displayName}の得点ランキング", modifier = Modifier.onGloballyPositioned { marks.own = it })
                         Text(
-                            "今季、得点した選手を得点の多い順に並べた表です。得点していない選手も含めた全員のプロフィール(生年月日・身長など)と数字は、下の「選手(全員)」にあります。",
+                            if (selectedTeam == Team.VERCOSTA)
+                                "今季、得点した選手を得点の多い順に並べた表です。得点していない選手も含めた全員の背番号・ポジションと数字は、下の「選手(全員)」にあります。"
+                            else
+                                "今季、得点した選手を得点の多い順に並べた表です。得点していない選手も含めた全員のプロフィール(生年月日・身長など)と数字は、下の「選手(全員)」にあります。",
                             style = MaterialTheme.typography.bodySmall,
                             color = InkSoft
                         )
                         ScorersSection(
                             scorers = scorers,
-                            rows = scorers.rows.filter { it.team.contains(teamWord(selectedTeam)) },
+                            // ヴェルコスタの表には得点していない選手も入っているので、ここでは得点した選手だけ
+                            rows = scorers.rows.filter { it.team.contains(teamWord(selectedTeam)) && (selectedTeam != Team.VERCOSTA || it.goals > 0) },
                             team = selectedTeam,
                             updatedAt = st.updatedAt,
                             emptyMessage = "まだ得点した選手はいません。",
@@ -370,13 +375,29 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                     NoDataBox(
                         when (selectedTeam) {
                             Team.BLOWINDS -> "まだ選手データが届いていません。GitHubの自動更新(約20分おき)が動くと、Bリーグ公式の選手情報から全選手の成績が表示されます。"
-                            Team.RAC, Team.UNITED, Team.THUNDER -> "このチームの得点のデータはまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。"
+                            Team.RAC, Team.UNITED, Team.THUNDER, Team.VERCOSTA -> "このチームの得点のデータはまだ届いていません。GitHubの自動更新(約20分おき)が動くと表示されます。"
                         }
                     )
                 }
             }
             // 丸岡RUCK・ユナイテッドの全選手(公式サイトの選手紹介の全員。得点などの数字を重ねる)
-            if (selectedTeam != Team.BLOWINDS) {
+            if (selectedTeam == Team.VERCOSTA) {
+                // ヴェルコスタは誕生日・身長のデータが無いので、ホッケージャパンリーグ公式の選手の一覧(得点の表に入れてある全員)を背番号の順に並べる
+                val all = leagueStandings[selectedTeam.name]?.scorers?.rows.orEmpty()
+                    .filter { it.team.contains(teamWord(selectedTeam)) }
+                    .sortedBy { it.number.toIntOrNull() ?: 999 }
+                SectionLabel("${selectedTeam.displayName}の選手(全員)", modifier = Modifier.onGloballyPositioned { marks.all = it })
+                if (all.isEmpty()) {
+                    NoDataBox("全選手のデータはまだ届いていません。GitHubの自動更新が動くと、ホッケージャパンリーグ公式の選手の一覧から表示されます。")
+                } else {
+                    Text(
+                        "ホッケージャパンリーグ公式のチーム・選手のページに載っている全員(${all.size}人。試合に出ていない選手も含む)と、今季の数字です。得点・先発・出場は公式の試合ごとの記録から数えています。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = InkSoft
+                    )
+                    ScorersTable(all, false, selectedTeam.inkColor, hockey = true)
+                }
+            } else if (selectedTeam != Team.BLOWINDS) {
                 val teamRoster = profiles.values.filter { it.team == selectedTeam }
                 SectionLabel("${selectedTeam.displayName}の選手(全員)", modifier = Modifier.onGloballyPositioned { marks.all = it })
                 if (teamRoster.isEmpty()) {
@@ -467,6 +488,7 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                         Team.RAC -> "女子Fリーグ公式"
                         Team.UNITED -> "ユナイテッド公式"
                         Team.THUNDER -> "ブルーサンダー公式"
+                        Team.VERCOSTA -> "ホッケージャパンリーグ公式"
                     } +
                     "から取り直しています。下に引っ張ると最新のデータを読み込みます。",
                 style = MaterialTheme.typography.bodySmall,
@@ -688,6 +710,7 @@ private fun teamWord(team: Team): String = when (team) {
     Team.UNITED -> "福井ユナイテッド"
     Team.BLOWINDS -> "ブローウィンズ"
     Team.THUNDER -> "ブルーサンダー"
+    Team.VERCOSTA -> "ヴェルコスタ"
 }
 
 /**
@@ -718,7 +741,7 @@ private fun ScorersSection(
         if (shown.isEmpty()) {
             NoDataBox(emptyMessage)
         } else {
-            ScorersTable(shown, isUnited, team.color, profileOf)
+            ScorersTable(shown, isUnited, team.inkColor, profileOf, hockey = team == Team.VERCOSTA)
         }
         if (isUnited && rows.any { it.goals == 0 }) {
             Text(
@@ -738,6 +761,8 @@ private fun ScorersSection(
                     "先発=先発メンバーに入った試合数、ベンチ=控えでメンバー入りした試合数です(途中から出たかどうかは公式に載っていないため数えていません)。"
                 team == Team.THUNDER ->
                     "順位はチームの中の得点の順位です。シュート=打ったシュートの数(7mスローを含む)、出場=試合のメンバー(ベンチ入り)に入った試合数です。"
+                team == Team.VERCOSTA ->
+                    "順位はチームの中の得点の順位です。先発=先発で出た試合数、出場=試合に出た試合数(先発と途中出場)です。SO(シュートアウト)の得点は含みません。"
                 else ->
                     "順位はリーグ全体の得点ランキングの順位です。出場・アシストなど、ほかの数字は公式に載っていないため表示していません。"
             },
@@ -752,9 +777,13 @@ private fun ScorersTable(
     rows: List<ScorerRow>,
     isUnited: Boolean,
     ownColor: androidx.compose.ui.graphics.Color,
-    profileOf: (String) -> PlayerBirthday? = { null }
+    profileOf: (String) -> PlayerBirthday? = { null },
+    // ホッケー(ヴェルコスタ):シュートの代わりに先発の数
+    hockey: Boolean = false
 ) {
-    val headers = if (isUnited) listOf("番号", "選手", "得点", "先発", "ベンチ") else listOf("順位", "選手", "得点", "シュート", "出場")
+    val headers = if (isUnited) listOf("番号", "選手", "得点", "先発", "ベンチ")
+        else if (hockey) listOf("順位", "選手", "得点", "先発", "出場")
+        else listOf("順位", "選手", "得点", "シュート", "出場")
     val weights = listOf(1f, 3.4f, 1f, 1.2f, 1f)
     Column(modifier = Modifier.fillMaxWidth().border(1.dp, Ink).background(Paper)) {
         Row(modifier = Modifier.fillMaxWidth().background(Ink).padding(vertical = 5.dp, horizontal = 6.dp)) {
@@ -772,6 +801,8 @@ private fun ScorersTable(
                     "${r.starts ?: "-"}",
                     "${r.bench ?: "-"}"
                 )
+            } else if (hockey) {
+                listOf("${r.rank}位", r.name + if (r.position.isNotBlank()) " ${r.position}" else "", "${r.goals}", "${r.starts ?: "-"}", r.games?.let { "${it}試合" } ?: "-")
             } else {
                 listOf("${r.rank}位", r.name, "${r.goals}", "${r.shots ?: "-"}", r.games?.let { "${it}試合" } ?: "-")
             }

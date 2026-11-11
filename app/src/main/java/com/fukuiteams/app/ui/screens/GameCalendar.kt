@@ -45,6 +45,8 @@ import com.fukuiteams.app.ui.theme.White
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
+import com.fukuiteams.app.model.inkColor
+import com.fukuiteams.app.model.onColor
 
 /** カレンダーで見ている月と、押した日(試合タブを開いている間だけ覚えておく) */
 class CalendarState(today: LocalDate) {
@@ -260,12 +262,14 @@ private fun CalendarPill(game: Game, single: Boolean, outcome: GameOutcome?) {
         null -> ""
     }
     Text(
-        (if (single) (if (game.isHome) "H" else "A") else game.team.initial) + mark,
+        // 中立の会場での試合(ヴェルコスタ)は「N」
+        (if (single) (if (game.isHome) "H" else if (game.neutral) "N" else "A") else game.team.initial) + mark,
         modifier = Modifier
             .border(1.5.dp, color, RoundedCornerShape(3.dp))
             .background(if (game.isHome) color else White, RoundedCornerShape(3.dp))
             .padding(horizontal = 3.dp),
-        color = if (game.isHome) White else color,
+        // 塗った印の上は白(黄色のヴェルコスタは黒)、枠だけの印はチームの色(黄色は濃い黄土色)
+        color = if (game.isHome) game.team.onColor else game.team.inkColor,
         fontSize = 10.sp,
         fontWeight = FontWeight.ExtraBold,
         maxLines = 1,
@@ -278,6 +282,7 @@ private fun shortTeamName(t: Team): String = when (t) {
     Team.RAC -> "丸岡RUCK"
     Team.UNITED -> "ユナイテッド"
     Team.THUNDER -> "ブルーサンダー"
+    Team.VERCOSTA -> "ヴェルコスタ"
 }
 
 /** 前の月・次の月。今日のある月は今日、それ以外はその月の最初の試合の日を選ぶ */

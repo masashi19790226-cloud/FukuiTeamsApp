@@ -268,7 +268,9 @@ fun AddFromXSheet(
             Text("公式のXを開く", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Team.values().forEach { t ->
-                    NewsChip(t.shortName, false, modifier = Modifier.weight(t.shortName.length + 1f), horizontalPadding = 2.dp) { openExternalUrl(context, t.officialXUrl) }
+                    t.officialXUrl?.let { x ->
+                        NewsChip(t.shortName, false, modifier = Modifier.weight(t.shortName.length + 1f), horizontalPadding = 2.dp) { openExternalUrl(context, x) }
+                    }
                 }
             }
             Text("公式のインスタを開く", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)

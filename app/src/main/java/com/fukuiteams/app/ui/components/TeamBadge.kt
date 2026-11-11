@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fukuiteams.app.model.Team
+import com.fukuiteams.app.model.onColor
 
 /**
  * チームロゴの仮バッジ(頭文字+チームカラーの円)。
@@ -35,7 +36,8 @@ fun TeamBadge(
     ) {
         Text(
             text = team.initial,
-            color = Color.White,
+            // 黄色のヴェルコスタは黒い文字
+            color = team.onColor,
             fontWeight = FontWeight.Black,
             fontSize = fontSize
         )

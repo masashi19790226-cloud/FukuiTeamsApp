@@ -27,8 +27,19 @@ data class StandingRow(
     val draw: Int?,
     val lose: Int?,
     val goalDiff: Int?,
-    val form: String?
+    val form: String?,
+    /** SO勝・SO負(ヴェルコスタのホッケー日本リーグだけ。無いリーグは null)。draw は SO勝+SO負 */
+    val soWin: Int? = null,
+    val soLose: Int? = null
 )
+
+/** 勝敗「3勝2敗1分」。SOのあるリーグ(ヴェルコスタ)は「3勝2敗・SO勝1」 */
+val StandingRow.recordText: String
+    get() = if (soWin != null) {
+        "${win}勝${lose}敗" + (if (soWin > 0) "・SO勝$soWin" else "") + (if ((soLose ?: 0) > 0) "・SO負$soLose" else "")
+    } else {
+        "${win}勝${lose}敗" + (if ((draw ?: 0) > 0) "${draw}分" else "")
+    }
 
 data class StandingsPart(val label: String, val rows: List<StandingRow>)
 
@@ -256,7 +267,9 @@ object StandingsRepository {
                 draw = intOrNull("draw"),
                 lose = intOrNull("lose"),
                 goalDiff = intOrNull("gd"),
-                form = r.optString("form").takeIf { it.isNotBlank() }
+                form = r.optString("form").takeIf { it.isNotBlank() },
+                soWin = intOrNull("so_win"),
+                soLose = intOrNull("so_lose")
             )
         }
         return StandingsPart(o.optString("label"), rows)

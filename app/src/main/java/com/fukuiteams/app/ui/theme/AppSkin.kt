@@ -26,7 +26,8 @@ enum class SkinMode(val label: String, val team: Team?) {
     BLOWINDS("ブローウィンズ", Team.BLOWINDS),
     RAC("丸岡RUCK", Team.RAC),
     UNITED("ユナイテッド", Team.UNITED),
-    THUNDER("ブルーサンダー", Team.THUNDER)
+    THUNDER("ブルーサンダー", Team.THUNDER),
+    VERCOSTA("ヴェルコスタ", Team.VERCOSTA)
 }
 
 /** 着せ替え1つ分の色 */
@@ -126,6 +127,25 @@ object AppSkin {
     private fun teamPalette(team: Team): SkinPalette = paletteCache.getOrPut(team) {
         val c = team.color
         val s = STANDARD_PALETTE
+        // 色が明るいチーム(ヴェルコスタの黄色):帯の上の文字は黒、強調の色(白い紙の上の文字・HOMEの札など)は濃い黄土色
+        if (team == Team.VERCOSTA) return@getOrPut SkinPalette(
+            ivory = lerp(s.ivory, c, 0.07f),
+            paper = lerp(s.paper, c, 0.03f),
+            ink = s.ink,
+            inkSoft = s.inkSoft,
+            lineGray = lerp(s.lineGray, c, 0.22f),
+            dividerGray = lerp(s.dividerGray, c, 0.14f),
+            accent = TeamVercostaInk,
+            topBar = c,
+            navBar = c,
+            onBar = Color(0xFF111111),
+            onBarSoft = Color(0xFF111111).copy(alpha = 0.6f),
+            navSelectedIcon = Color(0xFF111111),
+            // 黄色の帯の上でも読める濃い赤
+            barWarn = Color(0xFFB00020),
+            away = Color(0xFF55504A),
+            coloredBars = true
+        )
         SkinPalette(
             ivory = lerp(s.ivory, c, 0.07f),
             paper = lerp(s.paper, c, 0.03f),

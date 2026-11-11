@@ -52,11 +52,21 @@ data class HistoryMatch(
 ) {
     val localDate: LocalDate? get() = runCatching { LocalDate.parse(date) }.getOrNull()
 
-    /** 勝ち・負け・引き分け(PK戦は引き分けとして数える) */
+    /** SO(シュートアウト)の点数(ヴェルコスタは pk の欄にSOの点数が入っている)。ほかのチーム・SOの無い試合は null */
+    private val so: Pair<Int, Int>?
+        get() = if (team == Team.VERCOSTA) Regex("""^(\d+)-(\d+)$""").find(pk)?.let { it.groupValues[1].toInt() to it.groupValues[2].toInt() } else null
+
+    /** 「(PK3-4)」「(SO 3-2)」(ヴェルコスタはSO)。無ければ空 */
+    val pkLabel: String
+        get() = if (pk.isBlank()) "" else if (team == Team.VERCOSTA) "(SO $pk)" else "(PK$pk)"
+
+    /** 勝ち・負け・引き分け(PK戦は引き分けとして数える。ヴェルコスタのSOは、SOの勝ち負けで数える) */
     val outcome: GameOutcome
         get() = when {
             myScore > opponentScore -> GameOutcome.WIN
             myScore < opponentScore -> GameOutcome.LOSE
+            so?.let { it.first > it.second } == true -> GameOutcome.WIN
+            so?.let { it.first < it.second } == true -> GameOutcome.LOSE
             else -> GameOutcome.DRAW
         }
 
@@ -72,7 +82,7 @@ data class HistoryMatch(
                 GameOutcome.LOSE -> "●"
                 GameOutcome.DRAW -> "△"
             }
-            return "$mark$myScore-$opponentScore" + (if (pk.isNotBlank()) "(PK$pk)" else "")
+            return "$mark$myScore-$opponentScore" + (if (pk.isBlank()) "" else if (team == Team.VERCOSTA) "(SO $pk)" else "(PK$pk)")
         }
 
     /** エキシビジョン(親善試合)か。成績には数えない */
@@ -545,6 +555,7 @@ fun seasonSummaries(team: Team, matches: List<HistoryMatch>): List<SeasonSummary
 private fun isLeague(team: Team, m: HistoryMatch): Boolean = when (team) {
     Team.UNITED -> m.competition.contains("北信越フットボールリーグ")
     Team.THUNDER -> m.competition == "リーグH"
+    Team.VERCOSTA -> m.competition.startsWith("サムライリーグ")
     Team.RAC -> m.competition == "女子Fリーグ"
     // ブローウィンズは「B2 リーグ戦」「B.ONE リーグ戦」など(プレーオフは除く)
     Team.BLOWINDS -> m.competition.endsWith("リーグ戦")

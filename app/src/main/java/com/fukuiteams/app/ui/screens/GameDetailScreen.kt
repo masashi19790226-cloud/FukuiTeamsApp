@@ -152,6 +152,10 @@ import com.fukuiteams.app.ui.theme.LineGray
 import com.fukuiteams.app.ui.theme.White
 import java.net.URLEncoder
 import kotlinx.coroutines.launch
+import com.fukuiteams.app.model.inkColor
+import com.fukuiteams.app.model.onColorFor
+import com.fukuiteams.app.model.sideWord
+import com.fukuiteams.app.data.outcome
 
 /**
  * 「試合」タブ(日程と自分の観戦)。上から: チーム選択 → チームの写真 → 観戦成績 →
@@ -303,6 +307,7 @@ fun GameDetailScreen(
         Team.UNITED -> "福井ユナイテッド"
         Team.RAC -> "丸岡ラック"
         Team.THUNDER -> "ブルーサンダー"
+        Team.VERCOSTA -> "ヴェルコスタ福井"
     }
     val encodedAdKeyword = URLEncoder.encode(adSearchKeyword, "UTF-8")
 
@@ -714,7 +719,8 @@ private fun QuickChoice(
             .padding(vertical = 10.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(label, color = if (selected) White else Ink, style = MaterialTheme.typography.labelLarge)
+        // チームの色で塗った上の文字は白(黄色のヴェルコスタは黒)
+        Text(label, color = if (selected) onColorFor(color) else Ink, style = MaterialTheme.typography.labelLarge)
     }
 }
 
@@ -990,7 +996,7 @@ private fun ScheduleRow(
                     maxLines = 1,
                     softWrap = false
                 )
-                HomeAwayLabel(isHome = game.isHome)
+                HomeAwayLabel(isHome = game.isHome, neutral = game.neutral)
             }
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 if (game.specialDay() != null) SpecialDayBadge()
@@ -1004,7 +1010,7 @@ private fun ScheduleRow(
                         // U-20・サテライトなど、トップチーム以外の試合の札
                         if (category != null) UserAddedBadge(category)
                         if (showTeam) {
-                            Text(game.team.displayName, style = MaterialTheme.typography.labelSmall, color = game.team.color, maxLines = 1)
+                            Text(game.team.displayName, style = MaterialTheme.typography.labelSmall, color = game.team.inkColor, maxLines = 1)
                         }
                     }
                 }
@@ -1449,8 +1455,8 @@ private fun ScoreBoard(game: Game, myScore: Int, opponentScore: Int) {
     ) {
         ScoreSide(
             name = game.team.shortLabel(),
-            sub = if (game.isHome) "ホーム" else "アウェイ",
-            color = game.team.color,
+            sub = game.sideWord("ホーム", "アウェイ"),
+            color = game.team.inkColor,
             won = myScore > opponentScore,
             modifier = Modifier.weight(1f)
         )
@@ -1463,7 +1469,7 @@ private fun ScoreBoard(game: Game, myScore: Int, opponentScore: Int) {
         )
         ScoreSide(
             name = game.opponent,
-            sub = if (game.isHome) "アウェイ" else "ホーム",
+            sub = game.sideWord("アウェイ", "ホーム"),
             color = InkSoft,
             won = opponentScore > myScore,
             modifier = Modifier.weight(1f)
@@ -1524,11 +1530,21 @@ private fun PastGameResultCard(game: Game, autoResult: RemoteGameResult?) {
                     myScore = result.myScore,
                     opponentScore = result.opponentScore
                 )
-                val diff = result.myScore - result.opponentScore
-                val (label, color) = when {
-                    diff > 0 -> "勝利" to androidx.compose.ui.graphics.Color(0xFF2F6846)
-                    diff < 0 -> "敗戦" to androidx.compose.ui.graphics.Color(0xFFB3261E)
-                    else -> "引き分け" to InkSoft
+                // SO(シュートアウト)で決着した試合は、SOの点数とSOの勝ち負け(ヴェルコスタ)
+                if (result.soMy != null && result.soOpp != null) {
+                    Text(
+                        "SO ${result.soMy} - ${result.soOpp}",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
+                val so = result.soMy != null && result.soOpp != null
+                val (label, color) = when (result.outcome()) {
+                    GameOutcome.WIN -> (if (so) "SO勝ち" else "勝利") to androidx.compose.ui.graphics.Color(0xFF2F6846)
+                    GameOutcome.LOSE -> (if (so) "SO負け" else "敗戦") to androidx.compose.ui.graphics.Color(0xFFB3261E)
+                    GameOutcome.DRAW -> "引き分け" to InkSoft
                 }
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     Box(

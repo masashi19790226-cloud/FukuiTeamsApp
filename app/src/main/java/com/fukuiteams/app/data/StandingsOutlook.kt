@@ -20,6 +20,7 @@ private fun outlookTeamWord(team: Team): String? = when (team) {
     Team.RAC -> "丸岡"
     Team.THUNDER -> "ブルーサンダー"
     Team.UNITED -> "ユナイテッド"
+    Team.VERCOSTA -> "ヴェルコスタ"
     else -> null
 }
 
@@ -138,5 +139,6 @@ private fun pointsOutlook(team: Team, league: LeagueStandings, upcoming: Int): S
     if (upcoming > 0) rows += OutlookRow("残りの試合", "${upcoming}試合", "日程に出ている試合(リーグ戦以外も含むことがあります)")
     val notes = mutableListOf("順位表(${part.label})から数えています。")
     if (team == Team.THUNDER) notes += "リーグHのプレーオフは、レギュラーシーズンの上位6チーム。同じ勝点のときの順位は公式の順位表のとおりです。"
+    if (team == Team.VERCOSTA) notes += "勝点は 勝ち3・SO勝ち2・SO負け1。サムライリーグD1の7位のチームは、D2の2位のチームと入替戦を行います。"
     return StandingOutlook("順位の見通し", rows, notes)
 }

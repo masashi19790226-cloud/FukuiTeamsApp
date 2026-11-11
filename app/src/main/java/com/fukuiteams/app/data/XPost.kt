@@ -114,6 +114,7 @@ fun guessTeam(text: String, author: String): Team? {
     val all = "$author\n$text"
     return when {
         Regex("ブルーサンダー|永平寺|BLUE ?THUNDER|ハンドボール", RegexOption.IGNORE_CASE).containsMatchIn(all) -> Team.THUNDER
+        Regex("ヴェルコスタ|VERCOSTA|ホッケー", RegexOption.IGNORE_CASE).containsMatchIn(all) -> Team.VERCOSTA
         Regex("RUCK|ラック|丸岡", RegexOption.IGNORE_CASE).containsMatchIn(all) -> Team.RAC
         Regex("ブローウィンズ|BLOWINDS", RegexOption.IGNORE_CASE).containsMatchIn(all) -> Team.BLOWINDS
         Regex("ユナイテッド|UNITED", RegexOption.IGNORE_CASE).containsMatchIn(all) -> Team.UNITED

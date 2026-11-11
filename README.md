@@ -97,11 +97,11 @@ https://github.com/masashi19790226-cloud/FukuiTeamsApp/releases/latest/download/
 - 署名鍵の Secret(DEBUG_KEYSTORE_BASE64)が未登録だと公開は中止される(上書き更新できなくなるため)
 - 普段の push では公開されない(自分用のビルドのみ)
 
-## ヴェルコスタ福井(ホッケー)のデータ(Web版だけで使う)
+## ヴェルコスタ福井(ホッケー)のデータ
 
-Web版「ふくスポ」(FukuiTeamsWeb)に出すヴェルコスタ福井(男子ホッケー・ホッケー日本リーグ サムライリーグD1)のデータも、
+Web版「ふくスポ」(FukuiTeamsWeb)とAndroid版(2026年11月11日から)に出すヴェルコスタ福井(男子ホッケー・ホッケー日本リーグ サムライリーグD1)のデータも、
 このリポジトリの自動更新(`.github/workflows/check-invitations.yml`)で作っています。
-Android版のアプリは、知らないチーム(`vercosta`・`VERCOSTA`)の試合・順位・記録を読み飛ばすので、画面は変わりません。
+Android版では `Team.VERCOSTA`(黄色。文字や線は濃い黄色 `TeamVercostaInk`、黄色の上の文字は黒)。通知は、はじめはオフ(`NotificationPrefsKeys.teamDefault`)。ウィジェットは4チームのまま。
 
 - 読み取りの部品は `scripts/hjl.py`(ホッケージャパンリーグ公式 hjl-hockey.tv。`leagueh.py` と同じ形)
 - `data/games.json`:`team` が `vercosta` の試合(IDは `vc01`〜)。中立の会場の試合は `neutral: true`(このとき `is_home` は false)、
@@ -111,7 +111,7 @@ Android版のアプリは、知らないチーム(`vercosta`・`VERCOSTA`)の試
 - `data/history.json` の `VERCOSTA`:2022年〜今年の試合と選手ごとの通算(`hjl.PAST_FROM_YEAR` から。去年までの年は全部読み終えたら読み直さない。
   1回に読む試合詳細のページは30まで、残りは次の実行で読む)。2021年以前は表の作りが違うので入れていない
 - `data/previews.json`:次の試合の展望
-- `data/news_vercosta.json`:ニュース。Android版の通知に出ないよう、`news_raw.json` とは別のファイルにしている
+- `data/news_vercosta.json`:ニュース。`news_raw.json` とは別のファイル(Android版は読み込んでまとめる。古い版のアプリには出ない)
 - ホーム・アウェイ・中立は公式の表に無いので、会場で決める(越前町営=ホーム、相手の本拠地の県の会場=アウェイ、それ以外=中立)。
   実際と違う試合は `scripts/manual_schedule.json` の `home_away_overrides` に書いて直す
 - 日程・結果のページはスマホ向けの表示だと表の作りが違うので、パソコン向けの表示(`hjl.HEADERS`)で読む

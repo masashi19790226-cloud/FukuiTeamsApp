@@ -122,9 +122,8 @@ fun resolveOutcome(
 ): GameOutcome? {
     val auto = autoResults[gameId]
     return when {
-        auto != null && auto.myScore > auto.opponentScore -> GameOutcome.WIN
-        auto != null && auto.myScore < auto.opponentScore -> GameOutcome.LOSE
-        auto != null -> GameOutcome.DRAW
+        // 自動取得の結果の勝ち負け(SOで決着した試合は、SOの勝ち負け)
+        auto != null -> auto.outcome()
         else -> GameOutcome.values().find { it.name == prefs?.get(outcomeKey(gameId)) }
     }
 }

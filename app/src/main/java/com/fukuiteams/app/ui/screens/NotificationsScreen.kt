@@ -103,8 +103,8 @@ fun NotificationsScreen(
     val scope = rememberCoroutineScope()
 
     val teamPrefs by context.notificationDataStore.data
-        .map { prefs -> Team.values().associateWith { prefs[NotificationPrefsKeys.teamKey(it.name)] ?: true } }
-        .collectAsState(initial = Team.values().associateWith { true })
+        .map { prefs -> Team.values().associateWith { prefs[NotificationPrefsKeys.teamKey(it.name)] ?: NotificationPrefsKeys.teamDefault(it.name) } }
+        .collectAsState(initial = Team.values().associateWith { NotificationPrefsKeys.teamDefault(it.name) })
 
     val kindPrefs by context.notificationDataStore.data
         .map { prefs -> kindDefs.associate { it.id to (prefs[NotificationPrefsKeys.kindKey(it.id)] ?: it.defaultOn) } }
@@ -182,7 +182,9 @@ fun NotificationsScreen(
                         )
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        NewsChip("公式X", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, team.officialXUrl) }
+                        team.officialXUrl?.let { x ->
+                            NewsChip("公式X", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, x) }
+                        }
                         team.officialInstagramUrl?.let { ig ->
                             NewsChip("公式インスタグラム", false, modifier = Modifier.weight(1f)) { openExternalUrl(context, ig) }
                         }
@@ -250,7 +252,7 @@ fun NotificationsScreen(
                                     Text(team.displayName, style = MaterialTheme.typography.bodyLarge)
                                 }
                                 Switch(
-                                    checked = teamPrefs[team] ?: true,
+                                    checked = teamPrefs[team] ?: NotificationPrefsKeys.teamDefault(team.name),
                                     onCheckedChange = { newValue ->
                                         scope.launch {
                                             context.notificationDataStore.edit {

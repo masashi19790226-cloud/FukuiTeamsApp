@@ -30,6 +30,7 @@ import com.fukuiteams.app.ui.theme.InkSoft
 import com.fukuiteams.app.ui.theme.NewsRed
 import com.fukuiteams.app.ui.theme.Paper
 import com.fukuiteams.app.ui.theme.White
+import com.fukuiteams.app.model.inkColor
 
 /** 試合の一覧などに付ける小さな札「PV」(その試合のパブリックビューイングがあるとき) */
 @Composable
@@ -65,7 +66,7 @@ fun PublicViewingList(items: List<PublicViewing>, showTeam: Boolean = false) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     PublicViewingBadge()
                     if (showTeam) {
-                        Text(pv.team.displayName, style = MaterialTheme.typography.labelMedium, color = pv.team.color, maxLines = 1)
+                        Text(pv.team.displayName, style = MaterialTheme.typography.labelMedium, color = pv.team.inkColor, maxLines = 1)
                     }
                     if (pv.auto) {
                         Text("自動で見つけた記事", style = MaterialTheme.typography.labelSmall, color = InkSoft)
@@ -106,7 +107,7 @@ fun PublicViewingXSearch(teams: List<Team>) {
         )
         // チームごとに枠付きのボタン(押すとXの最新の投稿の検索結果が開く)
         teams.forEach { team ->
-            val color = if (teams.size > 1) team.color else Ink
+            val color = if (teams.size > 1) team.inkColor else Ink
             OutlinedButton(
                 onClick = { openPvUrl(context, publicViewingXSearchUrl(team)) },
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp),

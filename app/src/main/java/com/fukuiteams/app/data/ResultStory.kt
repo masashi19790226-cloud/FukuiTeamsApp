@@ -48,12 +48,17 @@ private fun Team.seasonStart(game: Game): String {
         Team.UNITED -> "%04d0301".format(year)
         // リーグH(ハンドボール)も秋に始まり春に終わる
         Team.THUNDER -> "%04d0801".format(if (month >= 8) year else year - 1)
+        // ホッケー日本リーグは春(4月)から冬(12月)
+        Team.VERCOSTA -> "%04d0401".format(year)
     }
 }
 
 fun RemoteGameResult.outcome(): GameOutcome = when {
     myScore > opponentScore -> GameOutcome.WIN
     myScore < opponentScore -> GameOutcome.LOSE
+    // 同点でSO(シュートアウト)の点数があるときは、SOの勝ち負け(ヴェルコスタ)
+    soMy != null && soOpp != null && soMy > soOpp -> GameOutcome.WIN
+    soMy != null && soOpp != null && soMy < soOpp -> GameOutcome.LOSE
     else -> GameOutcome.DRAW
 }
 
@@ -110,7 +115,8 @@ fun buildResultContext(game: Game, games: List<Game>, results: Map<String, Remot
     val backToBack = before?.takeIf { b ->
         b.opponent == game.opponent && daysBetween(b.sortKey, game.sortKey)?.let { it in 0..2 } == true
     }?.let { results[it.id] }
-    val sameVenue = season.filter { it.isHome == game.isHome }
+    // ホーム・アウェイ・中立(ヴェルコスタ)ごとに分ける
+    val sameVenue = season.filter { it.isHome == game.isHome && it.neutral == game.neutral }
     val venueKnown = covered && sameVenue.all { results.containsKey(it.id) }
     val venueOutcomes = sameVenue.mapNotNull { results[it.id]?.outcome() }
     // 次の試合(これから行われる試合だけ。結果が取れていない過去の試合は除く)

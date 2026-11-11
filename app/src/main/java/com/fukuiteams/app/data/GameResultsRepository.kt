@@ -19,8 +19,19 @@ data class RemoteGameResult(
     val opponentScore: Int,
     val sourceUrl: String? = null,
     /** 前半・後半の点数(分からなければ空) */
-    val periods: List<ScorePeriod> = emptyList()
+    val periods: List<ScorePeriod> = emptyList(),
+    /** SO(シュートアウト)の点数(ヴェルコスタ。同点のあとSOで勝ち負けを決めた試合だけ。無ければ null) */
+    val soMy: Int? = null,
+    val soOpp: Int? = null
 )
+
+/** SO(シュートアウト)で決着した試合か */
+val RemoteGameResult.hasSo: Boolean
+    get() = soMy != null && soOpp != null
+
+/** 「2-1」。SOで決着した試合は「1-1(SO 3-2)」 */
+val RemoteGameResult.scoreText: String
+    get() = "$myScore-$opponentScore" + if (soMy != null && soOpp != null) "(SO $soMy-$soOpp)" else ""
 
 /** 「前半 16-14・後半 10-14」。区切りの点数が無ければ空 */
 val RemoteGameResult.periodsLabel: String
@@ -38,6 +49,7 @@ fun Game.resultSourceUrl(result: RemoteGameResult?): String =
             Team.RAC -> "https://ruck-fukui.com/schedules-results"
             Team.UNITED -> "https://fukuiunited.co.jp/"
             Team.THUNDER -> "https://www.fukuieiheijihand.co.jp/latestmatch/"
+            Team.VERCOSTA -> "https://hjl-hockey.tv/schedule/"
         }
 
 object GameResultsRepository {
@@ -65,7 +77,9 @@ object GameResultsRepository {
                         (0 until arr.length()).mapNotNull { i ->
                             arr.optJSONObject(i)?.let { p -> ScorePeriod(p.optString("label"), p.optInt("my"), p.optInt("opp")) }
                         }.filter { it.label.isNotBlank() }
-                    }.orEmpty()
+                    }.orEmpty(),
+                    soMy = if (entry.has("so_my") && !entry.isNull("so_my")) entry.optInt("so_my") else null,
+                    soOpp = if (entry.has("so_opp") && !entry.isNull("so_opp")) entry.optInt("so_opp") else null
                 )
             }
             map

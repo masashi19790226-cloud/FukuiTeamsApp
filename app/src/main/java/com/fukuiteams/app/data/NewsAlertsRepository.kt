@@ -17,9 +17,21 @@ private const val NEWS_JSON_URL =
 private const val NEWS_ARCHIVE_JSON_URL =
     "https://raw.githubusercontent.com/masashi19790226-cloud/FukuiTeamsApp/main/data/news_archive.json"
 
+/** ヴェルコスタ福井のニュース(check_alerts.py が news_raw.json とは別のファイルに書く)。まだファイルが無いときは0件 */
+private const val VERCOSTA_NEWS_JSON_URL =
+    "https://raw.githubusercontent.com/masashi19790226-cloud/FukuiTeamsApp/main/data/news_vercosta.json"
+
 object NewsAlertsRepository {
 
-    suspend fun fetch(): AlertsResult = fetchFrom(NEWS_JSON_URL)
+    /** ニュース。ヴェルコスタのニュースを足す(読めなくても、ほかのニュースはそのまま返す) */
+    suspend fun fetch(): AlertsResult {
+        val main = fetchFrom(NEWS_JSON_URL)
+        if (main !is AlertsResult.Success) return main
+        val extra = fetchFrom(VERCOSTA_NEWS_JSON_URL, missingIsEmpty = true)
+        if (extra !is AlertsResult.Success || extra.items.isEmpty()) return main
+        val ids = main.items.map { it.id }.toSet()
+        return AlertsResult.Success((main.items + extra.items.filter { it.id !in ids }).sortedNewestFirst())
+    }
 
     /** 過去のニュース(45日より前〜1年前)。まだ保管庫が無いときは空の一覧 */
     suspend fun fetchArchive(): AlertsResult = fetchFrom(NEWS_ARCHIVE_JSON_URL, missingIsEmpty = true)

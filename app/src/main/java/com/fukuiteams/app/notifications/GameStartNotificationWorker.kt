@@ -53,7 +53,7 @@ suspend fun rescheduleGameStartNotifications(context: Context) {
     }
 
     GamesRepository.refresh(context).forEach { game ->
-        val teamOn = prefs[NotificationPrefsKeys.teamKey(game.team.name)] ?: true
+        val teamOn = prefs[NotificationPrefsKeys.teamKey(game.team.name)] ?: NotificationPrefsKeys.teamDefault(game.team.name)
         val startMillis = game.startEpochMillis()
         val triggerAt = startMillis - LEAD_TIME_MINUTES * 60_000
 

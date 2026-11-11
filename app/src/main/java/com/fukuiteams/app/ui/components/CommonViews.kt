@@ -43,8 +43,8 @@ fun openExternalUrl(context: Context, url: String) {
 
 /** 試合の一覧の日付の下に出す HOME / AWAY の札(紙面風。HOME は黒地に白抜き、AWAY は黒枠) */
 @Composable
-fun HomeAwayLabel(isHome: Boolean) {
-    HomeAwayTag(isHome = isHome, modifier = Modifier.padding(top = 2.dp))
+fun HomeAwayLabel(isHome: Boolean, neutral: Boolean = false) {
+    HomeAwayTag(isHome = isHome, modifier = Modifier.padding(top = 2.dp), neutral = neutral)
 }
 
 /**

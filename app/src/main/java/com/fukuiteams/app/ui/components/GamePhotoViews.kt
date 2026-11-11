@@ -70,7 +70,8 @@ import java.io.File
 fun photoCaption(game: Game, result: RemoteGameResult?, outcome: GameOutcome?, method: WatchMethod?): String {
     val team = game.team.shortLabel()
     val opp = game.opponent
-    val score = result?.let { "${it.myScore}－${it.opponentScore}で" } ?: ""
+    // SOで決着した試合は「1－1(SO 3-2)で」
+    val score = result?.let { "${it.myScore}－${it.opponentScore}" + (if (it.soMy != null && it.soOpp != null) "(SO ${it.soMy}-${it.soOpp})" else "") + "で" } ?: ""
     val basketball = game.team == Team.BLOWINDS
     val diff = result?.let { kotlin.math.abs(it.myScore - it.opponentScore) }
     // ハンドボール(ブルーサンダー)は点がたくさん入るので、点差の基準をバスケとサッカーの間にする
