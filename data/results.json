@@ -322,5 +322,201 @@
     "opponent_score": 85,
     "checked_at": "2026-11-08T07:41:38.313774",
     "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507334"
+  },
+  "vc01": {
+    "my_score": 2,
+    "opponent_score": 3,
+    "checked_at": "2026-11-11T12:22:33.923482",
+    "source_url": "https://hjl-hockey.tv/match_detail/?matchID=13651",
+    "periods": [
+      {
+        "label": "1Q",
+        "my": 1,
+        "opp": 0
+      },
+      {
+        "label": "2Q",
+        "my": 0,
+        "opp": 1
+      },
+      {
+        "label": "3Q",
+        "my": 1,
+        "opp": 1
+      },
+      {
+        "label": "4Q",
+        "my": 0,
+        "opp": 1
+      }
+    ]
+  },
+  "vc02": {
+    "my_score": 1,
+    "opponent_score": 4,
+    "checked_at": "2026-11-11T12:22:33.923500",
+    "source_url": "https://hjl-hockey.tv/match_detail/?matchID=13667",
+    "periods": [
+      {
+        "label": "1Q",
+        "my": 0,
+        "opp": 0
+      },
+      {
+        "label": "2Q",
+        "my": 0,
+        "opp": 2
+      },
+      {
+        "label": "3Q",
+        "my": 0,
+        "opp": 1
+      },
+      {
+        "label": "4Q",
+        "my": 1,
+        "opp": 1
+      }
+    ]
+  },
+  "vc03": {
+    "my_score": 2,
+    "opponent_score": 6,
+    "checked_at": "2026-11-11T12:22:33.923509",
+    "source_url": "https://hjl-hockey.tv/match_detail/?matchID=13671",
+    "periods": [
+      {
+        "label": "1Q",
+        "my": 0,
+        "opp": 2
+      },
+      {
+        "label": "2Q",
+        "my": 0,
+        "opp": 1
+      },
+      {
+        "label": "3Q",
+        "my": 2,
+        "opp": 1
+      },
+      {
+        "label": "4Q",
+        "my": 0,
+        "opp": 2
+      }
+    ]
+  },
+  "vc04": {
+    "my_score": 0,
+    "opponent_score": 3,
+    "checked_at": "2026-11-11T12:22:33.923514",
+    "source_url": "https://hjl-hockey.tv/match_detail/?matchID=13693",
+    "periods": [
+      {
+        "label": "1Q",
+        "my": 0,
+        "opp": 0
+      },
+      {
+        "label": "2Q",
+        "my": 0,
+        "opp": 0
+      },
+      {
+        "label": "3Q",
+        "my": 0,
+        "opp": 1
+      },
+      {
+        "label": "4Q",
+        "my": 0,
+        "opp": 2
+      }
+    ]
+  },
+  "vc05": {
+    "my_score": 2,
+    "opponent_score": 1,
+    "checked_at": "2026-11-11T12:22:33.923520",
+    "source_url": "https://hjl-hockey.tv/match_detail/?matchID=13696",
+    "periods": [
+      {
+        "label": "1Q",
+        "my": 0,
+        "opp": 0
+      },
+      {
+        "label": "2Q",
+        "my": 1,
+        "opp": 1
+      },
+      {
+        "label": "3Q",
+        "my": 1,
+        "opp": 0
+      },
+      {
+        "label": "4Q",
+        "my": 0,
+        "opp": 0
+      }
+    ]
+  },
+  "vc06": {
+    "my_score": 3,
+    "opponent_score": 5,
+    "checked_at": "2026-11-11T12:22:33.923525",
+    "source_url": "https://hjl-hockey.tv/match_detail/?matchID=13702",
+    "periods": [
+      {
+        "label": "1Q",
+        "my": 0,
+        "opp": 1
+      },
+      {
+        "label": "2Q",
+        "my": 0,
+        "opp": 2
+      },
+      {
+        "label": "3Q",
+        "my": 2,
+        "opp": 2
+      },
+      {
+        "label": "4Q",
+        "my": 1,
+        "opp": 0
+      }
+    ]
+  },
+  "vc07": {
+    "my_score": 3,
+    "opponent_score": 2,
+    "checked_at": "2026-11-11T12:22:33.923530",
+    "source_url": "https://hjl-hockey.tv/match_detail/?matchID=13726",
+    "periods": [
+      {
+        "label": "1Q",
+        "my": 1,
+        "opp": 0
+      },
+      {
+        "label": "2Q",
+        "my": 2,
+        "opp": 1
+      },
+      {
+        "label": "3Q",
+        "my": 0,
+        "opp": 0
+      },
+      {
+        "label": "4Q",
+        "my": 0,
+        "opp": 1
+      }
+    ]
   }
 }
