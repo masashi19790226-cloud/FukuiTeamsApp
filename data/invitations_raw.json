@@ -198,5 +198,21 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51862&ct=ga&cd=CAIyGmQxOGI1ZDQ5YjkwYjMxNzM6Y29tOmphOlVT&usg=AOvVaw1jtjSnNcP_mfz9OrRAZVNm",
     "published": "2026-11-10T10:40:22Z",
     "detected_at": "2026-11-10T19:21:07.108300+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4477431231013769706",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの試合ご招待",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://ruck-fukui.com/archives/6479&ct=ga&cd=CAIyGmFhYzU5ZGU2NGU2MWZjMmE6Y29tOmphOlVT&usg=AOvVaw1WTDbajKn5DpRr5vNhNjyY",
+    "published": "2026-11-10T15:14:11Z",
+    "detected_at": "2026-11-11T12:41:07.677753+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13161171892489773808",
+    "team": "RAC",
+    "title": "【12/19（土、20（日）福井ブローウィンズ観戦者限定】12/20（日）福井丸岡ラックの試合にご招待",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51862&ct=ga&cd=CAIyGmFhYzU5ZGU2NGU2MWZjMmE6Y29tOmphOlVT&usg=AOvVaw1jtjSnNcP_mfz9OrRAZVNm",
+    "published": "2026-11-10T10:40:22Z",
+    "detected_at": "2026-11-11T12:41:07.677796+00:00"
   }
 ]
