@@ -7593,5 +7593,31 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.x25tbs4KDnJWKozc9kMjAQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-11T21:26:10.279576+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3534327422712557152",
+    "team": "UNITED",
+    "title": "JFL昇格懸けて福井ユナイテッド、全国地域CL挑む 強敵ぞろいの1次ラウンドは11月13日から",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15217423.html&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2whn5NFDcI5pK5OhTQiy0a",
+    "published": "2026-11-11T21:18:33Z",
+    "detected_at": "2026-11-11T22:01:09.985763+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13213636839922046624",
+    "team": "UNITED",
+    "title": "JFL昇格懸けて福井ユナイテッド、全国地域CL挑む 強敵ぞろいの1次ラウンドは11月13日から",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://portal.uqmobile.jp/detail/1/2/5/10211_5_r_20261112_1794431050832490&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0pQ8AtlTvuBgrctdkr4qlX",
+    "published": "2026-11-11T21:10:42Z",
+    "detected_at": "2026-11-11T22:01:09.985817+00:00"
+  },
+  {
+    "id": "bing:https://www.oricon.co.jp/article/3434424/",
+    "team": "UNITED",
+    "title": "JFL昇格懸けて福井ユナイテッド、全国地域CL挑む 強敵ぞろいの1次 ...",
+    "link": "https://www.oricon.co.jp/article/3434424/",
+    "published": "2026-11-11T08:01:00+00:00",
+    "source": "ORICON NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.pwKltZ2cu3AWJTRHWJ7OAA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-11T22:01:11.905988+00:00"
   }
 ]
