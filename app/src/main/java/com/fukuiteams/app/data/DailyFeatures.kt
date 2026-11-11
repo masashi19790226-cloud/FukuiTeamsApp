@@ -270,7 +270,7 @@ data class FeatureFocus(val team: Team, val from: String, val until: String, val
  * 今の特集期間。期間中は「すべて」のときも、そのチームの記事だけを出し、
  * 特集期間だけの記事(観戦ガイド・観客数・代表候補・フットサル入門・新しい顔)も加える。期間が過ぎたら自動でふだんの特集に戻る
  */
-val FEATURE_FOCUS = FeatureFocus(Team.RAC, "2026-11-10", "2026-11-15", "丸岡ラック特集")
+val FEATURE_FOCUS = FeatureFocus(Team.RAC, "2026-11-10", "2026-11-15", "福井丸岡RUCK特集")
 
 /** 今が特集期間で、そのチームを表示しているなら FEATURE_FOCUS。それ以外は null */
 fun activeFeatureFocus(teams: List<Team>, today: LocalDate = LocalDate.now(JST)): FeatureFocus? {

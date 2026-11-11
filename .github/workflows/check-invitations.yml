@@ -98,6 +98,8 @@ jobs:
           if [ -f data/standings.json ]; then git add data/standings.json; fi
           # 45日より前のニュースの保管庫(1年分)
           if [ -f data/news_archive.json ]; then git add data/news_archive.json; fi
+          # ヴェルコスタ福井のニュース(Web版だけで使う。Android版の通知に出ないよう、news_raw.json とは別のファイル)
+          if [ -f data/news_vercosta.json ]; then git add data/news_vercosta.json; fi
           # 過去の試合の記録(アプリの「過去の記録」)
           if [ -f data/history.json ]; then git add data/history.json; fi
           if git diff --cached --quiet; then

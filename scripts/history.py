@@ -10,6 +10,8 @@ build_previews.py から1日1回だけ呼び、data/history.json に書き出す
 - 丸岡RUCK      : 女子Fリーグ公式の「過去の記録」(/archive/年/score.html の日程・結果。2017-18〜)と、
                   今季の分はトップページの試合一覧(standings.wfleague_matches)。
                   過去のシーズンは変わらないので、一度読んだシーズンは前回の分(history.json)を使う
+- ヴェルコスタ  : ホッケージャパンリーグ公式の日程・結果の表(今年の分)の福井の行 → 試合詳細のページ(hjl.py)。
+                  一度読んだ試合は前回の分(history.json)を使う。Web版だけで使う(Android版は知らないチームを読み飛ばす)
 - ブローウィンズは、まだ入れていない(Bリーグ公式のメンテナンス明けに加える)
 
 読めなかったチームは前回の分を残す。
@@ -21,6 +23,7 @@ from datetime import datetime, timedelta, timezone
 
 import html as htmllib
 
+import hjl
 import leagueh
 import name_changes
 import standings
@@ -254,6 +257,105 @@ def thunder_matches(fetch, old_matches):
     print(f"[過去の記録] ブルーサンダー: {len(seasons)}シーズン・{len(out)}試合(今回読んだ試合ページ{read}件"
           + ("・残りは次回" if pending else "") + ")")
     return out, pending
+
+
+# ---------- ヴェルコスタ ----------
+
+VERCOSTA_MAX_PAGES = 30
+
+
+def vercosta_matches(fetch, old_matches):
+    """ホッケージャパンリーグ公式の日程・結果の表(hjl.PAST_FROM_YEAR 年〜今年)から福井の終わった試合。返り値は (試合のリスト, 読み残しがあるか)。
+    前回までに読んだ試合(code = 試合の番号)は試合詳細のページを読み直さない。1回に読む試合詳細のページは VERCOSTA_MAX_PAGES まで。
+    去年までの年の表は、その年の試合がすでに全部そろっていれば読み直さない。
+    ha は H=ホーム・A=アウェイ・N=中立。pk は SO(シュートアウト)の点数(「3-2」)"""
+    by_code = {m.get("code"): m for m in old_matches or [] if m.get("code")}
+    this_year = datetime.now(JST).year
+    rows, done_years = [], set()
+    for year in range(hjl.PAST_FROM_YEAR, this_year + 1):
+        olds = [m for m in old_matches or [] if m.get("date", "")[:4] == str(year)]
+        if year < this_year and olds and all(m.get("roster") for m in olds) and any(m.get("year_done") for m in olds):
+            done_years.add(str(year))
+            continue
+        try:
+            page = fetch(hjl.schedule_url(year), hjl.HEADERS)
+        except Exception as e:
+            print(f"[WARN] 過去の記録: ヴェルコスタ {year}年の日程・結果の取得に失敗 {e!r}")
+            if year == this_year:
+                raise
+            done_years.add(str(year))  # 読めなかった年は前回の分を残す
+            continue
+        rows += [r for r in hjl.schedule(page) if r["mid"] and r["my"] is not None and r["opp"] is not None]
+    years = {r["date"][:4] for r in rows}
+    # 読み直さなかった年・読めなかった年の試合は前回の内容を残す
+    out = [m for m in old_matches or [] if m.get("date", "")[:4] not in years]
+    read, pending = 0, False
+    for r in rows:
+        season = r["date"][:4]
+        league = r["division"] or "サムライリーグ"
+        stage = hjl.stage_label(r)
+        pk = f"{r['so_my']}-{r['so_opp']}" if r["so_my"] is not None and r["so_opp"] is not None else ""
+        base = {
+            "code": r["mid"], "date": r["date"], "time": r["time"], "season": season,
+            "comp": league, "title": f"{league} {season}" + (f" {stage}" if stage else ""),
+            "opp": r["opponent"], "venue": r["venue"],
+            "ha": "H" if r["is_home"] else "N" if r["neutral"] else "A",
+            "my": r["my"], "their": r["opp"], "pk": pk, "url": r["url"],
+        }
+        # 去年までの年の試合は、全部の試合詳細を読み終えたら year_done を付ける(次からその年の表を読まない)
+        if r["date"][:4] != str(this_year):
+            base["year_done"] = True
+        old_m = by_code.get(r["mid"])
+        if old_m and old_m.get("roster"):
+            # 点数・ホームとアウェイなどは今回の表に合わせ、試合詳細から読んだ分(観客数・得点者・メンバー表)は前回のまま
+            out.append({**old_m, **base})
+            continue
+        m = {**base, "visitors": None, "scorers": [], "roster": []}
+        if read >= VERCOSTA_MAX_PAGES:
+            # 読み残し(次の実行で読む)。その年はまだそろっていないので year_done は付けない
+            pending = True
+            m.pop("year_done", None)
+            out.append(m)
+            continue
+        try:
+            g = hjl.parse_match(fetch(r["url"]))
+            read += 1
+        except Exception as e:
+            print(f"[WARN] 過去の記録: ヴェルコスタ {r['mid']} の取得に失敗 {e!r}")
+            g = None
+            pending = True
+            m.pop("year_done", None)
+        if g:
+            players = hjl.match_players(g)
+            top3 = sorted([p for p in players if p["goals"]], key=lambda p: -p["goals"])[:3]
+            m["visitors"] = g.get("visitors")
+            m["scorers"] = [{"name": p["name"], "goals": p["goals"]} for p in top3]
+            # メンバー表に載った選手([名前, 背番号, ポジション, 得点, 選手の番号, 出たか, 先発か])
+            m["roster"] = [[p["name"], p["number"], p["position"], p["goals"], p["pid"], p["played"], p["started"]]
+                           for p in players]
+            m["periods"] = g.get("periods") or []
+        out.append(m)
+    out.sort(key=lambda x: (x["date"], x.get("time", "")))
+    print(f"[過去の記録] ヴェルコスタ: {len(out)}試合(今回読んだ試合詳細のページ{read}件"
+          + (f"・読み直さなかった年 {sorted(done_years)}" if done_years else "") + ("・残りは次回" if pending else "") + ")")
+    return out, pending
+
+
+def vercosta_players(matches, current_keys):
+    """試合ごとのメンバー表から、選手ごとの通算の出場・先発・得点"""
+    book = PlayerBook()
+    pids = {}
+    for m in sorted(matches, key=lambda x: (x["date"], x.get("time", ""))):
+        for row in m.get("roster") or []:
+            name, number, position, goals, pid, played, started = (list(row) + ["", True, False])[:7]
+            book.add(name, number, position, m.get("season"), m["date"], bool(played), bool(started), goals,
+                     [m["date"], m.get("opp", ""), m.get("ha", ""), m.get("my"), m.get("their")])
+            if pid:
+                pids[name_key(name)] = pid
+    players = book.result(current_keys)
+    for p in players:
+        p["pid"] = pids.get(name_key(p["name"]), "")
+    return players
 
 
 # ---------- 丸岡RUCK ----------
@@ -1392,7 +1494,11 @@ def build(fetch, post_json, old, current=None):
     # 手で確かめた代表選出(MANUAL_NATIONAL)がまだ入っていなければ、今日作り終えていても作り直す(次の自動更新ですぐ出すため)
     old_nat_links = {n.get("link") for n in ((old.get("teams") or {}).get("RAC") or {}).get("national") or []}
     manual_missing = any(m["link"] not in old_nat_links for m in MANUAL_NATIONAL)
-    if old.get("date") == today and old.get("v") == VERSION and not old.get("pending") and not manual_missing:
+    # ヴェルコスタ(あとから加えたチーム)の分がまだ入っていない・読む年の範囲(hjl.PAST_FROM_YEAR)を変えたときは、
+    # 今日作り終えていても作り直す
+    vercosta_missing = ((old.get("teams") or {}).get("VERCOSTA") or {}).get("from_year") != hjl.PAST_FROM_YEAR
+    if old.get("date") == today and old.get("v") == VERSION and not old.get("pending") and not manual_missing \
+            and not vercosta_missing:
         return None
     teams = dict(old.get("teams") or {}) if old.get("v") == VERSION else {}
     old_teams = dict(old.get("teams") or {})
@@ -1422,6 +1528,26 @@ def build(fetch, post_json, old, current=None):
     except Exception as e:
         print(f"[WARN] 過去の記録: ブルーサンダーの取得に失敗。前回の分を使います {e!r}")
         pending = True
+    try:
+        got, pend = vercosta_matches(fetch, (teams.get("VERCOSTA") or {}).get("matches"))
+        pending = pending or pend
+        if got:
+            # いまの選手(チーム・選手のページの一覧)。読めなければ、いまもいるかどうかは分からないままにする
+            now_keys = cur_keys.get("VERCOSTA")
+            try:
+                now_keys = {name_key(p["name"]) for p in hjl.roster(fetch(hjl.team_url(int(today[:4]))))} or now_keys
+            except Exception as e:
+                print(f"[WARN] 過去の記録: ヴェルコスタの選手の一覧の取得に失敗 {e!r}")
+            players = vercosta_players(got, now_keys)
+            teams["VERCOSTA"] = {"source": "ホッケージャパンリーグ公式の日程・結果と試合詳細", "source_url": hjl.SCHEDULE_URL,
+                                 "matches": got, "players": players, "from_year": hjl.PAST_FROM_YEAR}
+            print(f"[過去の記録] ヴェルコスタ: 選手{len(players)}人")
+    except Exception as e:
+        print(f"[WARN] 過去の記録: ヴェルコスタの取得に失敗。前回の分を使います {e!r}")
+    # 読めなかった・まだ試合が無いときも、空の入れ物は作っておく(無いと「まだ入っていない」とみなして毎回作り直してしまうため)
+    if "VERCOSTA" not in teams and not (old_teams.get("VERCOSTA") or {}).get("matches"):
+        teams["VERCOSTA"] = {"source": "ホッケージャパンリーグ公式の日程・結果と試合詳細", "source_url": hjl.SCHEDULE_URL,
+                             "matches": [], "players": [], "from_year": hjl.PAST_FROM_YEAR}
     try:
         got = ruck_matches(fetch, (teams.get("RAC") or {}).get("matches"))
         if got:

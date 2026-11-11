@@ -53,6 +53,13 @@ NEWS_PATH = os.path.join(BASE_DIR, "news_raw.json")
 ARCHIVE_PATH = os.path.join(BASE_DIR, "news_archive.json")
 ARCHIVE_KEEP_DAYS = 365
 
+# ヴェルコスタ福井(ホッケー)のニュース。Web版だけで使うので、ほかの4チームのニュース(news_raw.json)とは別のファイルに入れる
+# (news_raw.json に入れると、Android版のアプリが知らないチームのニュースとして通知を出してしまうため)
+VERCOSTA_NEWS_PATH = os.path.join(BASE_DIR, "news_vercosta.json")
+VERCOSTA_KEEP_DAYS = 120
+VERCOSTA_BING_QUERIES = ["ヴェルコスタ福井", "ヴェルコスタ ホッケー"]
+VERCOSTA_WORDS = re.compile(r"ヴェルコスタ|VERCOSTA", re.I)
+
 ATOM_NS = "{http://www.w3.org/2005/Atom}"
 
 
@@ -382,6 +389,67 @@ def check_bing_news() -> int:
     return new_count
 
 
+def check_vercosta_news() -> int:
+    """ヴェルコスタ福井のニュースを data/news_vercosta.json に入れる(Web版だけが読む)。
+    - ホッケージャパンリーグ公式のニュースのうち、題名に「ヴェルコスタ」「福井」がある記事
+    - Bingニュースの検索結果のうち、題名に「ヴェルコスタ」がある記事
+    VERCOSTA_KEEP_DAYS 日より前の記事は消す"""
+    import hjl
+
+    now = datetime.now(timezone.utc)
+    cutoff = now - timedelta(days=VERCOSTA_KEEP_DAYS)
+    existing = [x for x in load_existing(VERCOSTA_NEWS_PATH) if (item_time(x) or now) >= cutoff]
+    ids = {x["id"] for x in existing}
+    links = {x.get("link") for x in existing}
+    new_count = 0
+
+    def add(entry):
+        nonlocal new_count
+        existing.append({"team": "VERCOSTA", "detected_at": now.isoformat(), **entry})
+        ids.add(entry["id"])
+        links.add(entry["link"])
+        new_count += 1
+
+    try:
+        page = fetch_feed(hjl.NEWS_URL).decode("utf-8", errors="replace")
+        for n in hjl.news(page):
+            if n["id"] in ids or n["link"] in links:
+                continue
+            # 公式サイトには日付しか無いので、その日の正午(日本時間)にしておく
+            published = datetime.strptime(n["date"], "%Y-%m-%d").replace(hour=3, tzinfo=timezone.utc)
+            if published < cutoff:
+                continue
+            add({"id": n["id"], "title": n["title"], "link": n["link"], "published": published.isoformat(),
+                 "source": "ホッケージャパンリーグ公式"})
+    except Exception as e:
+        print(f"[WARN] ヴェルコスタのニュース: ホッケージャパンリーグ公式の取得に失敗しました: {e!r}")
+
+    for q in VERCOSTA_BING_QUERIES:
+        try:
+            text = fetch_feed(BING_NEWS_URL.format(q=urllib.request.quote(q))).decode("utf-8", errors="replace")
+        except Exception as e:
+            print(f"[WARN] ヴェルコスタのニュース: Bingニュース/{q} の取得に失敗しました: {e}")
+            continue
+        for entry in parse_bing_rss(text):
+            if entry["id"] in ids or entry["link"] in links:
+                continue
+            title = entry["title"]
+            try:
+                old = datetime.fromisoformat(entry["published"]) < cutoff
+            except ValueError:
+                continue  # 公開日が分からない記事は入れない
+            if old or not VERCOSTA_WORDS.search(title) or is_personal_x_post(title) or NEWS_NOISE.search(title) \
+                    or is_old_title(title):
+                continue
+            add({"id": entry["id"], "title": title, "link": entry["link"], "published": entry["published"],
+                 "source": entry["source"], "image": entry["image"]})
+
+    existing.sort(key=lambda a: str(a.get("published") or a.get("detected_at") or ""), reverse=True)
+    save(VERCOSTA_NEWS_PATH, existing)
+    print(f"[ヴェルコスタのニュース] 新しく見つかった件数: {new_count}件(累計 {len(existing)}件)")
+    return new_count
+
+
 def main():
     check_feeds(INVITATION_FEEDS, INVITATIONS_PATH, "無料招待")
     # 45日を過ぎたニュースは、消す前に保管庫(1年分)へ移す
@@ -395,6 +463,11 @@ def main():
         check_bing_news()
     except Exception as e:
         print(f"[WARN] Bingニュースの処理に失敗しました: {e!r}")
+    # ヴェルコスタ福井のニュース(Web版だけで使う別のファイル)。失敗しても、ほかの処理の結果は残す
+    try:
+        check_vercosta_news()
+    except Exception as e:
+        print(f"[WARN] ヴェルコスタのニュースの処理に失敗しました: {e!r}")
 
 
 if __name__ == "__main__":

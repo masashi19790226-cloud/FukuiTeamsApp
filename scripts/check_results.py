@@ -1,10 +1,12 @@
 """
-4チームの公式サイト等を見に行き、終了した試合のスコアを data/results.json に記録する。
+5チームの公式サイト等を見に行き、終了した試合のスコアを data/results.json に記録する。
 
 - ブローウィンズ : 公式サイトのトップページ(直近の試合カード)
 - 丸岡RUCK       : 女子Fリーグ公式のクラブ日程ページ(gid=試合番号ごとのスコアリンク)
 - ユナイテッド   : 公式サイトのトップページ「LATEST MATCH」欄
 - ブルーサンダー : リーグH公式の星取表(福井永平寺の行)→ 試合ごとのページ(日付・点数・前後半)
+- ヴェルコスタ   : ホッケージャパンリーグ公式の日程・結果の表(福井の行)→ 試合詳細のページ(クォーターごとの点数)
+                   引き分けはSO(シュートアウト)で決着するので、SOの点数を so_my・so_opp に残す
 
 どのサイトも構造が変わると取れなくなるので、GitHub Actionsの実行ログ
 (print文の出力)を見ながら調整する想定。
@@ -17,6 +19,7 @@ import re
 import urllib.request
 from datetime import datetime, timedelta
 
+import hjl
 import leagueh
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
@@ -306,6 +309,34 @@ def thunder_results(results):
     return found
 
 
+# ---------- ヴェルコスタ(ホッケージャパンリーグ公式) ----------
+
+def vercosta_results(dates):
+    """ホッケージャパンリーグ公式の日程・結果の表から、福井の終わった試合のうち dates(確認が必要な試合の日付)の分を探し、
+    日付 → {"my","opp","so_my","so_opp","url","periods"} を返す。
+    クォーターごとの点数は試合詳細のページから(読めなくても、点数は日程・結果の表のものを使う)"""
+    page = safe_fetch("VERCOSTA", hjl.SCHEDULE_URL)
+    if not page:
+        return {}
+    found = {}
+    rows = [r for r in hjl.schedule(page) if r["my"] is not None and r["opp"] is not None]
+    print(f"[INFO] VERCOSTA: 日程・結果の表で終わった試合 {len(rows)} 件")
+    for r in rows:
+        if r["date"] not in dates:
+            continue
+        hit = {"my": r["my"], "opp": r["opp"], "so_my": r["so_my"], "so_opp": r["so_opp"], "url": r["url"], "periods": []}
+        detail = safe_fetch("VERCOSTA", r["url"]) if r["mid"] else None
+        g = hjl.parse_match(detail) if detail else None
+        if g and g.get("my") == r["my"] and g.get("opp") == r["opp"]:
+            hit["periods"] = g["periods"]
+            if hit["so_my"] is None and g.get("so_my") is not None:
+                hit["so_my"], hit["so_opp"] = g["so_my"], g["so_opp"]
+        elif r["mid"]:
+            print(f"[WARN] VERCOSTA: 試合詳細のページを読み取れませんでした {r['url']}")
+        found[r["date"]] = hit
+    return found
+
+
 # ---------- メイン ----------
 
 def safe_fetch(name, url):
@@ -363,6 +394,13 @@ def main():
     ruck_page = safe_fetch("RUCK", RUCK_URL) if "rac" in teams else None
     un_page = safe_fetch("UNITED", UNITED_URL) if "united" in teams else None
     thunder_found = thunder_results(results) if "thunder" in teams else {}
+    vercosta_found = {}
+    if "vercosta" in teams:
+        try:
+            vercosta_found = vercosta_results({g["date"] for g, _ in pending if g.get("team") == "vercosta"})
+        except Exception as e:
+            # ヴェルコスタの読み取りで失敗しても、ほかのチームの結果の確認は続ける
+            print(f"[WARN] VERCOSTA: 結果の読み取り中にエラー {e!r}")
 
     ruck_parsed = parse_ruck_page(ruck_page) if ruck_page else None
     if ruck_parsed:
@@ -402,6 +440,12 @@ def main():
                 score = (hit["my"], hit["opp"])
                 source_url = hit["url"]
 
+        elif team == "vercosta":
+            hit = vercosta_found.get(game["date"])
+            if hit:
+                score = (hit["my"], hit["opp"])
+                source_url = hit["url"]
+
         label = f"{game['id']} ({game['date']} vs {game['opponent']})"
         if score:
             results[game["id"]] = {
@@ -413,6 +457,13 @@ def main():
             # ブルーサンダーは前半・後半の点数も残す(リーグH公式の試合ページから)
             if team == "thunder" and thunder_found.get(game["date"], {}).get("periods"):
                 results[game["id"]]["periods"] = thunder_found[game["date"]]["periods"]
+            # ヴェルコスタはクォーターごとの点数と、SO(シュートアウト)で決着した試合のSOの点数も残す
+            if team == "vercosta":
+                vh = vercosta_found.get(game["date"], {})
+                if vh.get("periods"):
+                    results[game["id"]]["periods"] = vh["periods"]
+                if vh.get("so_my") is not None and vh.get("so_opp") is not None:
+                    results[game["id"]]["so_my"], results[game["id"]]["so_opp"] = vh["so_my"], vh["so_opp"]
             updated += 1
             print(f"[INFO] {label}: {score[0]} - {score[1]} を記録")
         else:

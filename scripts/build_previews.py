@@ -17,6 +17,8 @@
 - ユナイテッド : 公式サイトトップの北信越リーグ順位表
 - ユナイテッド : 選手の得点は公式サイトの試合結果ページから集計(standings.py)
 - 丸岡RUCK      : 女子Fリーグ公式の試合結果から計算した順位表と、公式の得点ランキング(standings.py)
+- ブルーサンダー: リーグH公式の順位表・星取表・試合ごとのページ(leagueh.py)
+- ヴェルコスタ  : ホッケージャパンリーグ公式の順位表・日程と結果の表・試合詳細のページ(hjl.py)。Web版だけで使う
 """
 
 import html as htmllib
@@ -28,6 +30,7 @@ import urllib.parse
 import urllib.request
 
 import standings
+import hjl
 import leagueh
 from datetime import datetime, timedelta, timezone
 
@@ -45,9 +48,10 @@ UA = "Mozilla/5.0 (Linux; Android 14) FukuiSpoBot/1.0 (+https://github.com/masas
 BLEAGUE = "https://www.bleague.jp"
 BLOWINDS_TEAM_ID = "2891"
 # 今季の試合とみなす日付(これより前の試合は直近成績に入れない)
-SEASON_START = {"BLOWINDS": "2026-08-01", "UNITED": "2026-03-01", "RAC": "2026-05-01", "THUNDER": "2026-08-01"}
+SEASON_START = {"BLOWINDS": "2026-08-01", "UNITED": "2026-03-01", "RAC": "2026-05-01", "THUNDER": "2026-08-01",
+                "VERCOSTA": "2026-04-01"}
 
-MY_LABEL = {"BLOWINDS": "福井", "UNITED": "福井", "RAC": "丸岡", "THUNDER": "福井永平寺"}
+MY_LABEL = {"BLOWINDS": "福井", "UNITED": "福井", "RAC": "丸岡", "THUNDER": "福井永平寺", "VERCOSTA": "ヴェルコスタ"}
 
 # 女子Fリーグのクラブページ(相手の選手一覧へのリンク用)
 WFLEAGUE_CLUBS = {
@@ -99,6 +103,14 @@ def mark(my, opp):
     return "○" if my > opp else ("●" if my < opp else "△")
 
 
+def res_mark(r):
+    """結果(results.json の1試合分)の勝敗の記号。同点でSO(シュートアウト)の点数があれば、SOの勝ち負け(ヴェルコスタ)"""
+    my, opp = r["my_score"], r["opponent_score"]
+    if my == opp and isinstance(r.get("so_my"), int) and isinstance(r.get("so_opp"), int) and r["so_my"] != r["so_opp"]:
+        return "○" if r["so_my"] > r["so_opp"] else "●"
+    return mark(my, opp)
+
+
 def md(date_str):
     """'2026-09-26' / '2026.09.26' → '9/26'"""
     parts = re.split(r"[-./]", date_str)
@@ -116,7 +128,7 @@ def own_summary(team, games, results, next_game):
         [g for g in games if g["team"].upper() == team and g["id"] in results and g["date"] >= start],
         key=lambda g: g.get("sort_key", g["date"]),
     )
-    marks = [mark(results[g["id"]]["my_score"], results[g["id"]]["opponent_score"]) for g in finished]
+    marks = [res_mark(results[g["id"]]) for g in finished]
     w, l, d = marks.count("○"), marks.count("●"), marks.count("△")
     record = f"{w}勝{l}敗" + (f"{d}分" if d else "") if finished else ""
 
@@ -126,7 +138,9 @@ def own_summary(team, games, results, next_game):
     if past_vs:
         g = max(past_vs, key=lambda x: x.get("sort_key", x["date"]))
         r = results[g["id"]]
-        last_meeting = f"{md(g['date'])} {mark(r['my_score'], r['opponent_score'])}{r['my_score']}-{r['opponent_score']}"
+        last_meeting = f"{md(g['date'])} {res_mark(r)}{r['my_score']}-{r['opponent_score']}"
+        if isinstance(r.get("so_my"), int) and isinstance(r.get("so_opp"), int):
+            last_meeting += f"(SO {r['so_my']}-{r['so_opp']})"
     return {"record": record, "form": "".join(marks[-5:])}, last_meeting
 
 
@@ -730,6 +744,11 @@ def load_standings():
         load_thunder()
     except Exception as e:
         print(f"[WARN] 順位: ブルーサンダー(リーグH公式)の読み取りに失敗 {e!r}")
+    # ヴェルコスタ(ホッケージャパンリーグ公式の順位表と、試合ごとの記録から数えた得点・出場)。読めなかったときは前回の内容を残す
+    try:
+        load_vercosta()
+    except Exception as e:
+        print(f"[WARN] 順位: ヴェルコスタ(ホッケージャパンリーグ公式)の読み取りに失敗 {e!r}")
     # 選手の得点。読めなかったときは前回の内容を残す(main で standings.json にまとめるときに前回分を使う)
     old = load_json(STANDINGS_PATH, {})
     if "RAC" in STANDINGS:
@@ -818,6 +837,115 @@ def load_thunder():
         print(f"[順位] ブルーサンダー: 個人ランキング(得点) {len(THUNDER_LEADERS)}人")
     except Exception as e:
         print(f"[WARN] ブルーサンダー: 個人ランキングの取得に失敗 {e!r}")
+
+
+# ---------- ヴェルコスタ(ホッケージャパンリーグ公式) ----------
+
+# ホッケージャパンリーグ公式の得点ランキング(福井のいるリーグ)。load_vercosta で読む
+VERCOSTA_LEADERS = []
+
+
+def load_vercosta():
+    """ホッケージャパンリーグ公式の順位表と、福井の試合ごとの記録から数えた選手の得点・出場を STANDINGS["VERCOSTA"] に入れる。
+    試合ごとの記録は "match_cache"(試合の番号 → 日付・点数・得点者・メンバー表)に残し、終わってから2日たった試合は読み直さない。
+    選手の一覧(チーム・選手のページ)は "roster" に残し、1日1回だけ読み直す。
+    順位表が読めなかったときは何も入れない(standings.json の前回の内容が残る)"""
+    old_v = load_json(STANDINGS_PATH, {}).get("VERCOSTA", {})
+    cache = dict(old_v.get("match_cache") or {})
+    today = datetime.now(JST).date()
+    try:
+        rows = [r for r in hjl.schedule(fetch(hjl.SCHEDULE_URL, hjl.HEADERS))
+                if r["mid"] and r["my"] is not None and r["opp"] is not None]
+    except Exception as e:
+        print(f"[WARN] ヴェルコスタ: 日程・結果のページの取得に失敗 {e!r}")
+        rows = None
+    if rows is not None:
+        read = 0
+        for r in rows:
+            hit = cache.get(r["mid"])
+            if hit and hit.get("my") == r["my"] and hit.get("opp") == r["opp"] and hit.get("lineup"):
+                try:
+                    # 公式の記録は試合の後で直ることがあるので、試合から2日たつまでは読み直す
+                    if (today - datetime.strptime(hit.get("date", ""), "%Y-%m-%d").date()).days >= 2:
+                        continue
+                except ValueError:
+                    pass
+            try:
+                g = hjl.parse_match(fetch(r["url"]))
+            except Exception as e:
+                print(f"[WARN] ヴェルコスタ: 試合詳細のページの取得に失敗 {r['url']} {e!r}")
+                g = None
+            if g and g.get("my") is not None:
+                g["url"] = r["url"]
+                # ホーム・アウェイ・中立と、ステージ(7位決定戦など)は日程・結果の表から
+                g["ha"] = "H" if r["is_home"] else "N" if r["neutral"] else "A"
+                g["stage"] = hjl.stage_label(r)
+                cache[r["mid"]] = g
+                read += 1
+        # 日程・結果の表に無くなった試合(取り消しなど)は数えない
+        if rows:
+            cache = {k: v for k, v in cache.items() if k in {r["mid"] for r in rows}}
+        print(f"[順位] ヴェルコスタ: 終わった試合 {len(rows)} 件(試合詳細のページを{read}件読み込み)")
+    rank_page = fetch(hjl.RANKING_URL)
+    st = hjl.standings_from(rank_page, hjl.form_of(cache) if cache else "")
+    if not st:
+        print("[WARN] ヴェルコスタ: ホッケージャパンリーグ公式の順位表を読み取れませんでした")
+        return
+    st["match_cache"] = cache
+    # 選手の一覧(背番号・ポジション・ローマ字・写真)。1日1回だけ読み直す
+    roster = old_v.get("roster") or {}
+    if roster.get("date") != today.isoformat() or not roster.get("players"):
+        try:
+            players = hjl.roster(fetch(hjl.team_url(today.year)))
+            if players:
+                roster = {"date": today.isoformat(), "source_url": hjl.team_url(today.year), "players": players}
+                print(f"[順位] ヴェルコスタ: 選手の一覧 {len(players)}人")
+        except Exception as e:
+            print(f"[WARN] ヴェルコスタ: 選手の一覧の取得に失敗 {e!r}")
+    if roster:
+        st["roster"] = roster
+    sc = hjl.scorers_from(cache, roster.get("players"))
+    if sc:
+        st["scorers"] = sc
+    elif old_v.get("scorers"):
+        st["scorers"] = old_v["scorers"]
+    STANDINGS["VERCOSTA"] = st
+    # 得点ランキング。次の対戦相手の注目選手に使う(standings.json には入れない)
+    global VERCOSTA_LEADERS
+    VERCOSTA_LEADERS = hjl.leaders(rank_page)
+    print(f"[順位] ヴェルコスタ: 得点ランキング {len(VERCOSTA_LEADERS)}人")
+
+
+def vercosta_extra(next_game, preview):
+    """ヴェルコスタの展望:ホッケージャパンリーグ公式の順位表から両チームの順位・勝敗、
+    福井の直近の勝敗(試合ごとの記録から)、相手の注目選手(得点ランキングの上位)"""
+    st = STANDINGS.get("VERCOSTA")
+    opp_tid = ""
+    if st:
+        for r in st.get("regular", {}).get("table", []):
+            if r.get("tid") == hjl.TEAM_ID:
+                side = "my"
+            elif r["team"] == next_game["opponent"]:
+                side = "opp"
+                opp_tid = r.get("tid", "")
+            else:
+                continue
+            if not r.get("played"):
+                continue
+            preview[side]["rank"] = f"{r['rank']}位(勝ち点{r['points']})"
+            preview[side]["record"] = r["record"]
+            if r.get("form"):
+                preview[side]["form"] = r["form"]
+    if opp_tid:
+        preview["opp_link"] = f"{hjl.HJL}/teams?teamID={opp_tid}&teamYear={next_game['date'][:4]}"
+    top = [x for x in VERCOSTA_LEADERS if x["team"] == next_game["opponent"]][:3]
+    if top:
+        preview["key_players"] = [
+            {"number": "", "name": x["name"], "position": "",
+             "stat": f"今季{x['goals']}得点(リーグ{x['rank']}位)", "photo": x["photo"]}
+            for x in top
+        ]
+        preview["players_note"] = "ホッケージャパンリーグ公式の得点ランキングから"
 
 
 # リーグH公式の個人ランキング(得点)。load_thunder で読む
@@ -1080,7 +1208,7 @@ def build_summary(team, next_game, p):
     my, opp = p["my"], p["opp"]
     me, them = MY_LABEL[team], next_game["opponent"]
     parts = []
-    if my.get("rank") and opp.get("rank") and team in ("UNITED", "THUNDER"):
+    if my.get("rank") and opp.get("rank") and team in ("UNITED", "THUNDER", "VERCOSTA"):
         parts.append(f"{my['rank'].split('(')[0]}の{me}と{opp['rank'].split('(')[0]}の{them}の対戦。")
     if my.get("form"):
         f = my["form"]
@@ -1121,7 +1249,8 @@ def build_one(team, games, results, today, previews):
         "last_meeting": last_meeting, "key_players": [], "players_note": "", "opp_link": None,
     }
     try:
-        {"BLOWINDS": blowinds_extra, "UNITED": united_extra, "RAC": ruck_extra, "THUNDER": thunder_extra}[team](game, p)
+        {"BLOWINDS": blowinds_extra, "UNITED": united_extra, "RAC": ruck_extra, "THUNDER": thunder_extra,
+         "VERCOSTA": vercosta_extra}[team](game, p)
     except Exception as e:
         print(f"[WARN] {team}: 追加データの取得中にエラー {e}")
     p["summary"] = build_summary(team, game, p)
@@ -1147,7 +1276,7 @@ def main():
     except Exception as e:
         print(f"[WARN] ブルーサンダー: 次の相手の選手の取得に失敗 {e!r}")
 
-    for team in ["BLOWINDS", "RAC", "UNITED", "THUNDER"]:
+    for team in ["BLOWINDS", "RAC", "UNITED", "THUNDER", "VERCOSTA"]:
         try:
             build_one(team, games, results, today, previews)
         except Exception as e:

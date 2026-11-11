@@ -1,10 +1,12 @@
 """
-4チームの公式サイトから試合日程を読み取り、data/games.json を自動で更新する。
+5チームの公式サイトから試合日程を読み取り、data/games.json を自動で更新する。
 
 - ブローウィンズ : 公式サイトの試合日程一覧(月ごと)
 - 丸岡RUCK       : 公式サイトの「対戦スケジュール / 試合結果」の表
 - ユナイテッド   : 公式サイトの月間スケジュール(「◯◯KO vs.相手@会場」の行)
 - ブルーサンダー : 公式サイトの試合スケジュールの表(見出し「LEAGUE H 2026-27」の年で年を決める)
+- ヴェルコスタ   : ホッケージャパンリーグ公式の日程・結果の表(福井の行)。ホーム・アウェイ・中立は会場で決める
+                   (Web版だけで使う。Android版のアプリは知らないチームの試合を読み飛ばす)
 
 動き:
 - まだ games.json に無い試合 → 新しく追加
@@ -24,6 +26,7 @@ import re
 import urllib.request
 from datetime import datetime, timedelta
 
+import hjl
 import leagueh
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
@@ -37,7 +40,8 @@ WEEKDAY_JP = ["月", "火", "水", "木", "金", "土", "日"]
 EN_WEEKDAYS = "Mon|Tue|Wed|Thu|Fri|Sat|Sun"
 # thunder:福井永平寺ブルーサンダー(男子ハンドボール・リーグH)。日程は公式サイトの試合スケジュールから
 # (読めなかったときは manual_schedule.json の分で補う)
-ID_PREFIX = {"blowinds": "bw", "rac": "rc", "united": "un", "thunder": "th"}
+# vercosta:ヴェルコスタ福井(男子ホッケー・ホッケー日本リーグ)。日程はホッケージャパンリーグ公式の日程・結果の表から
+ID_PREFIX = {"blowinds": "bw", "rac": "rc", "united": "un", "thunder": "th", "vercosta": "vc"}
 
 # ホーム判定に使う会場名のキーワード(ユナイテッド用。RUCKはセーレン・ドリームアリーナのみホーム)
 FUKUI_VENUE_WORDS = ["福井", "セーレン", "テクノポート", "9.98", "９．９８", "丸岡", "坂井", "敦賀", "鯖江", "越前", "武生", "三国", "大野", "勝山", "小浜"]
@@ -214,6 +218,43 @@ def scrape_thunder():
     return games
 
 
+# ---------- ヴェルコスタ福井 ----------
+
+def home_away_overrides():
+    """manual_schedule.json の "home_away_overrides"(ホーム・アウェイ・中立を手で決める試合)。
+    {(チーム, 日付): {"is_home": …, "neutral": …}}。会場からの自動の判定が実際と違うときに使う"""
+    if not os.path.exists(MANUAL_PATH):
+        return {}
+    with open(MANUAL_PATH, "r", encoding="utf-8") as f:
+        rows = json.load(f).get("home_away_overrides", [])
+    return {(r.get("team"), r.get("date")): r for r in rows if isinstance(r, dict) and r.get("team") and r.get("date")}
+
+
+def scrape_vercosta():
+    """ホッケージャパンリーグ公式の日程・結果の表のうち、福井の行(終わった試合も含む今年の全試合)。
+    ホーム・アウェイ・中立は会場で決める(hjl.home_away)。例外は manual_schedule.json の home_away_overrides"""
+    page = safe_fetch("VERCOSTA", hjl.SCHEDULE_URL)
+    if not page:
+        raise RuntimeError("ホッケージャパンリーグ公式の日程・結果のページを読めませんでした")
+    overrides = home_away_overrides()
+    games = []
+    for r in hjl.schedule(page):
+        y, m, d = (int(x) for x in r["date"].split("-"))
+        is_home, neutral = r["is_home"], r["neutral"]
+        ov = overrides.get(("vercosta", r["date"]))
+        if ov:
+            is_home, neutral = bool(ov.get("is_home")), bool(ov.get("neutral")) and not ov.get("is_home")
+            print(f"[INFO] VERCOSTA: {r['date']} のホーム・アウェイは手動の指定を使用(is_home={is_home}, neutral={neutral})")
+        games.append(make_game("vercosta", y, m, d, r["time"], r["opponent"], r["venue"], is_home,
+                               neutral=neutral, stage=hjl.stage_label(r), mid=r["mid"],
+                               result_page_url=r["url"] if r["mid"] else None))
+    print(f"[INFO] VERCOSTA: {len(games)} 試合を読み取り")
+    if not games:
+        # シーズンの前(新しい年の日程がまだ載っていない時期)は0試合のことがある
+        print("[WARN] VERCOSTA: 日程・結果のページに福井の試合がありませんでした")
+    return games
+
+
 # ---------- 手動の日程(scripts/manual_schedule.json) ----------
 
 MANUAL_PATH = os.path.join(os.path.dirname(__file__), "manual_schedule.json")
@@ -231,8 +272,9 @@ def scrape_manual():
             continue
         y, m, d = (int(x) for x in r["date"].split("-"))
         # category:トップチーム以外(U-20・サテライトなど)の試合。同じ日に何試合あってもよい
+        # neutral:中立の会場での試合(ヴェルコスタのセントラル開催など。Web版で「中立」と出す)
         extra = {"placeholder_until": r.get("placeholder_until"), "placeholder_from": r.get("placeholder_from"),
-                 "category": r.get("category")}
+                 "category": r.get("category"), "neutral": bool(r.get("neutral")) and not r.get("is_home")}
         games.append(make_game(r["team"], y, m, d, r.get("time", ""), r["opponent"], r.get("venue", ""),
                                bool(r.get("is_home")), **extra))
     print(f"[INFO] 手動の日程: {len(games)} 件を確認")
@@ -424,7 +466,7 @@ def merge(games, scraped):
         changes = []
         # 仮の行と同じ日に本当の試合が見つかったら、仮の行を本当の試合の内容に置き換える
         if g.get("placeholder_until") and not s.get("placeholder_until"):
-            for key in ["time", "day_of_week", "opponent", "venue", "is_home", "gid"]:
+            for key in ["time", "day_of_week", "opponent", "venue", "is_home", "gid", "neutral", "stage", "mid", "result_page_url"]:
                 if s.get(key) is not None:
                     g[key] = s[key]
             g.pop("placeholder_until", None)
@@ -437,9 +479,9 @@ def merge(games, scraped):
             g["time"] = s["time"]
             g["sort_key"] = sort_key_of(g)
             changes.append(f"開始時刻 {s['time']}")
-        elif s["team"] in ("blowinds", "thunder") and valid_time(g.get("time", "")) \
+        elif s["team"] in ("blowinds", "thunder", "vercosta") and valid_time(g.get("time", "")) \
                 and valid_time(s["time"]) and g["time"] != s["time"]:
-            # ブローウィンズ・ブルーサンダーは公式サイトの時刻が正しいので、開始時刻が変わったらそれに合わせる
+            # ブローウィンズ・ブルーサンダー・ヴェルコスタは公式サイトの時刻が正しいので、開始時刻が変わったらそれに合わせる
             changes.append(f"開始時刻 {g['time']}→{s['time']}")
             g["time"] = s["time"]
             g["sort_key"] = sort_key_of(g)
@@ -450,6 +492,19 @@ def merge(games, scraped):
         if s.get("gid") and not g.get("gid"):
             g["gid"] = s["gid"]
             changes.append(f"gid {s['gid']}")
+        if s["team"] == "vercosta" and not s.get("placeholder_until") and not s.get("category") and s.get("mid"):
+            # ヴェルコスタ:ホーム・アウェイ・中立(会場からの判定と手動の指定)と、試合の番号・ステージを公式の表に合わせる
+            if bool(g.get("is_home")) != bool(s.get("is_home")) or bool(g.get("neutral")) != bool(s.get("neutral")):
+                g["is_home"] = bool(s.get("is_home"))
+                if s.get("neutral"):
+                    g["neutral"] = True
+                else:
+                    g.pop("neutral", None)
+                changes.append("ホーム" if g["is_home"] else "中立" if g.get("neutral") else "アウェイ")
+            for key in ["stage", "mid", "result_page_url"]:
+                if s.get(key) and g.get(key) != s[key]:
+                    g[key] = s[key]
+                    changes.append(f"{key} {s[key]}")
         if changes:
             updated += 1
             print(f"[INFO] 更新: {g['id']} {g['date']} ({', '.join(changes)})")
@@ -464,7 +519,7 @@ def main():
     errors = []
     # 公式サイトを先に読み、最後に手動の日程で足りない分を補う
     for name, scraper in [("BW", scrape_blowinds), ("RUCK", scrape_ruck), ("UNITED", scrape_united),
-                          ("THUNDER", scrape_thunder), ("MANUAL", scrape_manual)]:
+                          ("THUNDER", scrape_thunder), ("VERCOSTA", scrape_vercosta), ("MANUAL", scrape_manual)]:
         try:
             scraped = scraper()
         except Exception as e:
