@@ -7682,5 +7682,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/8aa6694ba787e101e15886e11148f1e6df4c49c8/images/000&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1dvb7t-7e1D18SOKJrEehF",
     "published": "2026-11-11T03:32:59Z",
     "detected_at": "2026-11-11T08:01:07.456918+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51866",
+    "team": "BLOWINDS",
+    "title": "【第16節 岐阜戦】チケット販売スケジュール決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51866",
+    "published": "2026-11-11T09:00:00+09:00",
+    "detected_at": "2026-11-11T09:01:10.008741+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TICKET.jpg"
   }
 ]
