@@ -24,14 +24,6 @@
     "detected_at": "2026-09-28T07:31:01.066142+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:17000120428424130746",
-    "team": "UNITED",
-    "title": "新潟医療福祉大学FC対福井ユナイテッドFC戦 | 化猫的情報番組",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://ameblo.jp/ma-memoire-toujours/entry-12979982004.html&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw06ghiPmJLt3zRzeGajoWOM",
-    "published": "2026-09-27T22:31:36Z",
-    "detected_at": "2026-09-28T07:31:01.066158+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:12869469914827114014",
     "team": "BLOWINDS",
     "title": "【おじゃスポ】B.ONE開幕 ブローウィンズは連勝逃す 岐阜に1勝1敗 ユナイテッドは今季初黒星",
@@ -7619,5 +7611,13 @@
     "source": "ORICON NEWS",
     "image": "https://www.bing.com/th?id=ONUT.pwKltZ2cu3AWJTRHWJ7OAA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-11T22:01:11.905988+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10689679318679327245",
+    "team": "BLOWINDS",
+    "title": "アースフレンズ東京Z vs 福井ブローウィンズ - チケット流通センター",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.ticket.co.jp/sys/d/35387.htm%3Fki%3D247794&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0V2_TYCdD-H6i4mgyTyDKD",
+    "published": "2026-11-11T12:53:16Z",
+    "detected_at": "2026-11-11T22:41:07.625525+00:00"
   }
 ]
