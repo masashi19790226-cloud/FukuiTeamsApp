@@ -50,14 +50,6 @@
     "detected_at": "2026-09-29T07:30:49.233791+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:2785883332388984309",
-    "team": "BLOWINDS",
-    "title": "【おじゃスポ】B.ONE開幕 ブローウィンズは連勝逃す 岐阜に1勝1敗 ユナイテッドは今季初黒星",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://tver.jp/episodes/eppzyhjt0r&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw241FIKDib67KQLcOhGFS8D",
-    "published": "2026-09-28T12:42:47Z",
-    "detected_at": "2026-09-29T07:30:49.233823+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:13352868338055273588",
     "team": "UNITED",
     "title": "福井ユナイテッド【公式】 on X: \"【 10/4 新庄ク戦 】 試合観戦について⚽️ https://t.co ...",
@@ -7555,5 +7547,23 @@
     "detected_at": "2026-11-12T10:01:23.641983+00:00",
     "source": "ブローウィンズ公式",
     "image": "https://www.fukuiblowinds.com/files/user/12.19-20_1920_1080_BWZRSDAY%E3%81%AA%E3%81%97.jpg"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:11981567328380661414",
+    "team": "RAC",
+    "title": "女子Fファイナル第15節‼️ 12月20日（日）17:00 福井丸岡RUCK vs SWHレディース西宮 冠 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fukuiruck/status/2120825184156631214&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw1NboWWdVWaDI4Ygr84BC6R",
+    "published": "2026-11-12T11:24:54Z",
+    "detected_at": "2026-11-12T13:01:12.614109+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51874",
+    "team": "BLOWINDS",
+    "title": "【キャンペーン 第2弾】LINE公式アカウントとB.LEAGUE IDの連携でホームゲーム招待券をプレゼント！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51874",
+    "published": "2026-11-12T09:00:00+09:00",
+    "detected_at": "2026-11-12T13:01:27.614076+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
   }
 ]
