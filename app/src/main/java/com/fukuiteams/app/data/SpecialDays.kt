@@ -44,16 +44,9 @@ data class SpecialDay(
     }
 }
 
-// 組み込みの一覧(GitHub から読めないとき用。scripts/special_days.json と同じ内容)
-private val BUILT_IN = listOf(
-    SpecialDay(
-        date = "2026-12-20",
-        title = "ブローウィンズ×丸岡RUCK コラボデー",
-        note = "同じ週末にセーレン・ドリームアリーナで両チームの試合が予定されています。コラボ企画がありそうです。詳細は公式発表をお待ちください。",
-        teams = listOf(Team.BLOWINDS, Team.RAC),
-        confirmed = false
-    )
-)
+// 組み込みの一覧(GitHub から読めないとき用。scripts/special_days.json と同じ内容)。
+// 2026/12/20 のブローウィンズ×丸岡RUCK コラボデーは出さないことにしたので、今は空
+private val BUILT_IN = emptyList<SpecialDay>()
 
 object SpecialDaysRepository {
     /** いま使っている一覧。画面はこれを見て表示を変える。 */

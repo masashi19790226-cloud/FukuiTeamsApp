@@ -15,6 +15,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
         date = "2026年11月12日",
+        title = "コラボデーの案内を終わりに",
+        items = listOf(
+            "一面の「コラボデー」の特集枠と、日程・試合詳細・ウィジェットの「★コラボ」の印を出さないようにしました(12/20のブローウィンズ×丸岡RUCK)"
+        )
+    ),
+    ChangelogEntry(
+        date = "2026年11月12日",
         title = "ウィジェットにヴェルコスタ",
         items = listOf(
             "ホーム画面のウィジェットに、ヴェルコスタ福井の次の試合を加えました(5チーム)。中立の会場の試合は「中立」と出します。行が詰まって見えるときは、ウィジェットを縦に少し広げてください",
