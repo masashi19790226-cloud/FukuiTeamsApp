@@ -1,13 +1,5 @@
 [
   {
-    "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
-    "team": "RAC",
-    "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2104488912249077940&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3KEaE5JP-doMNG-tCgJnOB",
-    "published": "2026-09-28T15:09:47Z",
-    "detected_at": "2026-09-29T03:30:19.169783+00:00"
-  },
-  {
     "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7000",
     "team": "UNITED",
     "title": "【 10/4 新庄ク戦 】試合観戦について",
@@ -7573,5 +7565,21 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.maruoka-h.ed.jp/archives/11972&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw08u2mxT4apwAj81IsT5fH8",
     "published": "2026-11-12T03:04:13Z",
     "detected_at": "2026-11-12T14:23:36.811352+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1463545004653528583",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【 試合情報 】 いよいよ明日から全国地域SCLが開幕します ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2120811339866415179&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2qscNZYZIOx4RqSIYxlRFG",
+    "published": "2026-11-12T09:36:22Z",
+    "detected_at": "2026-11-12T15:21:10.187403+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17450021044875237693",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【 #Uniteファンディング 】 〈11/11現在〉 支援口数：153口 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2120494254896099611&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2RvPZGXsuTeGl-iJVNUHsj",
+    "published": "2026-11-11T22:37:43Z",
+    "detected_at": "2026-11-12T15:21:10.187446+00:00"
   }
 ]
