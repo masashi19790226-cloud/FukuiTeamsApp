@@ -23,4 +23,6 @@ object NotificationPrefsKeys {
     val LAST_MILESTONE_DATE = stringPreferencesKey("last_milestone_date")
     /** これまでに通知した節目(同じ節目を2回通知しないため。Milestone.key) */
     val NOTIFIED_MILESTONES = stringSetPreferencesKey("notified_milestones")
+    /** 「ヴェルコスタ福井を追加しました」のお知らせを出したか(1回だけ出す) */
+    val NOTICE_VERCOSTA_ADDED = booleanPreferencesKey("notice_vercosta_added")
 }

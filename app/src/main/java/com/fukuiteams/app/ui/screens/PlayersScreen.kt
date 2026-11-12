@@ -318,6 +318,8 @@ fun PlayersScreen(onBack: (() -> Unit)? = null) {
                 RosterSection(
                     roster, sortKey,
                     profileOf = { name -> profiles[profileKey(selectedTeam, name)] },
+                    // 会場での選手コール(ブローウィンズの選手だけ)
+                    callOf = { p -> com.fukuiteams.app.data.playerCallOf(Team.BLOWINDS, p.number, p.name) },
                     pastOf = { name ->
                         val k = com.fukuiteams.app.data.playerNameKey(name)
                         com.fukuiteams.app.data.HistoryRepository.data[selectedTeam]?.players
@@ -516,6 +518,8 @@ private fun RosterSection(
     profileOf: (String) -> PlayerBirthday? = { null },
     // 選手名 → これまでのシーズンごとの成績(自チームのブローウィンズだけ。過去の記録から)
     pastOf: (String) -> com.fukuiteams.app.data.HistoryStats? = { null },
+    // 選手 → 会場での選手コール(自チームのブローウィンズだけ。相手チームは空)
+    callOf: (PlayerStats) -> String = { "" },
     onSortChange: (PlayerSort) -> Unit
 ) {
     // 選んでいる並び順のボタンをもう一度押すと、逆の順番にする
@@ -578,7 +582,7 @@ private fun RosterSection(
             val (missing, known) = sorted.partition { sortValueMissing(it, sortKey, profileOf) }
             known.reversed() + missing
         } else sorted
-        shown.forEach { p -> key(p.number, p.name) { RosterCard(p, sortKey, profileOf(p.name), pastOf(p.name)) } }
+        shown.forEach { p -> key(p.number, p.name) { RosterCard(p, sortKey, profileOf(p.name), pastOf(p.name), callOf(p)) } }
     }
 }
 
@@ -918,6 +922,17 @@ internal fun ProfileLines(p: PlayerBirthday, mark: ProfileMark) {
         // 出身校は長い名前(例「京北高等学校(現・東洋大学京北高等学校)→筑波大学」)もあるので、切らずに折り返す
         p.schoolLine.takeIf { it.isNotBlank() }?.let {
             Text(it, style = MaterialTheme.typography.bodySmall, color = InkSoft, modifier = Modifier.fillMaxWidth())
+        }
+        // 選手本人のX(公式サイトの選手紹介に載っているときだけ。一面の選手紹介から移した)
+        if (p.x.isNotBlank()) {
+            val context = LocalContext.current
+            Text(
+                "▶ この選手のX ›",
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = Accent,
+                modifier = Modifier.clickable { openPlayersUrl(context, p.x) }.padding(vertical = 2.dp)
+            )
         }
     }
 }
@@ -1334,7 +1349,9 @@ private fun RosterCard(
     player: PlayerStats,
     sortKey: PlayerSort = PlayerSort.NUMBER,
     profile: PlayerBirthday? = null,
-    past: com.fukuiteams.app.data.HistoryStats? = null
+    past: com.fukuiteams.app.data.HistoryStats? = null,
+    /** 会場での選手コール(無ければ空) */
+    call: String = ""
 ) {
     var expanded by remember(player.number, player.name) { mutableStateOf(false) }
     val hasStats = listOf(
@@ -1379,6 +1396,18 @@ private fun RosterCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = InkSoft
                 )
+                if (call.isNotBlank()) {
+                    Text(
+                        androidx.compose.ui.text.buildAnnotatedString {
+                            append("コール:")
+                            pushStyle(androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold, color = Accent))
+                            append(call)
+                            pop()
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Ink
+                    )
+                }
 
             }
             if (hasStats) {

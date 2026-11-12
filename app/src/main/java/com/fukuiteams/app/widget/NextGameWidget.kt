@@ -29,6 +29,10 @@ import com.fukuiteams.app.data.isUpcoming
 import com.fukuiteams.app.model.isMainTeamGame
 import com.fukuiteams.app.model.Game
 import com.fukuiteams.app.model.Team
+import com.fukuiteams.app.model.inkColor
+import com.fukuiteams.app.data.GameOutcome
+import com.fukuiteams.app.data.outcome
+import com.fukuiteams.app.data.hasSo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -36,7 +40,7 @@ import kotlinx.coroutines.launch
 
 /**
  * ホーム画面のウィジェット「次の試合」。
- * 4チームそれぞれの次の試合(日付・相手・会場・HOME/AWAY)を1行ずつ出し、その試合向けの招待があれば「招待あり」を出す。
+ * 5チームそれぞれの次の試合(日付・相手・会場・HOME/AWAY/中立)を1行ずつ出し、その試合向けの招待があれば「招待あり」を出す。
  * チーム名の行の右には、前回の結果(例「前回 ●64-89」)も出す。
  * 更新のきっかけ: ウィジェットの定期更新(約1時間)・アプリの一面を開いたとき・招待の定期チェック。
  */
@@ -66,7 +70,8 @@ class NextGameWidget : AppWidgetProvider() {
             Row(Team.BLOWINDS, "ブローウィンズ", R.id.bar_b, R.id.team_b, R.id.date_b, R.id.homeaway_b, R.id.opp_b, R.id.invite_b, R.id.last_b),
             Row(Team.RAC, "丸岡RUCK", R.id.bar_r, R.id.team_r, R.id.date_r, R.id.homeaway_r, R.id.opp_r, R.id.invite_r, R.id.last_r),
             Row(Team.UNITED, "ユナイテッド", R.id.bar_u, R.id.team_u, R.id.date_u, R.id.homeaway_u, R.id.opp_u, R.id.invite_u, R.id.last_u),
-            Row(Team.THUNDER, "ブルーサンダー", R.id.bar_t, R.id.team_t, R.id.date_t, R.id.homeaway_t, R.id.opp_t, R.id.invite_t, R.id.last_t)
+            Row(Team.THUNDER, "ブルーサンダー", R.id.bar_t, R.id.team_t, R.id.date_t, R.id.homeaway_t, R.id.opp_t, R.id.invite_t, R.id.last_t),
+            Row(Team.VERCOSTA, "ヴェルコスタ", R.id.bar_v, R.id.team_v, R.id.date_v, R.id.homeaway_v, R.id.opp_v, R.id.invite_v, R.id.last_v)
         )
 
         private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -88,7 +93,7 @@ class NextGameWidget : AppWidgetProvider() {
                 ?.filterNot { it.isLikelyClosed() } ?: emptyList()
 
             val views = RemoteViews(context.packageName, R.layout.widget_next_game)
-            // 4チームそれぞれの次の試合を1行ずつ
+            // 5チームそれぞれの次の試合を1行ずつ
             ROWS.forEach { row ->
                 val next: Game? = games
                     // トップチームの試合だけ(U-20・サテライトなどの試合は出さない)
@@ -103,18 +108,21 @@ class NextGameWidget : AppWidgetProvider() {
                 if (lastResult == null) {
                     views.setViewVisibility(row.last, View.GONE)
                 } else {
-                    val win = lastResult.myScore > lastResult.opponentScore
-                    val mark = when {
-                        win -> "○"
-                        lastResult.myScore < lastResult.opponentScore -> "●"
-                        else -> "△"
+                    // 勝ち負けは SO(シュートアウト。ヴェルコスタ)も見る
+                    val outcome = lastResult.outcome()
+                    val win = outcome == GameOutcome.WIN
+                    val mark = when (outcome) {
+                        GameOutcome.WIN -> "○"
+                        GameOutcome.LOSE -> "●"
+                        GameOutcome.DRAW -> "△"
                     }
-                    views.setTextViewText(row.last, "前回 $mark${lastResult.myScore}-${lastResult.opponentScore}")
+                    views.setTextViewText(row.last, "前回 $mark${lastResult.myScore}-${lastResult.opponentScore}" + if (lastResult.hasSo) "(SO)" else "")
                     views.setTextColor(row.last, if (win) Color.parseColor("#C8102E") else Color.parseColor("#55504A"))
                     views.setViewVisibility(row.last, View.VISIBLE)
                 }
                 views.setTextViewText(row.teamLabel, row.label)
-                views.setTextColor(row.teamLabel, row.team.color.toArgb())
+                // チーム名はチームの色(黄色のヴェルコスタは、白い背景で読めるよう濃い黄色)
+                views.setTextColor(row.teamLabel, row.team.inkColor.toArgb())
                 if (next == null) {
                     views.setTextViewText(row.date, "次の試合は未発表")
                     views.setTextViewText(row.opponent, "")
@@ -137,11 +145,11 @@ class NextGameWidget : AppWidgetProvider() {
                     views.setTextViewText(row.date, dateText)
                     views.setTextViewText(row.opponent, "vs ${next.opponent}・${next.venue}")
                     views.setViewVisibility(row.homeAway, View.VISIBLE)
-                    views.setTextViewText(row.homeAway, if (next.isHome) "HOME" else "AWAY")
-                    // HOME は赤、AWAY は紺の塗りつぶしに白抜き文字(小さくても見分けやすいように)
+                    views.setTextViewText(row.homeAway, if (next.isHome) "HOME" else if (next.neutral) "中立" else "AWAY")
+                    // HOME は赤、AWAY は紺、中立(ヴェルコスタ)は灰色の塗りつぶしに白抜き文字(小さくても見分けやすいように)
                     views.setInt(
                         row.homeAway, "setBackgroundResource",
-                        if (next.isHome) R.drawable.widget_home_bg else R.drawable.widget_away_bg
+                        if (next.isHome) R.drawable.widget_home_bg else if (next.neutral) R.drawable.widget_neutral_bg else R.drawable.widget_away_bg
                     )
                     views.setTextColor(row.homeAway, Color.WHITE)
                     // 右端の印:コラボ企画など特別な日は「★コラボ」、招待があれば「招待あり」

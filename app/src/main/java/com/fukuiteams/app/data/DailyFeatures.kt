@@ -127,6 +127,12 @@ fun buildFeatureStories(
         out += recordStory(team, today)
         out += nationalStory(team, today)
         if (focus != null && focus.team == team) out += focusStories(team, games, birthdays, today)
+        // 特集期間の追加の記事(対戦成績・歴代得点ランキング・シーズンの歩み・記録・観客数。Web版と同じ)
+        if (focus != null && focus.team == team) out += focusExtraStories(team, birthdays)
+        // 選手紹介を全チームで出す(特集期間のチームは、上の特集の記事に選手紹介があるので出さない。Web版と同じ)
+        if (focus == null || focus.team != team) out += playerIntroStories(team, birthdays, standings, today)
+        // 選手コールの一覧(会場で選手を呼ぶニックネーム。一覧のあるチームだけ)
+        out += callStory(team, players)
     }
     out += topNews(useTeams, news, today)
     out += newsDigest(useTeams, news, today)
@@ -146,7 +152,8 @@ fun buildFeatureStories(
         if (unseen.filter { it.kicker != TOPIC_KICKER }.map { it.kicker }.distinct().size >= MIN_UNSEEN_KINDS) pool = unseen
     }
     val topics = bbs + pool.filter { it.kicker == TOPIC_KICKER }
-    val onePerKind = pool.filter { it.kicker != TOPIC_KICKER }.groupBy { it.kicker }.values.map { group ->
+    // 選手紹介は、ほかの記事とは別に1回で INTRO_SLOTS 人まで出す(ほかの記事の数は減らさない。Web版と同じ)
+    val onePerKind = pool.filter { it.kicker != TOPIC_KICKER && it.kicker != INTRO_KICKER }.groupBy { it.kicker }.values.map { group ->
         group[(seed.absoluteValue + group.size) % group.size]
     }.sortedBy { ((it.kicker.hashCode() + seed * 7919).absoluteValue) % 1000 }
     // 過去の話(過去の実績・あの選手は今・今日は何の日・あの日の一戦・歴代の選手・日本代表の歩み)は、毎日 PAST_SLOTS 本を必ず入れる。
@@ -164,6 +171,11 @@ fun buildFeatureStories(
     }
     // 過去の話は2本目・5本目あたりに入れる(先頭は今の話題)
     past.forEachIndexed { k, story -> result.add(minOf(1 + k * 3, result.size), story) }
+    // 選手紹介:見ていない選手を先に。足りなければ見た選手も。ほかの記事の間に散らして入れる
+    val fresh = pickIntros(pool.filter { it.kicker == INTRO_KICKER }, seed, INTRO_SLOTS)
+    val intros = if (fresh.size >= INTRO_SLOTS) fresh
+        else fresh + pickIntros(out.filter { it.kicker == INTRO_KICKER && it !in fresh }, seed, INTRO_SLOTS - fresh.size)
+    intros.forEachIndexed { k, story -> result.add(minOf(1 + k * 3, result.size), story) }
     return withFallbackPhotos(result, photoPool(players, birthdays), seed, keepWithoutPhoto)
 }
 
@@ -1481,10 +1493,254 @@ private fun localPlayers(team: Team, birthdays: List<PlayerBirthday>): List<Feat
     )
 }
 
+// ---------- 特集期間の追加の記事(Web版の focusExtraStories と同じ) ----------
+// 同じ記事が何度も出ないように、過去の試合の記録から、種類ごとに何本も作る(見た記事は出さない仕組みで入れ替わる)
+
+private fun winLabel(w: Int, d: Int, l: Int) = "${w}勝${d}分${l}敗"
+private data class Wdl(val w: Int, val d: Int, val l: Int, val gf: Int, val ga: Int)
+private fun wdl(ms: List<HistoryMatch>) = Wdl(
+    ms.count { it.outcome == GameOutcome.WIN }, ms.count { it.outcome == GameOutcome.DRAW }, ms.count { it.outcome == GameOutcome.LOSE },
+    ms.sumOf { it.myScore }, ms.sumOf { it.opponentScore }
+)
+
+private fun focusExtraStories(team: Team, birthdays: List<PlayerBirthday>): List<FeatureStory> {
+    val out = mutableListOf<FeatureStory>()
+    val name = team.shortName
+    val data = HistoryRepository.data[team] ?: return out
+    val matches = data.matches.filterNot { it.isExhibition }
+    if (matches.isEmpty()) return out
+    fun key(n: String) = n.replace(Regex("[\\s　]"), "")
+    val nowNames = birthdays.filter { it.team == team }.map { key(it.name) }.toSet()
+    val src = "\n※女子Fリーグ公式の記録より"
+    fun comma(n: Int) = "%,d".format(n)
+
+    // 対戦成績:相手ごとの通算成績(2試合以上戦った相手)
+    matches.groupBy { it.opponent }.forEach { (opp, ms) ->
+        if (ms.size < 2) return@forEach
+        val r = wdl(ms)
+        // マイナスの印象にならないように、負け越している相手は出さない
+        if (r.l > r.w) return@forEach
+        val best = ms.filter { it.outcome == GameOutcome.WIN }.maxByOrNull { it.myScore - it.opponentScore }
+        val last = ms.last()
+        out += FeatureStory(
+            kicker = "対戦成績", team = team, headline = "${opp}とは通算${winLabel(r.w, r.d, r.l)}",
+            body = "${name}は${opp}とこれまで公式戦で${ms.size}回対戦し、${winLabel(r.w, r.d, r.l)}。得点${r.gf}・失点${r.ga}です。" +
+                (if (best != null) "いちばん大きな勝ちは${best.dateLabel}の${best.scoreLabel}。" else "") +
+                // 直近の対戦が負けのときは書かない
+                (if (last.outcome != GameOutcome.LOSE) "直近の対戦は${last.dateLabel}で${last.scoreLabel}でした。" else "") + src,
+            bigNumber = "${ms.size}", bigUnit = "試合", url = last.url.ifBlank { null }
+        )
+    }
+
+    // 歴代得点ランキング:通算得点の上位10人(1人ずつ)
+    val ranked = data.players.filter { it.goals > 0 }.sortedWith(compareByDescending<HistoryPlayer> { it.goals }.thenBy { it.apps }).take(10)
+    ranked.forEach { x ->
+        val rank = ranked.indexOfFirst { it.goals == x.goals } + 1
+        out += FeatureStory(
+            kicker = "歴代得点ランキング", team = team, headline = "歴代${rank}位、${x.name}の通算${x.goals}得点",
+            body = "${name}の公式戦の通算得点で、${x.name}選手は${rank}位。${x.seasonsLabel}に${x.apps}試合に出場し、${x.goals}得点を挙げました。" +
+                (if (key(x.name) in nowNames) "今もチームでプレーしています。会場で記録が伸びる瞬間に立ち会えるかもしれません。" else "") + src,
+            bigNumber = "$rank", bigUnit = "位"
+        )
+    }
+
+    // シーズンの歩み:シーズンごとの成績と、そのシーズンのチーム内の得点王
+    matches.groupBy { it.season }.forEach { (season, ms) ->
+        val r = wdl(ms)
+        // 負け越したシーズンは出さない
+        if (r.l > r.w) return@forEach
+        val goals = linkedMapOf<String, Int>()
+        ms.forEach { m -> m.scorers.forEach { (n, g) -> goals[n] = (goals[n] ?: 0) + g } }
+        val topG = goals.values.maxOrNull() ?: 0
+        val tops = goals.filter { it.value == topG && it.value > 0 }.keys
+        out += FeatureStory(
+            kicker = "シーズンの歩み", team = team, headline = "${season}シーズンは${winLabel(r.w, r.d, r.l)}",
+            body = "${name}の${season}シーズンの公式戦は${ms.size}試合で${winLabel(r.w, r.d, r.l)}、得点${r.gf}・失点${r.ga}。" +
+                (if (tops.isNotEmpty()) "チームでいちばん点を取ったのは${tops.joinToString("・")}選手(${topG}得点)でした。" else "") + src,
+            bigNumber = "${r.w}", bigUnit = "勝"
+        )
+    }
+
+    // 記録で見る:いちばんの大勝・1試合の最多得点・1人の1試合の最多得点・ハットトリック・最長の連勝・通算成績
+    val bigWin = matches.filter { it.outcome == GameOutcome.WIN }.maxByOrNull { it.myScore - it.opponentScore }
+    if (bigWin != null) {
+        out += FeatureStory(
+            kicker = "記録で見る", team = team, headline = "最大の得点差は${bigWin.myScore - bigWin.opponentScore}点",
+            body = "${name}の公式戦でいちばん大きな勝ちは、${bigWin.dateLabel}の${bigWin.opponent}戦(${bigWin.scoreLabel})。" +
+                (if (bigWin.scorers.isNotEmpty()) "${bigWin.scorers.size}人がゴールを決めました。" else "") + src,
+            bigNumber = "${bigWin.myScore - bigWin.opponentScore}", bigUnit = "点差", url = bigWin.url.ifBlank { null }
+        )
+    }
+    val mostGoals = matches.maxByOrNull { it.myScore }
+    if (mostGoals != null && mostGoals !== bigWin) {
+        out += FeatureStory(
+            kicker = "記録で見る", team = team, headline = "1試合の最多得点は${mostGoals.myScore}点",
+            body = "${name}が公式戦の1試合でいちばん多く点を取ったのは、${mostGoals.dateLabel}の${mostGoals.opponent}戦(${mostGoals.scoreLabel})です。" + src,
+            bigNumber = "${mostGoals.myScore}", bigUnit = "点", url = mostGoals.url.ifBlank { null }
+        )
+    }
+    data class Solo(val n: String, val g: Int, val m: HistoryMatch)
+    val solo = matches.flatMap { m -> m.scorers.map { (n, g) -> Solo(n, g, m) } }
+    val soloTop = solo.maxByOrNull { it.g }
+    if (soloTop != null && soloTop.g >= 3) {
+        val same = solo.filter { it.g == soloTop.g }
+        out += FeatureStory(
+            kicker = "記録で見る", team = team, headline = "1人で1試合${soloTop.g}得点",
+            body = "${name}の選手が公式戦の1試合で決めた最多得点は${soloTop.g}点。" +
+                same.take(3).joinToString("、") { "${it.n}選手(${it.m.dateLabel}の${it.m.opponent}戦)" } + "が記録しています。" + src,
+            bigNumber = "${soloTop.g}", bigUnit = "点"
+        )
+    }
+    val hat = solo.filter { it.g >= 3 }
+    if (hat.isNotEmpty()) {
+        val byP = hat.groupBy { it.n }.map { it.key to it.value.size }.sortedByDescending { it.second }
+        out += FeatureStory(
+            kicker = "記録で見る", team = team, headline = "ハットトリックは通算${hat.size}回",
+            body = "${name}の公式戦で、1人が1試合に3点以上を決めたハットトリックはこれまで${hat.size}回。" +
+                "いちばん多いのは${byP[0].first}選手の${byP[0].second}回です。" + src,
+            bigNumber = "${hat.size}", bigUnit = "回"
+        )
+    }
+    var run = 0
+    var best = 0
+    var bestEnd: HistoryMatch? = null
+    matches.forEach { m -> if (m.outcome == GameOutcome.WIN) { run++; if (run > best) { best = run; bestEnd = m } } else run = 0 }
+    val be = bestEnd
+    if (best >= 3 && be != null) {
+        out += FeatureStory(
+            kicker = "記録で見る", team = team, headline = "最長の連勝は${best}連勝",
+            body = "${name}の公式戦の最長の連勝は${best}連勝(${be.dateLabel}の${be.opponent}戦まで)。連勝の記録が伸びていく試合を、会場で見届けてください。" + src,
+            bigNumber = "$best", bigUnit = "連勝"
+        )
+    }
+    val r = wdl(matches)
+    out += FeatureStory(
+        kicker = "記録で見る", team = team, headline = "公式戦の通算成績は${r.w}勝",
+        body = "${name}の女子Fリーグでの公式戦は、これまで${matches.size}試合で${winLabel(r.w, r.d, r.l)}。通算の得点は${r.gf}、失点は${r.ga}です。" + src,
+        bigNumber = "${r.w}", bigUnit = "勝"
+    )
+
+    // 観客数で見る:シーズンごとのホームの平均観客数
+    matches.filter { it.homeAway == "H" && (it.visitors ?: 0) > 0 }.groupBy { it.season }.forEach { (season, ms) ->
+        val avg = ms.map { it.visitors!! }.average().toInt()
+        val top = ms.maxByOrNull { it.visitors!! }!!
+        out += FeatureStory(
+            kicker = "観客数で見る", team = team,
+            headline = if (ms.size == 1) "${season}シーズンのホームは${comma(avg)}人" else "${season}シーズンのホームは平均${comma(avg)}人",
+            body = (if (ms.size == 1)
+                "${name}の${season}シーズンのホームゲーム(観客数が分かる試合)は${top.dateLabel}の${top.opponent}戦で、観客は${comma(top.visitors!!)}人でした。"
+            else "${name}の${season}シーズンのホームゲームは${ms.size}試合で、観客は1試合平均${comma(avg)}人。" +
+                "いちばん多かったのは${top.dateLabel}の${top.opponent}戦で${comma(top.visitors!!)}人でした。") + "会場の声援がチームの力になります。" + src,
+            bigNumber = comma(avg), bigUnit = "人"
+        )
+    }
+    return out
+}
+
+// ---------- 選手紹介(全チーム。1回で3人まで。Web版の playerIntroStories と同じ) ----------
+
+private const val INTRO_KICKER = "選手紹介"
+private const val INTRO_SLOTS = 3
+private val INTRO_SOURCE = mapOf(
+    Team.BLOWINDS to "公式サイトの選手紹介・Bリーグ公式の記録",
+    Team.RAC to "公式サイトの選手紹介・女子Fリーグ公式の記録",
+    Team.UNITED to "公式サイトの選手紹介・試合結果",
+    Team.THUNDER to "公式サイトの選手紹介・リーグH公式の記録",
+    Team.VERCOSTA to "ホッケージャパンリーグ公式の選手紹介・記録"
+)
+
+/** 選手紹介をn人選ぶ。チームごとに開くたびに別の選手、チームが偏らないよう順番に */
+private fun pickIntros(list: List<FeatureStory>, seed: Int, n: Int): List<FeatureStory> {
+    if (n <= 0 || list.isEmpty()) return emptyList()
+    val byTeam = list.groupBy { it.team }.values
+        .map { g -> val r = seed.absoluteValue % g.size; g.drop(r) + g.take(r) }
+        .sortedBy { g -> ((g[0].team?.name.hashCode() + seed * 7919).absoluteValue) % 1000 }
+    val out = mutableListOf<FeatureStory>()
+    var i = 0
+    while (out.size < n && byTeam.any { i < it.size }) {
+        for (g in byTeam) if (out.size < n && i < g.size) out += g[i]
+        i++
+    }
+    return out
+}
+
+/** 選手紹介:今の選手(公式サイトの選手紹介)を1人ずつ。ブローウィンズは会場での選手コールも */
+/** 選手紹介のもとにする選手(公式サイトの選手紹介。ヴェルコスタはホッケージャパンリーグ公式の選手の一覧) */
+private data class IntroSource(
+    val name: String, val number: String, val position: String, val photo: String,
+    val birthday: LocalDate?, val height: String, val hometown: String, val reading: String, val x: String,
+    /** ヴェルコスタの今季の出場試合数と得点(選手の一覧から) */
+    val games: Int? = null, val goals: Int? = null
+)
+
+/** 選手紹介:今の選手を1人ずつ。ブローウィンズは会場での選手コールも。ヴェルコスタは誕生日などのデータが無いので選手の一覧から(Web版と同じ) */
+private fun playerIntroStories(team: Team, birthdays: List<PlayerBirthday>, standings: Map<String, LeagueStandings>, today: LocalDate): List<FeatureStory> {
+    val name = team.shortName
+    val data = HistoryRepository.data[team]
+    fun key(n: String) = n.replace(Regex("[\\s　]"), "")
+    val histPlayers = data?.players.orEmpty()
+    val latest = data?.national.orEmpty().filter { it.players.isNotEmpty() }.maxByOrNull { it.date }
+    val natNames = (if (latest != null && latest.date >= today.minusDays(183).toString()) latest.players else emptyList()).map { key(it) }.toSet()
+    val sources = if (team == Team.VERCOSTA)
+        standings[team.name]?.scorers?.rows.orEmpty().filter { it.team.contains("ヴェルコスタ") }.map {
+            IntroSource(it.name, it.number, it.position, it.photo, null, "", "", "", "", it.games, it.goals)
+        }
+    else
+        birthdays.filter { it.team == team }.map { IntroSource(it.name, it.number, it.position, it.photo, it.birthday, it.height, it.hometown, it.reading, it.x) }
+    return sources.sortedWith(compareBy<IntroSource> { it.number.toIntOrNull() ?: 999 }.thenBy { it.name }).map { b ->
+        val hp = histPlayers.firstOrNull { key(it.name) == key(b.name) }
+        val age = b.birthday?.let { bd -> today.year - bd.year - (if (today.monthValue < bd.monthValue || (today.monthValue == bd.monthValue && today.dayOfMonth < bd.dayOfMonth)) 1 else 0) }
+        val head = (if (b.number.isNotBlank()) "#${b.number} " else "") + b.name
+        val prof = listOfNotNull(age?.let { "${it}歳" }, b.height.takeIf { it.isNotBlank() }?.let { "身長${it}cm" }, b.position.takeIf { it.isNotBlank() }).joinToString("・")
+        val call = playerCallOf(team, b.number, b.name)
+        // ヴェルコスタで過去の記録に無い選手は、今季の数字(過去の記録にいれば今季も含めた通算を出すので、重ねない)
+        val season = if (team == Team.VERCOSTA && !(hp != null && hp.apps > 0) && b.games != null) "今季は${b.games}試合に出場して${b.goals ?: 0}得点。" else ""
+        FeatureStory(
+            photo = b.photo,
+            photoCaption = if (b.photo.isNotBlank()) head else null,
+            kicker = INTRO_KICKER,
+            team = team,
+            headline = if (b.hometown.isNotBlank()) "${head}、${b.hometown}出身" else head,
+            body = (if (b.reading.isNotBlank()) "${b.name}(${b.reading})。" else "${b.name}。") + (if (prof.isNotBlank()) "${prof}。" else "") +
+                (if (hp != null && hp.apps > 0) "${name}では${hp.seasonsLabel}に公式戦${hp.apps}試合に出場し${hp.goals}${goalUnit(team)}。" else "") + season +
+                (if (key(b.name) in natNames) "${latest!!.kind}にも選ばれています。" else "") +
+                (if (call.isNotBlank()) "会場でのコールは「$call」。" else "") +
+                (if (b.number.isNotBlank()) "会場ではぜひ背番号${b.number}に注目を。" else "会場でぜひ注目してください。") +
+                "\n※${INTRO_SOURCE[team].orEmpty()}" + (if (call.isNotBlank()) "・${PLAYER_CALLS[team]?.label.orEmpty()}" else "") + "より",
+            bigNumber = b.number.ifBlank { null },
+            bigUnit = if (b.number.isNotBlank()) "番" else null,
+            playerUrl = b.x
+        )
+    }
+}
+// ---------- 選手コール(Web版の callStory と同じ) ----------
+
+/** 選手コール:会場で選手を呼ぶニックネームの一覧(今の選手名簿にいる選手だけ。名簿が無ければ一覧のとおり) */
+private fun callStory(team: Team, players: Map<String, TeamPlayers>): List<FeatureStory> {
+    val c = PLAYER_CALLS[team] ?: return emptyList()
+    val roster = players[team.name]?.players.orEmpty()
+    val list = c.players.filter { x -> roster.isEmpty() || roster.any { it.number == x.number && playerCallOf(team, it.number, it.name) == x.call } }
+    if (list.isEmpty()) return emptyList()
+    val body = list.joinToString("、") { "#${it.number} ${it.name}「${it.call}」" } +
+        (if (c.staff.isNotEmpty()) "、" + c.staff.joinToString("、") { "${it.role} ${it.name}「${it.call}」" } else "") + "。" +
+        (if (c.team.isNotEmpty()) c.team.joinToString("、") { "${it.label}は「${it.call}」" } + "。" else "") +
+        "覚えて会場で一緒に声を出しましょう。\n※${team.shortName}の${c.label}より"
+    return listOf(
+        FeatureStory(
+            kicker = "選手コール", team = team, headline = "${team.shortName}の選手コール、覚えて会場へ",
+            body = body, bigNumber = "${list.size}", bigUnit = "人"
+        )
+    )
+}
+
 // ---------- 特集期間だけの記事(Web版の focusStories と同じ) ----------
 
 /** 特集期間だけの記事の種類(先に並べる) */
-private val FOCUS_KICKERS = setOf("観戦ガイド", "選手紹介", "観客数で見る", "代表候補", "フットサル入門", "新しい顔")
+private val FOCUS_KICKERS = setOf(
+    "観戦ガイド", "選手紹介", "観客数で見る", "代表候補", "フットサル入門", "新しい顔",
+    // 特集期間の追加の記事(focusExtraStories)
+    "対戦成績", "歴代得点ランキング", "シーズンの歩み", "記録で見る"
+)
 
 /** フットサル入門(公式ルールの基本。毎日1本):見出し・本文・大きな数字・単位 */
 private val FUTSAL_TIPS = listOf(

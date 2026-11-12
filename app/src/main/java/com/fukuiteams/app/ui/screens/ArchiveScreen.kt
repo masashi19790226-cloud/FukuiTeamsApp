@@ -1405,6 +1405,7 @@ private fun HistoryPlayerCard(
                 else when (team) {
                     Team.BLOWINDS -> "いま:Bリーグのクラブには所属していません"
                     Team.RAC -> "いま:女子Fリーグのクラブには所属していません"
+                    Team.VERCOSTA -> "いま:ホッケージャパンリーグのチームには所属していません"
                     else -> "いま:リーグHのチームには所属していません"
                 },
                 style = MaterialTheme.typography.bodySmall,

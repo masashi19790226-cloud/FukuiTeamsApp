@@ -26,6 +26,8 @@ import com.fukuiteams.app.ui.components.SourceTag
 import com.fukuiteams.app.data.sourceLabel
 import androidx.compose.runtime.collectAsState
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import com.fukuiteams.app.data.notificationDataStore
 import com.fukuiteams.app.ui.components.photoCaption
 import com.fukuiteams.app.ui.components.NewspaperPhoto
 import com.fukuiteams.app.data.recordedWatchMethod
@@ -208,6 +210,34 @@ fun HomeScreen(
     // 特集「掲示板の話題」(メニューでオフにできる)
     var bbsBuzz by remember { mutableStateOf<BbsBuzz?>(null) }
     val bbsSettings by remember { BbsPrefs.flow(appContext) }.collectAsState<BbsSettings, BbsSettings?>(initial = null)
+
+    // 「ヴェルコスタ福井を追加しました」のお知らせ(1回だけ。ヴェルコスタの通知ははじめはオフなので、オンにする方法も伝える)
+    val noticeScope = rememberCoroutineScope()
+    val vercostaNoticeShown by appContext.notificationDataStore.data.collectAsState<Preferences, Preferences?>(initial = null)
+    fun markVercostaNotice() {
+        noticeScope.launch {
+            appContext.notificationDataStore.edit { it[com.fukuiteams.app.data.NotificationPrefsKeys.NOTICE_VERCOSTA_ADDED] = true }
+        }
+    }
+    val prefsLoaded = vercostaNoticeShown
+    if (prefsLoaded != null && prefsLoaded[com.fukuiteams.app.data.NotificationPrefsKeys.NOTICE_VERCOSTA_ADDED] != true) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { markVercostaNotice() },
+            title = { Text("ヴェルコスタ福井を追加しました") },
+            text = {
+                Text(
+                    "ホッケー日本リーグ(サムライリーグD1)のヴェルコスタ福井の試合日程・結果・順位・選手・過去の記録が見られるようになりました。\n\n" +
+                        "ヴェルコスタの通知(ニュース・試合開始など)は、はじめはオフです。受け取りたいときは、通知の設定でオンにしてください。"
+                )
+            },
+            confirmButton = {
+                androidx.compose.material3.TextButton(onClick = { markVercostaNotice(); onOpenNotifications() }) { Text("通知の設定を開く") }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(onClick = { markVercostaNotice() }) { Text("閉じる") }
+            }
+        )
+    }
 
     // アプリのすべての情報(日程・結果・招待・ニュース・展望・選手・順位・試合情報ページなど)を読み直す。
     // 選手や順位はこの画面では使わないが、ほかのタブに切り替えたときに新しい内容を出せるよう一緒に読み直す
@@ -406,15 +436,17 @@ fun HomeScreen(
                 item { AchievementCard(achievements) }
             }
 
-            // 一面の「次の試合」。次の試合の日にほかのチームの試合もあれば、同じ日の試合をすべて並べる
-            // (並びは開始時刻順。「時間未定」の試合は後ろ)。本日の試合は上に出しているので、ここには出さない
+            // 一面の「次の試合」。3日以内(あしたから3日後まで)の試合を、チームごとにいちばん近い1試合だけ並べる。
+            // 3日以内に試合が無ければ、いちばん近い日の試合(同じ日のほかのチームの試合も)。Web版と同じ
+            // (並びは開始時刻順。「時間未定」の試合はその日の後ろ)。本日の試合は上に出しているので、ここには出さない
             val todayIds = todayGames.map { it.id }.toSet()
             val upcoming = mainGames()
                 .filter { (selectedTeam == null || it.team == selectedTeam) && it.isUpcoming() && it.id !in todayIds }
             val firstDay = upcoming.minByOrNull { it.sortKey }?.sortKey?.take(8)
-            val nextGames = upcoming
-                .filter { firstDay != null && it.sortKey.take(8) == firstDay }
-                .sortedBy { g -> if (Regex("""\d{1,2}:\d{2}""").matches(g.timeLabel.trim())) g.sortKey else g.sortKey.take(8) + "-9999" }
+            val within3 = upcoming.filter { (it.daysUntil() ?: 99L) in 1L..3L }
+                .groupBy { it.team }.values.mapNotNull { list -> list.minByOrNull { it.sortKey } }
+            val nextGames = (if (within3.isNotEmpty()) within3 else upcoming.filter { firstDay != null && it.sortKey.take(8) == firstDay })
+                .sortedWith(compareBy<Game>({ g -> if (Regex("""\d{1,2}:\d{2}""").matches(g.timeLabel.trim())) g.sortKey else g.sortKey.take(8) + "-9999" }, { it.team.ordinal }))
             // 本日の試合があって、そのあとの試合がまだ無いときは「次の試合」の欄を出さない
             if (nextGames.isNotEmpty() || todayIds.isEmpty()) {
                 item {
@@ -962,7 +994,12 @@ private fun TwoColumnFront(
                 .padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            SectionLabel(if (nextGames.size > 1) "次の試合(同じ日に${nextGames.size}試合)" else "次の試合")
+            val oneDay = nextGames.map { it.sortKey.take(8) }.distinct().size <= 1
+            SectionLabel(
+                if (nextGames.size <= 1) "次の試合"
+                else if (oneDay) "次の試合(同じ日に${nextGames.size}試合)"
+                else "次の試合(3日以内・${nextGames.size}チーム)"
+            )
             if (nextGames.isEmpty()) {
                 Text("予定はまだ発表されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
             }
@@ -1140,13 +1177,32 @@ private fun PreviewSection(game: Game, preview: GamePreview) {
             ThinRule(modifier = Modifier.padding(vertical = 6.dp))
             SectionLabel("相手の注目選手")
             val oppPhotos = TeamPhotos.forOpponent(game)
-            if (preview.keyPlayers.isNotEmpty()) {
-                preview.keyPlayers.forEach { KeyPlayerRow(it, TeamPhotos.findByName(oppPhotos, it.name)) }
+            // 福井のチームに以前いた選手(元所属)を先頭に出す。注目選手に入っていない元所属の選手も加える(Web版と同じ)
+            val formers = com.fukuiteams.app.data.formerPlayersAt(game)
+            fun formerOf(name: String) = formers.firstOrNull { com.fukuiteams.app.data.formerNameKey(it.name) == com.fukuiteams.app.data.formerNameKey(name) }
+            val keys = preview.keyPlayers
+            val rows: List<Pair<KeyPlayer, com.fukuiteams.app.data.FormerPlayer?>> =
+                keys.filter { formerOf(it.name) != null }.map { it to formerOf(it.name) } +
+                    formers.filter { f -> keys.none { com.fukuiteams.app.data.formerNameKey(it.name) == com.fukuiteams.app.data.formerNameKey(f.name) } }
+                        .map { f -> KeyPlayer(f.number, f.name, f.position, f.stat) to f } +
+                    keys.filter { formerOf(it.name) == null }.map { it to null }
+            if (rows.isNotEmpty()) {
+                rows.forEach { (k, f) -> KeyPlayerRow(k, TeamPhotos.findByName(oppPhotos, k.name), f, game.team) }
                 // 注目選手のほかの相手の選手の写真
-                val others = oppPhotos.filter { p -> preview.keyPlayers.none { TeamPhotos.findByName(listOf(p), it.name) != null } }
+                val others = oppPhotos.filter { p -> rows.none { TeamPhotos.findByName(listOf(p), it.first.name) != null } }
                 PlayerPhotoRow(others, count = 4, photoWidth = 52.dp, photoHeight = 65.dp)
-                if (preview.playersNote.isNotBlank()) {
+                if (formers.isNotEmpty()) {
+                    Text(
+                        "※元${game.team.shortName}の選手を先頭に出しています(元所属は、歴代の選手の「いま」の所属" +
+                            (if (game.team == Team.RAC) "・退団や移籍のお知らせ" else "") + "から)",
+                        style = MaterialTheme.typography.labelSmall, color = InkSoft
+                    )
+                }
+                if (keys.isNotEmpty() && preview.playersNote.isNotBlank()) {
                     Text("※${preview.playersNote}", style = MaterialTheme.typography.labelSmall, color = InkSoft)
+                }
+                if (keys.isEmpty()) {
+                    Text("※相手の選手データは公開されていないため、元所属の選手だけを出しています", style = MaterialTheme.typography.labelSmall, color = InkSoft)
                 }
             } else {
                 Text("相手の選手データは公開されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
@@ -1324,7 +1380,7 @@ private fun PreviewTable(preview: GamePreview) {
 }
 
 @Composable
-private fun KeyPlayerRow(player: KeyPlayer, photo: PhotoRef? = null) {
+private fun KeyPlayerRow(player: KeyPlayer, photo: PhotoRef? = null, former: com.fukuiteams.app.data.FormerPlayer? = null, team: Team? = null) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.padding(vertical = 2.dp)) {
         // 相手の選手の写真が分かれば左に出す
@@ -1334,8 +1390,20 @@ private fun KeyPlayerRow(player: KeyPlayer, photo: PhotoRef? = null) {
         Column(modifier = Modifier.weight(1f)) {
             Text(player.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold,
                 maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(listOf(player.position, player.stat).filter { it.isNotBlank() }.joinToString("・"),
-                style = MaterialTheme.typography.bodySmall, color = InkSoft)
+            // 元所属の選手は「元ブローウィンズ(福井での記録:…)」
+            if (former != null && team != null) {
+                Text(
+                    androidx.compose.ui.text.buildAnnotatedString {
+                        pushStyle(androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold, color = Accent))
+                        append("元${team.shortName}")
+                        pop()
+                        if (former.note.isNotBlank()) append("(${former.note})")
+                    },
+                    style = MaterialTheme.typography.bodySmall, color = InkSoft
+                )
+            }
+            val sub = listOf(player.position, player.stat).filter { it.isNotBlank() }.joinToString("・")
+            if (sub.isNotBlank()) Text(sub, style = MaterialTheme.typography.bodySmall, color = InkSoft)
         }
     }
 }
@@ -1747,10 +1815,11 @@ private fun FeatureHero(
                 // (写真より本文が長いときは、写真の下から全幅で続ける。下に空きができないように)
                 Headline(story.headline, fontSize = 21)
                 FeatureWrapBody(story, results, standings)
-                // ブローウィンズの選手の記事は、その選手の Bリーグ公式ページ(ハイライト動画)へ。選手紹介は、その選手本人のXへ
-                if (story.playerUrl.isNotBlank()) {
+                // ブローウィンズの選手の記事は、その選手の Bリーグ公式ページ(ハイライト動画)へ。
+                // 選手本人のXは「選手」の画面のプロフィールに出す(Web版と同じ)
+                if (story.playerUrl.isNotBlank() && !story.playerUrl.startsWith("https://x.com/")) {
                     Text(
-                        if (story.playerUrl.startsWith("https://x.com/")) "▶ この選手のX ›" else "▶ この選手のハイライト動画(Bリーグ公式) ›",
+                        "▶ この選手のハイライト動画(Bリーグ公式) ›",
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
                         color = Accent,

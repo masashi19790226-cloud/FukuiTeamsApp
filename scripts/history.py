@@ -792,6 +792,57 @@ def _add_birthday_height(p, page: str):
     p["bd_checked"] = True
 
 
+def vercosta_players_now(fetch, players, old_players=None, recheck_days=7):
+    """ヴェルコスタの元選手のいまのチーム:ホッケージャパンリーグ公式のほかのチームの選手の一覧(/teams?teamID=…)に、
+    同じ選手の番号(pid。チームが変わっても同じ)があれば、そのチーム(now_team)。
+    一度調べたら recheck_days 日たつまで前回の分を使う(ほかのチームの一覧を毎回十数ページ読まないように)。
+    読めなかったチームがあるときは、見つからなかった選手は前回の分のままにする(「所属していない」と誤って出さない)"""
+    old = {p.get("pid"): p for p in old_players or [] if p.get("pid")}
+    today = datetime.now(JST).date()
+    formers = [p for p in players if p.get("pid") and p.get("now") is False]
+    def fresh(o):
+        try:
+            return (today - datetime.fromisoformat(o.get("now_checked", "")).date()).days < recheck_days
+        except ValueError:
+            return False
+    if all(fresh(old.get(p["pid"]) or {}) for p in formers):
+        for p in formers:
+            o = old.get(p["pid"]) or {}
+            for k in ("now_team", "now_checked"):
+                if k in o:
+                    p[k] = o[k]
+        return players
+    where, failed = {}, 0
+    for tid, (tname, _) in hjl.TEAMS.items():
+        if tid == hjl.TEAM_ID:
+            continue
+        try:
+            rows = hjl.roster(fetch(f"{hjl.HJL}/teams?teamID={tid}&teamYear={today.year}"))
+        except Exception as e:
+            failed += 1
+            print(f"[WARN] 過去の記録: ホッケージャパンリーグの {tname} の選手の一覧を読めませんでした {e!r}")
+            continue
+        for r in rows:
+            where.setdefault(r["pid"], tname)
+    found = 0
+    for p in formers:
+        team = where.get(p["pid"])
+        if team:
+            p["now_team"] = team
+            p["now_checked"] = today.isoformat()
+            found += 1
+        elif failed:
+            o = old.get(p["pid"]) or {}
+            for k in ("now_team", "now_checked"):
+                if k in o:
+                    p[k] = o[k]
+        else:
+            p["now_team"] = ""
+            p["now_checked"] = today.isoformat()
+    print(f"[過去の記録] ヴェルコスタ: 元選手{len(formers)}人のうち、いまほかのチームにいる選手 {found}人" + (f"(読めなかったチーム {failed})" if failed else ""))
+    return players
+
+
 def thunder_players_now(fetch, players, old_players=None, recheck_days=7):
     """ブルーサンダーの元選手の「あの選手は今」と写真:リーグH公式の選手ページ(/player/番号/)。
     見出し「高光 凌（大崎オーソル埼玉） - …」のかっこの中が今のチーム、写真は /files/<年>/player/<チーム>/p<番号>.jpg。
@@ -1539,6 +1590,10 @@ def build(fetch, post_json, old, current=None):
             except Exception as e:
                 print(f"[WARN] 過去の記録: ヴェルコスタの選手の一覧の取得に失敗 {e!r}")
             players = vercosta_players(got, now_keys)
+            try:
+                players = vercosta_players_now(fetch, players, (old_teams.get("VERCOSTA") or {}).get("players"))
+            except Exception as e:
+                print(f"[WARN] 過去の記録: ヴェルコスタの元選手のいまのチームの取得に失敗 {e!r}")
             teams["VERCOSTA"] = {"source": "ホッケージャパンリーグ公式の日程・結果と試合詳細", "source_url": hjl.SCHEDULE_URL,
                                  "matches": got, "players": players, "from_year": hjl.PAST_FROM_YEAR}
             print(f"[過去の記録] ヴェルコスタ: 選手{len(players)}人")

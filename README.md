@@ -101,7 +101,7 @@ https://github.com/masashi19790226-cloud/FukuiTeamsApp/releases/latest/download/
 
 Web版「ふくスポ」(FukuiTeamsWeb)とAndroid版(2026年11月11日から)に出すヴェルコスタ福井(男子ホッケー・ホッケー日本リーグ サムライリーグD1)のデータも、
 このリポジトリの自動更新(`.github/workflows/check-invitations.yml`)で作っています。
-Android版では `Team.VERCOSTA`(黄色。文字や線は濃い黄色 `TeamVercostaInk`、黄色の上の文字は黒)。通知は、はじめはオフ(`NotificationPrefsKeys.teamDefault`)。ウィジェットは4チームのまま。
+Android版では `Team.VERCOSTA`(黄色。文字や線は濃い黄色 `TeamVercostaInk`、黄色の上の文字は黒)。通知は、はじめはオフ(`NotificationPrefsKeys.teamDefault`)。ウィジェットはヴェルコスタを加えた5チーム(中立の試合は「中立」の札)。初回だけ一面に「ヴェルコスタ福井を追加しました」のお知らせを出す(`NOTICE_VERCOSTA_ADDED`)。
 
 - 読み取りの部品は `scripts/hjl.py`(ホッケージャパンリーグ公式 hjl-hockey.tv。`leagueh.py` と同じ形)
 - `data/games.json`:`team` が `vercosta` の試合(IDは `vc01`〜)。中立の会場の試合は `neutral: true`(このとき `is_home` は false)、
