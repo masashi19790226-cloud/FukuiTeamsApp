@@ -7541,5 +7541,15 @@
     "source": "中日新聞Web",
     "image": "https://www.bing.com/th?id=ONUT.LCALZR-G3oz8sIB3Com0fg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-12T06:41:13.231629+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51828",
+    "team": "BLOWINDS",
+    "title": "【お知らせ】新企画「VOICES」および「月間コーポレートレポート」配信をスタート！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51828",
+    "published": "2026-11-12T09:00:00+09:00",
+    "detected_at": "2026-11-12T07:01:20.069612+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
   }
 ]
