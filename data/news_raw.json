@@ -7535,5 +7535,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://bakusai.com/thr_res_show/acode%3D6/ctgid%3D104/bid%3D272/tid%3D13498677/rid%3D1761295172/word%3D%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw12UwfNJnpMeV7DDtPzwhbC",
     "published": "2026-11-12T04:02:38Z",
     "detected_at": "2026-11-12T07:21:10.027643+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51873",
+    "team": "BLOWINDS",
+    "title": "【福井県児童科学館 エンゼルランドふくい】BOOZ CAFEがオープン！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51873",
+    "published": "2026-11-12T09:00:00+09:00",
+    "detected_at": "2026-11-12T10:01:23.641983+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/boozcafe_1920_1080.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51860",
+    "team": "BLOWINDS",
+    "title": "【第16節】12/19（土）、12/20（日）vs岐阜スゥープス 冠パートナーおよび来場者プレゼント決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51860",
+    "published": "2026-11-12T09:00:00+09:00",
+    "detected_at": "2026-11-12T10:01:23.641983+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/12.19-20_1920_1080_BWZRSDAY%E3%81%AA%E3%81%97.jpg"
   }
 ]
