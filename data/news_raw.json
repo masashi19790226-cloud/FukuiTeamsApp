@@ -1,13 +1,5 @@
 [
   {
-    "id": "tag:google.com,2013:googlealerts/feed:12869469914827114014",
-    "team": "BLOWINDS",
-    "title": "【おじゃスポ】B.ONE開幕 ブローウィンズは連勝逃す 岐阜に1勝1敗 ユナイテッドは今季初黒星",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.ntv.co.jp/category/society/fb859d5e5bef744eb58ee3d4185f8e4910&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3twcJGaU-LQNDbJCCwEV3x",
-    "published": "2026-09-28T07:16:00Z",
-    "detected_at": "2026-09-28T08:32:18.811808+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -7551,5 +7543,13 @@
     "detected_at": "2026-11-12T07:01:20.069612+00:00",
     "source": "ブローウィンズ公式",
     "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4293566547917430470",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ｜爆サイ.com北陸版",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://bakusai.com/thr_res_show/acode%3D6/ctgid%3D104/bid%3D272/tid%3D13498677/rid%3D1761295172/word%3D%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw12UwfNJnpMeV7DDtPzwhbC",
+    "published": "2026-11-12T04:02:38Z",
+    "detected_at": "2026-11-12T07:21:10.027643+00:00"
   }
 ]
