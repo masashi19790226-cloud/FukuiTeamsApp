@@ -40,14 +40,6 @@
     "detected_at": "2026-09-28T08:32:18.811912+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:11644082919270417250",
-    "team": "UNITED",
-    "title": "ユナイテッド初黒星 連勝記録６で止まる：日刊県民福井Web - 中日新聞",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.chunichi.co.jp/article/1317454&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2N5jJzHLIpr3Zq6PEu0aGR",
-    "published": "2026-09-28T03:24:47Z",
-    "detected_at": "2026-09-28T08:32:18.811921+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10467560185430129273",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                                   2026 女子Fレギュラー ...",
@@ -7543,5 +7535,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.ticket.co.jp/sys/d/35387.htm%3Fki%3D247794&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0V2_TYCdD-H6i4mgyTyDKD",
     "published": "2026-11-11T12:53:16Z",
     "detected_at": "2026-11-11T22:41:07.625525+00:00"
+  },
+  {
+    "id": "bing:https://www.47news.jp/15217423.html",
+    "team": "UNITED",
+    "title": "JFL昇格懸けて福井ユナイテッド、全国地域CL挑む 強敵ぞろいの1次 ...",
+    "link": "https://www.47news.jp/15217423.html",
+    "published": "2026-11-11T16:00:00+00:00",
+    "source": "47NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.6-yUa1ieFKkm9SO31b22aw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-12T03:41:07.267786+00:00"
   }
 ]
