@@ -7521,5 +7521,15 @@
     "source": "47NEWS",
     "image": "https://www.bing.com/th?id=ONUT.6-yUa1ieFKkm9SO31b22aw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-12T03:41:07.267786+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51864",
+    "team": "BLOWINDS",
+    "title": "【スクール】11月入会キャンペーンについて",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51864",
+    "published": "2026-11-12T09:00:00+09:00",
+    "detected_at": "2026-11-12T04:41:21.429139+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E4%BF%AE%E6%AD%A3%E7%89%88.png"
   }
 ]
