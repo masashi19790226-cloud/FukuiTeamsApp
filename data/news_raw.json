@@ -66,14 +66,6 @@
     "detected_at": "2026-09-29T08:32:00.700692+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:2461913766344526331",
-    "team": "RAC",
-    "title": "【激闘】福井ブローウィンズ開幕1勝1敗！岐阜との死闘に大興奮…⚡️  福井ユナイテッドは今季初 ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DqUtm_NAW1Y8&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1KKbiT7LMh_NBW1c2zRCJj",
-    "published": "2026-09-28T14:07:29Z",
-    "detected_at": "2026-09-29T08:32:00.700724+00:00"
-  },
-  {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51667",
     "team": "BLOWINDS",
     "title": "【10/1(木)発売】「TIME TOGETHER WATCH｜ダイバーズウォッチ」数量限定販売！",
@@ -7565,5 +7557,21 @@
     "detected_at": "2026-11-12T13:01:27.614076+00:00",
     "source": "ブローウィンズ公式",
     "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3629933002006603200",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ｜爆サイ.com北陸版",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://bakusai.com/thr_res_show/acode%3D6/ctgid%3D104/bid%3D272/tid%3D13498677/rid%3D1761291141/word%3D%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3HWWcYPYETm1nkpCHtBxVo",
+    "published": "2026-11-12T04:02:38Z",
+    "detected_at": "2026-11-12T14:23:36.811320+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7511127387722519269",
+    "team": "BLOWINDS",
+    "title": "【企業連携】福井ブローウィンズ - 福井県立丸岡高等学校",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.maruoka-h.ed.jp/archives/11972&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw08u2mxT4apwAj81IsT5fH8",
+    "published": "2026-11-12T03:04:13Z",
+    "detected_at": "2026-11-12T14:23:36.811352+00:00"
   }
 ]
