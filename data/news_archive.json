@@ -1,5 +1,55 @@
 [
   {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51677",
+    "team": "BLOWINDS",
+    "title": "【第9節】11/7（土）11/8（日）vsトライフープ岡山 冠パートナーおよび来場者プレゼント決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51677",
+    "published": "2026-09-28T09:00:00+09:00",
+    "detected_at": "2026-09-29T00:35:49.325598+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/11.7-8_KV.png"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51673",
+    "team": "BLOWINDS",
+    "title": "2026/27シーズン 3rdユニフォーム「FUKUI CONNECTED edition」デザイン決定！着用試合に関するお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51673",
+    "published": "2026-09-28T09:00:00+09:00",
+    "detected_at": "2026-09-29T00:35:49.325598+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_3rd%20uniform.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51671",
+    "team": "BLOWINDS",
+    "title": "#1 藤永 佳昭 選手インジュアリーリスト登録のご報告",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51671",
+    "published": "2026-09-28T09:00:00+09:00",
+    "detected_at": "2026-09-29T00:35:49.325598+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TOPTEAM.JPG"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51639",
+    "team": "BLOWINDS",
+    "title": "【第2節】福井ブローウィンズvs金沢サムライズ ”WESTER 全力応援キャンペーン” 実施のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51639",
+    "published": "2026-09-28T09:00:00+09:00",
+    "detected_at": "2026-09-29T00:35:49.325598+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/33898876-870D-4EFE-8B6C-6891A8AB6284.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51672",
+    "team": "BLOWINDS",
+    "title": "【第2節】会場アクセス・駐車場情報について",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51672",
+    "published": "2026-09-28T09:00:00+09:00",
+    "detected_at": "2026-09-29T00:35:49.325598+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
+  },
+  {
     "id": "tag:google.com,2013:googlealerts/feed:4813516365032673431",
     "team": "BLOWINDS",
     "title": "本日のMVP 西濃建設東洋スタビ賞     9/27 (日) 福井ブローウィンズ GAME 2 #2 エリック ...",
