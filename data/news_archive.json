@@ -1,5 +1,43 @@
 [
   {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7000",
+    "team": "UNITED",
+    "title": "【 10/4 新庄ク戦 】試合観戦について",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7000",
+    "published": "2026-09-29T09:00:00+09:00",
+    "detected_at": "2026-09-29T03:30:19.352830+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51667",
+    "team": "BLOWINDS",
+    "title": "【10/1(木)発売】「TIME TOGETHER WATCH｜ダイバーズウォッチ」数量限定販売！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51667",
+    "published": "2026-09-29T09:00:00+09:00",
+    "detected_at": "2026-09-29T09:31:29.269912+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E6%99%82%E8%A8%88.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51680",
+    "team": "BLOWINDS",
+    "title": "【スクール】10月新規入会キャンペーン実施のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51680",
+    "published": "2026-09-29T09:00:00+09:00",
+    "detected_at": "2026-09-29T10:31:12.071371+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/HP%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9%E7%94%BB%E5%83%8F.jpeg"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3325513324797601516",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】B.ONE開幕 ブローウィンズは連勝逃す 岐阜に1勝1敗 ユナイテッドは今季初黒星",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/12475075476c4df35c159e42a7d133f27c3e146b&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2gMXQ7Wa7ZmIEDxcJSEGAw",
+    "published": "2026-09-28T23:51:17Z",
+    "detected_at": "2026-09-29T07:30:49.233791+00:00"
+  },
+  {
     "id": "tag:google.com,2013:googlealerts/feed:8843157544638087553",
     "team": "BLOWINDS",
     "title": "残り13秒で逆転弾 Bリーグワン「福井ブローウィンズ」初戦は劇的勝利も岐阜に ... - Yahoo!ニュース",
