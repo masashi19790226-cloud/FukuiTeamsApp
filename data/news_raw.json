@@ -7675,5 +7675,15 @@
     "source": "ORICON NEWS",
     "image": "",
     "detected_at": "2026-11-13T07:01:11.815138+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51876",
+    "team": "BLOWINDS",
+    "title": "りそなグループ B.LEAGUE 2026-27 B.LEAGUE ONE リーグ戦（第18～31節）試合時間決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51876",
+    "published": "2026-11-13T09:00:00+09:00",
+    "detected_at": "2026-11-13T07:21:17.860239+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/B.jpg"
   }
 ]
