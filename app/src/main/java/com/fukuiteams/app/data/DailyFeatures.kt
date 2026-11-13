@@ -99,7 +99,7 @@ fun buildFeatureStories(
     val today = LocalDate.now(JST)
     // 特集期間は、そのチームの記事だけにする
     val focus = activeFeatureFocus(teams, today)
-    val useTeams = focus?.let { listOf(it.team) } ?: teams
+    val useTeams = focus?.teams ?: teams
     val out = mutableListOf<FeatureStory>()
     useTeams.forEach { team ->
         out += countdown(team, games, results, previews)
@@ -126,13 +126,15 @@ fun buildFeatureStories(
         out += milestoneStory(team)
         out += recordStory(team, today)
         out += nationalStory(team, today)
-        if (focus != null && focus.team == team) out += focusStories(team, games, birthdays, today)
+        if (focus != null && team in focus.teams) out += focusStories(team, games, birthdays, today)
         // 特集期間の追加の記事(対戦成績・歴代得点ランキング・シーズンの歩み・記録・観客数。Web版と同じ)
-        if (focus != null && focus.team == team) out += focusExtraStories(team, birthdays)
+        if (focus != null && team in focus.teams) out += focusExtraStories(team, birthdays)
         // 選手紹介を全チームで出す(特集期間のチームは、上の特集の記事に選手紹介があるので出さない。Web版と同じ)
-        if (focus == null || focus.team != team) out += playerIntroStories(team, birthdays, standings, today)
+        out += playerIntroStories(team, birthdays, standings, today)
         // 選手コールの一覧(会場で選手を呼ぶニックネーム。一覧のあるチームだけ)
         out += callStory(team, players)
+        // 競技の入門(バスケ・フットサル・サッカー・ハンドボール・ホッケーの基本ルール。毎日1本)
+        out += sportTipStories(team)
     }
     out += topNews(useTeams, news, today)
     out += newsDigest(useTeams, news, today)
@@ -279,19 +281,24 @@ private const val MAX_STORIES_PER_DAY = 6
 private const val FOCUS_STORIES_PER_DAY = 8
 
 /** チームの特集期間(Web版の FEATURE_FOCUS と同じ)。日付は「2026-11-10」の形で、from〜until(両端を含む) */
-data class FeatureFocus(val team: Team, val from: String, val until: String, val title: String)
+data class FeatureFocus(val teams: List<Team>, val from: String, val until: String, val title: String) {
+    /** 特集のチームの先頭(帯の色など) */
+    val team: Team get() = teams.first()
+}
 
 /**
  * 今の特集期間。期間中は「すべて」のときも、そのチームの記事だけを出し、
  * 特集期間だけの記事(観戦ガイド・観客数・代表候補・フットサル入門・新しい顔)も加える。期間が過ぎたら自動でふだんの特集に戻る
  */
-val FEATURE_FOCUS = FeatureFocus(Team.RAC, "2026-11-10", "2026-11-15", "福井丸岡RUCK特集")
+val FEATURE_FOCUS = FeatureFocus(listOf(Team.RAC, Team.UNITED), "2026-11-10", "2026-11-15", "丸岡RUCK・ユナイテッド特集")
 
-/** 今が特集期間で、そのチームを表示しているなら FEATURE_FOCUS。それ以外は null */
+/** 今が特集期間で、特集のチームを表示しているなら、その特集(teams は表示しているチームだけに絞る)。それ以外は null */
 fun activeFeatureFocus(teams: List<Team>, today: LocalDate = LocalDate.now(JST)): FeatureFocus? {
     val d = today.toString()
     val f = FEATURE_FOCUS
-    return if (d >= f.from && d <= f.until && f.team in teams) f else null
+    if (d < f.from || d > f.until) return null
+    val shown = f.teams.filter { it in teams }
+    return if (shown.isEmpty()) null else f.copy(teams = shown)
 }
 
 /** 過去の話の記事の小見出し(毎日 PAST_SLOTS 本は必ず入れる) */
@@ -1511,7 +1518,7 @@ private fun focusExtraStories(team: Team, birthdays: List<PlayerBirthday>): List
     if (matches.isEmpty()) return out
     fun key(n: String) = n.replace(Regex("[\\s　]"), "")
     val nowNames = birthdays.filter { it.team == team }.map { key(it.name) }.toSet()
-    val src = "\n※女子Fリーグ公式の記録より"
+    val src = "\n※" + (when (team) { Team.RAC -> "女子Fリーグ公式の記録"; Team.UNITED -> "ユナイテッド公式サイトの試合結果"; else -> "公式の記録" }) + "より"
     fun comma(n: Int) = "%,d".format(n)
 
     // 対戦成績:相手ごとの通算成績(2試合以上戦った相手)
@@ -1616,7 +1623,7 @@ private fun focusExtraStories(team: Team, birthdays: List<PlayerBirthday>): List
     val r = wdl(matches)
     out += FeatureStory(
         kicker = "記録で見る", team = team, headline = "公式戦の通算成績は${r.w}勝",
-        body = "${name}の女子Fリーグでの公式戦は、これまで${matches.size}試合で${winLabel(r.w, r.d, r.l)}。通算の得点は${r.gf}、失点は${r.ga}です。" + src,
+        body = "${name}の${if (team == Team.RAC) "女子Fリーグでの" else ""}公式戦は、これまで${matches.size}試合で${winLabel(r.w, r.d, r.l)}。通算の得点は${r.gf}、失点は${r.ga}です。" + src,
         bigNumber = "${r.w}", bigUnit = "勝"
     )
 
@@ -1733,6 +1740,49 @@ private fun callStory(team: Team, players: Map<String, TeamPlayers>): List<Featu
     )
 }
 
+// ---------- 競技の入門(Web版の sportTipStories と同じ) ----------
+
+/** 競技の入門(各競技の公式ルールの基本。毎日1本):小見出しと、見出し・本文・大きな数字・単位。フットサルは FUTSAL_TIPS */
+private val SPORT_TIPS: Map<Team, Pair<String, List<List<String?>>>> = mapOf(
+    Team.BLOWINDS to ("バスケ入門" to listOf(
+        listOf("1クォーター10分、全部で4クォーター", "Bリーグの試合は10分×4クォーター。ボールが止まるたびに時計も止まるので、実際の試合は2時間ほどかかります。同点で終わると5分の延長戦です。", "10", "分"),
+        listOf("攻撃は24秒以内にシュート", "ボールを持ったチームは24秒以内にシュートを打たなければいけません(ショットクロック)。ゴールの上の数字が0になる前に打てるか、残り数秒の攻防に注目です。", "24", "秒"),
+        listOf("遠くからのシュートは3点", "3ポイントラインの外から決めると3点、内側からは2点、フリースローは1点。点差があっても、3点シュートが続けば一気に追いつけます。", "3", "点"),
+        listOf("ファウル5つで退場", "1人の選手がファウルを5つすると、その試合はもうコートに戻れません。主力の選手のファウルの数は、勝負の行方を左右します。", "5", "つ"),
+        listOf("チームファウルとフリースロー", "1つのクォーターでチームのファウルが5つ目になると、そこからは相手にフリースローが与えられます。終盤はファウルの数にも注目です。", null, null)
+    )),
+    Team.THUNDER to ("ハンドボール入門" to listOf(
+        listOf("ハンドボールは7人対7人", "ゴールキーパーを含む7人ずつで戦います。コートは40m×20m。走って、跳んで、投げる、スピードと迫力のある競技です。", "7", "人"),
+        listOf("前半・後半30分ずつ", "試合は前半・後半30分ずつ。点がたくさん入る競技で、両チームで50点を超える試合もあります。", "30", "分"),
+        listOf("7mスローは1対1の勝負", "ゴールを狙える場面を反則で止められると、7m離れた所からゴールキーパーと1対1で投げる「7mスロー」になります。", "7", "m"),
+        listOf("反則で2分間の退場", "危ない反則などをすると、その選手は2分間コートに入れず、チームは1人少ない人数で戦います。その2分間の攻防は見どころです。", "2", "分"),
+        listOf("ゴールエリアに入れるのはゴールキーパーだけ", "ゴール前の6mのエリアに入れるのはゴールキーパーだけ。シューターは、エリアの上に飛び込みながら空中でシュートを放ちます。", "6", "m")
+    )),
+    Team.UNITED to ("サッカー入門" to listOf(
+        listOf("11人対11人、前半・後半45分", "ゴールキーパーを含む11人ずつで、前半・後半45分ずつ戦います。ハーフタイムは15分以内です。", "45", "分"),
+        listOf("オフサイド", "攻める側の選手が、相手のゴールに近い所で待ち伏せするのは反則(オフサイド)。パスが出た瞬間の選手の位置で決まるので、線審の旗に注目です。", null, null),
+        listOf("イエローカード2枚で退場", "警告のイエローカードを1試合で2枚受けるか、レッドカードを受けると退場。チームは1人少ない人数で戦うことになります。", "2", "枚"),
+        listOf("最後に足される時間", "選手の交代やけがの手当てなどで止まった時間の分、前半・後半の最後に時間が足されます(アディショナルタイム)。終了間際まで目が離せません。", null, null),
+        listOf("手を使えるのはゴールキーパーだけ", "自分のペナルティーエリアの中では、ゴールキーパーだけがボールを手で扱えます。至近距離のシュートを止めるビッグセーブも見どころです。", null, null)
+    )),
+    Team.VERCOSTA to ("ホッケー入門" to listOf(
+        listOf("11人対11人、15分×4クォーター", "ホッケーはゴールキーパーを含む11人ずつで、15分×4クォーターを戦います。スティックで打ったボールは、とても速く飛びます。", "15", "分"),
+        listOf("打てるのはスティックの平らな面だけ", "ボールを打てるのはスティックの平らな面だけ。丸い背中の側で触ると反則になります。細かいスティックさばきに注目です。", null, null),
+        listOf("得点はサークルの中から", "シュートが得点になるのは、ゴール前の半円(シューティングサークル)の中から打ったときだけ。サークルにどう入り込むかが攻撃のかぎです。", null, null),
+        listOf("見せ場のペナルティーコーナー", "サークルの中などで守る側が反則をすると、攻める側のチャンス「ペナルティーコーナー」。ゴールラインから出したボールを止めて、一気にシュートします。", null, null),
+        listOf("同点ならSO(シュートアウト)", "ホッケージャパンリーグでは、同点で終わるとSO(シュートアウト)で決着をつけます。23mラインから8秒以内に、ゴールキーパーと1対1で点を取り合います。勝ちは3点、SO勝ちは2点、SO負けは1点です。", "8", "秒")
+    ))
+)
+
+/** 競技の入門の記事(丸岡RUCKはフットサル入門) */
+private fun sportTipStories(team: Team): List<FeatureStory> {
+    if (team == Team.RAC) {
+        return FUTSAL_TIPS.map { (h, b, n, u) -> FeatureStory(kicker = "フットサル入門", team = team, headline = h!!, body = b!!, bigNumber = n, bigUnit = u) }
+    }
+    val (kicker, tips) = SPORT_TIPS[team] ?: return emptyList()
+    return tips.map { (h, b, n, u) -> FeatureStory(kicker = kicker, team = team, headline = h!!, body = b!!, bigNumber = n, bigUnit = u) }
+}
+
 // ---------- 特集期間だけの記事(Web版の focusStories と同じ) ----------
 
 /** 特集期間だけの記事の種類(先に並べる) */
@@ -1815,43 +1865,14 @@ private fun focusStories(team: Team, games: List<Game>, birthdays: List<PlayerBi
         )
     }
 
-    // 選手紹介:今の選手(公式サイトの選手紹介)を1人ずつ。開くたびに別の選手
-    fun key(n: String) = n.replace(Regex("[\\s　]"), "")
-    val histPlayers = data?.players.orEmpty()
-    val natNames = (if (latest != null && latest.date >= today.minusDays(183).toString()) latest.players else emptyList()).map { key(it) }.toSet()
-    birthdays.filter { it.team == team }.sortedWith(compareBy<PlayerBirthday> { it.number.toIntOrNull() ?: 999 }.thenBy { it.name }).forEach { b ->
-        val hp = histPlayers.firstOrNull { key(it.name) == key(b.name) }
-        val bd = b.birthday
-        val age = today.year - bd.year - (if (today.monthValue < bd.monthValue || (today.monthValue == bd.monthValue && today.dayOfMonth < bd.dayOfMonth)) 1 else 0)
-        val head = (if (b.number.isNotBlank()) "#${b.number} " else "") + b.name
-        val prof = listOfNotNull("${age}歳", b.height.takeIf { it.isNotBlank() }?.let { "身長${it}cm" }, b.position.takeIf { it.isNotBlank() }).joinToString("・")
-        out += FeatureStory(
-            photo = b.photo,
-            photoCaption = if (b.photo.isNotBlank()) head else null,
-            kicker = "選手紹介",
-            team = team,
-            headline = if (b.hometown.isNotBlank()) "${head}、${b.hometown}出身" else head,
-            body = (if (b.reading.isNotBlank()) "${b.name}(${b.reading})。" else "${b.name}。") + "${prof}。" +
-                (if (hp != null && hp.apps > 0) "${name}では${hp.seasonsLabel}に公式戦${hp.apps}試合に出場し${hp.goals}得点。" else "") +
-                (if (key(b.name) in natNames) "${latest!!.kind}にも選ばれています。" else "") +
-                (if (b.number.isNotBlank()) "会場ではぜひ背番号${b.number}に注目を。" else "会場でぜひ注目してください。") +
-                "\n※公式サイトの選手紹介・女子Fリーグ公式の記録より",
-            bigNumber = b.number.ifBlank { null },
-            bigUnit = if (b.number.isNotBlank()) "番" else null,
-            // 選手本人のX(公式サイトの選手紹介に載っているときだけ)
-            playerUrl = b.x
-        )
-    }
+    // 選手紹介・競技の入門は、特集期間でもふだんと同じ playerIntroStories・sportTipStories で出す(チームごとの出典・競技に合わせるため。Web版と同じ)
 
-    // フットサル入門
-    FUTSAL_TIPS.forEach { (h, b, n, u) ->
-        out += FeatureStory(kicker = "フットサル入門", team = team, headline = h!!, body = b!!, bigNumber = n, bigUnit = u)
-    }
 
     // 新しい顔:今季はじめて出場した選手(試合ごとの出場選手から数えたときだけ)
     if (data?.playersFromLineup == true) {
-        // 今季の始まり(5月1日)
-        val startIso = "${if (today.monthValue >= 5) today.year else today.year - 1}-05-01"
+        // 今季の始まり(丸岡RUCKは5月1日、ほかのチームは3月1日)
+        val sm = if (team == Team.RAC) 5 else 3
+        val startIso = "${if (today.monthValue >= sm) today.year else today.year - 1}-${"%02d".format(sm)}-01"
         val fresh = data.players.filter { it.first >= startIso && it.apps > 0 && it.now != false }
             .sortedWith(compareByDescending<HistoryPlayer> { it.apps }.thenByDescending { it.goals }.thenBy { it.name })
         if (fresh.isNotEmpty()) {

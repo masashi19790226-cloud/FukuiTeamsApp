@@ -332,31 +332,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
 
-            // 試合当日だけ、一番上に当日のまとめ(開始時刻・会場の地図・天気)
-            val todayGames = mainGames()
-                .filter { (selectedTeam == null || it.team == selectedTeam) && it.isToday() && !autoResults.containsKey(it.id) }
-                .sortedBy { it.sortKey }
-            if (todayGames.isNotEmpty()) {
-                item {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        todayGames.forEach { g ->
-                            MatchDayCard(
-                                g, weathers[g.id], forecasts[g.id], GameLpRepository.latest[g.id],
-                                results = autoResults, preview = previews[g.id],
-                                multi = todayGames.size > 1, onOpen = { onOpenGame(g.id) }
-                            )
-                        }
-                    }
-                }
-            }
-
-            // コラボ企画など特別な日が45日以内にあれば、特集枠を出す(選んでいるチームが関係するときだけ)
-            val special = upcomingSpecialDay()
-            if (special != null && (selectedTeam == null || selectedTeam in special.teams)) {
-                item { SpecialDayBanner(special, onOpenGame = { g -> onOpenGame(g.id) }) }
-            }
-
-            // 一面トップ:選択中のチーム(「すべて」なら全チーム)の最新の試合結果
+            // 一面トップ(速報・特集)。いちばん上に固定し、その下に本日の試合・次の試合を出す(Web版と同じ)。選択中のチーム(「すべて」なら全チーム)の最新の試合結果
             val latest = mainGames()
                 .filter { (selectedTeam == null || it.team == selectedTeam) && autoResults.containsKey(it.id) }
                 .maxByOrNull { it.sortKey }
@@ -404,12 +380,14 @@ fun HomeScreen(
                     if (focus != null && stories.isNotEmpty()) {
                         val until = java.time.LocalDate.parse(focus.until)
                         val wd = listOf("月", "火", "水", "木", "金", "土", "日")[until.dayOfWeek.value - 1]
-                        Row(
-                            modifier = Modifier.fillMaxWidth().background(focus.team.color).padding(horizontal = 12.dp, vertical = 6.dp),
-                            verticalAlignment = Alignment.Bottom,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        // 2チームの特集は、帯をそれぞれのチームの色で半分ずつ塗る(Web版と同じ)
+                        val n = focus.teams.size
+                        val stops = focus.teams.flatMapIndexed { i, t -> listOf(i.toFloat() / n to t.color, (i + 1).toFloat() / n to t.color) }.toTypedArray()
+                        val bandBrush = androidx.compose.ui.graphics.Brush.horizontalGradient(*stops)
+                        Column(
+                            modifier = Modifier.fillMaxWidth().background(bandBrush).padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
-                            Text(focus.title, color = focus.team.onColor, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp)
+                            Text(focus.title, color = focus.team.onColor, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp, maxLines = 1, softWrap = false)
                             Text("${until.monthValue}/${until.dayOfMonth}(${wd})まで", color = focus.team.onColor, fontSize = 12.sp)
                         }
                     }
@@ -427,16 +405,25 @@ fun HomeScreen(
                 }
             }
 
-            // 節目達成(最近の試合で通算の節目に届いた選手。試合の日から2日まで)
-            // (過去の記録 history.json を読み終えたら数え直す。無いときは欄ごと出さない)
-            val achToday = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"))
-            val achievements = (selectedTeam?.let { listOf(it) } ?: Team.values().toList())
-                .flatMap { com.fukuiteams.app.data.recentAchievements(it, achToday) }
-            if (achievements.isNotEmpty()) {
-                item { AchievementCard(achievements) }
+            // 試合当日だけ、一面トップの下に当日のまとめ(開始時刻・会場の地図・天気)
+            val todayGames = mainGames()
+                .filter { (selectedTeam == null || it.team == selectedTeam) && it.isToday() && !autoResults.containsKey(it.id) }
+                .sortedBy { it.sortKey }
+            if (todayGames.isNotEmpty()) {
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        todayGames.forEach { g ->
+                            MatchDayCard(
+                                g, weathers[g.id], forecasts[g.id], GameLpRepository.latest[g.id],
+                                results = autoResults, preview = previews[g.id],
+                                multi = todayGames.size > 1, onOpen = { onOpenGame(g.id) }
+                            )
+                        }
+                    }
+                }
             }
 
-            // 一面の「次の試合」。3日以内(あしたから3日後まで)の試合を、チームごとにいちばん近い1試合だけ並べる。
+            // 一面の「次の試合」(本日の試合のすぐ下。試合の欄をまとめる。Web版と同じ)。3日以内(あしたから3日後まで)の試合を、チームごとにいちばん近い1試合だけ並べる。
             // 3日以内に試合が無ければ、いちばん近い日の試合(同じ日のほかのチームの試合も)。Web版と同じ
             // (並びは開始時刻順。「時間未定」の試合はその日の後ろ)。本日の試合は上に出しているので、ここには出さない
             val todayIds = todayGames.map { it.id }.toSet()
@@ -460,6 +447,21 @@ fun HomeScreen(
                         onOpenGame = onOpenGame
                     )
                 }
+            }
+
+            // コラボ企画など特別な日が45日以内にあれば、特集枠を出す(選んでいるチームが関係するときだけ)
+            val special = upcomingSpecialDay()
+            if (special != null && (selectedTeam == null || selectedTeam in special.teams)) {
+                item { SpecialDayBanner(special, onOpenGame = { g -> onOpenGame(g.id) }) }
+            }
+
+            // 節目達成(最近の試合で通算の節目に届いた選手。試合の日から2日まで)
+            // (過去の記録 history.json を読み終えたら数え直す。無いときは欄ごと出さない)
+            val achToday = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"))
+            val achievements = (selectedTeam?.let { listOf(it) } ?: Team.values().toList())
+                .flatMap { com.fukuiteams.app.data.recentAchievements(it, achToday) }
+            if (achievements.isNotEmpty()) {
+                item { AchievementCard(achievements) }
             }
 
             // 各チームの近況(前回の結果と次の試合)。上に詳しく出している試合は「(上に掲載)」と短く出す
@@ -541,7 +543,23 @@ fun HomeScreen(
     }
 }
 
-/** 試合当日のまとめ。赤い見出しで目立たせ、開始時刻・会場(地図)・天気をまとめて出す。 */
+/**
+ * 本日の試合の「開始まで あと○時間○分」。timeLabel が「14:00」の形でなければ空。
+ * 開始の60分前からは「あと○分で試合開始」、開始から2時間半は「試合中」、それより後は空(Web版の kickoffText と同じ)
+ */
+private fun kickoffText(timeLabel: String, nowMs: Long): String {
+    val m = Regex("""^(\d{1,2}):(\d{2})$""").find(timeLabel.trim()) ?: return ""
+    val now = java.time.Instant.ofEpochMilli(nowMs).atZone(java.time.ZoneId.of("Asia/Tokyo"))
+    val diff = (m.groupValues[1].toInt() * 60 + m.groupValues[2].toInt()) - (now.hour * 60 + now.minute)
+    return when {
+        diff > 60 -> "開始まで あと${diff / 60}時間" + (if (diff % 60 != 0) "${diff % 60}分" else "")
+        diff > 0 -> "あと${diff}分で試合開始"
+        diff > -150 -> "試合中"
+        else -> ""
+    }
+}
+
+/** 試合当日のまとめ。チームの色の帯(「本日の試合 GAME DAY」と試合開始までの時間)と太い枠で目立たせ、開始時刻・会場(地図)・天気をまとめて出す。 */
 @Composable
 private fun MatchDayCard(
     game: Game,
@@ -557,27 +575,78 @@ private fun MatchDayCard(
     onOpen: () -> Unit
 ) {
     val context = LocalContext.current
+    // 試合開始までの時間(1分ごとに進める)
+    var nowMs by remember { mutableStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(game.id) {
+        while (true) {
+            kotlinx.coroutines.delay(60_000)
+            nowMs = System.currentTimeMillis()
+        }
+    }
+    val kick = kickoffText(game.timeLabel, nowMs)
+    // 「次の試合」と見分けられるよう、本日の試合はチームの色の帯(「本日の試合 GAME DAY」と試合開始までの時間)と太い枠で、文字も大きくする(Web版と同じ)
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(2.dp, if (multi) game.team.color else NewsRed)
-            .background(if (multi) game.team.color.copy(alpha = 0.07f) else Paper)
+            .border(5.dp, game.team.color)
+            .background(Paper)
+            .background(game.team.color.copy(alpha = if (multi) 0.07f else 0.05f))
             .clickable(onClick = onOpen)
     ) {
-    if (multi) Box(modifier = Modifier.fillMaxWidth().height(5.dp).background(game.team.color))
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(game.team.color)
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                "本日の試合",
+                color = game.team.onColor,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Black,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
+                maxLines = 1,
+                softWrap = false
+            )
+            Text(
+                "GAME DAY",
+                color = game.team.onColor.copy(alpha = 0.85f),
+                fontSize = 11.sp,
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = 1.5.sp,
+                maxLines = 1,
+                softWrap = false,
+                modifier = Modifier.padding(bottom = 2.dp)
+            )
+        }
+        if (kick.isNotBlank()) {
+            Text(
+                kick,
+                color = game.team.onColor,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.ExtraBold,
+                maxLines = 1,
+                softWrap = false,
+                modifier = Modifier
+                    .background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.18f), RoundedCornerShape(12.dp))
+                    .padding(horizontal = 8.dp, vertical = 3.dp)
+            )
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        SectionLabel("本日の試合", red = true)
-        Text(game.team.displayName, style = MaterialTheme.typography.labelMedium, color = game.team.inkColor)
+        Text(game.team.displayName, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = game.team.inkColor)
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Headline("${game.timeLabel} 試合開始", fontSize = 20)
-            HomeAwayTag(isHome = game.isHome, neutral = game.neutral)
+            Headline("${game.timeLabel} 試合開始", fontSize = 26)
+            HomeAwayTag(isHome = game.isHome, fontSize = 14.sp, neutral = game.neutral)
         }
-        Headline("vs ${game.opponent}", fontSize = 17)
+        Headline("vs ${game.opponent}", fontSize = 21)
         Text(
             "会場:${game.venue} ›地図",
             style = MaterialTheme.typography.bodyMedium,
@@ -684,6 +753,13 @@ private fun DataStatusLine(status: DataStatus?) {
     )
 }
 
+/** 見出しを比べるための形(最後の「 - 配信先」「|配信先」を除き、空白をそろえる) */
+private fun newsTitleKey(title: String): String =
+    java.text.Normalizer.normalize(title, java.text.Normalizer.Form.NFKC)
+        .replace(Regex("""\s+[-–—|｜]\s+[^-–—|｜]+$"""), "")
+        .replace(Regex("""\s+"""), "")
+        .lowercase()
+
 @Composable
 private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?, onOpenRadar: () -> Unit) {
     val context = LocalContext.current
@@ -696,9 +772,11 @@ private fun NewsSection(newsResult: AlertsResult?, selectedTeam: Team?, onOpenRa
             color = InkSoft
         )
         is AlertsResult.Success -> {
+            // 同じ記事が配信先ごとに何本も届くことがある(「…は西地区 - Yahoo!ニュース」「…は西地区 - dメニューニュース」)。
+            // 見出しの最後の「 - 配信先」を除いた見出しが同じなら、同じ記事として最初の1本だけ出す(Web版と同じ)
             val newsList = newsResult.items.filter {
                 selectedTeam == null || it.teamId == selectedTeam.name
-            }
+            }.distinctBy { "${it.teamId}|${newsTitleKey(it.title)}" }
             if (newsList.isEmpty()) {
                 Text("まだニュースが自動検知されていません", style = MaterialTheme.typography.bodySmall, color = InkSoft)
             } else {
@@ -1012,7 +1090,8 @@ private fun TwoColumnFront(
                         lp = lps[game.id],
                         forecast = forecasts[game.id],
                         results = autoResults,
-                        onOpenGame = onOpenGame
+                        onOpenGame = onOpenGame,
+                        compact = nextGames.size > 1
                     )
                 }
                 if (nextGames.size > 1) {
@@ -1048,9 +1127,12 @@ private fun NextGameBlock(
     lp: GameLp?,
     forecast: GameForecast?,
     results: Map<String, RemoteGameResult>,
-    onOpenGame: (String) -> Unit
+    onOpenGame: (String) -> Unit,
+    /** 2試合以上並べるとき:対戦成績・天気・展望などは「詳しく見る」で開く(一面が長くなりすぎないように。Web版と同じ) */
+    compact: Boolean = false
 ) {
     val context = LocalContext.current
+    var detailOpen by androidx.compose.runtime.saveable.rememberSaveable(nextGame.id) { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -1069,8 +1151,9 @@ private fun NextGameBlock(
             if (isGoing(nextGame.id, nextLogPrefs)) GoingBadge()
             // チーム名は残りの幅に収め、入りきらないときは「…」で切る
             // (「行く予定」の札が付くと幅が足りなくなり、右端の「あと○日」が1文字ずつ縦に折り返していたため)
+            // 2試合以上のときは短いチーム名(枠がチームの色なので分かる)。チーム名が切れにくいように
             Text(
-                nextGame.team.displayName,
+                if (compact) nextGame.team.shortName else nextGame.team.displayName,
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.labelMedium,
                 color = nextGame.team.inkColor,
@@ -1078,7 +1161,8 @@ private fun NextGameBlock(
                 overflow = TextOverflow.Ellipsis
             )
             // 「あと○日」は赤い枠と赤い文字(塗りつぶしにすると、赤地に白文字の HOME の札と見分けにくいため)。折り返さず1行で出す
-            nextGame.countdownLabel()?.let { label ->
+            // 「あと1日(明日)」は札が長くてチーム名が切れるので「明日」にする
+            nextGame.countdownLabel()?.let { if (it == "あと1日(明日)") "明日" else it }?.let { label ->
                 Text(
                     label,
                     modifier = Modifier
@@ -1102,6 +1186,18 @@ private fun NextGameBlock(
             style = MaterialTheme.typography.bodySmall,
             color = InkSoft
         )
+        if (compact) {
+            // 2試合以上のとき:詳しい部分は閉じておき、押すと開く(カードを押すと試合の詳細を開くのは今までどおり)
+            val what = listOfNotNull("対戦成績", if (forecast != null) "天気" else null, if (preview != null) "展望・注目選手" else null).joinToString("・")
+            Text(
+                if (detailOpen) "▲ 閉じる" else "▼ 詳しく見る($what)",
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = Accent,
+                modifier = Modifier.clickable { detailOpen = !detailOpen }.padding(vertical = 4.dp)
+            )
+        }
+        if (!compact || detailOpen) {
         // 福井側の選手の写真(日替わりで4人)
         PlayerPhotoRow(
             TeamPhotos.rotate(TeamPhotos.forTeam(nextGame.team), nextGame.id),
@@ -1137,6 +1233,7 @@ private fun NextGameBlock(
         }
 
         if (preview != null) PreviewSection(nextGame, preview)
+        }
         if (hasOpenInvite) {
             Text("無料招待あり ›", style = MaterialTheme.typography.labelMedium, color = NewsRed, modifier = Modifier.padding(top = 4.dp))
         }
