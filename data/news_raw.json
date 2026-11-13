@@ -7775,5 +7775,13 @@
     "source": "日テレNEWS NNN",
     "image": "https://www.bing.com/th?id=ONUT.cz5myUIVBk8ELg-goBrndw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-13T11:21:09.783521+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6359383313386626499",
+    "team": "BLOWINDS",
+    "title": "【学生限定】福井ブローウィンズ観戦チケットプレゼント！ - 福井県若者情報発信局",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://page.fwi.fukui.jp/events/5170&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw03hHrmkVX4Ky_iPRwCsmVo",
+    "published": "2026-11-13T06:55:03Z",
+    "detected_at": "2026-11-13T13:41:08.477082+00:00"
   }
 ]
