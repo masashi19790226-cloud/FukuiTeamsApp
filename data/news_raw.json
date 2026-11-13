@@ -7773,5 +7773,15 @@
     "source": "Yahoo!ニュース",
     "image": "https://www.bing.com/th?id=ONUT.mOZQqLdwRt1QSga9ciOjkQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-13T11:01:16.552324+00:00"
+  },
+  {
+    "id": "bing:https://news.ntv.co.jp/n/fbc/category/society/fb0df1b86a8b7e42aab866de02394cb003",
+    "team": "UNITED",
+    "title": "JFL昇格へ 福井ユナイテッドFCが好発進 関西代表チームに1対0 貴重な ...",
+    "link": "https://news.ntv.co.jp/n/fbc/category/society/fb0df1b86a8b7e42aab866de02394cb003",
+    "published": "2026-11-12T21:42:00+00:00",
+    "source": "日テレNEWS NNN",
+    "image": "https://www.bing.com/th?id=ONUT.cz5myUIVBk8ELg-goBrndw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-13T11:21:09.783521+00:00"
   }
 ]
