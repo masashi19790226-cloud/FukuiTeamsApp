@@ -1887,19 +1887,21 @@ private fun FeatureHero(
                     ),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 「特集」の大きな赤い札と、記事の種類・チーム名
+                // 記事ごとの強調の色:チームを選んだとき(着せ替え)と同じく、そのチームの色(黄色のヴェルコスタは濃い黄色)。チームの無い記事は赤(Web版と同じ)
+                val storyAccent = story.team?.inkColor ?: NewsRed
+                // 「特集」の大きな札と、記事の種類・チーム名
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Headline(
                         "特集",
                         fontSize = 16,
                         color = White,
-                        modifier = Modifier.background(NewsRed).padding(horizontal = 10.dp, vertical = 1.dp)
+                        modifier = Modifier.background(storyAccent).padding(horizontal = 10.dp, vertical = 1.dp)
                     )
                     Text(
                         story.kicker,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = NewsRed,
+                        color = storyAccent,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
@@ -1919,7 +1921,7 @@ private fun FeatureHero(
                         "▶ この選手のハイライト動画(Bリーグ公式) ›",
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
-                        color = Accent,
+                        color = story.team?.inkColor ?: Accent,
                         modifier = Modifier
                             .clickable { openUrl(context, story.playerUrl) }
                             .padding(vertical = 4.dp)
@@ -2025,7 +2027,7 @@ private fun FeatureWrapBody(story: FeatureStory, results: Map<String, RemoteGame
                 Column(modifier = Modifier.width(leftW), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     if (story.bigNumber != null) {
                         Row(verticalAlignment = Alignment.Bottom) {
-                            Headline(story.bigNumber, fontSize = 40, color = NewsRed)
+                            Headline(story.bigNumber, fontSize = 40, color = story.team?.inkColor ?: NewsRed)
                             story.bigUnit?.let {
                                 Text(
                                     it,
