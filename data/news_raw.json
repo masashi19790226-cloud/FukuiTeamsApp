@@ -7565,5 +7565,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51875&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw33mCreuzwpWdSD-i-1yoE2",
     "published": "2026-11-13T01:48:39Z",
     "detected_at": "2026-11-13T05:01:09.552361+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2745960",
+    "team": "UNITED",
+    "title": "地域CL2026、福井ユナイテッドが1点守り切り白星発進 FC BASARA HYOGO戦",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2745960",
+    "published": "2026-11-12T16:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.baEsCbgwcXCYR0CNzmf6eg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-13T05:41:11.502896+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51872",
+    "team": "BLOWINDS",
+    "title": "【スクール】12/19（土）、20（日）親子バスケットボールクリニック開催について",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51872",
+    "published": "2026-11-13T09:00:00+09:00",
+    "detected_at": "2026-11-13T05:41:23.504475+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88%202026-11-11%2012.56.46.png"
   }
 ]
