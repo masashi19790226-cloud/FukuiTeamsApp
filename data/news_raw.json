@@ -7557,5 +7557,13 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.baEsCbgwcXCYR0CNzmf6eg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-13T04:41:10.713680+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6881817908224622919",
+    "team": "BLOWINDS",
+    "title": "【第11節/新潟戦】試合会場アクセス情報のお知らせ - 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51875&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw33mCreuzwpWdSD-i-1yoE2",
+    "published": "2026-11-13T01:48:39Z",
+    "detected_at": "2026-11-13T05:01:09.552361+00:00"
   }
 ]
