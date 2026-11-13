@@ -1,21 +1,5 @@
 [
   {
-    "id": "tag:google.com,2013:googlealerts/feed:13352868338055273588",
-    "team": "UNITED",
-    "title": "福井ユナイテッド【公式】 on X: \"【 10/4 新庄ク戦 】 試合観戦について⚽️ https://t.co ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2104768140861161598&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw16s3jQfsoKe8St79r7UBC7",
-    "published": "2026-09-29T04:31:47Z",
-    "detected_at": "2026-09-29T08:32:00.700667+00:00"
-  },
-  {
-    "id": "tag:google.com,2013:googlealerts/feed:17418872761308757838",
-    "team": "UNITED",
-    "title": "福井ユナイテッド【公式】 on X: \"  HAPPY BIRTHDAY   本日9月29日ははぴりゅうのお誕生日   お ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2104737932385112416&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1Nzy23yHiXO8gKXqBsJ3G1",
-    "published": "2026-09-29T04:31:47Z",
-    "detected_at": "2026-09-29T08:32:00.700692+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:7951496874294929862",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                         青ユニ販売のお知らせ  【訂正 ...",
@@ -7563,5 +7547,15 @@
     "detected_at": "2026-11-13T01:41:24.323370+00:00",
     "source": "ブローウィンズ公式",
     "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2745974",
+    "team": "UNITED",
+    "title": "地域CL2026、福井ユナイテッドが1点守り切り白星発進 FC BASARA HYOGO戦",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2745974",
+    "published": "2026-11-12T16:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.baEsCbgwcXCYR0CNzmf6eg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-13T04:41:10.713680+00:00"
   }
 ]
