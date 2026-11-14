@@ -542,5 +542,11 @@
         "opp": 15
       }
     ]
+  },
+  "un22": {
+    "my_score": 1,
+    "opponent_score": 1,
+    "checked_at": "2026-11-14T08:55:16.693831",
+    "source_url": "https://fukuiunited.co.jp/"
   }
 }
