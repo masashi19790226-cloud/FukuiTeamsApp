@@ -438,15 +438,6 @@
     "detected_at": "2026-10-04T13:52:12.766099+00:00"
   },
   {
-    "id": "bing:https://note.com/daisuke795/n/nd0d288883158",
-    "team": "BLOWINDS",
-    "title": "B.ONE 第1節GAME2 vs 岐阜スゥープスの感想【福井ブローウィンズ】",
-    "link": "https://note.com/daisuke795/n/nd0d288883158",
-    "published": "2026-09-30T06:36:00+00:00",
-    "source": "note",
-    "detected_at": "2026-10-04T13:52:12.766118+00:00"
-  },
-  {
     "id": "bing:https://mainichi.jp/articles/20261002/pr1/00m/020/171000c",
     "team": "BLOWINDS",
     "title": "[(株)アトム×福井ブローウィンズ]目指せ全選手コンプリート！食べ ...",
@@ -7855,5 +7846,13 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/aoids_fukui/status/2121343211167940812&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0VhPrseMD_EISO3i-ZaBj1",
     "published": "2026-11-14T02:33:21Z",
     "detected_at": "2026-11-14T04:41:07.942898+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8264800092868344898",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                           #ガラクタチャンネル 今シーズン変則 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121385559235199391&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw1yakOxcO1XTyT9eiejUmiD",
+    "published": "2026-11-14T03:53:52Z",
+    "detected_at": "2026-11-14T06:41:06.452130+00:00"
   }
 ]
