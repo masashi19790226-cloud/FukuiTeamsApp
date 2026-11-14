@@ -166,21 +166,21 @@
       "label": "ファイナルシーズン",
       "table": [
         {
-          "team": "SWHレディース西宮",
-          "played": 0,
-          "win": 0,
+          "team": "フウガドールすみだレディース",
+          "played": 1,
+          "win": 1,
           "draw": 0,
           "lose": 0,
-          "gf": 0,
-          "ga": 0,
-          "points": 0,
-          "gd": 0,
-          "form": "",
-          "record": "0勝0敗",
+          "gf": 6,
+          "ga": 3,
+          "points": 3,
+          "gd": 3,
+          "form": "○",
+          "record": "1勝0敗",
           "rank": 1
         },
         {
-          "team": "アルコ神戸",
+          "team": "SWHレディース西宮",
           "played": 0,
           "win": 0,
           "draw": 0,
@@ -194,7 +194,7 @@
           "rank": 2
         },
         {
-          "team": "バルドラール浦安ラス・ボニータス",
+          "team": "アルコ神戸",
           "played": 0,
           "win": 0,
           "draw": 0,
@@ -208,7 +208,7 @@
           "rank": 3
         },
         {
-          "team": "フウガドールすみだレディース",
+          "team": "バルドラール浦安ラス・ボニータス",
           "played": 0,
           "win": 0,
           "draw": 0,
@@ -237,16 +237,16 @@
         },
         {
           "team": "立川アスレティックFCレディース",
-          "played": 0,
+          "played": 1,
           "win": 0,
           "draw": 0,
-          "lose": 0,
-          "gf": 0,
-          "ga": 0,
+          "lose": 1,
+          "gf": 3,
+          "ga": 6,
           "points": 0,
-          "gd": 0,
-          "form": "",
-          "record": "0勝0敗",
+          "gd": -3,
+          "form": "●",
+          "record": "0勝1敗",
           "rank": 6
         }
       ]
@@ -293,10 +293,10 @@
           "rank": 4,
           "name": "平井 成美",
           "team": "立川アスレティックFCレディース",
-          "goals": 10,
+          "goals": 11,
           "pk": 0,
-          "shots": 46,
-          "games": 10,
+          "shots": 50,
+          "games": 11,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg",
           "number": "18"
         },
@@ -357,6 +357,17 @@
         },
         {
           "rank": 8,
+          "name": "尾田 緩奈",
+          "team": "立川アスレティックFCレディース",
+          "goals": 7,
+          "pk": 0,
+          "shots": 55,
+          "games": 11,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
+          "number": "19"
+        },
+        {
+          "rank": 8,
           "name": "伊藤 沙世",
           "team": "アルコ神戸",
           "goals": 7,
@@ -367,7 +378,7 @@
           "number": "4"
         },
         {
-          "rank": 11,
+          "rank": 12,
           "name": "新垣 杏奈",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 6,
@@ -377,7 +388,18 @@
           "number": "17"
         },
         {
-          "rank": 11,
+          "rank": 12,
+          "name": "若尾 和美",
+          "team": "フウガドールすみだレディース",
+          "goals": 6,
+          "pk": 0,
+          "shots": 22,
+          "games": 11,
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_e2eb8ecb-e1a1-4cc8-af7e-1561256e3f22.jpg",
+          "number": "24"
+        },
+        {
+          "rank": 12,
           "name": "倉持 杏子",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 6,
@@ -388,7 +410,7 @@
           "number": "23"
         },
         {
-          "rank": 11,
+          "rank": 12,
           "name": "アナ シュルハ",
           "team": "ミネルバ宇部",
           "goals": 6,
@@ -398,7 +420,7 @@
           "number": "21"
         },
         {
-          "rank": 11,
+          "rank": 12,
           "name": "高橋 菜津希",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 6,
@@ -408,7 +430,7 @@
           "number": "5"
         },
         {
-          "rank": 11,
+          "rank": 12,
           "name": "江川 涼",
           "team": "SWHレディース西宮",
           "goals": 6,
@@ -419,7 +441,7 @@
           "number": "9"
         },
         {
-          "rank": 11,
+          "rank": 12,
           "name": "川村 このは",
           "team": "アニージャ湘南",
           "goals": 6,
@@ -429,7 +451,7 @@
           "number": "77"
         },
         {
-          "rank": 11,
+          "rank": 12,
           "name": "飯干 絵里",
           "team": "SWHレディース西宮",
           "goals": 6,
@@ -440,7 +462,7 @@
           "number": "20"
         },
         {
-          "rank": 11,
+          "rank": 12,
           "name": "高尾 茜利",
           "team": "SWHレディース西宮",
           "goals": 6,
@@ -451,18 +473,7 @@
           "number": "13"
         },
         {
-          "rank": 11,
-          "name": "尾田 緩奈",
-          "team": "立川アスレティックFCレディース",
-          "goals": 6,
-          "pk": 0,
-          "shots": 48,
-          "games": 10,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
-          "number": "19"
-        },
-        {
-          "rank": 20,
+          "rank": 21,
           "name": "木村 美桜",
           "team": "アルコ神戸",
           "goals": 5,
@@ -473,18 +484,18 @@
           "number": "20"
         },
         {
-          "rank": 20,
+          "rank": 21,
           "name": "勝俣 里穗",
           "team": "フウガドールすみだレディース",
           "goals": 5,
           "pk": 0,
-          "shots": 23,
-          "games": 10,
+          "shots": 24,
+          "games": 11,
           "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_f6e10019-1639-4014-be4d-2e59f0c3926f.jpg",
           "number": "21"
         },
         {
-          "rank": 20,
+          "rank": 21,
           "name": "高畠 早奈恵",
           "team": "アルコ神戸",
           "goals": 5,
@@ -495,7 +506,7 @@
           "number": "21"
         },
         {
-          "rank": 20,
+          "rank": 21,
           "name": "荒井 一花",
           "team": "福井丸岡ラック",
           "goals": 5,
@@ -507,7 +518,7 @@
           "position": "FP"
         },
         {
-          "rank": 20,
+          "rank": 21,
           "name": "平田 梨豊",
           "team": "福井丸岡ラック",
           "goals": 5,
@@ -519,18 +530,18 @@
           "position": "FP"
         },
         {
-          "rank": 20,
-          "name": "黒田 茉耶",
+          "rank": 21,
+          "name": "玉川 華帆",
           "team": "フウガドールすみだレディース",
           "goals": 5,
-          "pk": 1,
-          "shots": 30,
-          "games": 10,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_60b00a8e-85f7-432c-9a7c-6bbe69a5720d.jpg",
-          "number": "13"
+          "pk": 0,
+          "shots": 29,
+          "games": 9,
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_14ed1885-e058-4ed0-9374-e36f533c5299.jpg",
+          "number": "23"
         },
         {
-          "rank": 20,
+          "rank": 21,
           "name": "矢津田 明莉",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 5,
@@ -541,7 +552,18 @@
           "number": "7"
         },
         {
-          "rank": 20,
+          "rank": 21,
+          "name": "黒田 茉耶",
+          "team": "フウガドールすみだレディース",
+          "goals": 5,
+          "pk": 1,
+          "shots": 33,
+          "games": 11,
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_60b00a8e-85f7-432c-9a7c-6bbe69a5720d.jpg",
+          "number": "13"
+        },
+        {
+          "rank": 21,
           "name": "渡邊 優和",
           "team": "福井丸岡ラック",
           "goals": 5,
@@ -553,7 +575,7 @@
           "position": "FP"
         },
         {
-          "rank": 20,
+          "rank": 21,
           "name": "井口 優",
           "team": "SWHレディース西宮",
           "goals": 5,
@@ -564,7 +586,7 @@
           "number": "11"
         },
         {
-          "rank": 20,
+          "rank": 21,
           "name": "吉野 遥菜",
           "team": "SWHレディース西宮",
           "goals": 5,
@@ -575,7 +597,7 @@
           "number": "8"
         },
         {
-          "rank": 20,
+          "rank": 21,
           "name": "中島 菜月",
           "team": "アルコ神戸",
           "goals": 5,
@@ -586,29 +608,18 @@
           "number": "8"
         },
         {
-          "rank": 20,
+          "rank": 21,
           "name": "中村 みづき",
           "team": "立川アスレティックFCレディース",
           "goals": 5,
           "pk": 0,
-          "shots": 65,
-          "games": 10,
+          "shots": 76,
+          "games": 11,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l08.jpg",
           "number": "8"
         },
         {
-          "rank": 32,
-          "name": "小倉 杏梨沙",
-          "team": "立川アスレティックFCレディース",
-          "goals": 4,
-          "pk": 0,
-          "shots": 10,
-          "games": 4,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l23.jpg",
-          "number": "23"
-        },
-        {
-          "rank": 32,
+          "rank": 34,
           "name": "伊藤 沙莉",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 4,
@@ -619,18 +630,29 @@
           "number": "4"
         },
         {
-          "rank": 32,
+          "rank": 34,
+          "name": "小倉 杏梨沙",
+          "team": "立川アスレティックFCレディース",
+          "goals": 4,
+          "pk": 0,
+          "shots": 13,
+          "games": 5,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l23.jpg",
+          "number": "23"
+        },
+        {
+          "rank": 34,
           "name": "吉田 恋々菜",
           "team": "フウガドールすみだレディース",
           "goals": 4,
           "pk": 0,
           "shots": 16,
-          "games": 10,
+          "games": 11,
           "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_26030724-0b8e-4ad2-94cf-1fe287849d98.jpg",
           "number": "6"
         },
         {
-          "rank": 32,
+          "rank": 34,
           "name": "高田 夏恋",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 4,
@@ -640,7 +662,7 @@
           "number": "11"
         },
         {
-          "rank": 32,
+          "rank": 34,
           "name": "小川 汐音",
           "team": "アニージャ湘南",
           "goals": 4,
@@ -650,7 +672,7 @@
           "number": "25"
         },
         {
-          "rank": 32,
+          "rank": 34,
           "name": "大西 恋花",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 4,
@@ -661,7 +683,7 @@
           "number": "16"
         },
         {
-          "rank": 32,
+          "rank": 34,
           "name": "山森 しおん",
           "team": "福井丸岡ラック",
           "goals": 4,
@@ -673,7 +695,7 @@
           "position": "FP"
         },
         {
-          "rank": 32,
+          "rank": 34,
           "name": "仲井 里奈",
           "team": "さいたまサイコロ",
           "goals": 4,
@@ -683,7 +705,7 @@
           "number": "17"
         },
         {
-          "rank": 32,
+          "rank": 34,
           "name": "土谷 美晴",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 4,
@@ -694,18 +716,18 @@
           "number": "31"
         },
         {
-          "rank": 32,
+          "rank": 34,
           "name": "肥尾 明里",
           "team": "フウガドールすみだレディース",
           "goals": 4,
           "pk": 0,
-          "shots": 30,
-          "games": 10,
+          "shots": 31,
+          "games": 11,
           "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1351x2027_v-frms_webp_1557c84e-0e04-49a3-af04-fe39f5b46670.jpg",
           "number": "14"
         },
         {
-          "rank": 42,
+          "rank": 44,
           "name": "江川 凜",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 3,
@@ -716,7 +738,7 @@
           "number": "19"
         },
         {
-          "rank": 42,
+          "rank": 44,
           "name": "山本 奈波",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 3,
@@ -727,7 +749,7 @@
           "number": "25"
         },
         {
-          "rank": 42,
+          "rank": 44,
           "name": "米田 夢宝",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 3,
@@ -737,29 +759,18 @@
           "number": "9"
         },
         {
-          "rank": 42,
+          "rank": 44,
           "name": "中野 瑞己",
           "team": "フウガドールすみだレディース",
           "goals": 3,
           "pk": 0,
-          "shots": 16,
-          "games": 10,
+          "shots": 18,
+          "games": 11,
           "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_2a9a9677-efeb-4987-9160-5ba631879bd7.jpg",
           "number": "10"
         },
         {
-          "rank": 42,
-          "name": "若尾 和美",
-          "team": "フウガドールすみだレディース",
-          "goals": 3,
-          "pk": 0,
-          "shots": 17,
-          "games": 10,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_e2eb8ecb-e1a1-4cc8-af7e-1561256e3f22.jpg",
-          "number": "24"
-        },
-        {
-          "rank": 42,
+          "rank": 44,
           "name": "濵田 莉那",
           "team": "ミネルバ宇部",
           "goals": 3,
@@ -770,7 +781,7 @@
           "number": "20"
         },
         {
-          "rank": 42,
+          "rank": 44,
           "name": "野田 桜菜",
           "team": "アルコ神戸",
           "goals": 3,
@@ -781,7 +792,7 @@
           "number": "9"
         },
         {
-          "rank": 42,
+          "rank": 44,
           "name": "松本 直美",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 3,
@@ -790,7 +801,7 @@
           "games": 7
         },
         {
-          "rank": 42,
+          "rank": 44,
           "name": "田中 夢",
           "team": "ミネルバ宇部",
           "goals": 3,
@@ -801,18 +812,7 @@
           "number": "19"
         },
         {
-          "rank": 42,
-          "name": "玉川 華帆",
-          "team": "フウガドールすみだレディース",
-          "goals": 3,
-          "pk": 0,
-          "shots": 26,
-          "games": 8,
-          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_14ed1885-e058-4ed0-9374-e36f533c5299.jpg",
-          "number": "23"
-        },
-        {
-          "rank": 42,
+          "rank": 44,
           "name": "舘山 香緒里",
           "team": "アニージャ湘南",
           "goals": 3,
@@ -822,7 +822,7 @@
           "number": "24"
         },
         {
-          "rank": 42,
+          "rank": 44,
           "name": "田中 ちひろ",
           "team": "アルコ神戸",
           "goals": 3,
@@ -839,7 +839,7 @@
           "goals": 2,
           "pk": 0,
           "shots": 4,
-          "games": 10,
+          "games": 11,
           "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_9482903a-6bac-46fc-a156-a4421cceb0ef.jpg",
           "number": "2"
         },
@@ -997,8 +997,8 @@
           "team": "立川アスレティックFCレディース",
           "goals": 2,
           "pk": 0,
-          "shots": 24,
-          "games": 10,
+          "shots": 25,
+          "games": 11,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l05.jpg",
           "number": "5"
         },
@@ -1009,7 +1009,7 @@
           "goals": 2,
           "pk": 0,
           "shots": 26,
-          "games": 10,
+          "games": 11,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l04.jpg",
           "number": "4"
         },
@@ -1063,8 +1063,8 @@
           "team": "立川アスレティックFCレディース",
           "goals": 1,
           "pk": 0,
-          "shots": 1,
-          "games": 10,
+          "shots": 2,
+          "games": 11,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l25.jpg",
           "number": "25"
         },
@@ -1103,6 +1103,17 @@
         },
         {
           "rank": 75,
+          "name": "原川 菜々子",
+          "team": "フウガドールすみだレディース",
+          "goals": 1,
+          "pk": 0,
+          "shots": 4,
+          "games": 1,
+          "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1489x2233_v-frms_webp_77d8950e-028e-437f-895e-32bbee492007.jpg",
+          "number": "19"
+        },
+        {
+          "rank": 75,
           "name": "秋原 美優",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1111,17 +1122,6 @@
           "games": 3,
           "photo": "https://www.swh2003.com/img/202627-17.jpg",
           "number": "17"
-        },
-        {
-          "rank": 75,
-          "name": "宮下 みのり",
-          "team": "立川アスレティックFCレディース",
-          "goals": 1,
-          "pk": 0,
-          "shots": 4,
-          "games": 5,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l33.jpg",
-          "number": "33"
         },
         {
           "rank": 75,
@@ -1185,6 +1185,17 @@
         },
         {
           "rank": 75,
+          "name": "宮下 みのり",
+          "team": "立川アスレティックFCレディース",
+          "goals": 1,
+          "pk": 0,
+          "shots": 6,
+          "games": 6,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l33.jpg",
+          "number": "33"
+        },
+        {
+          "rank": 75,
           "name": "岡野 未央",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1201,7 +1212,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 9,
-          "games": 9,
+          "games": 10,
           "photo": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_99b69d5a-dbd8-4bc5-b37a-eced47148ab7.jpg",
           "number": "7"
         },
@@ -1228,17 +1239,6 @@
         },
         {
           "rank": 75,
-          "name": "勝又 野乃花",
-          "team": "立川アスレティックFCレディース",
-          "goals": 1,
-          "pk": 0,
-          "shots": 11,
-          "games": 10,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l07.jpg",
-          "number": "7"
-        },
-        {
-          "rank": 75,
           "name": "伊藤 かの果",
           "team": "ミネルバ宇部",
           "goals": 1,
@@ -1247,6 +1247,17 @@
           "games": 7,
           "photo": "https://www.minerva-ube.jp/image/2026_minervaube_77.png",
           "number": "77"
+        },
+        {
+          "rank": 75,
+          "name": "勝又 野乃花",
+          "team": "立川アスレティックFCレディース",
+          "goals": 1,
+          "pk": 0,
+          "shots": 13,
+          "games": 11,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l07.jpg",
+          "number": "7"
         },
         {
           "rank": 75,
@@ -1388,7 +1399,7 @@
         "SWHレディース西宮": "13人(前回の分)・得点表に13人",
         "アルコ神戸": "12人(前回の分)・得点表に12人",
         "ミネルバ宇部": "5人(前回の分)・得点表に5人",
-        "フウガドールすみだレディース": "18人(前回の分)・得点表に10人"
+        "フウガドールすみだレディース": "18人(前回の分)・得点表に11人"
       },
       "club_photo_cache": {
         "エスポラーダ北海道イルネーヴェ": {
@@ -1687,7 +1698,7 @@
         }
       }
     },
-    "updated_at": "2026-11-14T09:23:07.403495+00:00"
+    "updated_at": "2026-11-14T09:42:57.762696+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3429,7 +3440,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-14T09:23:07.403495+00:00"
+    "updated_at": "2026-11-14T09:42:57.762696+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-14",
@@ -6400,7 +6411,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-14T09:23:07.403495+00:00"
+    "updated_at": "2026-11-14T09:42:57.762696+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -8456,7 +8467,7 @@
         }
       }
     },
-    "updated_at": "2026-11-14T09:23:07.403495+00:00"
+    "updated_at": "2026-11-14T09:42:57.762696+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-14",
@@ -11892,6 +11903,6 @@
         }
       ]
     },
-    "updated_at": "2026-11-14T09:02:51.410457+00:00"
+    "updated_at": "2026-11-14T09:42:57.762696+00:00"
   }
 }
