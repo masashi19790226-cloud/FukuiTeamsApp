@@ -7864,5 +7864,39 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.baEsCbgwcXCYR0CNzmf6eg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-14T07:01:13.420291+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12708273845312723106",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【 全国地域SCL 】 1次ラウンド vs.福山シティFC 試合終了 福井 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2121489316044296287&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2iL-OAVP_r88VAA6OtEx3w",
+    "published": "2026-11-14T07:04:15Z",
+    "detected_at": "2026-11-14T07:21:06.122426+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16468121886931152722",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【 全国地域SCL 】 1次ラウンド vs.福山シティFC 試合はこのあと ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2121448793476669573&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3mwFc6IeNvYIjxZMlXvfHt",
+    "published": "2026-11-14T03:47:15Z",
+    "detected_at": "2026-11-14T07:21:06.122471+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17264546840940680326",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"【 全国地域SCL 】 1次ラウンド vs.福山シティFC 試合メンバー ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2121445519121649957/photo/1&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw34tG9TelqLvNMNn7on4UPA",
+    "published": "2026-11-14T03:47:15Z",
+    "detected_at": "2026-11-14T07:21:06.122488+00:00"
+  },
+  {
+    "id": "bing:https://www.msn.com/ja-jp/sports/soccer/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89fc-%E5%BE%8C%E5%8D%8A%E3%81%AB%E5%85%88%E5%88%B6%E3%82%B4%E3%83%BC%E3%83%AB%E3%82%82%E5%BC%95%E3%81%8D%E5%88%86%E3%81%91-2026%E5%9C%B0%E5%9F%9Fcl1%E6%AC%A1%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89-%E7%A6%8F%E5%B1%B1%E3%82%B7%E3%83%86%E3%82%A3fc%E6%88%A6/ar-AA2hpG1t",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFC、後半に先制ゴールも引き分け 2026地域CL1次 ...",
+    "link": "https://www.msn.com/ja-jp/sports/soccer/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89fc-%E5%BE%8C%E5%8D%8A%E3%81%AB%E5%85%88%E5%88%B6%E3%82%B4%E3%83%BC%E3%83%AB%E3%82%82%E5%BC%95%E3%81%8D%E5%88%86%E3%81%91-2026%E5%9C%B0%E5%9F%9Fcl1%E6%AC%A1%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89-%E7%A6%8F%E5%B1%B1%E3%82%B7%E3%83%86%E3%82%A3fc%E6%88%A6/ar-AA2hpG1t",
+    "published": "2026-11-13T22:35:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "",
+    "detected_at": "2026-11-14T07:21:07.428222+00:00"
   }
 ]
