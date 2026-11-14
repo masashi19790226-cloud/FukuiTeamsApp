@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-14T18:43:03.184541+00:00",
+    "updated_at": "2026-11-14T19:04:08.971039+00:00",
     "players": [
       {
         "number": "1",
@@ -3392,7 +3392,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=695&tab=1",
-    "updated_at": "2026-11-14T18:43:04.538194+00:00",
+    "updated_at": "2026-11-14T19:04:41.571515+00:00",
     "players": [
       {
         "number": "1",
@@ -3540,12 +3540,12 @@
         "three_pct": "13.6%",
         "ft_pct": "47.8%",
         "eff": "2.4",
-        "fgm": "17",
-        "fga": "56",
-        "three_m": "2",
-        "three_a": "20",
+        "fgm": "20",
+        "fga": "60",
+        "three_m": "3",
+        "three_a": "22",
         "ftm": "11",
-        "fta": "20",
+        "fta": "23",
         "game_log": [
           {
             "date": "2026-11-14",
@@ -4194,12 +4194,12 @@
         "three_pct": "10.0%",
         "ft_pct": "54.5%",
         "eff": "2.9",
-        "fgm": "9",
-        "fga": "26",
+        "fgm": "10",
+        "fga": "28",
         "three_m": "1",
         "three_a": "10",
-        "ftm": "4",
-        "fta": "9",
+        "ftm": "6",
+        "fta": "11",
         "game_log": [
           {
             "date": "2026-11-14",
@@ -5290,12 +5290,12 @@
         "type": "BO",
         "g": "14",
         "v": {
-          "fgm": "17",
-          "fga": "56",
-          "three_m": "2",
-          "three_a": "20",
+          "fgm": "20",
+          "fga": "60",
+          "three_m": "3",
+          "three_a": "22",
           "ftm": "11",
-          "fta": "20"
+          "fta": "23"
         },
         "log": [
           {
@@ -5889,12 +5889,12 @@
         "type": "BO",
         "g": "15",
         "v": {
-          "fgm": "9",
-          "fga": "26",
+          "fgm": "10",
+          "fga": "28",
           "three_m": "1",
           "three_a": "10",
-          "ftm": "4",
-          "fta": "9"
+          "ftm": "6",
+          "fta": "11"
         },
         "log": [
           {
