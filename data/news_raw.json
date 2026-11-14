@@ -1,31 +1,11 @@
 [
   {
-    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51682",
-    "team": "BLOWINDS",
-    "title": "カスタマイズサービス「BLOWINDS LAB」2026-27シーズン出展概要決定！",
-    "link": "https://www.fukuiblowinds.com/news/detail/id=51682",
-    "published": "2026-09-30T09:00:00+09:00",
-    "detected_at": "2026-09-30T06:35:46.928794+00:00",
-    "source": "ブローウィンズ公式",
-    "image": "https://www.fukuiblowinds.com/files/user/KV_blowinds%20lab.jpg"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:18068703005524745147",
     "team": "UNITED",
     "title": "第52回北信越フットボールリーグ【第14節_福井ユナイテッドFC戦】のお知らせ | 富山新庄クラブ",
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://tymshinjoclub.com/cat01/12397&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw22-Atm11KWdlCzHYClOY-T",
     "published": "2026-09-30T02:59:29Z",
     "detected_at": "2026-09-30T07:32:16.312948+00:00"
-  },
-  {
-    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51684",
-    "team": "BLOWINDS",
-    "title": "【ホーム開幕節】観戦チケット「立ち見席」追加販売のお知らせ",
-    "link": "https://www.fukuiblowinds.com/news/detail/id=51684",
-    "published": "2026-09-30T09:00:00+09:00",
-    "detected_at": "2026-09-30T08:33:10.940679+00:00",
-    "source": "ブローウィンズ公式",
-    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TICKET.jpg"
   },
   {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51688",
@@ -3276,26 +3256,6 @@
     "link": "https://www.fukuieiheijihand.co.jp/topics/5%e6%9c%8824%e6%97%a5-%e3%83%aa%e3%83%bc%e3%82%b0%ef%bd%88-%e3%83%9b%e3%83%bc%e3%83%a0%e3%82%b2%e3%83%bc%e3%83%a0%e3%81%ae%e3%81%94%e6%a1%88%e5%86%85/",
     "published": "2026-10-01T09:00:00+09:00",
     "detected_at": "2026-10-01T00:00:00+00:00",
-    "source": "ブルーサンダー公式",
-    "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
-  },
-  {
-    "id": "official-news:https://www.fukuieiheijihand.co.jp/topics/%e9%96%8b%e5%b9%95%e6%88%a6%e3%83%81%e3%83%a9%e3%82%b7/",
-    "team": "THUNDER",
-    "title": "開幕戦チラシ",
-    "link": "https://www.fukuieiheijihand.co.jp/topics/%e9%96%8b%e5%b9%95%e6%88%a6%e3%83%81%e3%83%a9%e3%82%b7/",
-    "published": "2026-09-30T09:00:00+09:00",
-    "detected_at": "2026-09-30T00:00:00+00:00",
-    "source": "ブルーサンダー公式",
-    "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
-  },
-  {
-    "id": "official-news:https://www.fukuieiheijihand.co.jp/topics/%e7%a6%8f%e4%ba%95%e9%8a%80%e8%a1%8c%e6%a7%98%e3%81%ab%e3%81%a6%e5%86%99%e7%9c%9f%e3%83%91%e3%83%8d%e3%83%ab%e5%b1%95%e3%82%92%e9%96%8b%e5%82%ac%ef%bc%81/",
-    "team": "THUNDER",
-    "title": "福井銀行様にて写真パネル展を開催！",
-    "link": "https://www.fukuieiheijihand.co.jp/topics/%e7%a6%8f%e4%ba%95%e9%8a%80%e8%a1%8c%e6%a7%98%e3%81%ab%e3%81%a6%e5%86%99%e7%9c%9f%e3%83%91%e3%83%8d%e3%83%ab%e5%b1%95%e3%82%92%e9%96%8b%e5%82%ac%ef%bc%81/",
-    "published": "2026-09-30T09:00:00+09:00",
-    "detected_at": "2026-09-30T00:00:00+00:00",
     "source": "ブルーサンダー公式",
     "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
   },

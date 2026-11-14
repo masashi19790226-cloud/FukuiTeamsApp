@@ -1,5 +1,45 @@
 [
   {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51682",
+    "team": "BLOWINDS",
+    "title": "カスタマイズサービス「BLOWINDS LAB」2026-27シーズン出展概要決定！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51682",
+    "published": "2026-09-30T09:00:00+09:00",
+    "detected_at": "2026-09-30T06:35:46.928794+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_blowinds%20lab.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51684",
+    "team": "BLOWINDS",
+    "title": "【ホーム開幕節】観戦チケット「立ち見席」追加販売のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51684",
+    "published": "2026-09-30T09:00:00+09:00",
+    "detected_at": "2026-09-30T08:33:10.940679+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TICKET.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuieiheijihand.co.jp/topics/%e9%96%8b%e5%b9%95%e6%88%a6%e3%83%81%e3%83%a9%e3%82%b7/",
+    "team": "THUNDER",
+    "title": "開幕戦チラシ",
+    "link": "https://www.fukuieiheijihand.co.jp/topics/%e9%96%8b%e5%b9%95%e6%88%a6%e3%83%81%e3%83%a9%e3%82%b7/",
+    "published": "2026-09-30T09:00:00+09:00",
+    "detected_at": "2026-09-30T00:00:00+00:00",
+    "source": "ブルーサンダー公式",
+    "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
+  },
+  {
+    "id": "official-news:https://www.fukuieiheijihand.co.jp/topics/%e7%a6%8f%e4%ba%95%e9%8a%80%e8%a1%8c%e6%a7%98%e3%81%ab%e3%81%a6%e5%86%99%e7%9c%9f%e3%83%91%e3%83%8d%e3%83%ab%e5%b1%95%e3%82%92%e9%96%8b%e5%82%ac%ef%bc%81/",
+    "team": "THUNDER",
+    "title": "福井銀行様にて写真パネル展を開催！",
+    "link": "https://www.fukuieiheijihand.co.jp/topics/%e7%a6%8f%e4%ba%95%e9%8a%80%e8%a1%8c%e6%a7%98%e3%81%ab%e3%81%a6%e5%86%99%e7%9c%9f%e3%83%91%e3%83%8d%e3%83%ab%e5%b1%95%e3%82%92%e9%96%8b%e5%82%ac%ef%bc%81/",
+    "published": "2026-09-30T09:00:00+09:00",
+    "detected_at": "2026-09-30T00:00:00+00:00",
+    "source": "ブルーサンダー公式",
+    "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
+  },
+  {
     "id": "tag:google.com,2013:googlealerts/feed:7951496874294929862",
     "team": "RAC",
     "title": "福井丸岡RUCK【公式】 on X: \"                         青ユニ販売のお知らせ  【訂正 ...",
