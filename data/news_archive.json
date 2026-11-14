@@ -1,5 +1,24 @@
 [
   {
+    "id": "bing:https://www.asahi.com/and/pressrelease/16931087",
+    "team": "BLOWINDS",
+    "title": "【㈱アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
+    "link": "https://www.asahi.com/and/pressrelease/16931087",
+    "published": "2026-09-30T17:00:00+00:00",
+    "source": "朝日新聞デジタル",
+    "detected_at": "2026-10-04T13:52:12.766064+00:00"
+  },
+  {
+    "id": "bing:https://www.afpbb.com/articles/-/3655562",
+    "team": "BLOWINDS",
+    "title": "【㈱アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
+    "link": "https://www.afpbb.com/articles/-/3655562",
+    "published": "2026-09-30T17:00:00+00:00",
+    "source": "AFPBB News",
+    "image": "",
+    "detected_at": "2026-10-16T03:59:25.222068+00:00"
+  },
+  {
     "id": "tag:google.com,2013:googlealerts/feed:11340906122455880255",
     "team": "BLOWINDS",
     "title": "B.ONE 第1節GAME2 vs 岐阜スゥープスの感想【福井ブローウィンズ】 - note",
