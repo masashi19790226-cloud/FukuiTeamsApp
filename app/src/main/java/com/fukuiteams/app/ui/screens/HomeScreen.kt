@@ -332,6 +332,17 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
 
+            // 選手の誕生日(今日が誕生日の選手と、7日以内に誕生日の選手)。選んでいるチームの選手だけ。
+            // 今日が誕生日の選手がいる日は、一面のいちばん上(速報・特集より上)に出す(Web版と同じ)
+            val teamBirthdays = birthdays.filter { selectedTeam == null || it.team == selectedTeam }
+            val bdToday = BirthdaysRepository.today()
+            val soon = teamBirthdays.filter { it.daysUntilNext(bdToday) in 0..7 }
+                .sortedWith(compareBy<PlayerBirthday> { it.daysUntilNext(bdToday) }.thenBy { it.team?.ordinal ?: 9 })
+            val birthdayOnTop = soon.any { it.isBirthdayOn(bdToday) }
+            if (birthdayOnTop) {
+                item { BirthdayCard(soon, bdToday) }
+            }
+
             // 一面トップ(速報・特集)。いちばん上に固定し、その下に本日の試合・次の試合を出す(Web版と同じ)。選択中のチーム(「すべて」なら全チーム)の最新の試合結果
             val latest = mainGames()
                 .filter { (selectedTeam == null || it.team == selectedTeam) && autoResults.containsKey(it.id) }
@@ -478,12 +489,8 @@ fun HomeScreen(
                 )
             }
 
-            // 選手の誕生日(今日が誕生日の選手と、7日以内に誕生日の選手)。選んでいるチームの選手だけ
-            val teamBirthdays = birthdays.filter { selectedTeam == null || it.team == selectedTeam }
-            val bdToday = BirthdaysRepository.today()
-            val soon = teamBirthdays.filter { it.daysUntilNext(bdToday) in 0..7 }
-                .sortedWith(compareBy<PlayerBirthday> { it.daysUntilNext(bdToday) }.thenBy { it.team?.ordinal ?: 9 })
-            if (soon.isNotEmpty()) {
+            // 選手の誕生日(今日が誕生日の選手がいない日は、ここに出す)
+            if (soon.isNotEmpty() && !birthdayOnTop) {
                 item { BirthdayCard(soon, bdToday) }
             }
 

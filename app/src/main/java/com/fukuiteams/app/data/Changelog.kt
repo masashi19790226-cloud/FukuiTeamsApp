@@ -14,6 +14,13 @@ data class ChangelogEntry(val date: String, val title: String, val items: List<S
 
 val CHANGELOG: List<ChangelogEntry> = listOf(
     ChangelogEntry(
+        date = "2026年11月14日",
+        title = "誕生日を一面のいちばん上に",
+        items = listOf(
+            "今日が誕生日の選手がいる日は、一面のいちばん上(特集より上)に「今日は誕生日」を出すようにしました"
+        )
+    ),
+    ChangelogEntry(
         date = "2026年11月13日",
         title = "丸岡RUCK・ユナイテッド特集",
         items = listOf(
