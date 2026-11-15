@@ -180,6 +180,20 @@
           "rank": 1
         },
         {
+          "team": "SWHレディース西宮",
+          "played": 1,
+          "win": 1,
+          "draw": 0,
+          "lose": 0,
+          "gf": 4,
+          "ga": 3,
+          "points": 3,
+          "gd": 1,
+          "form": "○",
+          "record": "1勝0敗",
+          "rank": 2
+        },
+        {
           "team": "バルドラール浦安ラス・ボニータス",
           "played": 1,
           "win": 1,
@@ -191,34 +205,20 @@
           "gd": 1,
           "form": "○",
           "record": "1勝0敗",
-          "rank": 2
-        },
-        {
-          "team": "SWHレディース西宮",
-          "played": 0,
-          "win": 0,
-          "draw": 0,
-          "lose": 0,
-          "gf": 0,
-          "ga": 0,
-          "points": 0,
-          "gd": 0,
-          "form": "",
-          "record": "0勝0敗",
           "rank": 3
         },
         {
           "team": "アルコ神戸",
-          "played": 0,
+          "played": 1,
           "win": 0,
           "draw": 0,
-          "lose": 0,
-          "gf": 0,
-          "ga": 0,
+          "lose": 1,
+          "gf": 3,
+          "ga": 4,
           "points": 0,
-          "gd": 0,
-          "form": "",
-          "record": "0勝0敗",
+          "gd": -1,
+          "form": "●",
+          "record": "0勝1敗",
           "rank": 4
         },
         {
@@ -302,25 +302,36 @@
         },
         {
           "rank": 5,
+          "name": "高橋 京花",
+          "team": "アルコ神戸",
+          "goals": 10,
+          "pk": 0,
+          "shots": 51,
+          "games": 11,
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02934-2-768x512.jpg",
+          "number": "32"
+        },
+        {
+          "rank": 6,
           "name": "鈴木 心菜",
           "team": "アルコ神戸",
           "goals": 9,
           "pk": 0,
           "shots": 31,
-          "games": 10,
+          "games": 11,
           "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02914-768x512.jpg",
           "number": "31"
         },
         {
-          "rank": 5,
-          "name": "高橋 京花",
-          "team": "アルコ神戸",
-          "goals": 9,
+          "rank": 7,
+          "name": "高尾 茜利",
+          "team": "SWHレディース西宮",
+          "goals": 8,
           "pk": 0,
-          "shots": 44,
-          "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02934-2-768x512.jpg",
-          "number": "32"
+          "shots": 47,
+          "games": 11,
+          "photo": "https://www.swh2003.com/img/202627-13.jpg",
+          "number": "13"
         },
         {
           "rank": 7,
@@ -334,7 +345,7 @@
           "number": "20"
         },
         {
-          "rank": 8,
+          "rank": 9,
           "name": "岩崎 裕加",
           "team": "フウガドールすみだレディース",
           "goals": 7,
@@ -345,18 +356,18 @@
           "number": "9"
         },
         {
-          "rank": 8,
+          "rank": 9,
           "name": "尾川 奈穂",
           "team": "SWHレディース西宮",
           "goals": 7,
           "pk": 0,
-          "shots": 48,
-          "games": 10,
+          "shots": 51,
+          "games": 11,
           "photo": "https://www.swh2003.com/img/202627-14.jpg",
           "number": "14"
         },
         {
-          "rank": 8,
+          "rank": 9,
           "name": "尾田 緩奈",
           "team": "立川アスレティックFCレディース",
           "goals": 7,
@@ -367,18 +378,18 @@
           "number": "19"
         },
         {
-          "rank": 8,
+          "rank": 9,
           "name": "伊藤 沙世",
           "team": "アルコ神戸",
           "goals": 7,
           "pk": 0,
-          "shots": 72,
-          "games": 10,
+          "shots": 76,
+          "games": 11,
           "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02808-2-768x512.jpg",
           "number": "4"
         },
         {
-          "rank": 12,
+          "rank": 13,
           "name": "新垣 杏奈",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 6,
@@ -388,7 +399,7 @@
           "number": "17"
         },
         {
-          "rank": 12,
+          "rank": 13,
           "name": "若尾 和美",
           "team": "フウガドールすみだレディース",
           "goals": 6,
@@ -399,7 +410,18 @@
           "number": "24"
         },
         {
-          "rank": 12,
+          "rank": 13,
+          "name": "木村 美桜",
+          "team": "アルコ神戸",
+          "goals": 6,
+          "pk": 0,
+          "shots": 24,
+          "games": 11,
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02887-768x512.jpg",
+          "number": "20"
+        },
+        {
+          "rank": 13,
           "name": "倉持 杏子",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 6,
@@ -410,7 +432,7 @@
           "number": "23"
         },
         {
-          "rank": 12,
+          "rank": 13,
           "name": "アナ シュルハ",
           "team": "ミネルバ宇部",
           "goals": 6,
@@ -420,7 +442,7 @@
           "number": "21"
         },
         {
-          "rank": 12,
+          "rank": 13,
           "name": "高橋 菜津希",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 6,
@@ -430,18 +452,29 @@
           "number": "5"
         },
         {
-          "rank": 12,
+          "rank": 13,
+          "name": "井口 優",
+          "team": "SWHレディース西宮",
+          "goals": 6,
+          "pk": 0,
+          "shots": 39,
+          "games": 11,
+          "photo": "https://www.swh2003.com/img/202627-11.jpg",
+          "number": "11"
+        },
+        {
+          "rank": 13,
           "name": "江川 涼",
           "team": "SWHレディース西宮",
           "goals": 6,
           "pk": 0,
-          "shots": 36,
-          "games": 10,
+          "shots": 39,
+          "games": 11,
           "photo": "https://www.swh2003.com/img/202627-9.jpg",
           "number": "9"
         },
         {
-          "rank": 12,
+          "rank": 13,
           "name": "川村 このは",
           "team": "アニージャ湘南",
           "goals": 6,
@@ -451,29 +484,18 @@
           "number": "77"
         },
         {
-          "rank": 12,
+          "rank": 13,
           "name": "飯干 絵里",
           "team": "SWHレディース西宮",
           "goals": 6,
           "pk": 0,
-          "shots": 43,
-          "games": 10,
+          "shots": 49,
+          "games": 11,
           "photo": "https://www.swh2003.com/img/202627-20.jpg",
           "number": "20"
         },
         {
-          "rank": 12,
-          "name": "高尾 茜利",
-          "team": "SWHレディース西宮",
-          "goals": 6,
-          "pk": 0,
-          "shots": 44,
-          "games": 10,
-          "photo": "https://www.swh2003.com/img/202627-13.jpg",
-          "number": "13"
-        },
-        {
-          "rank": 21,
+          "rank": 23,
           "name": "江川 凜",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 5,
@@ -484,18 +506,7 @@
           "number": "19"
         },
         {
-          "rank": 21,
-          "name": "木村 美桜",
-          "team": "アルコ神戸",
-          "goals": 5,
-          "pk": 0,
-          "shots": 22,
-          "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02887-768x512.jpg",
-          "number": "20"
-        },
-        {
-          "rank": 21,
+          "rank": 23,
           "name": "勝俣 里穗",
           "team": "フウガドールすみだレディース",
           "goals": 5,
@@ -506,18 +517,7 @@
           "number": "21"
         },
         {
-          "rank": 21,
-          "name": "高畠 早奈恵",
-          "team": "アルコ神戸",
-          "goals": 5,
-          "pk": 0,
-          "shots": 25,
-          "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02890-768x512.jpg",
-          "number": "21"
-        },
-        {
-          "rank": 21,
+          "rank": 23,
           "name": "平田 梨豊",
           "team": "福井丸岡ラック",
           "goals": 5,
@@ -529,7 +529,18 @@
           "position": "FP"
         },
         {
-          "rank": 21,
+          "rank": 23,
+          "name": "高畠 早奈恵",
+          "team": "アルコ神戸",
+          "goals": 5,
+          "pk": 0,
+          "shots": 27,
+          "games": 11,
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02890-768x512.jpg",
+          "number": "21"
+        },
+        {
+          "rank": 23,
           "name": "荒井 一花",
           "team": "福井丸岡ラック",
           "goals": 5,
@@ -541,7 +552,7 @@
           "position": "FP"
         },
         {
-          "rank": 21,
+          "rank": 23,
           "name": "玉川 華帆",
           "team": "フウガドールすみだレディース",
           "goals": 5,
@@ -552,7 +563,7 @@
           "number": "23"
         },
         {
-          "rank": 21,
+          "rank": 23,
           "name": "矢津田 明莉",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 5,
@@ -563,7 +574,7 @@
           "number": "7"
         },
         {
-          "rank": 21,
+          "rank": 23,
           "name": "黒田 茉耶",
           "team": "フウガドールすみだレディース",
           "goals": 5,
@@ -574,7 +585,7 @@
           "number": "13"
         },
         {
-          "rank": 21,
+          "rank": 23,
           "name": "渡邊 優和",
           "team": "福井丸岡ラック",
           "goals": 5,
@@ -586,40 +597,29 @@
           "position": "FP"
         },
         {
-          "rank": 21,
-          "name": "井口 優",
-          "team": "SWHレディース西宮",
-          "goals": 5,
-          "pk": 0,
-          "shots": 37,
-          "games": 10,
-          "photo": "https://www.swh2003.com/img/202627-11.jpg",
-          "number": "11"
-        },
-        {
-          "rank": 21,
+          "rank": 23,
           "name": "吉野 遥菜",
           "team": "SWHレディース西宮",
           "goals": 5,
           "pk": 0,
-          "shots": 38,
-          "games": 10,
+          "shots": 39,
+          "games": 11,
           "photo": "https://www.swh2003.com/img/202627-8.jpg",
           "number": "8"
         },
         {
-          "rank": 21,
+          "rank": 23,
           "name": "中島 菜月",
           "team": "アルコ神戸",
           "goals": 5,
           "pk": 0,
-          "shots": 41,
-          "games": 10,
+          "shots": 42,
+          "games": 11,
           "photo": "https://arco-kobe.com/wp-content/uploads/2026/05/DSC02829-2-edited-768x512.jpg",
           "number": "8"
         },
         {
-          "rank": 21,
+          "rank": 23,
           "name": "中村 みづき",
           "team": "立川アスレティックFCレディース",
           "goals": 5,
@@ -684,6 +684,17 @@
         },
         {
           "rank": 35,
+          "name": "野田 桜菜",
+          "team": "アルコ神戸",
+          "goals": 4,
+          "pk": 0,
+          "shots": 23,
+          "games": 11,
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02836-2-1-768x512.jpg",
+          "number": "9"
+        },
+        {
+          "rank": 35,
           "name": "大西 恋花",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 4,
@@ -738,7 +749,7 @@
           "number": "14"
         },
         {
-          "rank": 45,
+          "rank": 46,
           "name": "山本 奈波",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 3,
@@ -749,7 +760,7 @@
           "number": "25"
         },
         {
-          "rank": 45,
+          "rank": 46,
           "name": "米田 夢宝",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 3,
@@ -759,7 +770,7 @@
           "number": "9"
         },
         {
-          "rank": 45,
+          "rank": 46,
           "name": "中野 瑞己",
           "team": "フウガドールすみだレディース",
           "goals": 3,
@@ -770,7 +781,7 @@
           "number": "10"
         },
         {
-          "rank": 45,
+          "rank": 46,
           "name": "濵田 莉那",
           "team": "ミネルバ宇部",
           "goals": 3,
@@ -781,18 +792,7 @@
           "number": "20"
         },
         {
-          "rank": 45,
-          "name": "野田 桜菜",
-          "team": "アルコ神戸",
-          "goals": 3,
-          "pk": 0,
-          "shots": 22,
-          "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02836-2-1-768x512.jpg",
-          "number": "9"
-        },
-        {
-          "rank": 45,
+          "rank": 46,
           "name": "松本 直美",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 3,
@@ -801,7 +801,7 @@
           "games": 7
         },
         {
-          "rank": 45,
+          "rank": 46,
           "name": "田中 夢",
           "team": "ミネルバ宇部",
           "goals": 3,
@@ -812,7 +812,18 @@
           "number": "19"
         },
         {
-          "rank": 45,
+          "rank": 46,
+          "name": "網城 安奈",
+          "team": "SWHレディース西宮",
+          "goals": 3,
+          "pk": 0,
+          "shots": 40,
+          "games": 10,
+          "photo": "https://www.swh2003.com/img/202627-10.jpg",
+          "number": "10"
+        },
+        {
+          "rank": 46,
           "name": "舘山 香緒里",
           "team": "アニージャ湘南",
           "goals": 3,
@@ -822,18 +833,18 @@
           "number": "24"
         },
         {
-          "rank": 45,
+          "rank": 46,
           "name": "田中 ちひろ",
           "team": "アルコ神戸",
           "goals": 3,
           "pk": 0,
-          "shots": 63,
-          "games": 10,
+          "shots": 67,
+          "games": 11,
           "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02824-2-768x512.jpg",
           "number": "7"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "庄子 彩",
           "team": "フウガドールすみだレディース",
           "goals": 2,
@@ -844,7 +855,7 @@
           "number": "2"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "岡部 茉帆",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 2,
@@ -855,18 +866,7 @@
           "number": "5"
         },
         {
-          "rank": 54,
-          "name": "島田 有嘉",
-          "team": "アルコ神戸",
-          "goals": 2,
-          "pk": 0,
-          "shots": 8,
-          "games": 4,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2026/05/DSC02862-2-edited-768x512.jpg",
-          "number": "17"
-        },
-        {
-          "rank": 54,
+          "rank": 55,
           "name": "後藤 穂香",
           "team": "さいたまサイコロ",
           "goals": 2,
@@ -876,7 +876,18 @@
           "number": "7"
         },
         {
-          "rank": 54,
+          "rank": 55,
+          "name": "島田 有嘉",
+          "team": "アルコ神戸",
+          "goals": 2,
+          "pk": 0,
+          "shots": 9,
+          "games": 5,
+          "photo": "https://arco-kobe.com/wp-content/uploads/2026/05/DSC02862-2-edited-768x512.jpg",
+          "number": "17"
+        },
+        {
+          "rank": 55,
           "name": "野口 はな",
           "team": "ミネルバ宇部",
           "goals": 2,
@@ -887,7 +898,7 @@
           "number": "87"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "松木 里緒",
           "team": "立川アスレティックFCレディース",
           "goals": 2,
@@ -897,7 +908,7 @@
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l10.jpg"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "足立 紗菜",
           "team": "福井丸岡ラック",
           "goals": 2,
@@ -909,18 +920,18 @@
           "position": "FP"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "三宅 怜",
           "team": "アルコ神戸",
           "goals": 2,
           "pk": 0,
           "shots": 18,
-          "games": 10,
+          "games": 11,
           "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02816-2-768x512.jpg",
           "number": "5"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "横川 四葉",
           "team": "福井丸岡ラック",
           "goals": 2,
@@ -932,7 +943,7 @@
           "position": "FP"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "加藤 鈴菜",
           "team": "SWHレディース西宮",
           "goals": 2,
@@ -943,7 +954,7 @@
           "number": "39"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "タイス デリマ オリベイラ",
           "team": "ミネルバ宇部",
           "goals": 2,
@@ -953,7 +964,7 @@
           "number": "8"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "パオラ ニコリ レオン アラウジョ",
           "team": "ミネルバ宇部",
           "goals": 2,
@@ -963,7 +974,7 @@
           "number": "10"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "稲垣 遙",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 2,
@@ -973,7 +984,7 @@
           "number": "2"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "小林 望月",
           "team": "福井丸岡ラック",
           "goals": 2,
@@ -985,7 +996,7 @@
           "position": "GK"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "倉元 美鈴",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 2,
@@ -995,7 +1006,7 @@
           "number": "10"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "原田 絢未",
           "team": "さいたまサイコロ",
           "goals": 2,
@@ -1004,7 +1015,7 @@
           "games": 10
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "鈴木 里歩",
           "team": "立川アスレティックFCレディース",
           "goals": 2,
@@ -1015,7 +1026,7 @@
           "number": "5"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "米山 涼美",
           "team": "立川アスレティックFCレディース",
           "goals": 2,
@@ -1026,7 +1037,7 @@
           "number": "4"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "山本 想",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 2,
@@ -1037,18 +1048,7 @@
           "number": "9"
         },
         {
-          "rank": 54,
-          "name": "網城 安奈",
-          "team": "SWHレディース西宮",
-          "goals": 2,
-          "pk": 0,
-          "shots": 38,
-          "games": 9,
-          "photo": "https://www.swh2003.com/img/202627-10.jpg",
-          "number": "10"
-        },
-        {
-          "rank": 54,
+          "rank": 55,
           "name": "長木 希果",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 2,
@@ -1059,13 +1059,13 @@
           "number": "42"
         },
         {
-          "rank": 54,
+          "rank": 55,
           "name": "山川 里佳子",
           "team": "アルコ神戸",
           "goals": 2,
           "pk": 0,
-          "shots": 43,
-          "games": 10,
+          "shots": 44,
+          "games": 11,
           "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02880-768x512.jpg",
           "number": "19"
         },
@@ -1087,7 +1087,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 3,
-          "games": 9,
+          "games": 10,
           "photo": "https://www.swh2003.com/img/202627-2.jpg",
           "number": "2"
         },
@@ -1168,17 +1168,6 @@
         },
         {
           "rank": 76,
-          "name": "見矢 明日香",
-          "team": "アルコ神戸",
-          "goals": 1,
-          "pk": 0,
-          "shots": 6,
-          "games": 10,
-          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02796-2-768x512.jpg",
-          "number": "1"
-        },
-        {
-          "rank": 76,
           "name": "児島 希里子",
           "team": "ミネルバ宇部",
           "goals": 1,
@@ -1213,9 +1202,20 @@
           "goals": 1,
           "pk": 0,
           "shots": 7,
-          "games": 8,
+          "games": 9,
           "photo": "https://www.swh2003.com/img/202627-18.jpg",
           "number": "18"
+        },
+        {
+          "rank": 76,
+          "name": "見矢 明日香",
+          "team": "アルコ神戸",
+          "goals": 1,
+          "pk": 0,
+          "shots": 7,
+          "games": 11,
+          "photo": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02796-2-768x512.jpg",
+          "number": "1"
         },
         {
           "rank": 76,
@@ -1309,7 +1309,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 16,
-          "games": 9,
+          "games": 10,
           "photo": "https://www.swh2003.com/img/202627-6.jpg",
           "number": "6"
         },
@@ -1353,7 +1353,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 19,
-          "games": 9,
+          "games": 10,
           "photo": "https://www.swh2003.com/img/202627-7.jpg",
           "number": "7"
         },
@@ -1698,7 +1698,7 @@
         }
       }
     },
-    "updated_at": "2026-11-15T09:23:03.643515+00:00"
+    "updated_at": "2026-11-15T09:42:44.359032+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3440,7 +3440,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-15T09:23:03.643515+00:00"
+    "updated_at": "2026-11-15T09:42:44.359032+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-15",
@@ -6411,7 +6411,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-15T09:23:03.643515+00:00"
+    "updated_at": "2026-11-15T09:42:44.359032+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -8632,7 +8632,7 @@
         }
       }
     },
-    "updated_at": "2026-11-15T09:23:03.643515+00:00"
+    "updated_at": "2026-11-15T09:42:44.359032+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-15",
@@ -12068,6 +12068,6 @@
         }
       ]
     },
-    "updated_at": "2026-11-15T09:23:03.643515+00:00"
+    "updated_at": "2026-11-15T09:42:44.359032+00:00"
   }
 }

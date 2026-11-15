@@ -120,14 +120,6 @@
     "detected_at": "2026-10-02T07:31:30.956989+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:10209065755537696152",
-    "team": "BLOWINDS",
-    "title": "アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援！福井県内12店舗に選手のサイン ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.okinawatimes.co.jp/articles/gallery/1935582&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2h8P_BKN0ezxcvtOOPbFav",
-    "published": "2026-10-01T09:38:34Z",
-    "detected_at": "2026-10-02T07:31:30.957005+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:10724475340171043264",
     "team": "UNITED",
     "title": "福井ユナイテッド【公式】 on X: \"    地域貢献活動     若狭町立三方小学校に生晃栄養薬品株式 ...",
@@ -8037,5 +8029,13 @@
     "source": "news.web",
     "image": "",
     "detected_at": "2026-11-15T08:41:07.601514+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16705185321185555093",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                       MATCH DAY REPO ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121760023126905186&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw224OE9ZKVvbIEK2jHW1DOK",
+    "published": "2026-11-15T04:51:34Z",
+    "detected_at": "2026-11-15T09:41:12.443357+00:00"
   }
 ]
