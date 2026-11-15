@@ -8013,5 +8013,29 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.baEsCbgwcXCYR0CNzmf6eg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-15T07:01:13.455128+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:18146146324702605877",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                       MATCH DAY REPO ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121814813928268259&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2M440lyND0xJMapLv-7uO2",
+    "published": "2026-11-15T04:55:25Z",
+    "detected_at": "2026-11-15T08:01:08.716123+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12178286469443434128",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                       MATCH DAY REPO ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121768859900506530&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2ZL_713Q7Ybr_bxob_aru0",
+    "published": "2026-11-15T04:51:28Z",
+    "detected_at": "2026-11-15T08:01:08.716164+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13622057490267570281",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 - X",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121759216797151242&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2tfmxwxCWt62DE5EMoUgPJ",
+    "published": "2026-11-15T04:50:22Z",
+    "detected_at": "2026-11-15T08:01:08.716181+00:00"
   }
 ]
