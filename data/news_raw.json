@@ -8037,5 +8037,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121759216797151242&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2tfmxwxCWt62DE5EMoUgPJ",
     "published": "2026-11-15T04:50:22Z",
     "detected_at": "2026-11-15T08:01:08.716181+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261115de76186",
+    "team": "BLOWINDS",
+    "title": "選手が車掌“ブローウィンズ列車” 公共交通で試合に 福井",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261115de76186",
+    "published": "2026-11-14T18:57:00+00:00",
+    "source": "news.web",
+    "image": "",
+    "detected_at": "2026-11-15T08:41:07.601514+00:00"
   }
 ]

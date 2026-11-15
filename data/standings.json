@@ -1698,7 +1698,7 @@
         }
       }
     },
-    "updated_at": "2026-11-15T08:22:49.993719+00:00"
+    "updated_at": "2026-11-15T08:43:04.855459+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3440,7 +3440,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-15T08:22:49.993719+00:00"
+    "updated_at": "2026-11-15T08:43:04.855459+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-15",
@@ -6411,7 +6411,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-15T08:22:49.993719+00:00"
+    "updated_at": "2026-11-15T08:43:04.855459+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -6450,6 +6450,20 @@
         },
         {
           "rank": 3,
+          "team": "ジークスター東京",
+          "slug": "zeekstar",
+          "points": 8,
+          "played": 5,
+          "win": 4,
+          "draw": 0,
+          "lose": 1,
+          "gf": 163,
+          "ga": 137,
+          "gd": 26,
+          "record": "4勝1敗"
+        },
+        {
+          "rank": 4,
           "team": "大崎オーソル埼玉",
           "slug": "osaki",
           "points": 7,
@@ -6463,7 +6477,7 @@
           "record": "3勝1敗1分"
         },
         {
-          "rank": 4,
+          "rank": 5,
           "team": "安芸高田わくながハンドボールクラブ",
           "slug": "wakunaga",
           "points": 7,
@@ -6477,35 +6491,7 @@
           "record": "3勝1敗1分"
         },
         {
-          "rank": 5,
-          "team": "ジークスター東京",
-          "slug": "zeekstar",
-          "points": 6,
-          "played": 4,
-          "win": 3,
-          "draw": 0,
-          "lose": 1,
-          "gf": 132,
-          "ga": 110,
-          "gd": 22,
-          "record": "3勝1敗"
-        },
-        {
           "rank": 6,
-          "team": "レッドトルネード佐賀",
-          "slug": "redtornado",
-          "points": 6,
-          "played": 5,
-          "win": 3,
-          "draw": 0,
-          "lose": 2,
-          "gf": 154,
-          "ga": 132,
-          "gd": 22,
-          "record": "3勝2敗"
-        },
-        {
-          "rank": 7,
           "team": "大同フェニックス東海",
           "slug": "daido",
           "points": 6,
@@ -6517,6 +6503,20 @@
           "ga": 79,
           "gd": 23,
           "record": "3勝0敗"
+        },
+        {
+          "rank": 7,
+          "team": "レッドトルネード佐賀",
+          "slug": "redtornado",
+          "points": 6,
+          "played": 5,
+          "win": 3,
+          "draw": 0,
+          "lose": 2,
+          "gf": 154,
+          "ga": 132,
+          "gd": 22,
+          "record": "3勝2敗"
         },
         {
           "rank": 8,
@@ -6579,14 +6579,14 @@
           "team": "琉球コラソン",
           "slug": "corazon",
           "points": 1,
-          "played": 4,
+          "played": 5,
           "win": 0,
           "draw": 1,
-          "lose": 3,
-          "gf": 122,
-          "ga": 140,
-          "gd": -18,
-          "record": "0勝3敗1分"
+          "lose": 4,
+          "gf": 149,
+          "ga": 171,
+          "gd": -22,
+          "record": "0勝4敗1分"
         },
         {
           "rank": 13,
@@ -7583,9 +7583,9 @@
         {
           "name": "小山 哲也",
           "team": "ジークスター東京",
-          "goals": 22,
-          "shots": 27,
-          "games": 4,
+          "goals": 24,
+          "shots": 33,
+          "games": 5,
           "number": "35",
           "position": "CB",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30582.jpg",
@@ -7594,90 +7594,123 @@
         {
           "name": "元木 博紀",
           "team": "ジークスター東京",
-          "goals": 18,
-          "shots": 21,
-          "games": 4,
+          "goals": 21,
+          "shots": 25,
+          "games": 5,
           "number": "8",
           "position": "RW",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30420.jpg",
           "rank": 2
         },
         {
-          "name": "部井久 アダム勇樹",
-          "team": "ジークスター東京",
-          "goals": 14,
-          "shots": 21,
-          "games": 4,
-          "number": "3",
-          "position": "LB",
-          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31049.jpg",
-          "rank": 3
-        },
-        {
           "name": "趙 顯章",
           "team": "ジークスター東京",
-          "goals": 13,
-          "shots": 19,
-          "games": 4,
+          "goals": 18,
+          "shots": 25,
+          "games": 5,
           "number": "9",
           "position": "RB",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30564.jpg",
+          "rank": 3
+        },
+        {
+          "name": "部井久 アダム勇樹",
+          "team": "ジークスター東京",
+          "goals": 16,
+          "shots": 23,
+          "games": 5,
+          "number": "3",
+          "position": "LB",
+          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31049.jpg",
           "rank": 4
         },
         {
-          "name": "水町 孝太郎",
+          "name": "蔦谷 大雅",
           "team": "ジークスター東京",
-          "goals": 11,
-          "shots": 14,
-          "games": 4,
-          "number": "10",
-          "position": "LB",
-          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30665.jpg",
+          "goals": 12,
+          "shots": 23,
+          "games": 5,
+          "number": "44",
+          "position": "RB",
+          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31051.jpg",
           "rank": 5
         },
         {
           "name": "玉川 裕康",
           "team": "ジークスター東京",
-          "goals": 10,
-          "shots": 16,
-          "games": 4,
+          "goals": 11,
+          "shots": 17,
+          "games": 5,
           "number": "27",
           "position": "PV",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30751.jpg",
           "rank": 6
         },
         {
+          "name": "伊禮 雅太",
+          "team": "ジークスター東京",
+          "goals": 11,
+          "shots": 17,
+          "games": 5,
+          "number": "33",
+          "position": "CB",
+          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31171.jpg",
+          "rank": 6
+        },
+        {
+          "name": "水町 孝太郎",
+          "team": "ジークスター東京",
+          "goals": 11,
+          "shots": 14,
+          "games": 5,
+          "number": "10",
+          "position": "LB",
+          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30665.jpg",
+          "rank": 6
+        },
+        {
           "name": "橋本 明雄",
           "team": "ジークスター東京",
-          "goals": 10,
-          "shots": 12,
-          "games": 4,
+          "goals": 11,
+          "shots": 13,
+          "games": 5,
           "number": "32",
           "position": "PV",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30481.jpg",
           "rank": 6
         },
         {
-          "name": "蔦谷 大雅",
-          "team": "ジークスター東京",
-          "goals": 9,
-          "shots": 15,
-          "games": 4,
-          "number": "44",
-          "position": "RB",
-          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31051.jpg",
-          "rank": 8
-        },
-        {
-          "name": "伊禮 雅太",
+          "name": "中田 航太",
           "team": "ジークスター東京",
           "goals": 8,
-          "shots": 14,
-          "games": 4,
-          "number": "33",
+          "shots": 13,
+          "games": 5,
+          "number": "5",
+          "position": "RW",
+          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31197.jpg",
+          "rank": 10
+        },
+        {
+          "name": "東江 雄斗",
+          "team": "ジークスター東京",
+          "goals": 7,
+          "shots": 9,
+          "games": 5,
+          "number": "77",
           "position": "CB",
-          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31171.jpg",
-          "rank": 9
+          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30563.jpg",
+          "rank": 11
+        },
+        {
+          "name": "中村 翼",
+          "team": "ジークスター東京",
+          "goals": 5,
+          "shots": 9,
+          "games": 5,
+          "number": "13",
+          "position": "RB",
+          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31050.jpg",
+          "rank": 12
         },
         {
           "name": "細川 智晃",
@@ -7688,62 +7721,51 @@
           "number": "7",
           "position": "LW",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30978.jpg",
-          "rank": 10
+          "rank": 12
         },
         {
-          "name": "中田 航太",
+          "name": "宮本 辰弥",
           "team": "ジークスター東京",
-          "goals": 4,
-          "shots": 7,
-          "games": 4,
-          "number": "5",
-          "position": "RW",
-          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31197.jpg",
-          "rank": 11
+          "goals": 2,
+          "shots": 3,
+          "games": 1,
+          "number": "24",
+          "position": "LW",
+          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31106.jpg",
+          "rank": 14
         },
         {
-          "name": "中村 翼",
+          "name": "高橋 颯汰",
           "team": "ジークスター東京",
-          "goals": 4,
-          "shots": 6,
-          "games": 4,
-          "number": "13",
-          "position": "RB",
-          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31050.jpg",
-          "rank": 11
-        },
-        {
-          "name": "東江 雄斗",
-          "team": "ジークスター東京",
-          "goals": 4,
-          "shots": 6,
-          "games": 4,
-          "number": "77",
-          "position": "CB",
-          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30563.jpg",
-          "rank": 11
+          "goals": 1,
+          "shots": 3,
+          "games": 1,
+          "number": "6",
+          "position": "LB",
+          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31642.jpg",
+          "rank": 15
         },
         {
           "name": "宮城 風太",
           "team": "ジークスター東京",
           "goals": 0,
           "shots": 1,
-          "games": 4,
+          "games": 5,
           "number": "66",
           "position": "GK",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31189.jpg",
-          "rank": 14
+          "rank": 16
         },
         {
           "name": "大山 翔伍",
           "team": "ジークスター東京",
           "goals": 0,
           "shots": 0,
-          "games": 4,
+          "games": 5,
           "number": "1",
           "position": "GK",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31683.jpg",
-          "rank": 14
+          "rank": 16
         },
         {
           "name": "岩下 祐太",
@@ -7754,29 +7776,7 @@
           "number": "21",
           "position": "GK",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30424.jpg",
-          "rank": 14
-        },
-        {
-          "name": "高橋 颯汰",
-          "team": "ジークスター東京",
-          "goals": 0,
-          "shots": 0,
-          "games": 0,
-          "number": "6",
-          "position": "LB",
-          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31642.jpg",
-          "rank": 14
-        },
-        {
-          "name": "宮本 辰弥",
-          "team": "ジークスター東京",
-          "goals": 0,
-          "shots": 0,
-          "games": 0,
-          "number": "24",
-          "position": "LW",
-          "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31106.jpg",
-          "rank": 14
+          "rank": 16
         },
         {
           "name": "バティスト ボンフォン",
@@ -7787,7 +7787,7 @@
           "number": "46",
           "position": "LB",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p31855.jpg",
-          "rank": 14
+          "rank": 16
         },
         {
           "name": "柴山 裕貴博",
@@ -7798,7 +7798,7 @@
           "number": "84",
           "position": "RW",
           "photo": "https://leagueh.jp/files/2026/player/zeekstar/p30514.jpg",
-          "rank": 14
+          "rank": 16
         }
       ]
     },
@@ -8464,10 +8464,175 @@
               "pid": "30563"
             }
           ]
+        },
+        "511M35": {
+          "date": "2026-11-15",
+          "players": [
+            {
+              "name": "大山 翔伍",
+              "number": "1",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 3,
+              "save_total": 17,
+              "pid": "31683"
+            },
+            {
+              "name": "部井久 アダム勇樹",
+              "number": "3",
+              "position": "LB",
+              "goals": 2,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31049"
+            },
+            {
+              "name": "中田 航太",
+              "number": "5",
+              "position": "RW",
+              "goals": 4,
+              "shots": 6,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31197"
+            },
+            {
+              "name": "高橋 颯汰",
+              "number": "6",
+              "position": "LB",
+              "goals": 1,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31642"
+            },
+            {
+              "name": "元木 博紀",
+              "number": "8",
+              "position": "RW",
+              "goals": 3,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30420"
+            },
+            {
+              "name": "趙 顯章",
+              "number": "9",
+              "position": "RB",
+              "goals": 5,
+              "shots": 6,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30564"
+            },
+            {
+              "name": "水町 孝太郎",
+              "number": "10",
+              "position": "LB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30665"
+            },
+            {
+              "name": "中村 翼",
+              "number": "13",
+              "position": "RB",
+              "goals": 1,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31050"
+            },
+            {
+              "name": "宮本 辰弥",
+              "number": "24",
+              "position": "LW",
+              "goals": 2,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31106"
+            },
+            {
+              "name": "玉川 裕康",
+              "number": "27",
+              "position": "PV",
+              "goals": 1,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30751"
+            },
+            {
+              "name": "橋本 明雄",
+              "number": "32",
+              "position": "PV",
+              "goals": 1,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30481"
+            },
+            {
+              "name": "伊禮 雅太",
+              "number": "33",
+              "position": "CB",
+              "goals": 3,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31171"
+            },
+            {
+              "name": "小山 哲也",
+              "number": "35",
+              "position": "CB",
+              "goals": 2,
+              "shots": 6,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30582"
+            },
+            {
+              "name": "蔦谷 大雅",
+              "number": "44",
+              "position": "RB",
+              "goals": 3,
+              "shots": 8,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31051"
+            },
+            {
+              "name": "宮城 風太",
+              "number": "66",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 11,
+              "save_total": 24,
+              "pid": "31189"
+            },
+            {
+              "name": "東江 雄斗",
+              "number": "77",
+              "position": "CB",
+              "goals": 3,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30563"
+            }
+          ]
         }
       }
     },
-    "updated_at": "2026-11-15T08:22:49.993719+00:00"
+    "updated_at": "2026-11-15T08:43:04.855459+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-15",
@@ -11903,6 +12068,6 @@
         }
       ]
     },
-    "updated_at": "2026-11-15T08:22:49.993719+00:00"
+    "updated_at": "2026-11-15T08:43:04.855459+00:00"
   }
 }
