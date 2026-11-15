@@ -554,5 +554,11 @@
     "opponent_score": 2,
     "checked_at": "2026-11-15T07:01:44.079672",
     "source_url": "https://w-fleague.jp/club/maruoka/schedule.html"
+  },
+  "un23": {
+    "my_score": 0,
+    "opponent_score": 0,
+    "checked_at": "2026-11-15T14:22:06.409101",
+    "source_url": "https://fukuiunited.co.jp/"
   }
 }
