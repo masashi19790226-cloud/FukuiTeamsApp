@@ -8208,5 +8208,37 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15235886.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0Y9uk1t9Z0_KCYDvmNDU_r",
     "published": "2026-11-15T20:19:27Z",
     "detected_at": "2026-11-15T21:21:06.342917+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14285246066985511175",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFC、JFL昇格ならず エリース豊島FCと引き分け 地域CL1次ラウンド最終節",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15233897.html&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0SwZGSpq_aEQdjmLoB78fx",
+    "published": "2026-11-15T18:50:01Z",
+    "detected_at": "2026-11-15T21:41:14.152705+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7889158015616186504",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFC、JFL昇格ならず エリース豊島FCと引き分け 地域CL1次ラウンド最終節",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2747438&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1Y7pu5D0lIRwow_COv0Pf0",
+    "published": "2026-11-15T18:31:52Z",
+    "detected_at": "2026-11-15T21:41:14.152728+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13559584371838030808",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFC vs エリース豊島FC 試合情報｜全国地域サッカーチャンピオンズリーグ2026",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.jfa.jp/match/regional_league_2026/groupB/match_page/m16.html&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1PIpv8W2HaFq-DkGU5g4GA",
+    "published": "2026-11-15T15:19:56Z",
+    "detected_at": "2026-11-15T21:41:14.152760+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2717299812134782263",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFC、JFL昇格ならず 無敗も決勝ラウンド進出逃す 地域CL",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/article/fukui/region/fukui-20261115190842221&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2pDOpbdffIPeLlFZpf6w0w",
+    "published": "2026-11-15T15:13:23Z",
+    "detected_at": "2026-11-15T21:41:14.152771+00:00"
   }
 ]
