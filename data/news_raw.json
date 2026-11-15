@@ -112,14 +112,6 @@
     "detected_at": "2026-10-02T07:31:30.956963+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:10724475340171043264",
-    "team": "UNITED",
-    "title": "福井ユナイテッド【公式】 on X: \"    地域貢献活動     若狭町立三方小学校に生晃栄養薬品株式 ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2105578693745910076&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1rP44gNxhRV0ukaU0VPQMG",
-    "published": "2026-10-01T13:04:40Z",
-    "detected_at": "2026-10-02T07:31:31.089715+00:00"
-  },
-  {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51693",
     "team": "BLOWINDS",
     "title": "藤原 隆充 氏 アソシエイトヘッドコーチ 就任のお知らせ",
@@ -160,14 +152,6 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/Dd-yl_MjFfl/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3X9wQTZUO6zZqT1HILjeuu",
     "published": "2026-10-02T20:21:34Z",
     "detected_at": "2026-10-03T05:38:08.326578+00:00"
-  },
-  {
-    "id": "tag:google.com,2013:googlealerts/feed:17264510310799081653",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズ、開幕連勝逃す 岐阜に残り2秒で失点 Bリーグワン | スポーツ - 区民ニュース",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://kumin.news/fukui/articles/1290702&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2S4KIbiQwWunhM36g9h9Nw",
-    "published": "2026-10-01T13:21:01Z",
-    "detected_at": "2026-10-03T05:38:08.326617+00:00"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:11539522938309834048",
@@ -8073,5 +8057,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121916758487650719&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw1jFnPdn9vNPowmhVZU1hee",
     "published": "2026-11-15T10:54:13Z",
     "detected_at": "2026-11-15T12:01:15.925469+00:00"
+  },
+  {
+    "id": "bing:https://www.47news.jp/15233897.html",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFC、JFL昇格ならず エリース豊島FCと引き分け 地域 ...",
+    "link": "https://www.47news.jp/15233897.html",
+    "published": "2026-11-14T22:32:00+00:00",
+    "source": "47NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.6-yUa1ieFKkm9SO31b22aw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-15T13:21:08.899910+00:00"
   }
 ]
