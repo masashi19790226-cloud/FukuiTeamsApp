@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-15T18:42:41.354369+00:00",
+    "updated_at": "2026-11-15T19:03:34.818134+00:00",
     "players": [
       {
         "number": "1",
@@ -3392,7 +3392,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=695&tab=1",
-    "updated_at": "2026-11-15T18:42:42.588622+00:00",
+    "updated_at": "2026-11-15T19:04:04.996978+00:00",
     "players": [
       {
         "number": "1",
@@ -4995,6 +4995,26 @@
         "fta": "9",
         "game_log": [
           {
+            "date": "2026-11-15",
+            "opp": "岐阜",
+            "ha": "H",
+            "wl": "W",
+            "start": false,
+            "pts": "0",
+            "fgm": "0",
+            "fga": "0",
+            "tpm": "0",
+            "tpa": "0",
+            "ftm": "0",
+            "fta": "0",
+            "reb": "0",
+            "ast": "0",
+            "stl": "0",
+            "blk": "0",
+            "tov": "0",
+            "eff": "0"
+          },
+          {
             "date": "2026-11-04",
             "opp": "福島",
             "ha": "A",
@@ -5077,27 +5097,6 @@
             "blk": "0",
             "tov": "1",
             "eff": "-3"
-          },
-          {
-            "date": "2026-10-24",
-            "opp": "岩手",
-            "ha": "H",
-            "wl": "L",
-            "start": false,
-            "min": "07:15",
-            "pts": "3",
-            "fgm": "1",
-            "fga": "3",
-            "tpm": "1",
-            "tpa": "2",
-            "ftm": "0",
-            "fta": "0",
-            "reb": "0",
-            "ast": "0",
-            "stl": "0",
-            "blk": "0",
-            "tov": "0",
-            "eff": "0"
           }
         ],
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=11501",
@@ -6619,6 +6618,26 @@
         },
         "log": [
           {
+            "date": "2026-11-15",
+            "opp": "岐阜",
+            "ha": "H",
+            "wl": "W",
+            "start": false,
+            "pts": "0",
+            "fgm": "0",
+            "fga": "0",
+            "tpm": "0",
+            "tpa": "0",
+            "ftm": "0",
+            "fta": "0",
+            "reb": "0",
+            "ast": "0",
+            "stl": "0",
+            "blk": "0",
+            "tov": "0",
+            "eff": "0"
+          },
+          {
             "date": "2026-11-04",
             "opp": "福島",
             "ha": "A",
@@ -6701,27 +6720,6 @@
             "blk": "0",
             "tov": "1",
             "eff": "-3"
-          },
-          {
-            "date": "2026-10-24",
-            "opp": "岩手",
-            "ha": "H",
-            "wl": "L",
-            "start": false,
-            "min": "07:15",
-            "pts": "3",
-            "fgm": "1",
-            "fga": "3",
-            "tpm": "1",
-            "tpa": "2",
-            "ftm": "0",
-            "fta": "0",
-            "reb": "0",
-            "ast": "0",
-            "stl": "0",
-            "blk": "0",
-            "tov": "0",
-            "eff": "0"
           }
         ]
       }
