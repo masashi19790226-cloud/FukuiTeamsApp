@@ -1925,16 +1925,6 @@
     "detected_at": "2026-10-16T11:13:15.431588+00:00"
   },
   {
-    "id": "bing:https://news.ntv.co.jp/n/fbc/category/society/fb9c58e747d78649b7be200cb9fa900bef",
-    "team": "UNITED",
-    "title": "福井ユナイテッドが小学校などにサッカーボール寄贈 今年度は187校 ...",
-    "link": "https://news.ntv.co.jp/n/fbc/category/society/fb9c58e747d78649b7be200cb9fa900bef",
-    "published": "2026-10-01T20:26:00+00:00",
-    "source": "日テレNEWS NNN",
-    "image": "",
-    "detected_at": "2026-10-16T12:44:50.796828+00:00"
-  },
-  {
     "id": "official-news:https://ruck-fukui.com/archives/6461",
     "team": "RAC",
     "title": "2026年12月20日ホームゲーム同日開催のお知らせ",
@@ -8192,5 +8182,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.chunichi.co.jp/article/1339942%3Frct%3Dfukui&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw136fYxWJ6q_a9qO4tMIe0W",
     "published": "2026-11-15T20:06:33Z",
     "detected_at": "2026-11-15T20:21:15.052517+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2747696",
+    "team": "RAC",
+    "title": "丸岡RUCK 初戦惜敗 フットサル 女子Fリーグ上位L GK小林が 攻守で奮闘",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2747696",
+    "published": "2026-11-15T01:59:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.VekTwm8XxMrRZO6i7gvd0Q&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-15T20:41:08.202507+00:00"
   }
 ]
