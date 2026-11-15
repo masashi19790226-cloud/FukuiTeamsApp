@@ -8250,5 +8250,15 @@
     "source": "47NEWS",
     "image": "https://www.bing.com/th?id=ONUT.6-yUa1ieFKkm9SO31b22aw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-15T22:01:15.538504+00:00"
+  },
+  {
+    "id": "bing:https://www.chunichi.co.jp/article/1339942",
+    "team": "BLOWINDS",
+    "title": "ブローウィンズ満田、田渡選手 ハピライン車掌に",
+    "link": "https://www.chunichi.co.jp/article/1339942",
+    "published": "2026-11-15T01:59:00+00:00",
+    "source": "中日新聞Web",
+    "image": "https://www.bing.com/th?id=ONUT.b_mvB08n5D7q3Tg4T2CJlg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-15T22:41:08.206471+00:00"
   }
 ]
