@@ -8260,5 +8260,21 @@
     "source": "中日新聞Web",
     "image": "https://www.bing.com/th?id=ONUT.b_mvB08n5D7q3Tg4T2CJlg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-15T22:41:08.206471+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16462671697589412633",
+    "team": "RAC",
+    "title": ". 丸岡RUCKさんにエールを   応援のダンス、チアダンスを体感すべく 地元福井の代表チーム ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/Dfx3q1zE6Iy/&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2CapPK0q72C6dXEWKcjX9H",
+    "published": "2026-11-15T22:38:56Z",
+    "detected_at": "2026-11-15T23:01:27.985656+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10821330979849296544",
+    "team": "RAC",
+    "title": "\"個人的胸アツシーンでした     2人ともナイスプレー    ナイスゲーム     #福井丸岡RUCK ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/emi__RUCK18/status/2121974891603988548&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2xyyj-qPZOADx4ajh-v4Xb",
+    "published": "2026-11-15T21:38:13Z",
+    "detected_at": "2026-11-15T23:01:27.985687+00:00"
   }
 ]
