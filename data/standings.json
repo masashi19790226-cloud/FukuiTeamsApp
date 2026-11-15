@@ -180,21 +180,21 @@
           "rank": 1
         },
         {
-          "team": "SWHレディース西宮",
-          "played": 0,
-          "win": 0,
+          "team": "バルドラール浦安ラス・ボニータス",
+          "played": 1,
+          "win": 1,
           "draw": 0,
           "lose": 0,
-          "gf": 0,
-          "ga": 0,
-          "points": 0,
-          "gd": 0,
-          "form": "",
-          "record": "0勝0敗",
+          "gf": 2,
+          "ga": 1,
+          "points": 3,
+          "gd": 1,
+          "form": "○",
+          "record": "1勝0敗",
           "rank": 2
         },
         {
-          "team": "アルコ神戸",
+          "team": "SWHレディース西宮",
           "played": 0,
           "win": 0,
           "draw": 0,
@@ -208,7 +208,7 @@
           "rank": 3
         },
         {
-          "team": "バルドラール浦安ラス・ボニータス",
+          "team": "アルコ神戸",
           "played": 0,
           "win": 0,
           "draw": 0,
@@ -223,16 +223,16 @@
         },
         {
           "team": "福井丸岡ラック",
-          "played": 0,
+          "played": 1,
           "win": 0,
           "draw": 0,
-          "lose": 0,
-          "gf": 0,
-          "ga": 0,
+          "lose": 1,
+          "gf": 1,
+          "ga": 2,
           "points": 0,
-          "gd": 0,
-          "form": "",
-          "record": "0勝0敗",
+          "gd": -1,
+          "form": "●",
+          "record": "0勝1敗",
           "rank": 5
         },
         {
@@ -262,8 +262,8 @@
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 13,
           "pk": 0,
-          "shots": 64,
-          "games": 10,
+          "shots": 71,
+          "games": 11,
           "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/TSUKAMOTO_Natsuki.jpg",
           "number": "7"
         },
@@ -273,8 +273,8 @@
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 12,
           "pk": 0,
-          "shots": 47,
-          "games": 10,
+          "shots": 51,
+          "games": 11,
           "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/NAKAMURA_Mizuki.jpg",
           "number": "8"
         },
@@ -284,8 +284,8 @@
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 12,
           "pk": 0,
-          "shots": 75,
-          "games": 10,
+          "shots": 84,
+          "games": 11,
           "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGUCHI_Mika.jpg",
           "number": "3"
         },
@@ -404,8 +404,8 @@
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 6,
           "pk": 0,
-          "shots": 25,
-          "games": 10,
+          "shots": 26,
+          "games": 11,
           "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/KURAMOCHI_Kyoko.jpg",
           "number": "23"
         },
@@ -474,6 +474,17 @@
         },
         {
           "rank": 21,
+          "name": "江川 凜",
+          "team": "バルドラール浦安ラス・ボニータス",
+          "goals": 5,
+          "pk": 0,
+          "shots": 14,
+          "games": 11,
+          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGAWA_Rin.jpg",
+          "number": "19"
+        },
+        {
+          "rank": 21,
           "name": "木村 美桜",
           "team": "アルコ神戸",
           "goals": 5,
@@ -507,26 +518,26 @@
         },
         {
           "rank": 21,
-          "name": "荒井 一花",
-          "team": "福井丸岡ラック",
-          "goals": 5,
-          "pk": 0,
-          "shots": 27,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-17-150x150.jpg",
-          "number": "17",
-          "position": "FP"
-        },
-        {
-          "rank": 21,
           "name": "平田 梨豊",
           "team": "福井丸岡ラック",
           "goals": 5,
           "pk": 0,
           "shots": 27,
-          "games": 10,
+          "games": 11,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-10-150x150.jpg",
           "number": "10",
+          "position": "FP"
+        },
+        {
+          "rank": 21,
+          "name": "荒井 一花",
+          "team": "福井丸岡ラック",
+          "goals": 5,
+          "pk": 0,
+          "shots": 28,
+          "games": 11,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-17-150x150.jpg",
+          "number": "17",
           "position": "FP"
         },
         {
@@ -568,8 +579,8 @@
           "team": "福井丸岡ラック",
           "goals": 5,
           "pk": 0,
-          "shots": 34,
-          "games": 10,
+          "shots": 36,
+          "games": 11,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-09-150x150.jpg",
           "number": "9",
           "position": "FP"
@@ -619,7 +630,7 @@
           "number": "8"
         },
         {
-          "rank": 34,
+          "rank": 35,
           "name": "伊藤 沙莉",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 4,
@@ -630,7 +641,7 @@
           "number": "4"
         },
         {
-          "rank": 34,
+          "rank": 35,
           "name": "小倉 杏梨沙",
           "team": "立川アスレティックFCレディース",
           "goals": 4,
@@ -641,7 +652,7 @@
           "number": "23"
         },
         {
-          "rank": 34,
+          "rank": 35,
           "name": "吉田 恋々菜",
           "team": "フウガドールすみだレディース",
           "goals": 4,
@@ -652,7 +663,7 @@
           "number": "6"
         },
         {
-          "rank": 34,
+          "rank": 35,
           "name": "高田 夏恋",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 4,
@@ -662,7 +673,7 @@
           "number": "11"
         },
         {
-          "rank": 34,
+          "rank": 35,
           "name": "小川 汐音",
           "team": "アニージャ湘南",
           "goals": 4,
@@ -672,7 +683,7 @@
           "number": "25"
         },
         {
-          "rank": 34,
+          "rank": 35,
           "name": "大西 恋花",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 4,
@@ -683,19 +694,7 @@
           "number": "16"
         },
         {
-          "rank": 34,
-          "name": "山森 しおん",
-          "team": "福井丸岡ラック",
-          "goals": 4,
-          "pk": 0,
-          "shots": 26,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-06-150x150.jpg",
-          "number": "6",
-          "position": "FP"
-        },
-        {
-          "rank": 34,
+          "rank": 35,
           "name": "仲井 里奈",
           "team": "さいたまサイコロ",
           "goals": 4,
@@ -705,7 +704,7 @@
           "number": "17"
         },
         {
-          "rank": 34,
+          "rank": 35,
           "name": "土谷 美晴",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 4,
@@ -716,7 +715,19 @@
           "number": "31"
         },
         {
-          "rank": 34,
+          "rank": 35,
+          "name": "山森 しおん",
+          "team": "福井丸岡ラック",
+          "goals": 4,
+          "pk": 0,
+          "shots": 28,
+          "games": 11,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-06-150x150.jpg",
+          "number": "6",
+          "position": "FP"
+        },
+        {
+          "rank": 35,
           "name": "肥尾 明里",
           "team": "フウガドールすみだレディース",
           "goals": 4,
@@ -727,18 +738,7 @@
           "number": "14"
         },
         {
-          "rank": 44,
-          "name": "江川 凜",
-          "team": "バルドラール浦安ラス・ボニータス",
-          "goals": 3,
-          "pk": 0,
-          "shots": 9,
-          "games": 10,
-          "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/EGAWA_Rin.jpg",
-          "number": "19"
-        },
-        {
-          "rank": 44,
+          "rank": 45,
           "name": "山本 奈波",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 3,
@@ -749,7 +749,7 @@
           "number": "25"
         },
         {
-          "rank": 44,
+          "rank": 45,
           "name": "米田 夢宝",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 3,
@@ -759,7 +759,7 @@
           "number": "9"
         },
         {
-          "rank": 44,
+          "rank": 45,
           "name": "中野 瑞己",
           "team": "フウガドールすみだレディース",
           "goals": 3,
@@ -770,7 +770,7 @@
           "number": "10"
         },
         {
-          "rank": 44,
+          "rank": 45,
           "name": "濵田 莉那",
           "team": "ミネルバ宇部",
           "goals": 3,
@@ -781,7 +781,7 @@
           "number": "20"
         },
         {
-          "rank": 44,
+          "rank": 45,
           "name": "野田 桜菜",
           "team": "アルコ神戸",
           "goals": 3,
@@ -792,7 +792,7 @@
           "number": "9"
         },
         {
-          "rank": 44,
+          "rank": 45,
           "name": "松本 直美",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 3,
@@ -801,7 +801,7 @@
           "games": 7
         },
         {
-          "rank": 44,
+          "rank": 45,
           "name": "田中 夢",
           "team": "ミネルバ宇部",
           "goals": 3,
@@ -812,7 +812,7 @@
           "number": "19"
         },
         {
-          "rank": 44,
+          "rank": 45,
           "name": "舘山 香緒里",
           "team": "アニージャ湘南",
           "goals": 3,
@@ -822,7 +822,7 @@
           "number": "24"
         },
         {
-          "rank": 44,
+          "rank": 45,
           "name": "田中 ちひろ",
           "team": "アルコ神戸",
           "goals": 3,
@@ -849,8 +849,8 @@
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 2,
           "pk": 0,
-          "shots": 6,
-          "games": 9,
+          "shots": 7,
+          "games": 10,
           "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/OKABE_Maho.jpg",
           "number": "5"
         },
@@ -902,8 +902,8 @@
           "team": "福井丸岡ラック",
           "goals": 2,
           "pk": 0,
-          "shots": 15,
-          "games": 10,
+          "shots": 16,
+          "games": 11,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-11-150x150.jpg",
           "number": "11",
           "position": "FP"
@@ -926,7 +926,7 @@
           "goals": 2,
           "pk": 0,
           "shots": 21,
-          "games": 9,
+          "games": 10,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-04-150x150.jpg",
           "number": "4",
           "position": "FP"
@@ -971,6 +971,18 @@
           "shots": 22,
           "games": 8,
           "number": "2"
+        },
+        {
+          "rank": 54,
+          "name": "小林 望月",
+          "team": "福井丸岡ラック",
+          "goals": 2,
+          "pk": 0,
+          "shots": 23,
+          "games": 11,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-01-150x150.jpg",
+          "number": "1",
+          "position": "GK"
         },
         {
           "rank": 54,
@@ -1058,7 +1070,7 @@
           "number": "19"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "愛沢 南",
           "team": "立川アスレティックFCレディース",
           "goals": 1,
@@ -1069,19 +1081,7 @@
           "number": "25"
         },
         {
-          "rank": 75,
-          "name": "小林 愛心",
-          "team": "福井丸岡ラック",
-          "goals": 1,
-          "pk": 0,
-          "shots": 3,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-19-150x150.jpg",
-          "number": "19",
-          "position": "FP"
-        },
-        {
-          "rank": 75,
+          "rank": 76,
           "name": "塚本 明日香",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1092,7 +1092,7 @@
           "number": "2"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "外村 美空",
           "team": "さいたまサイコロ",
           "goals": 1,
@@ -1102,7 +1102,7 @@
           "number": "3"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "原川 菜々子",
           "team": "フウガドールすみだレディース",
           "goals": 1,
@@ -1113,7 +1113,7 @@
           "number": "19"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "秋原 美優",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1124,7 +1124,7 @@
           "number": "17"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "小笹 璃緒",
           "team": "アニージャ湘南",
           "goals": 1,
@@ -1134,7 +1134,19 @@
           "number": "8"
         },
         {
-          "rank": 75,
+          "rank": 76,
+          "name": "小林 愛心",
+          "team": "福井丸岡ラック",
+          "goals": 1,
+          "pk": 0,
+          "shots": 5,
+          "games": 11,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-19-150x150.jpg",
+          "number": "19",
+          "position": "FP"
+        },
+        {
+          "rank": 76,
           "name": "大濱 あみ",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 1,
@@ -1144,7 +1156,7 @@
           "number": "15"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "西澤 結菜",
           "team": "ミネルバ宇部",
           "goals": 1,
@@ -1155,7 +1167,7 @@
           "number": "29"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "見矢 明日香",
           "team": "アルコ神戸",
           "goals": 1,
@@ -1166,7 +1178,7 @@
           "number": "1"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "児島 希里子",
           "team": "ミネルバ宇部",
           "goals": 1,
@@ -1175,7 +1187,7 @@
           "games": 3
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "鎮守 遥",
           "team": "ミネルバ宇部",
           "goals": 1,
@@ -1184,7 +1196,7 @@
           "games": 3
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "宮下 みのり",
           "team": "立川アスレティックFCレディース",
           "goals": 1,
@@ -1195,7 +1207,7 @@
           "number": "33"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "岡野 未央",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1206,7 +1218,7 @@
           "number": "18"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "本間 桃",
           "team": "フウガドールすみだレディース",
           "goals": 1,
@@ -1217,7 +1229,7 @@
           "number": "7"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "齊藤 日向子",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 1,
@@ -1228,7 +1240,7 @@
           "number": "3"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "笠井 美里",
           "team": "さいたまサイコロ",
           "goals": 1,
@@ -1238,7 +1250,7 @@
           "number": "14"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "伊藤 かの果",
           "team": "ミネルバ宇部",
           "goals": 1,
@@ -1249,7 +1261,7 @@
           "number": "77"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "勝又 野乃花",
           "team": "立川アスレティックFCレディース",
           "goals": 1,
@@ -1260,7 +1272,7 @@
           "number": "7"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "青木 友梨香",
           "team": "さいたまサイコロ",
           "goals": 1,
@@ -1270,7 +1282,7 @@
           "number": "36"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "山田 ひかる",
           "team": "さいたまサイコロ",
           "goals": 1,
@@ -1280,19 +1292,7 @@
           "number": "15"
         },
         {
-          "rank": 75,
-          "name": "加藤 はるな",
-          "team": "福井丸岡ラック",
-          "goals": 1,
-          "pk": 0,
-          "shots": 16,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-05-150x150.jpg",
-          "number": "5",
-          "position": "FP"
-        },
-        {
-          "rank": 75,
+          "rank": 76,
           "name": "太田 涼日",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 1,
@@ -1303,7 +1303,7 @@
           "number": "17"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "井戸 里咲",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1314,7 +1314,7 @@
           "number": "6"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "大西 紗瑛",
           "team": "アニージャ湘南",
           "goals": 1,
@@ -1324,18 +1324,30 @@
           "number": "13"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "池内 天紀",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 1,
           "pk": 0,
           "shots": 18,
-          "games": 10,
+          "games": 11,
           "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/IKEUCHI_Aki.jpg",
           "number": "10"
         },
         {
-          "rank": 75,
+          "rank": 76,
+          "name": "加藤 はるな",
+          "team": "福井丸岡ラック",
+          "goals": 1,
+          "pk": 0,
+          "shots": 18,
+          "games": 11,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-05-150x150.jpg",
+          "number": "5",
+          "position": "FP"
+        },
+        {
+          "rank": 76,
           "name": "宮崎 愛",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1346,31 +1358,19 @@
           "number": "7"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "加藤 ほのか",
           "team": "福井丸岡ラック",
           "goals": 1,
           "pk": 0,
-          "shots": 21,
-          "games": 10,
+          "shots": 24,
+          "games": 11,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-07-150x150.jpg",
           "number": "7",
           "position": "FP"
         },
         {
-          "rank": 75,
-          "name": "小林 望月",
-          "team": "福井丸岡ラック",
-          "goals": 1,
-          "pk": 0,
-          "shots": 21,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-01-150x150.jpg",
-          "number": "1",
-          "position": "GK"
-        },
-        {
-          "rank": 75,
+          "rank": 76,
           "name": "白戸 愛華",
           "team": "アニージャ湘南",
           "goals": 1,
@@ -1380,7 +1380,7 @@
           "number": "5"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "武井 柚香",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 1,
@@ -1698,7 +1698,7 @@
         }
       }
     },
-    "updated_at": "2026-11-15T06:42:53.032371+00:00"
+    "updated_at": "2026-11-15T07:02:58.923478+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3440,7 +3440,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-15T06:42:53.032371+00:00"
+    "updated_at": "2026-11-15T07:02:58.923478+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-15",
@@ -6411,7 +6411,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-15T06:42:53.032371+00:00"
+    "updated_at": "2026-11-15T07:02:58.923478+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -8467,7 +8467,7 @@
         }
       }
     },
-    "updated_at": "2026-11-15T06:42:53.032371+00:00"
+    "updated_at": "2026-11-15T07:02:58.923478+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-15",
@@ -11903,6 +11903,6 @@
         }
       ]
     },
-    "updated_at": "2026-11-15T06:42:53.032371+00:00"
+    "updated_at": "2026-11-15T07:02:58.923478+00:00"
   }
 }
