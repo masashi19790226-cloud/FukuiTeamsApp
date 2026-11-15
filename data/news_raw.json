@@ -309,15 +309,6 @@
     "detected_at": "2026-10-04T13:52:12.766099+00:00"
   },
   {
-    "id": "bing:https://mainichi.jp/articles/20261002/pr1/00m/020/171000c",
-    "team": "BLOWINDS",
-    "title": "[(株)アトム×福井ブローウィンズ]目指せ全選手コンプリート！食べ ...",
-    "link": "https://mainichi.jp/articles/20261002/pr1/00m/020/171000c",
-    "published": "2026-10-01T16:59:00+00:00",
-    "source": "毎日新聞デジタル",
-    "detected_at": "2026-10-04T13:52:12.766134+00:00"
-  },
-  {
     "id": "bing:https://www.oricon.co.jp/article/3396491/",
     "team": "UNITED",
     "title": "福井ユナイテッド、今季最終戦は黒星 サッカー北信越リーグ1部、11 ...",
@@ -2388,16 +2379,6 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3D6qE3kyPtxqw&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0FMhdDxNDQT1cnZwg3QS_e",
     "published": "2026-10-17T19:21:57Z",
     "detected_at": "2026-10-17T20:32:24.956603+00:00"
-  },
-  {
-    "id": "bing:https://straightpress.jp/company_news/detail?pr=000000773.000043111",
-    "team": "BLOWINDS",
-    "title": "【(株)アトム×福井ブローウィンズ】目指せ全選手コンプリート ...",
-    "link": "https://straightpress.jp/company_news/detail?pr=000000773.000043111",
-    "published": "2026-10-01T16:59:00+00:00",
-    "source": "ストレートプレス",
-    "image": "https://www.bing.com/th?id=ONUT.g6b_rhZn6W-ALBdtks4u6Q&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-17T21:37:23.510102+00:00"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:2486454891938462044",
@@ -8099,5 +8080,13 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121850454581940664&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw1Ns6tVQgP_Glf5fNEWit0E",
     "published": "2026-11-15T12:31:13Z",
     "detected_at": "2026-11-15T15:21:08.724939+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16840352472140941389",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"               試合速報   第1️⃣ピリオド終了 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121843464484884723/photo/1&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw15ueEtvSy20mV7XskgAQ08",
+    "published": "2026-11-15T10:23:02Z",
+    "detected_at": "2026-11-15T17:01:13.682627+00:00"
   }
 ]
