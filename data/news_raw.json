@@ -1,15 +1,5 @@
 [
   {
-    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51688",
-    "team": "BLOWINDS",
-    "title": "【10/1（木）発売】黒龍酒造株式会社（ESHIKOTO）コラボ梅酒ハイボール再販売のご案内",
-    "link": "https://www.fukuiblowinds.com/news/detail/id=51688",
-    "published": "2026-10-01T09:00:00+09:00",
-    "detected_at": "2026-10-01T01:29:25.928124+00:00",
-    "source": "ブローウィンズ公式",
-    "image": "https://www.fukuiblowinds.com/files/user/IMG_4582.jpg"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:9526317097614823237",
     "team": "BLOWINDS",
     "title": "BWZRS インタビュー  ｜福井ブローウィンズにハマったきっかけは⁉️   - YouTube",
@@ -18,42 +8,12 @@
     "detected_at": "2026-10-01T05:29:53.604414+00:00"
   },
   {
-    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51689",
-    "team": "BLOWINDS",
-    "title": "10/3（土）、4（日）ハーフタイム「ミラクルシュートチャレンジ」実施のお知らせ",
-    "link": "https://www.fukuiblowinds.com/news/detail/id=51689",
-    "published": "2026-10-01T09:00:00+09:00",
-    "detected_at": "2026-10-01T05:29:54.097921+00:00",
-    "source": "ブローウィンズ公式",
-    "image": "https://www.fukuiblowinds.com/files/user/button%20GAME.JPG"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:12749424720207031517",
     "team": "UNITED",
     "title": "福井ユナイテッド【公式】 on X: \"【メディア情報  】 10/2(金)放送のFM福井「Highlight Friday」に ...",
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2105492916231663776&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw13rpWYsI65qSJTwKSGCPzo",
     "published": "2026-10-01T04:56:21Z",
     "detected_at": "2026-10-01T08:33:32.955796+00:00"
-  },
-  {
-    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51690",
-    "team": "BLOWINDS",
-    "title": "【ホーム開幕節】アリーナDJ 決定のお知らせ",
-    "link": "https://www.fukuiblowinds.com/news/detail/id=51690",
-    "published": "2026-10-01T09:00:00+09:00",
-    "detected_at": "2026-10-01T08:33:33.052895+00:00",
-    "source": "ブローウィンズ公式",
-    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
-  },
-  {
-    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51668",
-    "team": "BLOWINDS",
-    "title": "【新商品】ホームゲームごとにデザインが変わる！「マッチデーペナントキーホルダー」販売決定！",
-    "link": "https://www.fukuiblowinds.com/news/detail/id=51668",
-    "published": "2026-10-01T09:00:00+09:00",
-    "detected_at": "2026-10-01T10:31:26.258448+00:00",
-    "source": "ブローウィンズ公式",
-    "image": "https://www.fukuiblowinds.com/files/user/202609262259_1-300x0.jpg"
   },
   {
     "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51681",
@@ -3194,16 +3154,6 @@
     "link": "https://www.fukuieiheijihand.co.jp/topics/%e3%80%90%e6%97%a5%e8%8f%af%e5%8c%96%e5%ad%a6%e6%a7%98%e3%81%ae%e6%9c%9d%e7%a4%bc%e3%81%ab%e5%8f%82%e5%8a%a0%e3%81%97%e3%81%be%e3%81%97%e3%81%9f%ef%bc%81%e3%80%91/",
     "published": "2026-10-05T09:00:00+09:00",
     "detected_at": "2026-10-05T00:00:00+00:00",
-    "source": "ブルーサンダー公式",
-    "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
-  },
-  {
-    "id": "official-news:https://www.fukuieiheijihand.co.jp/topics/5%e6%9c%8824%e6%97%a5-%e3%83%aa%e3%83%bc%e3%82%b0%ef%bd%88-%e3%83%9b%e3%83%bc%e3%83%a0%e3%82%b2%e3%83%bc%e3%83%a0%e3%81%ae%e3%81%94%e6%a1%88%e5%86%85/",
-    "team": "THUNDER",
-    "title": "10月20日 リーグＨ『NICCA Presents 2026-27シーズン ホーム開幕戦』のご案内",
-    "link": "https://www.fukuieiheijihand.co.jp/topics/5%e6%9c%8824%e6%97%a5-%e3%83%aa%e3%83%bc%e3%82%b0%ef%bd%88-%e3%83%9b%e3%83%bc%e3%83%a0%e3%82%b2%e3%83%bc%e3%83%a0%e3%81%ae%e3%81%94%e6%a1%88%e5%86%85/",
-    "published": "2026-10-01T09:00:00+09:00",
-    "detected_at": "2026-10-01T00:00:00+00:00",
     "source": "ブルーサンダー公式",
     "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
   },

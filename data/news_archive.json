@@ -1,5 +1,55 @@
 [
   {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51688",
+    "team": "BLOWINDS",
+    "title": "【10/1（木）発売】黒龍酒造株式会社（ESHIKOTO）コラボ梅酒ハイボール再販売のご案内",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51688",
+    "published": "2026-10-01T09:00:00+09:00",
+    "detected_at": "2026-10-01T01:29:25.928124+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/IMG_4582.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51689",
+    "team": "BLOWINDS",
+    "title": "10/3（土）、4（日）ハーフタイム「ミラクルシュートチャレンジ」実施のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51689",
+    "published": "2026-10-01T09:00:00+09:00",
+    "detected_at": "2026-10-01T05:29:54.097921+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/button%20GAME.JPG"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51690",
+    "team": "BLOWINDS",
+    "title": "【ホーム開幕節】アリーナDJ 決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51690",
+    "published": "2026-10-01T09:00:00+09:00",
+    "detected_at": "2026-10-01T08:33:33.052895+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51668",
+    "team": "BLOWINDS",
+    "title": "【新商品】ホームゲームごとにデザインが変わる！「マッチデーペナントキーホルダー」販売決定！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51668",
+    "published": "2026-10-01T09:00:00+09:00",
+    "detected_at": "2026-10-01T10:31:26.258448+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/202609262259_1-300x0.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuieiheijihand.co.jp/topics/5%e6%9c%8824%e6%97%a5-%e3%83%aa%e3%83%bc%e3%82%b0%ef%bd%88-%e3%83%9b%e3%83%bc%e3%83%a0%e3%82%b2%e3%83%bc%e3%83%a0%e3%81%ae%e3%81%94%e6%a1%88%e5%86%85/",
+    "team": "THUNDER",
+    "title": "10月20日 リーグＨ『NICCA Presents 2026-27シーズン ホーム開幕戦』のご案内",
+    "link": "https://www.fukuieiheijihand.co.jp/topics/5%e6%9c%8824%e6%97%a5-%e3%83%aa%e3%83%bc%e3%82%b0%ef%bd%88-%e3%83%9b%e3%83%bc%e3%83%a0%e3%82%b2%e3%83%bc%e3%83%a0%e3%81%ae%e3%81%94%e6%a1%88%e5%86%85/",
+    "published": "2026-10-01T09:00:00+09:00",
+    "detected_at": "2026-10-01T00:00:00+00:00",
+    "source": "ブルーサンダー公式",
+    "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
+  },
+  {
     "id": "bing:https://www.asahi.com/and/pressrelease/16931087",
     "team": "BLOWINDS",
     "title": "【㈱アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
