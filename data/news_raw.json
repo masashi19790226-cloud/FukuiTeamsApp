@@ -492,16 +492,6 @@
     "detected_at": "2026-10-04T21:59:11.191761+00:00"
   },
   {
-    "id": "bing:https://www.sankei.com/pressrelease/prtimes/POLCLOZELBNDBLEF7BFSWQBTZI/",
-    "team": "BLOWINDS",
-    "title": "【(株)アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
-    "link": "https://www.sankei.com/pressrelease/prtimes/POLCLOZELBNDBLEF7BFSWQBTZI/",
-    "published": "2026-10-01T06:00:00+00:00",
-    "source": "産経ニュース",
-    "image": "https://www.bing.com/th?id=ONUT.O10-x2yGtcyjn_chYsxRQg&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-04T22:41:40.556559+00:00"
-  },
-  {
     "id": "bing:https://www.fnn.jp/articles/-/1126631",
     "team": "BLOWINDS",
     "title": "福井ブローウィンズがホーム開幕2連勝、通算3勝1敗に 金沢サム ...",
@@ -1042,16 +1032,6 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.lNxmbr-Cbm7oX7Xzb7NMzA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-07T00:35:27.178461+00:00"
-  },
-  {
-    "id": "bing:https://mantan-web.jp/prtimes/article/20261001prt00m200001398a.html",
-    "team": "BLOWINDS",
-    "title": "【(株)アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
-    "link": "https://mantan-web.jp/prtimes/article/20261001prt00m200001398a.html",
-    "published": "2026-10-01T06:00:00+00:00",
-    "source": "MANTANWEB（まんたんウェブ）",
-    "image": "",
-    "detected_at": "2026-10-07T07:29:24.881106+00:00"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:4778118145394544361",
@@ -2330,16 +2310,6 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2111410092591681782&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0eph6Xck-FkqAgXLtuAIKV",
     "published": "2026-10-17T13:26:19Z",
     "detected_at": "2026-10-17T16:05:54.079506+00:00"
-  },
-  {
-    "id": "bing:https://prtimes.jp/main/html/rd/p/000000774.000043111.html",
-    "team": "BLOWINDS",
-    "title": "【㈱アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
-    "link": "https://prtimes.jp/main/html/rd/p/000000774.000043111.html",
-    "published": "2026-10-01T06:00:00+00:00",
-    "source": "PR TIMES",
-    "image": "",
-    "detected_at": "2026-10-17T16:05:54.270471+00:00"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:10258737408000577933",

@@ -50,6 +50,36 @@
     "image": "https://www.fukuieiheijihand.co.jp/wp-content/themes/blue_thunder/img/common/page.png"
   },
   {
+    "id": "bing:https://www.sankei.com/pressrelease/prtimes/POLCLOZELBNDBLEF7BFSWQBTZI/",
+    "team": "BLOWINDS",
+    "title": "【(株)アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
+    "link": "https://www.sankei.com/pressrelease/prtimes/POLCLOZELBNDBLEF7BFSWQBTZI/",
+    "published": "2026-10-01T06:00:00+00:00",
+    "source": "産経ニュース",
+    "image": "https://www.bing.com/th?id=ONUT.O10-x2yGtcyjn_chYsxRQg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-04T22:41:40.556559+00:00"
+  },
+  {
+    "id": "bing:https://mantan-web.jp/prtimes/article/20261001prt00m200001398a.html",
+    "team": "BLOWINDS",
+    "title": "【(株)アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
+    "link": "https://mantan-web.jp/prtimes/article/20261001prt00m200001398a.html",
+    "published": "2026-10-01T06:00:00+00:00",
+    "source": "MANTANWEB（まんたんウェブ）",
+    "image": "",
+    "detected_at": "2026-10-07T07:29:24.881106+00:00"
+  },
+  {
+    "id": "bing:https://prtimes.jp/main/html/rd/p/000000774.000043111.html",
+    "team": "BLOWINDS",
+    "title": "【㈱アトム×福井ブローウィンズ】アトム店舗を巡って選手を応援 ...",
+    "link": "https://prtimes.jp/main/html/rd/p/000000774.000043111.html",
+    "published": "2026-10-01T06:00:00+00:00",
+    "source": "PR TIMES",
+    "image": "",
+    "detected_at": "2026-10-17T16:05:54.270471+00:00"
+  },
+  {
     "id": "tag:google.com,2013:googlealerts/feed:12749424720207031517",
     "team": "UNITED",
     "title": "福井ユナイテッド【公式】 on X: \"【メディア情報  】 10/2(金)放送のFM福井「Highlight Friday」に ...",
