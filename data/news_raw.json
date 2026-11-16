@@ -8159,5 +8159,49 @@
     "source": "ORICON NEWS",
     "image": "",
     "detected_at": "2026-11-16T08:41:07.246832+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3011813986905858253",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの経済効果43.9億円に拡大 バスケBリーグワン、飲食店や交通にも波及効果",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2748151&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0LewpEfMZMIulwhZ_ITBQO",
+    "published": "2026-11-16T07:56:06Z",
+    "detected_at": "2026-11-16T09:01:18.956552+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12478344348237718697",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                       MATCH DAY REPO ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121917474891534666/photo/2&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2cZJonqnXsFiGeagbBp9Aw",
+    "published": "2026-11-15T12:31:13Z",
+    "detected_at": "2026-11-16T09:01:19.012028+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9143850025210240069",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"               第12節 MIP賞❤️‍   第12節 浦安 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2121915145991459309/photo/3&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2Ul65gB2Ola-gCPe-el4Mk",
+    "published": "2026-11-15T12:31:13Z",
+    "detected_at": "2026-11-16T09:01:19.012052+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/reader/2747696",
+    "team": "RAC",
+    "title": "丸岡RUCK 初戦惜敗 フットサル 女子Fリーグ上位L GK小林が 攻守で奮闘",
+    "link": "https://www.fukuishimbun.co.jp/articles/reader/2747696",
+    "published": "2026-11-15T16:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.VekTwm8XxMrRZO6i7gvd0Q&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-16T09:01:20.093646+00:00"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7086",
+    "team": "UNITED",
+    "title": "2026シーズン公式戦終了のご挨拶",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7086",
+    "published": "2026-11-16T09:00:00+09:00",
+    "detected_at": "2026-11-16T09:01:23.652744+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
   }
 ]
