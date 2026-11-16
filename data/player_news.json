@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-16T15:21:25.371140+00:00",
- "cursor": 60,
+ "updated_at": "2026-11-16T15:41:20.275617+00:00",
+ "cursor": 70,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -458,6 +458,93 @@
     "published": "2026-10-20T13:00:00+00:00",
     "source": "Fukui Shimbun",
     "detected_at": "2026-11-16T15:01:19.417979+00:00"
+   }
+  ],
+  "UNITED|井出龍志": [
+   {
+    "title": "DF井出龍志 期限付き移籍 JFL沼津から",
+    "link": "https://www.chunichi.co.jp/article/1203151",
+    "published": "2026-02-02T12:05:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   }
+  ],
+  "UNITED|加納大": [
+   {
+    "title": "長野、福井Uに期限付き移籍中FW加納大の制約条件解消を発表…両 ...",
+    "link": "https://web.gekisaka.jp/news/jleague/detail/?456350-456350-fl",
+    "published": "2026-08-03T11:55:00+00:00",
+    "source": "ゲキサカ",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   },
+   {
+    "title": "長野、福井に期限付き移籍中の加納大における対戦試合出場に ...",
+    "link": "https://news.yahoo.co.jp/articles/520e35ef135e090aa63050b3f18eb9ed2e379f0e",
+    "published": "2026-08-03T04:02:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   },
+   {
+    "title": "FW加納が福井ユナイテッドFCへ期限付き移籍【長野】",
+    "link": "https://sports.yahoo.co.jp/column/detail/2026052900116-spnaviow",
+    "published": "2026-07-28T22:05:00+00:00",
+    "source": "スポーツナビ",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   },
+   {
+    "title": "AC長野、FW加納大が北信越1部の福井ユナイテッドFCに期限付き移籍",
+    "link": "https://www.shinmai.co.jp/news/article/gf01d8c1pufhgt5j2m0abpi0",
+    "published": "2026-05-28T12:48:00+00:00",
+    "source": "信濃毎日新聞デジタル",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   },
+   {
+    "title": "長野の大卒2年目FW加納大が地域リーグへ期限付き移籍「成長した姿 ...",
+    "link": "https://web.gekisaka.jp/news/jleague/detail/%3F452291-452291-fl",
+    "published": "2026-05-28T11:26:00+00:00",
+    "source": "ゲキサカ",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   }
+  ],
+  "UNITED|北脇健慈": [
+   {
+    "title": "「昇格実現」へ決意 監督や選手ら来社",
+    "link": "https://www.chunichi.co.jp/article/1232239",
+    "published": "2026-04-02T13:05:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   }
+  ],
+  "UNITED|山口哲平": [
+   {
+    "title": "福井U8連覇 天皇杯へ 県サッカー選手権 MF山口2発、逆転 坂井先制 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2597835",
+    "published": "2026-05-11T13:00:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   },
+   {
+    "title": "劇的勝利…福井ユナイテッドが天皇杯出場へ 福井県サッカー選手権 ...",
+    "link": "https://www.47news.jp/14280657.html",
+    "published": "2026-05-10T23:00:00+00:00",
+    "source": "47NEWS",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   },
+   {
+    "title": "劇的勝利…福井ユナイテッドが天皇杯出場へ 福井県サッカー選手権 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2597013",
+    "published": "2026-05-10T14:00:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   }
+  ],
+  "UNITED|廣岡睦樹": [
+   {
+    "title": "JFL昇格懸けて福井ユナイテッド、全国地域CL挑む 強敵ぞろいの1次 ...",
+    "link": "https://www.msn.com/ja-jp/news/other/jfl%E6%98%87%E6%A0%BC%E6%87%B8%E3%81%91%E3%81%A6%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89-%E5%85%A8%E5%9B%BD%E5%9C%B0%E5%9F%9Fcl%E6%8C%91%E3%82%80-%E5%BC%B7%E6%95%B5%E3%81%9E%E3%82%8D%E3%81%84%E3%81%AE1%E6%AC%A1%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E3%81%AF11%E6%9C%8813%E6%97%A5%E3%81%8B%E3%82%89/ar-AA2heCNZ",
+    "published": "2026-11-11T13:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "detected_at": "2026-11-16T15:41:20.275617+00:00"
    }
   ]
  }
