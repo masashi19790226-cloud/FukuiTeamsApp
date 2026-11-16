@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-16T13:44:45.249529+00:00",
+    "updated_at": "2026-11-16T14:02:46.385375+00:00",
     "players": [
       {
         "number": "1",
@@ -2319,7 +2319,7 @@
       {
         "key": "BPG",
         "label": "平均ブロック数",
-        "rank": 22,
+        "rank": 23,
         "value": "1.94",
         "unit": "本"
       },
@@ -2331,7 +2331,7 @@
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年11月15日20:56",
+    "team_stats_updated": "2026年11月16日22:39",
     "league": "B.ONE",
     "league_teams": 25,
     "club_photos": {
@@ -4560,7 +4560,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=695&tab=1",
-    "updated_at": "2026-11-16T13:44:46.280253+00:00",
+    "updated_at": "2026-11-16T14:02:47.571851+00:00",
     "players": [
       {
         "number": "1",
@@ -6275,14 +6275,14 @@
       {
         "key": "PPG",
         "label": "平均得点数",
-        "rank": 17,
+        "rank": 18,
         "value": "77.9",
         "unit": "点"
       },
       {
         "key": "FG%",
         "label": "フィールドゴール成功率",
-        "rank": 5,
+        "rank": 6,
         "value": "45.2",
         "unit": "%"
       },
@@ -6329,7 +6329,7 @@
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年11月15日20:56",
+    "team_stats_updated": "2026年11月16日22:39",
     "league": "B.ONE",
     "league_teams": 25,
     "shot_cache": {

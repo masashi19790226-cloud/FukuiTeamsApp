@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-16T13:41:59.352846+00:00",
- "cursor": 10,
+ "updated_at": "2026-11-16T14:01:24.369970+00:00",
+ "cursor": 20,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -307,6 +307,114 @@
     "published": "2026-05-07T01:04:00+00:00",
     "source": "Yahoo!ニュース",
     "detected_at": "2026-11-16T13:41:59.352846+00:00"
+   }
+  ],
+  "BLOWINDS|田渡修人": [
+   {
+    "title": "ブローウィンズ満田、田渡選手 ハピライン車掌に",
+    "link": "https://www.chunichi.co.jp/article/1339942",
+    "published": "2026-11-15T16:00:00+00:00",
+    "source": "中日新聞Web",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   },
+   {
+    "title": "福井ブローウィンズが田渡と西野の契約継続を発表…36歳の ...",
+    "link": "https://basketballking.jp/news/japan/20260518/613433.html",
+    "published": "2026-05-18T09:56:00+00:00",
+    "source": "BASKETBALLKING VIDEO",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   },
+   {
+    "title": "福井ブローウィンズが田渡と西野の契約継続を発表…36歳の ...",
+    "link": "https://news.yahoo.co.jp/articles/7a6e407c8b275713465315f5fdd231c01be40b73",
+    "published": "2026-05-18T00:56:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   }
+  ],
+  "BLOWINDS|藤永佳昭": [
+   {
+    "title": "目指すは「Bプレミア」 全試合で入場率9割目指しさらなる集客へ ...",
+    "link": "https://www.fnn.jp/articles/-/1136989",
+    "published": "2026-10-20T23:46:00+00:00",
+    "source": "FNNプライムオンライン",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   },
+   {
+    "title": "Bワン福井の藤永佳昭がインジュアリーリスト登録…右脛骨内果骨折 ...",
+    "link": "https://basketballking.jp/news/japan/20260928/634884.html",
+    "published": "2026-09-28T09:19:00+00:00",
+    "source": "バスケットボールキング",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   },
+   {
+    "title": "バスケB2の福井ブローウィンズ、B1富山の藤永佳昭と契約 北陸高 ...",
+    "link": "https://www.oricon.co.jp/article/3261967/",
+    "published": "2026-05-22T02:47:00+00:00",
+    "source": "ORICON NEWS",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   },
+   {
+    "title": "バスケB2の福井ブローウィンズ、B1富山の藤永佳昭と契約 北陸高 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2606809",
+    "published": "2026-05-21T17:40:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   }
+  ],
+  "BLOWINDS|西野曜": [
+   {
+    "title": "前半のリード生かせず福井ブローウィンズ逆転負け 新潟 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2725205",
+    "published": "2026-10-18T02:30:00+00:00",
+    "source": "福井新聞ONLINE",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   },
+   {
+    "title": "福井ブローウィンズが田渡と西野の契約継続を発表…36歳の ...",
+    "link": "https://basketballking.jp/news/japan/20260518/613433.html",
+    "published": "2026-05-18T09:56:00+00:00",
+    "source": "BASKETBALLKING VIDEO",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   },
+   {
+    "title": "福井ブローウィンズが田渡と西野の契約継続を発表…36歳の ...",
+    "link": "https://news.yahoo.co.jp/articles/7a6e407c8b275713465315f5fdd231c01be40b73",
+    "published": "2026-05-18T00:56:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   }
+  ],
+  "BLOWINDS|高橋育実": [
+   {
+    "title": "プレーで地元を盛り上げる気持ちがより強く 福井ブローウィンズの ...",
+    "link": "https://www.47news.jp/14755543.html",
+    "published": "2026-08-05T22:05:00+00:00",
+    "source": "47NEWS",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   },
+   {
+    "title": "プレーで地元を盛り上げる気持ちがより強く 福井ブローウィンズの ...",
+    "link": "https://www.chunichi.co.jp/article/1292905",
+    "published": "2026-08-05T13:05:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   },
+   {
+    "title": "福井ブローウィンズに香川ファイブアローズから28歳SG加入 高橋 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2624910",
+    "published": "2026-06-12T04:10:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   }
+  ],
+  "RAC|坪川美咲": [
+   {
+    "title": "丸岡RUCKカード誕生 フットサルメンバー坪川さん考案",
+    "link": "https://www.chunichi.co.jp/article/1270167",
+    "published": "2026-06-21T13:05:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-16T14:01:24.369970+00:00"
    }
   ]
  }
