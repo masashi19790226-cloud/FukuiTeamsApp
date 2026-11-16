@@ -8203,5 +8203,25 @@
     "detected_at": "2026-11-16T09:01:23.652744+00:00",
     "source": "ユナイテッド公式",
     "image": "https://fukuiunited.co.jp/img/ogp.jpg"
+  },
+  {
+    "id": "bing:https://news.yahoo.co.jp/articles/8ff29a11f8bc08bbd70edfdf9fafe2a700431292",
+    "team": "RAC",
+    "title": "【おじゃスポ】ユナイテッドJFL昇格ならず 1次ラウンド敗退 丸岡RUCK ...",
+    "link": "https://news.yahoo.co.jp/articles/8ff29a11f8bc08bbd70edfdf9fafe2a700431292",
+    "published": "2026-11-16T02:08:00+00:00",
+    "source": "Yahoo!ニュース",
+    "image": "https://www.bing.com/th?id=ONUT.J-6ccMXeLhallqLQqA3oCA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-16T10:21:08.885441+00:00"
+  },
+  {
+    "id": "bing:https://news.yahoo.co.jp/articles/ed3e480ee690e2817a022c41cc4cbe26ab8828fa",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFC、JFL昇格ならず 無敗も決勝ラウンド進出逃す ...",
+    "link": "https://news.yahoo.co.jp/articles/ed3e480ee690e2817a022c41cc4cbe26ab8828fa",
+    "published": "2026-11-15T01:56:00+00:00",
+    "source": "Yahoo!ニュース",
+    "image": "",
+    "detected_at": "2026-11-16T10:21:09.487954+00:00"
   }
 ]
