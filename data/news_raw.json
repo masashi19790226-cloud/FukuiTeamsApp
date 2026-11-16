@@ -8207,5 +8207,23 @@
     "source": "Yahoo!ニュース",
     "image": "",
     "detected_at": "2026-11-16T10:21:09.487954+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6507356843993371206",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの経済効果43.9億円に拡大 バスケBリーグワン、飲食店や交通にも波及効果",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://portal.uqmobile.jp/detail/1/2/5/10211_5_r_20261116_1794816291740804&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2aM1NOCJtH7hFdVI7yZlWh",
+    "published": "2026-11-16T09:18:33Z",
+    "detected_at": "2026-11-16T12:21:10.809361+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51877",
+    "team": "BLOWINDS",
+    "title": "【第16節】12/19（土）、20（日）vs 岐阜スゥープス 戦 第一弾「選手コラボフード」販売決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51877",
+    "published": "2026-11-16T09:00:00+09:00",
+    "detected_at": "2026-11-16T12:21:29.240170+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E3%82%B3%E3%83%A9%E3%83%9B%E3%82%99%E3%83%95%E3%83%BC%E3%83%88%E3%82%99.jpg"
   }
 ]
