@@ -24,14 +24,6 @@
     "detected_at": "2026-10-03T05:38:08.326578+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:11539522938309834048",
-    "team": "UNITED",
-    "title": "福井ユナイテッドが小学校などにサッカーボール寄贈 今年度は 187校に 690個 若狭町で児童に ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.ntv.co.jp/n/fbc/category/society/fb9c58e747d78649b7be200cb9fa900bef&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1XNUrfDeKa96mn7YqM9uR2",
-    "published": "2026-10-02T16:46:22Z",
-    "detected_at": "2026-10-03T08:30:11.620044+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:6793515848670777807",
     "team": "BLOWINDS",
     "title": "ホーム開幕戦 白星にファン歓喜 ブローウィンズ - 47NEWS",
@@ -187,15 +179,6 @@
     "published": "2026-10-04T00:59:00+00:00",
     "source": "福井新聞ONLINE",
     "detected_at": "2026-10-04T13:52:13.392517+00:00"
-  },
-  {
-    "id": "bing:https://www.fukuishimbun.co.jp/category/news-fukui/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89FC~%E3%82%B5%E3%82%A6%E3%83%AB%E3%82%B3%E3%82%B9%E7%A6%8F%E4%BA%95",
-    "team": "UNITED",
-    "title": "福井のニュース｜福井ユナイテッドFC",
-    "link": "https://www.fukuishimbun.co.jp/category/news-fukui/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89FC~%E3%82%B5%E3%82%A6%E3%83%AB%E3%82%B3%E3%82%B9%E7%A6%8F%E4%BA%95",
-    "published": "2026-10-02T17:00:00+00:00",
-    "source": "福井新聞ONLINE",
-    "detected_at": "2026-10-04T13:52:13.392579+00:00"
   },
   {
     "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2713671",
@@ -8245,5 +8228,13 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51887&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1zk6Z_Mvn2JcXrlHBGySx2",
     "published": "2026-11-16T13:07:16Z",
     "detected_at": "2026-11-16T16:15:02.672825+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17194878347656847251",
+    "team": "RAC",
+    "title": "【おじゃスポ】ユナイテッドJFL昇格ならず 1次ラウンド敗退 丸岡RUCK先制も浦安に逆転負け ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/8ff29a11f8bc08bbd70edfdf9fafe2a700431292&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2DWyAQBZLayq4XGW0cnrhJ",
+    "published": "2026-11-16T14:37:18Z",
+    "detected_at": "2026-11-16T17:01:15.374662+00:00"
   }
 ]
