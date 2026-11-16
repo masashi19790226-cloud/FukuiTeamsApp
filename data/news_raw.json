@@ -8121,5 +8121,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://search.yahoo.co.jp/realtime/search%3Fei%3DUTF-8%26p%3D%2523fukuiunited%26mtype%3Dimage&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw31RLrWxKs7BsMu9g2nT4e_",
     "published": "2026-11-15T22:46:38Z",
     "detected_at": "2026-11-15T23:21:06.474304+00:00"
+  },
+  {
+    "id": "bing:https://www.chunichi.co.jp/article/1340142",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFC、JFL昇格逃す 痛恨ドローで2次ラウンド進出ならず",
+    "link": "https://www.chunichi.co.jp/article/1340142",
+    "published": "2026-11-15T16:00:00+00:00",
+    "source": "中日新聞Web",
+    "image": "https://www.bing.com/th?id=ONUT.p52Wy2VT8c7YmKK1i1PzEQ&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-16T07:41:08.630725+00:00"
   }
 ]
