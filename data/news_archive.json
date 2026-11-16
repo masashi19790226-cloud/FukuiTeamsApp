@@ -50,6 +50,26 @@
     "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
   },
   {
+    "id": "bing:https://www.sankei.com/pressrelease/prtimes/2QSVQG4GSNJTJFES47WBSBO3IQ/",
+    "team": "BLOWINDS",
+    "title": "【(株)アトム×福井ブローウィンズ】目指せ全選手コンプリート ...",
+    "link": "https://www.sankei.com/pressrelease/prtimes/2QSVQG4GSNJTJFES47WBSBO3IQ/",
+    "published": "2026-10-02T05:59:00+00:00",
+    "source": "産経ニュース",
+    "image": "https://www.bing.com/th?id=ONUT.hOZ6b3vLhKJ1F4KKnS7u0w&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-04T14:15:12.406904+00:00"
+  },
+  {
+    "id": "bing:https://mantan-web.jp/prtimes/article/20261002prt00m200000782a.html",
+    "team": "BLOWINDS",
+    "title": "【(株)アトム×福井ブローウィンズ】目指せ全選手コンプリート ...",
+    "link": "https://mantan-web.jp/prtimes/article/20261002prt00m200000782a.html",
+    "published": "2026-10-02T05:59:00+00:00",
+    "source": "MANTANWEB（まんたんウェブ）",
+    "image": "https://www.bing.com/th?id=ONUT.flyILULbHv1JGHLulsDuPw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-05T07:33:13.575874+00:00"
+  },
+  {
     "id": "tag:google.com,2013:googlealerts/feed:11317396422624358966",
     "team": "BLOWINDS",
     "title": "【  アトム×福井ブローウィンズ】目指せ全選手コンプリート！食べて回して限定カプセルトイを ...",
