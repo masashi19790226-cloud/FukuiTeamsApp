@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-16T14:01:24.369970+00:00",
- "cursor": 20,
+ "updated_at": "2026-11-16T14:21:20.452059+00:00",
+ "cursor": 30,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -415,6 +415,31 @@
     "published": "2026-06-21T13:05:00+00:00",
     "source": "中日新聞",
     "detected_at": "2026-11-16T14:01:24.369970+00:00"
+   }
+  ],
+  "RAC|山森しおん": [
+   {
+    "title": "孝行娘 山森しおん 縦横無尽 優勝候補相手でもお構い ...",
+    "link": "https://note.com/misslemon/n/nb296a6ab0f0e",
+    "published": "2026-07-20T01:22:00+00:00",
+    "source": "note",
+    "detected_at": "2026-11-16T14:21:20.452059+00:00"
+   }
+  ],
+  "RAC|荒井一花": [
+   {
+    "title": "丸岡RUCK2026-27日程、ホーム試合が4倍増 新主将に荒井一花【選手一覧】",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2622808?page=3",
+    "published": "2026-06-10T09:15:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-16T14:21:20.452059+00:00"
+   },
+   {
+    "title": "丸岡RUCK2026-27日程、ホーム試合が4倍増 新主将に荒井一花【選手一覧】",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2622808?page=2",
+    "published": "2026-06-10T00:15:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-16T14:21:20.452059+00:00"
    }
   ]
  }
