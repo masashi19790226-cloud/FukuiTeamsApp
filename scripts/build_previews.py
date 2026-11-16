@@ -458,7 +458,85 @@ def parse_game_log(page):
     return []
 
 
-def attach_shot_totals(players, season, label, old_cache):
+# 選手ページの「合計」の表のうち、リーグ戦ではない大会(プレーオフ PO・B3PO、チャンピオンシップ CS、アーリーカップ EC など)
+CAREER_NON_LEAGUE = re.compile(r"PO|CS|EC")
+
+
+def parse_career(page):
+    """Bリーグ公式の選手ページの「シーズン成績(合計)」の表(全シーズン・全クラブ。通算の行は無い)を足して、Bリーグでの通算にする。
+    返り値 {"league": リーグ戦だけの合計, "all": プレーオフなども含めた合計, "from": いちばん古いシーズン,
+            "path": 所属の流れ [{"season", "club"}](古い順)}。表が無ければ None。
+    合計は g(試合)・pts(得点)・reb(リバウンド TR)・ast(アシスト AS)。"""
+    rows = []
+    for table in re.findall(r"<table\b.*?</table>", page, flags=re.S | re.I):
+        header = None
+        for row in _rows(table):
+            cells = _cells(row)
+            if header is None:
+                if all(k in cells for k in ("SEASON", "TYPE", "CLUB", "G", "PTS", "FGM", "TR", "AS")):
+                    header = cells
+                continue
+            if len(cells) < len(header):
+                continue
+            rec = dict(zip(header, cells[:len(header)]))
+            if not re.fullmatch(r"\d{4}-\d{2}", rec.get("SEASON", "")):
+                continue
+
+            def n(k):
+                v = rec.get(k, "").strip().replace(",", "")
+                return int(v) if v.isdigit() else 0
+            rows.append({"season": rec["SEASON"], "type": rec.get("TYPE", "").strip(), "club": rec.get("CLUB", "").strip(),
+                         "g": n("G"), "pts": n("PTS"), "reb": n("TR"), "ast": n("AS")})
+        if header:
+            break
+    if not rows:
+        return None
+
+    def total(rs):
+        return {k: sum(r[k] for r in rs) for k in ("g", "pts", "reb", "ast")}
+    league = [r for r in rows if not CAREER_NON_LEAGUE.search(r["type"])]
+    path = []
+    for r in sorted(league or rows, key=lambda x: x["season"]):
+        if r["club"] and not any(x["season"] == r["season"] and x["club"] == r["club"] for x in path):
+            path.append({"season": r["season"], "club": r["club"]})
+    return {"league": total(league), "all": total(rows), "from": min(r["season"] for r in rows), "path": path}
+
+
+def attach_careers(players, label, old_cache, pages):
+    """ブローウィンズの各選手に、Bリーグでの通算(他クラブ時代も含む)と所属の流れ(career)を付ける。
+    選手ページは、このあいだに読んだもの(pages)があればそれを使い、無ければ1日1回だけ読みに行く。
+    返り値は次回用の覚え書き {PlayerID: {"date": 日付, "c": career}}。"""
+    today = datetime.now(JST).strftime("%Y-%m-%d")
+    cache, fetched = {}, 0
+    for p in players:
+        pid = p.get("pid")
+        if not pid:
+            continue
+        hit = old_cache.get(pid) or {}
+        c = None
+        if pid in pages:
+            c = parse_career(pages[pid])
+        elif hit.get("date") == today and hit.get("c"):
+            c = hit["c"]
+        else:
+            try:
+                c = parse_career(fetch(f"{BLEAGUE}/roster_detail/?PlayerID={pid}"))
+                fetched += 1
+            except Exception as e:
+                print(f"[WARN] 選手: {label} {p.get('name', '')} のBリーグ通算を読めませんでした {e!r}")
+        if c is None:
+            c = hit.get("c")  # 読めなかったときは前回の分
+            if c:
+                cache[pid] = hit
+        else:
+            cache[pid] = {"date": today, "c": c}
+        if c:
+            p["career"] = c
+    print(f"[選手] {label} Bリーグ通算 {len(cache)}人分(選手ページ{fetched}件を読み込み)")
+    return cache
+
+
+def attach_shot_totals(players, season, label, old_cache, pages=None):
     """各選手に、シュートの成功数・試投数(合計)と、試合ごとの成績(game_log)を付ける。
     選手ページを読むのは、試合数が前回から変わった選手だけ(毎日4時台は全員読み直す)。
     返り値は次回用の覚え書き {PlayerID: {"season", "type", "g", "v": {...}, "log": [...]}}。"""
@@ -476,6 +554,8 @@ def attach_shot_totals(players, season, label, old_cache):
             try:
                 page = fetch(f"{BLEAGUE}/roster_detail/?PlayerID={pid}")
                 fetched += 1
+                if pages is not None:
+                    pages[pid] = page  # Bリーグ通算(attach_careers)でも使う
                 vals = parse_shot_totals(page, season, type_, games)
                 log = parse_game_log(page)
             except Exception as e:
@@ -633,15 +713,23 @@ def build_team_players(team_id, label):
         except Exception as e:
             print(f"[WARN] 写真: ブローウィンズ公式サイトの選手紹介の取得に失敗 {e!r}")
     # シュートの成功数・試投数(合計)。前回の覚え書きは players.json のどのチームの分からでも使う
-    shot_cache = {}
+    shot_cache, pages = {}, {}
     try:
         old_shots = {}
         for section in load_json(PLAYERS_PATH, {}).values():
             if isinstance(section, dict):
                 old_shots.update(section.get("shot_cache") or {})
-        shot_cache = attach_shot_totals(players, season, label, old_shots)
+        shot_cache = attach_shot_totals(players, season, label, old_shots, pages)
     except Exception as e:
         print(f"[WARN] 選手: {label} のシュートの成功数・試投数の取得に失敗 {e!r}")
+    # Bリーグでの通算(他クラブ時代も含む)。ブローウィンズの選手だけ(選手ページの節目・経歴に使う)
+    career_cache = {}
+    if team_id == BLOWINDS_TEAM_ID:
+        try:
+            old_section = load_json(PLAYERS_PATH, {}).get("BLOWINDS") or {}
+            career_cache = attach_careers(players, label, old_section.get("career_cache") or {}, pages)
+        except Exception as e:
+            print(f"[WARN] 選手: {label} のBリーグ通算の取得に失敗 {e!r}")
     for p in players:
         p.pop("_type", None)
         pid = p.pop("pid", None)
@@ -680,6 +768,8 @@ def build_team_players(team_id, label):
         result["club_photos"] = club_cache  # 次回の写真取得で使う(アプリは使わない)
     if shot_cache:
         result["shot_cache"] = shot_cache  # 次回のシュート数の取得で使う(アプリは使わない)
+    if career_cache:
+        result["career_cache"] = career_cache  # 次回のBリーグ通算の取得で使う(アプリは使わない)
     return result
 
 

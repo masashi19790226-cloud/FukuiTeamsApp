@@ -56,7 +56,8 @@ def _load_manual():
 # データの形の版。身長などを足したときに上げると、その日のうちに作り直す
 # 7: ブルーサンダーの選手を追加
 # 8: 丸岡RUCKの選手のXのアカウント(x)を追加
-VERSION = 8
+# 9: ユナイテッド・ブルーサンダーの選手の経歴(career)と、選手紹介の短い項目(qa:趣味・座右の銘など)を追加
+VERSION = 9
 
 
 def _text(fragment: str) -> str:
@@ -162,6 +163,39 @@ def _high_school_career(text: str) -> str:
     return ""
 
 
+def _career_line(text: str) -> str:
+    """ユナイテッドの「所属/経歴」の1行(例「藤枝明誠高校→日本大学→ガイナーレ鳥取→藤枝MYFC」)。無ければ空"""
+    m = re.search(r"経歴\s*[:：]?\s*\n?\s*([^\n]{2,200})", text)
+    if not m or not re.search(r"→|⇒", m.group(1)):
+        return ""
+    return m.group(1).strip()
+
+
+# ユナイテッドの選手紹介の項目(表示する名前, 公式サイトの項目名の書き方)。「項目名」の次の行が中身
+UNITED_QA = (
+    ("ニックネーム", r"ニックネーム"), ("趣味", r"趣味"), ("特技", r"特技"), ("性格", r"自分の性格|性格"),
+    ("チャームポイント", r"チャームポイント"), ("プレーの特徴", r"プレーの特徴"), ("座右の銘", r"座右の銘[^\n]{0,10}"),
+    ("好きな食べ物", r"好きな食べ物"), ("勝負曲", r"勝負曲"), ("マイブーム", r"マイブーム"),
+    ("サッカーを始めたきっかけ", r"サッカーを始めたきっかけ"), ("福井の好きなところ", r"福井の好きなところ"),
+    ("今季の目標", r"今シーズンの個人目標[^\n]{0,12}"),
+)
+_QA_EMPTY = re.compile(r"^[-−ー―－—\s]*$")
+
+
+def _qa_items(text: str, labels) -> list:
+    """選手紹介の短い項目 [[項目, 中身], …]。中身が無い(「ー」)項目と、長すぎる中身(60文字より長い)は入れない"""
+    out = []
+    for disp, pat in labels:
+        m = re.search(rf"^\s*(?:{pat})\s*[:：]?\s*\n\s*([^\n]{{1,200}})", text, flags=re.M)
+        if not m:
+            continue
+        v = m.group(1).strip()
+        if _QA_EMPTY.match(v) or len(v) > 60 or any(re.fullmatch(p, v) for _, p in labels):
+            continue
+        out.append([disp, v])
+    return out
+
+
 def _fresh(entry, today):
     """覚え書きが30日以内のものか"""
     try:
@@ -239,7 +273,8 @@ def united(fetch, cache, today):
     for pid, number in links:
         key = f"united:{pid}"
         hit = cache.get(key)
-        if not (hit and _fresh(hit, today) and "high_school" in hit and "reading" in hit):
+        # 経歴(career)・選手紹介の項目(qa)を入れる前に覚えた分も読み直す
+        if not (hit and _fresh(hit, today) and "high_school" in hit and "reading" in hit and "career" in hit):
             url = f"{UNITED_SITE}/team/detail.php?id={pid}"
             try:
                 html = fetch(url)
@@ -258,6 +293,7 @@ def united(fetch, cache, today):
             hit = {"team": "UNITED", "name": name, "reading": _reading_before_name(body, name), "number": number,
                    "photo": photos.get(re.sub(r"[\s　]+", "", name), ""),
                    "birthday": _birthday_in(body), **profile, "high_school": _high_school_career(body),
+                   "career": _career_line(body), "qa": _qa_items(body, UNITED_QA),
                    "checked": today.isoformat()}
         out.append((key, hit))
     print(f"[誕生日] ユナイテッド: {len(out)}人(詳細ページ{fetched}件を読み込み)")
@@ -417,6 +453,10 @@ def thunder(fetch):
             "photo": photo, "height": height, "weight": weight,
             "hometown": info.get("出身地", ""), "school": school, "high_school": high_school,
             "birthday": birthday,
+            # 球歴(経歴)と、選手紹介のそのほかの短い項目(趣味など)
+            "career": info.get("球歴", ""),
+            "qa": [[k, v] for k, v in info.items()
+                   if k not in ("生年月日", "身長/体重/利き腕", "出身地", "球歴") and v and not _QA_EMPTY.match(v) and len(v) <= 60][:8],
         }))
     print(f"[誕生日] ブルーサンダー: {len(out)}人(生年月日が読めなかった選手 {sum(1 for _, v in out if not v['birthday'])}人)")
     return out

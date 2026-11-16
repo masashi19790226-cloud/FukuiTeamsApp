@@ -468,6 +468,12 @@ def main():
         check_vercosta_news()
     except Exception as e:
         print(f"[WARN] ヴェルコスタのニュースの処理に失敗しました: {e!r}")
+    # 選手ごとのニュース(Web版の選手ページ・推し選手で使う別のファイル)。1回に10人ずつ順番に調べる
+    try:
+        import player_news
+        player_news.check_player_news(fetch_feed, parse_bing_rss, BING_NEWS_URL)
+    except Exception as e:
+        print(f"[WARN] 選手のニュースの処理に失敗しました: {e!r}")
 
 
 if __name__ == "__main__":
