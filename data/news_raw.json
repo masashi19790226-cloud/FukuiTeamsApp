@@ -8131,5 +8131,15 @@
     "source": "中日新聞Web",
     "image": "https://www.bing.com/th?id=ONUT.p52Wy2VT8c7YmKK1i1PzEQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-16T07:41:08.630725+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2748151",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの経済効果43.9億円に拡大 バスケBリーグワン ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2748151",
+    "published": "2026-11-15T16:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "",
+    "detected_at": "2026-11-16T08:01:07.540337+00:00"
   }
 ]
