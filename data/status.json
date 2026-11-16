@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-11-16T01:23:24.346476+00:00",
+  "updated_at": "2026-11-16T01:43:29.461820+00:00",
   "steps": {
     "alerts": "success",
     "official": "success",
-    "schedule": "failure",
+    "schedule": "success",
     "results": "success",
     "previews": "success",
     "gamelp": "success"
