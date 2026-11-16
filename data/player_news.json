@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-16T15:41:20.275617+00:00",
- "cursor": 70,
+ "updated_at": "2026-11-16T16:01:21.854978+00:00",
+ "cursor": 80,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -545,6 +545,63 @@
     "published": "2026-11-11T13:00:00+00:00",
     "source": "福井新聞ONLINE",
     "detected_at": "2026-11-16T15:41:20.275617+00:00"
+   }
+  ],
+  "UNITED|杉本拓也": [
+   {
+    "title": "12日にアウェー戦開幕 2連勝目指す",
+    "link": "https://www.chunichi.co.jp/article/1235502",
+    "published": "2026-04-09T13:06:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-16T16:01:21.854978+00:00"
+   }
+  ],
+  "UNITED|杉浦秀謙": [
+   {
+    "title": "【おじゃスポ】ユナイテッドJFL昇格ならず 1次ラウンド敗退 丸岡RUCK ...",
+    "link": "https://news.yahoo.co.jp/articles/8ff29a11f8bc08bbd70edfdf9fafe2a700431292",
+    "published": "2026-11-16T02:08:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-16T16:01:21.854978+00:00"
+   },
+   {
+    "title": "JFL昇格へ 福井ユナイテッドFCが好発進 関西代表チームに1対0 貴重な ...",
+    "link": "https://news.ntv.co.jp/n/fbc/category/society/fb0df1b86a8b7e42aab866de02394cb003",
+    "published": "2026-11-13T11:42:00+00:00",
+    "source": "日テレNEWS NNN",
+    "detected_at": "2026-11-16T16:01:21.854978+00:00"
+   },
+   {
+    "title": "【Voice！】第18回 FW13 杉浦 秀謙",
+    "link": "https://note.com/fkiutd_official/n/n4946c6546a23",
+    "published": "2026-11-11T01:00:00+00:00",
+    "source": "note",
+    "detected_at": "2026-11-16T16:01:21.854978+00:00"
+   }
+  ],
+  "UNITED|竹葉大樹": [
+   {
+    "title": "福井ユナイテッドFC所属 竹葉大樹選手とのサプライヤー契約を締結",
+    "link": "https://www.jiji.com/jc/article?k=000000361.000022258&g=prt",
+    "published": "2026-09-04T09:16:00+00:00",
+    "source": "時事ドットコム",
+    "detected_at": "2026-11-16T16:01:21.854978+00:00"
+   },
+   {
+    "title": "「竹葉大樹」に関するプレスリリース一覧",
+    "link": "https://prtimes.jp/topics/keywords/%E7%AB%B9%E8%91%89%E5%A4%A7%E6%A8%B9",
+    "published": "2026-09-03T17:00:00+00:00",
+    "source": "PR TIMES",
+    "detected_at": "2026-11-16T16:01:21.854978+00:00"
+   }
+  ],
+  "UNITED|菅野雅俊": [
+   {
+    "title": "DF菅野が加入",
+    "link": "https://www.chunichi.co.jp/article/1279851",
+    "published": "2026-07-10T22:06:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-16T16:01:21.854978+00:00"
    }
   ]
  }
