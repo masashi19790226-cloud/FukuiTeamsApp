@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-16T16:01:21.854978+00:00",
- "cursor": 80,
+ "updated_at": "2026-11-16T16:15:06.989182+00:00",
+ "cursor": 90,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -602,6 +602,80 @@
     "published": "2026-07-10T22:06:00+00:00",
     "source": "中日新聞",
     "detected_at": "2026-11-16T16:01:21.854978+00:00"
+   }
+  ],
+  "UNITED|萩原正太郎": [
+   {
+    "title": "ユナイテッド選手が指導 福井・杉坂小中分教室ボールも寄贈",
+    "link": "https://www.chunichi.co.jp/article/1279192",
+    "published": "2026-07-09T13:04:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
+   }
+  ],
+  "UNITED|辻岡招真": [
+   {
+    "title": "選手考案メニュー販売 越前そばの里",
+    "link": "https://www.chunichi.co.jp/article/1319487",
+    "published": "2026-10-01T13:05:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
+   },
+   {
+    "title": "カマタマだより＝DF辻岡が期限付き移籍",
+    "link": "https://www.shikoku-np.co.jp/sports/kamatamare/20260521000216",
+    "published": "2026-05-20T21:00:00+00:00",
+    "source": "四国新聞社",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
+   },
+   {
+    "title": "カマタマだより＝DF辻岡が期限付き移籍",
+    "link": "https://www.shikoku-np.co.jp/sports/kamatamare/print.aspx?id=20260521000216",
+    "published": "2026-05-20T21:00:00+00:00",
+    "source": "四国新聞社",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
+   },
+   {
+    "title": "J3讃岐の辻岡、期限付きで加入 サッカー福井U",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2605715",
+    "published": "2026-05-20T13:00:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
+   },
+   {
+    "title": "「これからのサッカー人生を考え」讃岐22歳DF辻岡招真が福井 ...",
+    "link": "https://web.gekisaka.jp/news/jleague/detail/%3F451793-451793-fl",
+    "published": "2026-05-20T11:58:00+00:00",
+    "source": "ゲキサカ",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
+   },
+   {
+    "title": "「これからのサッカー人生を考え」讃岐22歳DF辻岡招真が福井 ...",
+    "link": "https://news.infoseek.co.jp/article/gekisaka_451793/",
+    "published": "2026-05-20T11:58:00+00:00",
+    "source": "楽天Infoseek",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
+   },
+   {
+    "title": "[MOM1138]高松大DF辻岡招真(4年)_前日に兄がJ3→J1移籍「背中を追って ...",
+    "link": "https://web.gekisaka.jp/news/incolle/detail/%3F443037-443037-fl",
+    "published": "2025-12-19T13:19:00+00:00",
+    "source": "ゲキサカ",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
+   },
+   {
+    "title": "高松大DF辻岡の来季加入が内定【讃岐】",
+    "link": "https://sports.yahoo.co.jp/official/detail/2025121000083-spnaviow",
+    "published": "2025-12-11T03:00:00+00:00",
+    "source": "スポーツナビ",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
+   },
+   {
+    "title": "四国大学サッカーリーグで得点王・高松大学のDF辻岡招真選手(21)が ...",
+    "link": "https://news.infoseek.co.jp/article/ksb_16214294/",
+    "published": "2025-12-10T07:44:00+00:00",
+    "source": "楽天Infoseek",
+    "detected_at": "2026-11-16T16:15:06.989182+00:00"
    }
   ]
  }
