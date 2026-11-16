@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-16T14:41:20.160946+00:00",
- "cursor": 40,
+ "updated_at": "2026-11-16T15:01:19.417979+00:00",
+ "cursor": 50,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -449,6 +449,15 @@
     "published": "2026-07-06T06:21:00+00:00",
     "source": "note",
     "detected_at": "2026-11-16T14:41:20.160946+00:00"
+   }
+  ],
+  "THUNDER|境駿太": [
+   {
+    "title": "境、家田好セーブ 地元沸かす ハンドボールリーグH 福井永平寺 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2727225",
+    "published": "2026-10-20T13:00:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-16T15:01:19.417979+00:00"
    }
   ]
  }
