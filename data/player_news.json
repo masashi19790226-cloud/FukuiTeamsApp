@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-16T14:21:20.452059+00:00",
- "cursor": 30,
+ "updated_at": "2026-11-16T14:41:20.160946+00:00",
+ "cursor": 40,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -440,6 +440,15 @@
     "published": "2026-06-10T00:15:00+00:00",
     "source": "Fukui Shimbun",
     "detected_at": "2026-11-16T14:21:20.452059+00:00"
+   }
+  ],
+  "RAC|足立紗菜": [
+   {
+    "title": "福井丸岡RUCK応援記 日本女子フットサルリーグ第4節 vs 立川",
+    "link": "https://note.com/misslemon/n/n33a639df0a2d",
+    "published": "2026-07-06T06:21:00+00:00",
+    "source": "note",
+    "detected_at": "2026-11-16T14:41:20.160946+00:00"
    }
   ]
  }
