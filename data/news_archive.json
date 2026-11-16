@@ -1,5 +1,55 @@
 [
   {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51681",
+    "team": "BLOWINDS",
+    "title": "【イベント情報】アトム×福井ブローウィンズ 食べて回して限定カプセルトイ コラボキャンペーン",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51681",
+    "published": "2026-10-02T09:00:00+09:00",
+    "detected_at": "2026-10-02T04:30:44.243005+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/%E3%82%AB%E3%83%95%E3%82%9A%E3%82%BB%E3%83%AB%E3%83%88%E3%82%A4%E3%83%8F%E3%82%99%E3%83%8A%E3%83%BC.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51692",
+    "team": "BLOWINDS",
+    "title": "岡本 飛竜 選手 契約基本合意（新規）のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51692",
+    "published": "2026-10-02T09:00:00+09:00",
+    "detected_at": "2026-10-02T06:36:03.776170+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TOPTEAM.JPG"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51695",
+    "team": "BLOWINDS",
+    "title": "【新商品】福井ブローウィンズ オリジナル「箱マスク」新発売！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51695",
+    "published": "2026-10-02T09:00:00+09:00",
+    "detected_at": "2026-10-02T06:36:03.776170+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_mask.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51694",
+    "team": "BLOWINDS",
+    "title": "【新商品】福井ブローウィンズ×毛谷黒龍神社 コラボレーション「御守り」発売決定",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51694",
+    "published": "2026-10-02T09:00:00+09:00",
+    "detected_at": "2026-10-02T06:36:03.776170+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/KV_omamori.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51693",
+    "team": "BLOWINDS",
+    "title": "藤原 隆充 氏 アソシエイトヘッドコーチ 就任のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51693",
+    "published": "2026-10-02T09:00:00+09:00",
+    "detected_at": "2026-10-02T08:32:28.996850+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
+  },
+  {
     "id": "bing:https://news.ntv.co.jp/n/fbc/category/society/fb9c58e747d78649b7be200cb9fa900bef",
     "team": "UNITED",
     "title": "福井ユナイテッドが小学校などにサッカーボール寄贈 今年度は187校 ...",
