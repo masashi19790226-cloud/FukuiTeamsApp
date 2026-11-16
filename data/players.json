@@ -2,12 +2,69 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-16T13:22:51.522066+00:00",
+    "updated_at": "2026-11-16T13:41:21.638455+00:00",
     "players": [
       {
         "number": "1",
         "name": "藤永 佳昭",
         "position": "PG",
+        "career": {
+          "league": {
+            "g": 440,
+            "pts": 827,
+            "reb": 373,
+            "ast": 675
+          },
+          "all": {
+            "g": 460,
+            "pts": 850,
+            "reb": 388,
+            "ast": 706
+          },
+          "from": "2016-17",
+          "path": [
+            {
+              "season": "2016-17",
+              "club": "名古屋D"
+            },
+            {
+              "season": "2017-18",
+              "club": "名古屋D"
+            },
+            {
+              "season": "2018-19",
+              "club": "千葉"
+            },
+            {
+              "season": "2019-20",
+              "club": "千葉"
+            },
+            {
+              "season": "2020-21",
+              "club": "千葉J"
+            },
+            {
+              "season": "2021-22",
+              "club": "千葉J"
+            },
+            {
+              "season": "2022-23",
+              "club": "A東京"
+            },
+            {
+              "season": "2023-24",
+              "club": "秋田"
+            },
+            {
+              "season": "2024-25",
+              "club": "富山"
+            },
+            {
+              "season": "2025-26",
+              "club": "富山"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=8736",
         "photo": "https://www.fukuiblowinds.com/v=1790295991/files/user/common/1_Fujinaga_2026-27_HP.jpg"
       },
@@ -139,6 +196,31 @@
             "eff": "5"
           }
         ],
+        "career": {
+          "league": {
+            "g": 18,
+            "pts": 70,
+            "reb": 22,
+            "ast": 40
+          },
+          "all": {
+            "g": 18,
+            "pts": 70,
+            "reb": 22,
+            "ast": 40
+          },
+          "from": "2024-25",
+          "path": [
+            {
+              "season": "2024-25",
+              "club": "琉球"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000439",
         "photo": "https://www.fukuiblowinds.com/v=1790296089/files/user/common/3_Tsukamoto_2026-27_HP.jpg"
       },
@@ -270,6 +352,67 @@
             "eff": "-2"
           }
         ],
+        "career": {
+          "league": {
+            "g": 410,
+            "pts": 1368,
+            "reb": 518,
+            "ast": 808
+          },
+          "all": {
+            "g": 423,
+            "pts": 1397,
+            "reb": 536,
+            "ast": 835
+          },
+          "from": "2016-17",
+          "path": [
+            {
+              "season": "2016-17",
+              "club": "島根"
+            },
+            {
+              "season": "2017-18",
+              "club": "島根"
+            },
+            {
+              "season": "2018-19",
+              "club": "広島"
+            },
+            {
+              "season": "2019-20",
+              "club": "広島"
+            },
+            {
+              "season": "2020-21",
+              "club": "広島"
+            },
+            {
+              "season": "2021-22",
+              "club": "新潟"
+            },
+            {
+              "season": "2022-23",
+              "club": "A東京"
+            },
+            {
+              "season": "2023-24",
+              "club": "A東京"
+            },
+            {
+              "season": "2024-25",
+              "club": "A東京"
+            },
+            {
+              "season": "2025-26",
+              "club": "島根"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=8839",
         "photo": "https://www.fukuiblowinds.com/v=1791251129/files/user/common/8_Okamoto_2026-27_HP.jpg"
       },
@@ -401,6 +544,31 @@
             "eff": "1"
           }
         ],
+        "career": {
+          "league": {
+            "g": 42,
+            "pts": 245,
+            "reb": 114,
+            "ast": 11
+          },
+          "all": {
+            "g": 45,
+            "pts": 245,
+            "reb": 115,
+            "ast": 11
+          },
+          "from": "2025-26",
+          "path": [
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000579",
         "photo": "https://www.fukuiblowinds.com/v=1790296126/files/user/common/10_Khishigbaar_2026-27_HP.jpg"
       },
@@ -531,6 +699,35 @@
             "eff": "-1"
           }
         ],
+        "career": {
+          "league": {
+            "g": 75,
+            "pts": 95,
+            "reb": 37,
+            "ast": 55
+          },
+          "all": {
+            "g": 76,
+            "pts": 95,
+            "reb": 37,
+            "ast": 55
+          },
+          "from": "2024-25",
+          "path": [
+            {
+              "season": "2024-25",
+              "club": "福井"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000471",
         "photo": "https://www.fukuiblowinds.com/v=1790296327/files/user/common/11_Naito_2026-27_HP.jpg"
       },
@@ -662,6 +859,55 @@
             "eff": "6"
           }
         ],
+        "career": {
+          "league": {
+            "g": 319,
+            "pts": 1655,
+            "reb": 597,
+            "ast": 290
+          },
+          "all": {
+            "g": 324,
+            "pts": 1685,
+            "reb": 612,
+            "ast": 291
+          },
+          "from": "2019-20",
+          "path": [
+            {
+              "season": "2019-20",
+              "club": "秋田"
+            },
+            {
+              "season": "2020-21",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2021-22",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2022-23",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2023-24",
+              "club": "横浜BC"
+            },
+            {
+              "season": "2024-25",
+              "club": "福井"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=30468",
         "photo": "https://www.fukuiblowinds.com/v=1790296426/files/user/common/12_Nishino_2026-27_HP.jpg"
       },
@@ -791,6 +1037,47 @@
             "eff": "12"
           }
         ],
+        "career": {
+          "league": {
+            "g": 241,
+            "pts": 1883,
+            "reb": 429,
+            "ast": 403
+          },
+          "all": {
+            "g": 251,
+            "pts": 1911,
+            "reb": 441,
+            "ast": 417
+          },
+          "from": "2021-22",
+          "path": [
+            {
+              "season": "2021-22",
+              "club": "FE名古屋"
+            },
+            {
+              "season": "2022-23",
+              "club": "神戸"
+            },
+            {
+              "season": "2023-24",
+              "club": "神戸"
+            },
+            {
+              "season": "2024-25",
+              "club": "神戸"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000115",
         "photo": "https://www.fukuiblowinds.com/v=1790296532/files/user/common/13_Kawashima_2026-27_HP.jpg"
       },
@@ -922,6 +1209,31 @@
             "eff": "25"
           }
         ],
+        "career": {
+          "league": {
+            "g": 71,
+            "pts": 948,
+            "reb": 623,
+            "ast": 122
+          },
+          "all": {
+            "g": 71,
+            "pts": 948,
+            "reb": 623,
+            "ast": 122
+          },
+          "from": "2025-26",
+          "path": [
+            {
+              "season": "2025-26",
+              "club": "川崎"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000494",
         "photo": "https://www.fukuiblowinds.com/v=1790296621/files/user/common/14_Dusan_2026-27_HP.jpg"
       },
@@ -1053,6 +1365,31 @@
             "eff": "11"
           }
         ],
+        "career": {
+          "league": {
+            "g": 74,
+            "pts": 1372,
+            "reb": 410,
+            "ast": 179
+          },
+          "all": {
+            "g": 74,
+            "pts": 1372,
+            "reb": 410,
+            "ast": 179
+          },
+          "from": "2024-25",
+          "path": [
+            {
+              "season": "2024-25",
+              "club": "神戸"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000417",
         "photo": "https://www.fukuiblowinds.com/v=1790296734/files/user/common/15_BrownJr_2026-27_HP.jpg"
       },
@@ -1184,6 +1521,51 @@
             "eff": "5"
           }
         ],
+        "career": {
+          "league": {
+            "g": 260,
+            "pts": 1332,
+            "reb": 299,
+            "ast": 466
+          },
+          "all": {
+            "g": 265,
+            "pts": 1372,
+            "reb": 305,
+            "ast": 474
+          },
+          "from": "2020-21",
+          "path": [
+            {
+              "season": "2020-21",
+              "club": "三遠"
+            },
+            {
+              "season": "2021-22",
+              "club": "三遠"
+            },
+            {
+              "season": "2022-23",
+              "club": "青森"
+            },
+            {
+              "season": "2023-24",
+              "club": "青森"
+            },
+            {
+              "season": "2024-25",
+              "club": "滋賀"
+            },
+            {
+              "season": "2025-26",
+              "club": "滋賀"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=5100000040",
         "photo": "https://www.fukuiblowinds.com/v=1790296771/files/user/common/17_Tsuneta_2026-27_HP.jpg"
       },
@@ -1315,6 +1697,67 @@
             "eff": "1"
           }
         ],
+        "career": {
+          "league": {
+            "g": 454,
+            "pts": 1907,
+            "reb": 677,
+            "ast": 539
+          },
+          "all": {
+            "g": 474,
+            "pts": 2000,
+            "reb": 704,
+            "ast": 559
+          },
+          "from": "2016-17",
+          "path": [
+            {
+              "season": "2016-17",
+              "club": "横浜"
+            },
+            {
+              "season": "2017-18",
+              "club": "横浜"
+            },
+            {
+              "season": "2018-19",
+              "club": "名古屋D"
+            },
+            {
+              "season": "2019-20",
+              "club": "名古屋D"
+            },
+            {
+              "season": "2020-21",
+              "club": "京都"
+            },
+            {
+              "season": "2021-22",
+              "club": "京都"
+            },
+            {
+              "season": "2022-23",
+              "club": "京都"
+            },
+            {
+              "season": "2023-24",
+              "club": "福井"
+            },
+            {
+              "season": "2024-25",
+              "club": "福井"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=10844",
         "photo": "https://www.fukuiblowinds.com/v=1790296812/files/user/common/21_Mitsuda_2026-27_HP.jpg"
       },
@@ -1446,6 +1889,27 @@
             "eff": "19"
           }
         ],
+        "career": {
+          "league": {
+            "g": 16,
+            "pts": 208,
+            "reb": 152,
+            "ast": 13
+          },
+          "all": {
+            "g": 16,
+            "pts": 208,
+            "reb": 152,
+            "ast": 13
+          },
+          "from": "2026-27",
+          "path": [
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=51000668",
         "photo": "https://www.fukuiblowinds.com/v=1790296847/files/user/common/41_WilliamsTawatari_2026-27_HP.jpg"
       },
@@ -1577,6 +2041,67 @@
             "eff": "17"
           }
         ],
+        "career": {
+          "league": {
+            "g": 489,
+            "pts": 2703,
+            "reb": 765,
+            "ast": 716
+          },
+          "all": {
+            "g": 506,
+            "pts": 2789,
+            "reb": 793,
+            "ast": 748
+          },
+          "from": "2016-17",
+          "path": [
+            {
+              "season": "2016-17",
+              "club": "三遠"
+            },
+            {
+              "season": "2017-18",
+              "club": "三遠"
+            },
+            {
+              "season": "2018-19",
+              "club": "三遠"
+            },
+            {
+              "season": "2019-20",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2020-21",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2021-22",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2022-23",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2023-24",
+              "club": "福井"
+            },
+            {
+              "season": "2024-25",
+              "club": "福井"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=8571",
         "photo": "https://www.fukuiblowinds.com/v=1790296882/files/user/common/73_Tawatari_2026-27_HP.jpg"
       },
@@ -1707,6 +2232,43 @@
             "eff": "6"
           }
         ],
+        "career": {
+          "league": {
+            "g": 218,
+            "pts": 1761,
+            "reb": 452,
+            "ast": 394
+          },
+          "all": {
+            "g": 226,
+            "pts": 1797,
+            "reb": 461,
+            "ast": 400
+          },
+          "from": "2022-23",
+          "path": [
+            {
+              "season": "2022-23",
+              "club": "品川"
+            },
+            {
+              "season": "2023-24",
+              "club": "品川"
+            },
+            {
+              "season": "2024-25",
+              "club": "香川"
+            },
+            {
+              "season": "2025-26",
+              "club": "香川"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        },
         "url": "https://www.bleague.jp/roster_detail/?PlayerID=40142",
         "photo": "https://www.fukuiblowinds.com/v=1790296914/files/user/common/93_Takahashi_2026-27_HP.jpg"
       }
@@ -3387,12 +3949,618 @@
           }
         ]
       }
+    },
+    "career_cache": {
+      "8736": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 440,
+            "pts": 827,
+            "reb": 373,
+            "ast": 675
+          },
+          "all": {
+            "g": 460,
+            "pts": 850,
+            "reb": 388,
+            "ast": 706
+          },
+          "from": "2016-17",
+          "path": [
+            {
+              "season": "2016-17",
+              "club": "名古屋D"
+            },
+            {
+              "season": "2017-18",
+              "club": "名古屋D"
+            },
+            {
+              "season": "2018-19",
+              "club": "千葉"
+            },
+            {
+              "season": "2019-20",
+              "club": "千葉"
+            },
+            {
+              "season": "2020-21",
+              "club": "千葉J"
+            },
+            {
+              "season": "2021-22",
+              "club": "千葉J"
+            },
+            {
+              "season": "2022-23",
+              "club": "A東京"
+            },
+            {
+              "season": "2023-24",
+              "club": "秋田"
+            },
+            {
+              "season": "2024-25",
+              "club": "富山"
+            },
+            {
+              "season": "2025-26",
+              "club": "富山"
+            }
+          ]
+        }
+      },
+      "51000439": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 18,
+            "pts": 70,
+            "reb": 22,
+            "ast": 40
+          },
+          "all": {
+            "g": 18,
+            "pts": 70,
+            "reb": 22,
+            "ast": 40
+          },
+          "from": "2024-25",
+          "path": [
+            {
+              "season": "2024-25",
+              "club": "琉球"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "8839": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 410,
+            "pts": 1368,
+            "reb": 518,
+            "ast": 808
+          },
+          "all": {
+            "g": 423,
+            "pts": 1397,
+            "reb": 536,
+            "ast": 835
+          },
+          "from": "2016-17",
+          "path": [
+            {
+              "season": "2016-17",
+              "club": "島根"
+            },
+            {
+              "season": "2017-18",
+              "club": "島根"
+            },
+            {
+              "season": "2018-19",
+              "club": "広島"
+            },
+            {
+              "season": "2019-20",
+              "club": "広島"
+            },
+            {
+              "season": "2020-21",
+              "club": "広島"
+            },
+            {
+              "season": "2021-22",
+              "club": "新潟"
+            },
+            {
+              "season": "2022-23",
+              "club": "A東京"
+            },
+            {
+              "season": "2023-24",
+              "club": "A東京"
+            },
+            {
+              "season": "2024-25",
+              "club": "A東京"
+            },
+            {
+              "season": "2025-26",
+              "club": "島根"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "51000579": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 42,
+            "pts": 245,
+            "reb": 114,
+            "ast": 11
+          },
+          "all": {
+            "g": 45,
+            "pts": 245,
+            "reb": 115,
+            "ast": 11
+          },
+          "from": "2025-26",
+          "path": [
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "51000471": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 75,
+            "pts": 95,
+            "reb": 37,
+            "ast": 55
+          },
+          "all": {
+            "g": 76,
+            "pts": 95,
+            "reb": 37,
+            "ast": 55
+          },
+          "from": "2024-25",
+          "path": [
+            {
+              "season": "2024-25",
+              "club": "福井"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "30468": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 319,
+            "pts": 1655,
+            "reb": 597,
+            "ast": 290
+          },
+          "all": {
+            "g": 324,
+            "pts": 1685,
+            "reb": 612,
+            "ast": 291
+          },
+          "from": "2019-20",
+          "path": [
+            {
+              "season": "2019-20",
+              "club": "秋田"
+            },
+            {
+              "season": "2020-21",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2021-22",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2022-23",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2023-24",
+              "club": "横浜BC"
+            },
+            {
+              "season": "2024-25",
+              "club": "福井"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "51000115": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 241,
+            "pts": 1883,
+            "reb": 429,
+            "ast": 403
+          },
+          "all": {
+            "g": 251,
+            "pts": 1911,
+            "reb": 441,
+            "ast": 417
+          },
+          "from": "2021-22",
+          "path": [
+            {
+              "season": "2021-22",
+              "club": "FE名古屋"
+            },
+            {
+              "season": "2022-23",
+              "club": "神戸"
+            },
+            {
+              "season": "2023-24",
+              "club": "神戸"
+            },
+            {
+              "season": "2024-25",
+              "club": "神戸"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "51000494": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 71,
+            "pts": 948,
+            "reb": 623,
+            "ast": 122
+          },
+          "all": {
+            "g": 71,
+            "pts": 948,
+            "reb": 623,
+            "ast": 122
+          },
+          "from": "2025-26",
+          "path": [
+            {
+              "season": "2025-26",
+              "club": "川崎"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "51000417": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 74,
+            "pts": 1372,
+            "reb": 410,
+            "ast": 179
+          },
+          "all": {
+            "g": 74,
+            "pts": 1372,
+            "reb": 410,
+            "ast": 179
+          },
+          "from": "2024-25",
+          "path": [
+            {
+              "season": "2024-25",
+              "club": "神戸"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "5100000040": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 260,
+            "pts": 1332,
+            "reb": 299,
+            "ast": 466
+          },
+          "all": {
+            "g": 265,
+            "pts": 1372,
+            "reb": 305,
+            "ast": 474
+          },
+          "from": "2020-21",
+          "path": [
+            {
+              "season": "2020-21",
+              "club": "三遠"
+            },
+            {
+              "season": "2021-22",
+              "club": "三遠"
+            },
+            {
+              "season": "2022-23",
+              "club": "青森"
+            },
+            {
+              "season": "2023-24",
+              "club": "青森"
+            },
+            {
+              "season": "2024-25",
+              "club": "滋賀"
+            },
+            {
+              "season": "2025-26",
+              "club": "滋賀"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "10844": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 454,
+            "pts": 1907,
+            "reb": 677,
+            "ast": 539
+          },
+          "all": {
+            "g": 474,
+            "pts": 2000,
+            "reb": 704,
+            "ast": 559
+          },
+          "from": "2016-17",
+          "path": [
+            {
+              "season": "2016-17",
+              "club": "横浜"
+            },
+            {
+              "season": "2017-18",
+              "club": "横浜"
+            },
+            {
+              "season": "2018-19",
+              "club": "名古屋D"
+            },
+            {
+              "season": "2019-20",
+              "club": "名古屋D"
+            },
+            {
+              "season": "2020-21",
+              "club": "京都"
+            },
+            {
+              "season": "2021-22",
+              "club": "京都"
+            },
+            {
+              "season": "2022-23",
+              "club": "京都"
+            },
+            {
+              "season": "2023-24",
+              "club": "福井"
+            },
+            {
+              "season": "2024-25",
+              "club": "福井"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "51000668": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 16,
+            "pts": 208,
+            "reb": 152,
+            "ast": 13
+          },
+          "all": {
+            "g": 16,
+            "pts": 208,
+            "reb": 152,
+            "ast": 13
+          },
+          "from": "2026-27",
+          "path": [
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "8571": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 489,
+            "pts": 2703,
+            "reb": 765,
+            "ast": 716
+          },
+          "all": {
+            "g": 506,
+            "pts": 2789,
+            "reb": 793,
+            "ast": 748
+          },
+          "from": "2016-17",
+          "path": [
+            {
+              "season": "2016-17",
+              "club": "三遠"
+            },
+            {
+              "season": "2017-18",
+              "club": "三遠"
+            },
+            {
+              "season": "2018-19",
+              "club": "三遠"
+            },
+            {
+              "season": "2019-20",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2020-21",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2021-22",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2022-23",
+              "club": "SR渋谷"
+            },
+            {
+              "season": "2023-24",
+              "club": "福井"
+            },
+            {
+              "season": "2024-25",
+              "club": "福井"
+            },
+            {
+              "season": "2025-26",
+              "club": "福井"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      },
+      "40142": {
+        "date": "2026-11-16",
+        "c": {
+          "league": {
+            "g": 218,
+            "pts": 1761,
+            "reb": 452,
+            "ast": 394
+          },
+          "all": {
+            "g": 226,
+            "pts": 1797,
+            "reb": 461,
+            "ast": 400
+          },
+          "from": "2022-23",
+          "path": [
+            {
+              "season": "2022-23",
+              "club": "品川"
+            },
+            {
+              "season": "2023-24",
+              "club": "品川"
+            },
+            {
+              "season": "2024-25",
+              "club": "香川"
+            },
+            {
+              "season": "2025-26",
+              "club": "香川"
+            },
+            {
+              "season": "2026-27",
+              "club": "福井"
+            }
+          ]
+        }
+      }
     }
   },
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=695&tab=1",
-    "updated_at": "2026-11-16T13:22:52.746592+00:00",
+    "updated_at": "2026-11-16T13:41:22.859560+00:00",
     "players": [
       {
         "number": "1",

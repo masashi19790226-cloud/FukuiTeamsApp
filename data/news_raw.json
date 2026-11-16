@@ -32,14 +32,6 @@
     "detected_at": "2026-10-03T08:30:11.620044+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:11092834621606050854",
-    "team": "UNITED",
-    "title": "福井ユナイテッド【公式】 on X: \"    地域貢献活動     勝山市立勝山北部中学校に #中山和紀 選手 ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2105923634309308838&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1VM5k-39PRm9CYDylX35qR",
-    "published": "2026-10-02T13:27:18Z",
-    "detected_at": "2026-10-03T09:29:53.595554+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:6793515848670777807",
     "team": "BLOWINDS",
     "title": "ホーム開幕戦 白星にファン歓喜 ブローウィンズ - 47NEWS",
@@ -8235,5 +8227,15 @@
     "detected_at": "2026-11-16T13:21:19.993651+00:00",
     "source": "丸岡RUCK公式",
     "image": ""
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51887",
+    "team": "BLOWINDS",
+    "title": "～TOGETHER WE FIGHT～開催決定！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51887",
+    "published": "2026-11-16T09:00:00+09:00",
+    "detected_at": "2026-11-16T13:38:25.751290+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_FANCLUB.jpg"
   }
 ]

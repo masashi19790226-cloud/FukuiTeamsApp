@@ -232,5 +232,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fwi_cob/status/2121134125298090031&ct=ga&cd=CAIyGmQxOGI1ZDQ5YjkwYjMxNzM6Y29tOmphOlVT&usg=AOvVaw1pdOhl32FLl-usze0rfCHz",
     "published": "2026-11-13T07:52:29Z",
     "detected_at": "2026-11-13T17:01:13.794678+00:00"
+  },
+  {
+    "id": "official:https://www.fukuiblowinds.com/news/detail/id=51887",
+    "team": "BLOWINDS",
+    "title": "～TOGETHER WE FIGHT～開催決定！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51887",
+    "published": "2026-11-16T09:00:00+09:00",
+    "detected_at": "2026-11-16T13:38:25.751290+00:00",
+    "snippet": "チケット購入ポイントを＋10％プレゼント！",
+    "source": "ブローウィンズ公式"
   }
 ]
