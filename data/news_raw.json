@@ -301,14 +301,6 @@
     "detected_at": "2026-10-05T04:26:37.237844+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:3150625757464768350",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズ、昨季B1島根スサノオマジックの岡本飛竜と新規契約 バスケBリーグワン",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://newspicks.com/news/17622235/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3UdhDr6jOmMTCRLdD0UWmz",
-    "published": "2026-10-03T15:32:21Z",
-    "detected_at": "2026-10-05T04:26:37.237873+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:8387871738304792117",
     "team": "BLOWINDS",
     "title": "これからも、ともに、戦いましょう。 #福井ブローウィンズ #FUKUIBLOWINDS #Bリーグ",
@@ -8428,5 +8420,13 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.city.tsuruga.lg.jp/site/bus/27906.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0Vyjv37--03UCvX1hjT51l",
     "published": "2026-11-17T07:14:36Z",
     "detected_at": "2026-11-17T14:41:15.689583+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7279031550569836427",
+    "team": "UNITED",
+    "title": "「#fukuiunited」のYahoo!リアルタイム検索 - X（旧Twitter）をリアルタイム検索",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://search.yahoo.co.jp/realtime/search%3Fei%3DUTF-8%26p%3D%2523fukuiunited%26mtype%3D&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw19J9Lexn9hV8gVpMfFbltb",
+    "published": "2026-11-17T04:48:41Z",
+    "detected_at": "2026-11-17T15:41:08.441516+00:00"
   }
 ]
