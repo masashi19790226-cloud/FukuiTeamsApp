@@ -104,15 +104,6 @@
     "detected_at": "2026-10-04T10:23:36.498318+00:00"
   },
   {
-    "id": "bing:https://www.msn.com/ja-jp/sports/basketball/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E3%81%8C%E3%83%9B%E3%83%BC%E3%83%A0%E5%88%9D%E6%88%A6%E5%8B%9D%E5%88%A9-%E9%87%91%E6%B2%A2%E3%82%9277-70%E3%81%A7%E6%8C%AF%E3%82%8A%E5%88%87%E3%82%8B-4500%E4%BA%BA%E3%81%AE%E5%A4%A7%E5%A3%B0%E6%8F%B4%E3%81%8C%E3%83%81%E3%83%BC%E3%83%A0%E3%82%92%E5%BE%8C%E6%8A%BC%E3%81%97/ar-AA2dvPl9",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズがホーム初戦勝利 金沢を77‐70で振り切る 4500人 ...",
-    "link": "https://www.msn.com/ja-jp/sports/basketball/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E3%81%8C%E3%83%9B%E3%83%BC%E3%83%A0%E5%88%9D%E6%88%A6%E5%8B%9D%E5%88%A9-%E9%87%91%E6%B2%A2%E3%82%9277-70%E3%81%A7%E6%8C%AF%E3%82%8A%E5%88%87%E3%82%8B-4500%E4%BA%BA%E3%81%AE%E5%A4%A7%E5%A3%B0%E6%8F%B4%E3%81%8C%E3%83%81%E3%83%BC%E3%83%A0%E3%82%92%E5%BE%8C%E6%8A%BC%E3%81%97/ar-AA2dvPl9",
-    "published": "2026-10-03T20:04:19+00:00",
-    "source": "FNNプライムオンライン",
-    "detected_at": "2026-10-04T13:52:12.766040+00:00"
-  },
-  {
     "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2714208",
     "team": "BLOWINDS",
     "title": "福井ブローウィンズ、ホーム開幕2連勝 第2節・金沢サムライズ戦",
@@ -148,16 +139,6 @@
     "source": "読売新聞オンライン",
     "image": "https://www.bing.com/th?id=ONUT.rQREH9cQNxI2SomHFjgcEA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-04T21:04:28.930026+00:00"
-  },
-  {
-    "id": "bing:https://www.msn.com/ja-jp/sports/basketball/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E3%81%8C%E3%83%9B%E3%83%BC%E3%83%A0%E9%96%8B%E5%B9%95%E6%88%A6%E3%81%A7%E7%99%BD%E6%98%9F-%E9%87%91%E6%B2%A2%E3%82%B5%E3%83%A0%E3%83%A9%E3%82%A4%E3%82%BA%E3%82%9277%E3%83%BC70%E3%81%A7%E7%A0%B4%E3%82%8B-4%E6%97%A5%E3%82%82%E5%AF%BE%E6%88%A6/ar-AA2dvPl9",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズがホーム初戦勝利 金沢を77‐70で振り切る 4500人 ...",
-    "link": "https://www.msn.com/ja-jp/sports/basketball/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E3%81%8C%E3%83%9B%E3%83%BC%E3%83%A0%E9%96%8B%E5%B9%95%E6%88%A6%E3%81%A7%E7%99%BD%E6%98%9F-%E9%87%91%E6%B2%A2%E3%82%B5%E3%83%A0%E3%83%A9%E3%82%A4%E3%82%BA%E3%82%9277%E3%83%BC70%E3%81%A7%E7%A0%B4%E3%82%8B-4%E6%97%A5%E3%82%82%E5%AF%BE%E6%88%A6/ar-AA2dvPl9",
-    "published": "2026-10-03T20:04:19+00:00",
-    "source": "FNNプライムオンライン",
-    "image": "https://www.bing.com/th?id=ONUT.jY29kks98A9a5GUz-LJmXw&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-04T21:04:28.930040+00:00"
   },
   {
     "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2714416",
