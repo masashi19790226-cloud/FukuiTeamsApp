@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-17T13:41:22.817229+00:00",
- "cursor": 34,
+ "updated_at": "2026-11-17T14:01:23.082810+00:00",
+ "cursor": 44,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -962,6 +962,22 @@
     "published": "2026-06-12T10:40:00+00:00",
     "source": "47NEWS",
     "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   }
+  ],
+  "RAC|池内天紀": [
+   {
+    "title": "池内天紀（バルドラール浦安ラス・ボニータス）が女子Fリーグ通算 ...",
+    "link": "https://www.oricon.co.jp/pressrelease/2879867/",
+    "published": "2026-07-01T02:46:00+00:00",
+    "source": "ORICON NEWS",
+    "detected_at": "2026-11-17T14:01:23.082810+00:00"
+   },
+   {
+    "title": "日本大勝 白星発進 池内（丸岡高出身）得点起点に フットサル女子W杯",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2465008?f=dkanranking-onlinearticle-under",
+    "published": "2025-11-23T16:00:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-17T14:01:23.082810+00:00"
    }
   ]
  }
