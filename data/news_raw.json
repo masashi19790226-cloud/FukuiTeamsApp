@@ -8368,5 +8368,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/reader/2748634&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw2oJRpv3JKl886fhUHHlov8",
     "published": "2026-11-16T20:17:52Z",
     "detected_at": "2026-11-17T00:41:14.192052+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51890",
+    "team": "BLOWINDS",
+    "title": "【第16節】12/19(土)、20(日)vs 岐阜スゥープス 戦 企画席およびオプション販売について",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51890",
+    "published": "2026-11-17T09:00:00+09:00",
+    "detected_at": "2026-11-17T01:01:28.516791+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51889",
+    "team": "BLOWINDS",
+    "title": "【第16節】12/19（土）、20（日）vs 岐阜スゥープス戦 「はじめて応援キット」オプション販売決定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51889",
+    "published": "2026-11-17T09:00:00+09:00",
+    "detected_at": "2026-11-17T01:01:28.516791+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/img/bg-game-header.png"
   }
 ]
