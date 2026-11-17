@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-17T14:01:23.082810+00:00",
- "cursor": 44,
+ "updated_at": "2026-11-17T14:21:24.314039+00:00",
+ "cursor": 54,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -978,6 +978,36 @@
     "published": "2025-11-23T16:00:00+00:00",
     "source": "Fukui Shimbun",
     "detected_at": "2026-11-17T14:01:23.082810+00:00"
+   }
+  ],
+  "RAC|高尾茜利": [
+   {
+    "title": "史上初！高尾茜利（SWHレディース西宮）がFリーグ通算100試合出場を ...",
+    "link": "https://www.oricon.co.jp/pressrelease/2869384/",
+    "published": "2026-06-23T11:16:00+00:00",
+    "source": "ORICON NEWS",
+    "detected_at": "2026-11-17T14:21:24.314039+00:00"
+   },
+   {
+    "title": "史上初！高尾茜利（SWHレディース西宮）がFリーグ通算100試合出場を ...",
+    "link": "https://news.infoseek.co.jp/article/prtimes_000001074_000098954/",
+    "published": "2026-06-23T02:15:00+00:00",
+    "source": "楽天Infoseek",
+    "detected_at": "2026-11-17T14:21:24.314039+00:00"
+   },
+   {
+    "title": "「輝いてる」女子Fリーグ強豪の27歳主将、どアップ写真公開に ...",
+    "link": "https://www.chunichi.co.jp/article/1257168",
+    "published": "2026-05-26T02:08:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-17T14:21:24.314039+00:00"
+   },
+   {
+    "title": "県勢高尾の西宮V 2年ぶり フットサル全日本女子選手権",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2536573",
+    "published": "2026-02-24T12:00:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-17T14:21:24.314039+00:00"
    }
   ]
  }
