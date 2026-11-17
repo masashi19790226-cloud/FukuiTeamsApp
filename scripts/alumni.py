@@ -28,7 +28,7 @@ WFL_SITE = "https://w-fleague.jp"
 # これより前のお知らせの選手は入れない(公式サイトのお知らせが始まった年)
 SINCE_YEAR = 2017
 
-VERSION = 4
+VERSION = 5
 
 # 元選手を探すお知らせの言葉と、そのときの種類(見出しにこの言葉がある記事を読む)
 DEPARTURE_WORDS = (("退団", "退団"), ("移籍", "移籍"), ("引退", "引退"), ("卒団", "卒団"), ("契約満了", "退団"))
@@ -190,12 +190,12 @@ def build(fetch, old, ruck_scorers=None, current_ruck_names=(), club_photos=None
                 continue
             r = rosters.get(k)
             g = goals.get(k)
-            # 写真:退団・移籍のお知らせの写真 → 今いるクラブの公式サイトの写真 → 得点表の写真
-            photo = d.get("photo", "")
-            if not photo and r:
-                photo = ((club_photos or {}).get(r["club"]) or {}).get(_photo_key(r["name"]), "")
+            # 写真:今いるクラブの公式サイトの写真 → 得点表の写真 → 退団・移籍のお知らせの写真(丸岡RUCK時代)
+            photo = ((club_photos or {}).get(r["club"]) or {}).get(_photo_key(r["name"]), "") if r else ""
             if not photo and g and r:
                 photo = g.get("photo", "")
+            if not photo:
+                photo = d.get("photo", "")
             new.append({
                 # 名前は女子Fリーグの名簿の書き方(姓と名の間に空白)があればそれを使う
                 "team": "RAC", "name": r["name"] if r else d["name"], "number": d["number"], "left": d["date"], "kind": d["kind"],
@@ -219,8 +219,9 @@ def build(fetch, old, ruck_scorers=None, current_ruck_names=(), club_photos=None
                 known.add(k)
                 r = rosters.get(k)
                 g = goals.get(k)
-                photo = ((n.get("photos") or {}).get(name)) or (
-                    ((club_photos or {}).get(r["club"]) or {}).get(_photo_key(r["name"]), "") if r else "")
+                # 写真:今いるクラブの公式サイトの写真 → 日本代表の選出のお知らせの写真
+                photo = (((club_photos or {}).get(r["club"]) or {}).get(_photo_key(r["name"]), "") if r else "") or (
+                    (n.get("photos") or {}).get(name) or "")
                 new.append({
                     "team": "RAC", "name": r["name"] if r else name, "number": "", "left": "", "kind": "元選手",
                     "dest": "", "link": n.get("link", ""),
