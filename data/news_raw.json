@@ -317,14 +317,6 @@
     "detected_at": "2026-10-05T04:26:37.237893+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:18199768897883354526",
-    "team": "BLOWINDS",
-    "title": "岡本 飛竜 選手 契約基本合意（新規）のお知らせ - 福井ブローウィンズ",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51692&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3Qo3ALW5oIvm_ZJ2mo8Y93",
-    "published": "2026-10-03T10:01:14Z",
-    "detected_at": "2026-10-05T04:26:37.237957+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:8387871738304792117",
     "team": "BLOWINDS",
     "title": "これからも、ともに、戦いましょう。 #福井ブローウィンズ #FUKUIBLOWINDS #Bリーグ",
@@ -8402,5 +8394,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://search.yahoo.co.jp/realtime/search%3Fei%3DUTF-8%26p%3D%2523%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%25A6%25E3%2583%258A%25E3%2582%25A4%25E3%2583%2586%25E3%2583%2583%25E3%2583%2589fc%26mtype%3Dimage&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1_NvY5zRwDEnvjQrT3w0Sh",
     "published": "2026-11-17T00:59:04Z",
     "detected_at": "2026-11-17T05:41:13.044581+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51891",
+    "team": "BLOWINDS",
+    "title": "#10 ヒシグバータル・オーギル 選手 モンゴル代表選出のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51891",
+    "published": "2026-11-17T09:00:00+09:00",
+    "detected_at": "2026-11-17T10:21:20.631639+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%2310_2025-26_sam.jpg"
   }
 ]
