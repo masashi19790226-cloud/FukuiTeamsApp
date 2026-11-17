@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-17T12:41:19.947934+00:00",
- "cursor": 4,
+ "updated_at": "2026-11-17T13:01:17.413176+00:00",
+ "cursor": 14,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -692,6 +692,133 @@
     "published": "2026-07-08T13:00:00+00:00",
     "source": "Fukui Shimbun",
     "detected_at": "2026-11-16T17:21:24.291713+00:00"
+   }
+  ],
+  "BLOWINDS|トレイボイド": [
+   {
+    "title": "トレイ・ボイドが3試合続けて40得点以上、横浜EXが立川と越谷の ...",
+    "link": "https://note.com/b_court_record/n/nd880c0452a47",
+    "published": "2026-11-08T23:24:00+00:00",
+    "source": "note",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "トレイ・ボイドの48得点 横浜EXが21点差を4点差まで詰められながら ...",
+    "link": "https://note.com/b_court_record/n/n2f53c5c39c9f",
+    "published": "2026-11-08T16:52:00+00:00",
+    "source": "note",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "【横浜エクセレンス】トレイ・ボイドIII選手、エライジャ ...",
+    "link": "https://www.jiji.com/jc/article?k=000000184.000036241&g=prt",
+    "published": "2026-05-28T08:46:00+00:00",
+    "source": "時事ドットコム",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "【横浜エクセレンス】「#1 トレイ・ボイドIII」「りそなグループ B ...",
+    "link": "https://www.jiji.com/jc/article?k=000000164.000036241&g=prt",
+    "published": "2026-04-27T08:40:00+00:00",
+    "source": "時事ドットコム",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "【横浜エクセレンス】「#1 トレイ・ボイドIII」「りそなグループ B ...",
+    "link": "https://prtimes.jp/main/html/rd/p/000000164.000036241.html",
+    "published": "2026-04-26T15:00:00+00:00",
+    "source": "PR TIMES",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "【横浜エクセレンス】「#1 トレイ・ボイドIII」「りそなグループ B ...",
+    "link": "https://sports.yahoo.co.jp/official/detail/2026042300029-spnaviow",
+    "published": "2026-04-26T02:00:00+00:00",
+    "source": "スポーツナビ",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   }
+  ],
+  "BLOWINDS|ベンジャミンローソン": [
+   {
+    "title": "【横浜エクセレンス】#34 ベンジャミン・ローソン選手 インジュ ...",
+    "link": "https://sports.yahoo.co.jp/column/detail/2026040900079-spnaviow",
+    "published": "2026-04-10T08:01:00+00:00",
+    "source": "スポーツナビ",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "【横浜エクセレンス】#34 ベンジャミン・ローソン選手 インジュ ...",
+    "link": "https://prtimes.jp/main/html/rd/p/000000157.000036241.html",
+    "published": "2026-04-10T08:00:00+00:00",
+    "source": "PR TIMES",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   }
+  ],
+  "BLOWINDS|ラポラスアイヴァナーカス": [
+   {
+    "title": "徳島ガンバロウズにラポラス・アイヴァナーカス加入 B2福井のPF兼 ...",
+    "link": "https://www.topics.or.jp/articles/-/1457034",
+    "published": "2026-07-02T22:00:00+00:00",
+    "source": "Tokushima Shimbun",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "[徳島ガンバロウズ]ラポラス・アイヴァナーカス選手 契約（新規 ...",
+    "link": "https://www.oricon.co.jp/pressrelease/2885226/",
+    "published": "2026-07-02T12:16:00+00:00",
+    "source": "ORICON NEWS",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "HOME PR TIMES [徳島ガンバロウズ]ラポラス・アイヴァナーカス選手 ...",
+    "link": "https://mantan-web.jp/prtimes/article/20260702prt00m200001034a/photopage/001.html",
+    "published": "2026-07-02T11:51:00+00:00",
+    "source": "MANTANWeb",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "徳島ガンバロウズがアイヴァナーカスを獲得…勉強中の日本語で ...",
+    "link": "https://news.yahoo.co.jp/articles/2d9ab66de09c3d10892690b304dddbf979cf5b3c",
+    "published": "2026-07-01T20:57:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   }
+  ],
+  "BLOWINDS|小阪彰久": [
+   {
+    "title": "【シーホース三河】選手加入のお知らせ(小阪 彰久選手)",
+    "link": "https://prtimes.jp/main/html/rd/p/000001160.000097825.html",
+    "published": "2026-06-24T02:50:00+00:00",
+    "source": "PR TIMES",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "【シーホース三河】選手加入のお知らせ(小阪 彰久選手)",
+    "link": "https://news.infoseek.co.jp/article/prtimes_000001160_000097825/",
+    "published": "2026-06-23T17:50:00+00:00",
+    "source": "楽天Infoseek",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "選手加入のお知らせ(小阪 彰久選手)",
+    "link": "https://sports.yahoo.co.jp/official/detail/2026062300024-spnaviow",
+    "published": "2026-06-23T11:00:00+00:00",
+    "source": "スポーツナビ",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "シーホース三河が小阪彰久を獲得…縁ある地でキャリアの集大成へ ...",
+    "link": "https://news.yahoo.co.jp/articles/68cdbdd454b26fbd33bff9460eb7f0a477c58db0",
+    "published": "2026-06-22T23:12:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   },
+   {
+    "title": "シーホース三河がビッグマンの小阪彰久を福井から獲得「チーム ...",
+    "link": "https://news.yahoo.co.jp/articles/63efb4249b6b47c6534161ad3223e828d9901513/images/000",
+    "published": "2026-06-22T21:22:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-17T13:01:17.413176+00:00"
    }
   ]
  }
