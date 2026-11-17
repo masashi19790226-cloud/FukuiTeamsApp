@@ -157,16 +157,6 @@
     "detected_at": "2026-10-04T13:52:13.392517+00:00"
   },
   {
-    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2713671",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズ、今季地元開幕戦飾る 金沢サムライズと対戦 ...",
-    "link": "https://www.fukuishimbun.co.jp/articles/-/2713671",
-    "published": "2026-10-03T05:25:00+00:00",
-    "source": "福井新聞ONLINE",
-    "image": "https://www.bing.com/th?id=ONUT.5bozXqcyk9HPYAJF_3I21Q&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-04T14:15:12.406940+00:00"
-  },
-  {
     "id": "bing:https://www.yomiuri.co.jp/local/fukui/news/20261004-GYTNT00070/",
     "team": "BLOWINDS",
     "title": "ブローウィンズ ホーム開幕節連勝",
@@ -8420,5 +8410,13 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/amp/article/fukui/region/fukui-20261117110851112&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0xAKnhlSCNqfPIbyoVGM6E",
     "published": "2026-11-17T03:40:19Z",
     "detected_at": "2026-11-17T05:21:13.413869+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10368211991347989057",
+    "team": "UNITED",
+    "title": "「#福井ユナイテッドfc」のYahoo!リアルタイム検索 - X（旧Twitter）をリアルタイム検索",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://search.yahoo.co.jp/realtime/search%3Fei%3DUTF-8%26p%3D%2523%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%25A6%25E3%2583%258A%25E3%2582%25A4%25E3%2583%2586%25E3%2583%2583%25E3%2583%2589fc%26mtype%3Dimage&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1_NvY5zRwDEnvjQrT3w0Sh",
+    "published": "2026-11-17T00:59:04Z",
+    "detected_at": "2026-11-17T05:41:13.044581+00:00"
   }
 ]
