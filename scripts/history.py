@@ -85,6 +85,9 @@ class PlayerBook:
         # 背番号・ポジションは新しい試合のものを残す(古い試合から順に足す)
         if number:
             r["number"] = str(number)
+            # シーズンごとの背番号(シーズンの途中で変わったときは、そのシーズンの最後の番号)。アプリで「当時の背番号」を出す
+            if season:
+                r.setdefault("numbers", {})[str(season)] = str(number)
         if position:
             r["position"] = position
         if season and season not in r["seasons"]:

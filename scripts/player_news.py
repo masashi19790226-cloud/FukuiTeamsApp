@@ -2,6 +2,8 @@
 選手ごとのニュース(Web版の選手ページ・一面の「推し選手」で使う)を data/player_news.json に集める。
 
 - 今の選手(data/standings.json の BIRTHDAYS(4チーム)と VERCOSTA の選手名簿)の名前とチーム名で Bingニュースを検索する
+- 移籍した元選手(data/history.json で、いまのクラブ now_team が分かっている人)は、名前といまのクラブ名で検索する
+  (記事は元のチームの「チーム|名前」に入れる。Web版の選手ページは元のチームの選手として開くため)
   (GoogleニュースのRSSは robots.txt で自動取得が禁止されているため使わない。Bingニュースの検索は禁止されていない)
 - 1回の実行で PER_RUN 人ずつ順番に調べる(20分おきの実行で、全員をおよそ数時間で1周する)
 - 見出しか説明文に選手の名前(空白を除いた形)が入っている記事だけ残す
@@ -19,6 +21,7 @@ from datetime import datetime, timedelta, timezone
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 STANDINGS_PATH = os.path.join(BASE_DIR, "standings.json")
+HISTORY_PATH = os.path.join(BASE_DIR, "history.json")
 PLAYER_NEWS_PATH = os.path.join(BASE_DIR, "player_news.json")
 
 PER_RUN = 10
@@ -38,7 +41,7 @@ def name_key(name: str) -> str:
 
 
 def player_list():
-    """今の選手 [(チーム, 名前)]。読めなければ空"""
+    """調べる選手 [(チーム, 名前, 検索に足す言葉)]。今の選手と、移籍した元選手(いまのクラブが分かっている人)。読めなければ空"""
     try:
         with open(STANDINGS_PATH, encoding="utf-8") as f:
             st = json.load(f)
@@ -50,12 +53,26 @@ def player_list():
         team, name = p.get("team"), (p.get("name") or "").strip()
         if team in TEAM_QUERY_WORD and name and (team, name_key(name)) not in seen:
             seen.add((team, name_key(name)))
-            out.append((team, name))
+            out.append((team, name, TEAM_QUERY_WORD[team]))
     for p in ((st.get("VERCOSTA") or {}).get("roster") or {}).get("players") or []:
         name = (p.get("name") or "").strip()
         if name and ("VERCOSTA", name_key(name)) not in seen:
             seen.add(("VERCOSTA", name_key(name)))
-            out.append(("VERCOSTA", name))
+            out.append(("VERCOSTA", name, TEAM_QUERY_WORD["VERCOSTA"]))
+    # 移籍した元選手(読めなくても今の選手の分は続ける)
+    try:
+        with open(HISTORY_PATH, encoding="utf-8") as f:
+            teams = (json.load(f) or {}).get("teams") or {}
+        for team, sec in teams.items():
+            if team not in TEAM_QUERY_WORD or not isinstance(sec, dict):
+                continue
+            for p in sec.get("players") or []:
+                name, now_team = (p.get("name") or "").strip(), (p.get("now_team") or "").strip()
+                if p.get("now") is False and name and now_team and (team, name_key(name)) not in seen:
+                    seen.add((team, name_key(name)))
+                    out.append((team, name, now_team))
+    except Exception as e:
+        print(f"[WARN] 選手のニュース: history.json の元選手を読めませんでした {e!r}")
     out.sort(key=lambda x: (x[0], name_key(x[1])))
     return out
 
@@ -82,9 +99,9 @@ def check_player_news(fetch_feed, parse_bing_rss, bing_url: str) -> int:
     cutoff = now - timedelta(days=KEEP_DAYS)
     new_count = 0
     for i in range(min(PER_RUN, len(players))):
-        team, name = players[(cursor + i) % len(players)]
+        team, name, word = players[(cursor + i) % len(players)]
         key = f"{team}|{name_key(name)}"
-        q = f"{name_key(name)} {TEAM_QUERY_WORD[team]}"
+        q = f"{name_key(name)} {word}"
         try:
             text = fetch_feed(bing_url.format(q=urllib.request.quote(q))).decode("utf-8", errors="replace")
         except Exception as e:
@@ -118,7 +135,7 @@ def check_player_news(fetch_feed, parse_bing_rss, bing_url: str) -> int:
         have.sort(key=when, reverse=True)
         store[key] = have[:KEEP_PER_PLAYER]
     # 今の選手にいない人の分は消す
-    alive = {f"{t}|{name_key(n)}" for t, n in players}
+    alive = {f"{t}|{name_key(n)}" for t, n, _ in players}
     store = {k: v for k, v in store.items() if k in alive and v}
     out = {"updated_at": now.isoformat(), "cursor": (cursor + PER_RUN) % len(players), "players": store}
     with open(PLAYER_NEWS_PATH, "w", encoding="utf-8") as f:

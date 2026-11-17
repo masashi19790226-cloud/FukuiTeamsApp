@@ -467,6 +467,26 @@ def parse_career(page):
     返り値 {"league": リーグ戦だけの合計, "all": プレーオフなども含めた合計, "from": いちばん古いシーズン,
             "path": 所属の流れ [{"season", "club"}](古い順)}。表が無ければ None。
     合計は g(試合)・pts(得点)・reb(リバウンド TR)・ast(アシスト AS)。"""
+    return career_from_rows(career_rows(page))
+
+
+def career_from_rows(rows):
+    """career_rows の行から、parse_career と同じ形の通算を作る。行が無ければ None"""
+    if not rows:
+        return None
+
+    def total(rs):
+        return {k: sum(r[k] for r in rs) for k in ("g", "pts", "reb", "ast")}
+    league = [r for r in rows if not CAREER_NON_LEAGUE.search(r["type"])]
+    path = []
+    for r in sorted(league or rows, key=lambda x: x["season"]):
+        if r["club"] and not any(x["season"] == r["season"] and x["club"] == r["club"] for x in path):
+            path.append({"season": r["season"], "club": r["club"]})
+    return {"league": total(league), "all": total(rows), "from": min(r["season"] for r in rows), "path": path}
+
+
+def career_rows(page):
+    """Bリーグ公式の選手ページの「シーズン成績(合計)」の表の行 [{"season", "type", "club", "g", "pts", "reb", "ast"}]"""
     rows = []
     for table in re.findall(r"<table\b.*?</table>", page, flags=re.S | re.I):
         header = None
@@ -489,17 +509,71 @@ def parse_career(page):
                          "g": n("G"), "pts": n("PTS"), "reb": n("TR"), "ast": n("AS")})
         if header:
             break
-    if not rows:
-        return None
+    return rows
 
-    def total(rs):
-        return {k: sum(r[k] for r in rs) for k in ("g", "pts", "reb", "ast")}
-    league = [r for r in rows if not CAREER_NON_LEAGUE.search(r["type"])]
-    path = []
-    for r in sorted(league or rows, key=lambda x: x["season"]):
-        if r["club"] and not any(x["season"] == r["season"] and x["club"] == r["club"] for x in path):
-            path.append({"season": r["season"], "club": r["club"]})
-    return {"league": total(league), "all": total(rows), "from": min(r["season"] for r in rows), "path": path}
+
+# いまBリーグのクラブにいない元選手(引退・海外など)の選手ページを読み直す間隔(日)
+FORMER_CAREER_RECHECK_DAYS = 30
+
+
+def former_now_stats(players, old_players, fetch_page=None):
+    """ブローウィンズの元選手(pid がある)に、Bリーグ公式の選手ページから
+    - career:Bリーグ通算(他クラブ時代も含む。parse_career と同じ形)と、読んだ日 career_date
+    - now_stats:いまBリーグのほかのクラブにいる選手(now_team_id がある)の、いまのシーズンのリーグ戦の成績
+      {"season", "g", "pts", "reb", "ast", "date"}
+    を付ける。いまBリーグのクラブにいる選手は1日1回、いない選手は FORMER_CAREER_RECHECK_DAYS 日に1回だけ読む。
+    読めなかったときは前回の分を残す。"""
+    fetch_page = fetch_page or fetch
+    now = datetime.now(JST)
+    today = now.strftime("%Y-%m-%d")
+    old = {p.get("pid"): p for p in old_players or [] if p.get("pid")}
+    fetched = 0
+    for p in players:
+        pid, tid = p.get("pid"), p.get("now_team_id")
+        if p.get("now") is not False or not pid:
+            for k in ("now_stats", "career", "career_date"):
+                p.pop(k, None)
+            continue
+        playing = bool(tid) and tid != BLOWINDS_TEAM_ID
+        o = old.get(pid) or {}
+        prev_stats = o.get("now_stats") or p.get("now_stats")
+        prev_career, prev_date = o.get("career") or p.get("career"), o.get("career_date") or p.get("career_date") or ""
+        try:
+            age = (now.date() - datetime.strptime(prev_date, "%Y-%m-%d").date()).days
+        except ValueError:
+            age = None
+        fresh = prev_career and age is not None and (age < 1 if playing else age < FORMER_CAREER_RECHECK_DAYS)
+        if fresh and (not playing or (prev_stats and prev_stats.get("date") == today)):
+            p["career"], p["career_date"] = prev_career, prev_date
+            if playing and prev_stats:
+                p["now_stats"] = prev_stats
+            else:
+                p.pop("now_stats", None)
+            continue
+        try:
+            rows = career_rows(fetch_page(f"{BLEAGUE}/roster_detail/?PlayerID={pid}"))
+            fetched += 1
+        except Exception as e:
+            print(f"[WARN] 過去の記録: ブローウィンズの元選手 {p.get('name', '')} の選手ページを読めませんでした {e!r}")
+            rows = None
+        # Bリーグ通算
+        c = career_from_rows(rows)
+        if c:
+            p["career"], p["career_date"] = c, today
+        elif prev_career:
+            p["career"], p["career_date"] = prev_career, prev_date
+        # いまのクラブでの今季
+        league = [r for r in rows or [] if not CAREER_NON_LEAGUE.search(r["type"])]
+        if playing and league:
+            season = max(r["season"] for r in league)
+            cur = [r for r in league if r["season"] == season]
+            p["now_stats"] = {"season": season, **{k: sum(r[k] for r in cur) for k in ("g", "pts", "reb", "ast")}, "date": today}
+        elif playing and prev_stats:
+            p["now_stats"] = prev_stats
+        else:
+            p.pop("now_stats", None)
+    print(f"[過去の記録] ブローウィンズ: 元選手のBリーグ通算といまの成績(選手ページ{fetched}件を読み込み)")
+    return players
 
 
 def attach_careers(players, label, old_cache, pages):
@@ -1437,7 +1511,15 @@ def main():
         for p in bd_all.get("players") or []:
             if p.get("team") and p.get("name"):
                 current.setdefault(p["team"], []).append(p["name"])
-        hi = history.build(fetch, post_json, load_json(HISTORY_PATH, {}), current)
+        old_hi = load_json(HISTORY_PATH, {})
+        hi = history.build(fetch, post_json, old_hi, current)
+        # ブローウィンズの元選手の、いまのクラブでの今季の成績(選手ページで「いま:熊本ヴォルターズ(今季10試合・平均8.5点)」と出す)
+        try:
+            bw = (hi or {}).get("teams", {}).get("BLOWINDS") or {}
+            if bw.get("players"):
+                former_now_stats(bw["players"], ((old_hi.get("teams") or {}).get("BLOWINDS") or {}).get("players"))
+        except Exception as e:
+            print(f"[WARN] 過去の記録: ブローウィンズの元選手のいまの成績の取得に失敗 {e!r}")
         if hi:
             with open(HISTORY_PATH, "w", encoding="utf-8") as f:
                 json.dump(hi, f, ensure_ascii=False, indent=1)
