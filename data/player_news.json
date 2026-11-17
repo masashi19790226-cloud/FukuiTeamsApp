@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-17T13:01:17.413176+00:00",
- "cursor": 14,
+ "updated_at": "2026-11-17T13:21:19.717279+00:00",
+ "cursor": 24,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -819,6 +819,149 @@
     "published": "2026-06-22T21:22:00+00:00",
     "source": "Yahoo!ニュース",
     "detected_at": "2026-11-17T13:01:17.413176+00:00"
+   }
+  ],
+  "BLOWINDS|木村圭吾": [
+   {
+    "title": "11/7 神戸vs横浜BC 主将不在を埋めたステップアップと、インサイドの ...",
+    "link": "https://note.com/waterfronthoops/n/n8a4b3378cc30",
+    "published": "2026-11-10T00:27:00+00:00",
+    "source": "note",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "11/1 神戸vs長崎 気持ちで掴んだ勝利と、残る課題",
+    "link": "https://note.com/waterfronthoops/n/n7169d4672308",
+    "published": "2026-11-06T05:38:00+00:00",
+    "source": "note",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "神戸ストークスが長崎に逆転勝ちで連敗を7で止める…木村圭吾が22 ...",
+    "link": "https://www.excite.co.jp/news/article/sportsbull_2449040/",
+    "published": "2026-11-01T12:29:00+00:00",
+    "source": "Excite エキサイト",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "神戸ストークスが長崎に逆転勝ちで連敗を7で止める…木村圭吾が22 ...",
+    "link": "https://topics.smt.docomo.ne.jp/article/sportsbull/sports/sportsbull-2449040",
+    "published": "2026-11-01T03:30:00+00:00",
+    "source": "dメニューニュース",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   }
+  ],
+  "BLOWINDS|渡辺竜之佑": [
+   {
+    "title": "#006 開幕まで7日「ひとつでも多くの勝利を」渡辺竜之佑 #16",
+    "link": "https://sports.yahoo.co.jp/official/detail/2026091800083-spnaviow",
+    "published": "2026-09-18T09:00:00+00:00",
+    "source": "スポーツナビ",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "京都ハンナリーズが前田悟と2年契約に合意、伊佐勉ヘッドコーチと ...",
+    "link": "https://news.yahoo.co.jp/articles/eb035f6a94f419bafe96f53c1da48e6db01c9925",
+    "published": "2026-05-07T20:44:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   }
+  ],
+  "BLOWINDS|細谷将司": [
+   {
+    "title": "Bワン鹿児島レブナイズ・新戦力 ガード細谷将司（36） 経験豊富 ...",
+    "link": "https://373news.com/news/local/detail/238721/",
+    "published": "2026-08-28T23:30:00+00:00",
+    "source": "Minami-Nippon Shimbun",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "バスケットボールB2鹿児島レブナイズ 福井の細谷加入、ガード兒玉 ...",
+    "link": "https://373news.com/news/local/detail/233873/",
+    "published": "2026-05-20T11:50:00+00:00",
+    "source": "Minami-Nippon Shimbun",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "鹿児島レブナイズが福井ブローウィンズの細谷将司を獲得「持てる ...",
+    "link": "https://news.yahoo.co.jp/articles/f388705c529c5550efd15828c9d6e602807b01b5",
+    "published": "2026-05-20T00:34:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "細谷将司、新天地は鹿児島レブナイズに決定「最高の『SHOWTIME』を ...",
+    "link": "https://news.yahoo.co.jp/articles/b493d3eb7e760afd23b5ba648ad3421c65a9ed2e",
+    "published": "2026-05-19T23:16:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   }
+  ],
+  "BLOWINDS|藤澤尚之": [
+   {
+    "title": "＜ヴォルターズ 26日ホームで香川と初戦＞5季ぶり復帰のPG藤澤尚之 ...",
+    "link": "https://kumanichi.com/articles/2038434",
+    "published": "2026-09-22T23:05:00+00:00",
+    "source": "熊本日日新聞",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "藤澤が5季ぶり復帰 熊本ヴォルターズ",
+    "link": "https://kumanichi.com/articles/2004589",
+    "published": "2026-06-19T11:17:00+00:00",
+    "source": "熊本日日新聞",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "【熊本ヴォルターズ】藤澤尚之選手 新規契約(複数年)",
+    "link": "https://news.infoseek.co.jp/article/prtimes_000000044_000035234/",
+    "published": "2026-06-19T11:10:00+00:00",
+    "source": "楽天Infoseek",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "【熊本ヴォルターズ】藤澤尚之選手 新規契約(複数年)",
+    "link": "https://mantan-web.jp/prtimes/article/20260619prt00m200000858a.html",
+    "published": "2026-06-19T08:00:00+00:00",
+    "source": "MANTANWeb",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "【熊本ヴォルターズ】藤澤尚之選手 新規契約(複数年)",
+    "link": "https://www.asahi.com/and/pressrelease/16659917",
+    "published": "2026-06-18T17:00:00+00:00",
+    "source": "朝日新聞社",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   }
+  ],
+  "BLOWINDS|長谷川智伸": [
+   {
+    "title": "アルビBB 主力2選手欠くも岩手に快勝 鵜沢監督「全員でやり続ける ...",
+    "link": "https://news.infoseek.co.jp/article/sponichin_20261026_0002/",
+    "published": "2026-10-25T12:02:00+00:00",
+    "source": "楽天Infoseek",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "アルビBB 17日から福井2連戦 SG長谷川 今季ホーム初勝利へ「泥くさく ...",
+    "link": "https://mainichi.jp/articles/20261017/spp/sp0/004/019000c",
+    "published": "2026-10-16T12:00:00+00:00",
+    "source": "毎日新聞",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "アルビBB ベテランSG長谷川と契約更新 「全身全霊で新潟のために ...",
+    "link": "https://mainichi.jp/articles/20260613/spp/sp0/004/131000c",
+    "published": "2026-06-12T23:20:00+00:00",
+    "source": "毎日新聞",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   },
+   {
+    "title": "[新潟アルビBB]長谷川智伸と契約更新「皆様と苦楽を共にしながら ...",
+    "link": "https://www.47news.jp/14459235.html",
+    "published": "2026-06-12T10:40:00+00:00",
+    "source": "47NEWS",
+    "detected_at": "2026-11-17T13:21:19.717279+00:00"
    }
   ]
  }
