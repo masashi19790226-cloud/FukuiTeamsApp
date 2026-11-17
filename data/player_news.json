@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-17T17:01:14.002442+00:00",
- "cursor": 134,
+ "updated_at": "2026-11-17T17:21:25.568413+00:00",
+ "cursor": 5,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -1008,6 +1008,66 @@
     "published": "2026-02-24T12:00:00+00:00",
     "source": "Fukui Shimbun",
     "detected_at": "2026-11-17T14:21:24.314039+00:00"
+   }
+  ],
+  "BLOWINDS|キムミンウク": [
+   {
+    "title": "アルビBB 新加入のキム・ミンウク チーム内での愛称は「テリーと ...",
+    "link": "https://mainichi.jp/articles/20260814/spp/sp0/004/002000c",
+    "published": "2026-08-13T12:00:00+00:00",
+    "source": "毎日新聞",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "アルビBB 新加入のSFオリバーがチームに合流 「チームの勝利に貢献 ...",
+    "link": "https://mainichi.jp/articles/20260813/spp/sp0/004/089000c",
+    "published": "2026-08-12T12:00:00+00:00",
+    "source": "毎日新聞",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "[Bリーグ・新潟アルビBB]福井ブローウィンズのキム・ミンウクが ...",
+    "link": "https://www.47news.jp/14770459.html",
+    "published": "2026-08-10T05:55:00+00:00",
+    "source": "47NEWS",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   }
+  ],
+  "BLOWINDS|トビンマーカス海舟": [
+   {
+    "title": "信州ブレイブウォリアーズ トビンマーカス海舟が加入",
+    "link": "https://www.shinmai.co.jp/news/article/gf01d8k07gcsmgmh3n1tj93g",
+    "published": "2026-06-09T14:18:00+00:00",
+    "source": "信濃毎日新聞デジタル",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "トビン マーカス海舟選手 契約(新規)のお知らせ",
+    "link": "https://prtimes.jp/main/html/rd/p/000000039.000125609.html",
+    "published": "2026-06-09T08:00:00+00:00",
+    "source": "PR TIMES",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "トビン マーカス海舟選手 契約(新規)のお知らせ",
+    "link": "https://www.shinmai.co.jp/news/article/PRPTc125609_r39",
+    "published": "2026-06-09T08:00:00+00:00",
+    "source": "信濃毎日新聞デジタル",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "福井ブローウィンズのトビンマーカス海舟が退団 バスケBリーグ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2622050",
+    "published": "2026-06-09T04:30:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "福井ブローウィンズのトビンマーカス海舟が退団 信州ブレイブ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2621932",
+    "published": "2026-06-09T00:31:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
    }
   ]
  }
