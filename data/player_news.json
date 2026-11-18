@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-17T13:21:19.717279+00:00",
- "cursor": 24,
+ "updated_at": "2026-11-18T12:41:20.221359+00:00",
+ "cursor": 49,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -962,6 +962,112 @@
     "published": "2026-06-12T10:40:00+00:00",
     "source": "47NEWS",
     "detected_at": "2026-11-17T13:21:19.717279+00:00"
+   }
+  ],
+  "RAC|池内天紀": [
+   {
+    "title": "池内天紀（バルドラール浦安ラス・ボニータス）が女子Fリーグ通算 ...",
+    "link": "https://www.oricon.co.jp/pressrelease/2879867/",
+    "published": "2026-07-01T02:46:00+00:00",
+    "source": "ORICON NEWS",
+    "detected_at": "2026-11-17T14:01:23.082810+00:00"
+   },
+   {
+    "title": "日本大勝 白星発進 池内（丸岡高出身）得点起点に フットサル女子W杯",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2465008?f=dkanranking-onlinearticle-under",
+    "published": "2025-11-23T16:00:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-17T14:01:23.082810+00:00"
+   }
+  ],
+  "RAC|高尾茜利": [
+   {
+    "title": "史上初！高尾茜利（SWHレディース西宮）がFリーグ通算100試合出場を ...",
+    "link": "https://www.oricon.co.jp/pressrelease/2869384/",
+    "published": "2026-06-23T11:16:00+00:00",
+    "source": "ORICON NEWS",
+    "detected_at": "2026-11-17T14:21:24.314039+00:00"
+   },
+   {
+    "title": "史上初！高尾茜利（SWHレディース西宮）がFリーグ通算100試合出場を ...",
+    "link": "https://news.infoseek.co.jp/article/prtimes_000001074_000098954/",
+    "published": "2026-06-23T02:15:00+00:00",
+    "source": "楽天Infoseek",
+    "detected_at": "2026-11-17T14:21:24.314039+00:00"
+   },
+   {
+    "title": "「輝いてる」女子Fリーグ強豪の27歳主将、どアップ写真公開に ...",
+    "link": "https://www.chunichi.co.jp/article/1257168",
+    "published": "2026-05-26T02:08:00+00:00",
+    "source": "中日新聞",
+    "detected_at": "2026-11-17T14:21:24.314039+00:00"
+   },
+   {
+    "title": "県勢高尾の西宮V 2年ぶり フットサル全日本女子選手権",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2536573",
+    "published": "2026-02-24T12:00:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-17T14:21:24.314039+00:00"
+   }
+  ],
+  "BLOWINDS|キムミンウク": [
+   {
+    "title": "アルビBB 新加入のキム・ミンウク チーム内での愛称は「テリーと ...",
+    "link": "https://mainichi.jp/articles/20260814/spp/sp0/004/002000c",
+    "published": "2026-08-13T12:00:00+00:00",
+    "source": "毎日新聞",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "アルビBB 新加入のSFオリバーがチームに合流 「チームの勝利に貢献 ...",
+    "link": "https://mainichi.jp/articles/20260813/spp/sp0/004/089000c",
+    "published": "2026-08-12T12:00:00+00:00",
+    "source": "毎日新聞",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "[Bリーグ・新潟アルビBB]福井ブローウィンズのキム・ミンウクが ...",
+    "link": "https://www.47news.jp/14770459.html",
+    "published": "2026-08-10T05:55:00+00:00",
+    "source": "47NEWS",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   }
+  ],
+  "BLOWINDS|トビンマーカス海舟": [
+   {
+    "title": "信州ブレイブウォリアーズ トビンマーカス海舟が加入",
+    "link": "https://www.shinmai.co.jp/news/article/gf01d8k07gcsmgmh3n1tj93g",
+    "published": "2026-06-09T14:18:00+00:00",
+    "source": "信濃毎日新聞デジタル",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "トビン マーカス海舟選手 契約(新規)のお知らせ",
+    "link": "https://prtimes.jp/main/html/rd/p/000000039.000125609.html",
+    "published": "2026-06-09T08:00:00+00:00",
+    "source": "PR TIMES",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "トビン マーカス海舟選手 契約(新規)のお知らせ",
+    "link": "https://www.shinmai.co.jp/news/article/PRPTc125609_r39",
+    "published": "2026-06-09T08:00:00+00:00",
+    "source": "信濃毎日新聞デジタル",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "福井ブローウィンズのトビンマーカス海舟が退団 バスケBリーグ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2622050",
+    "published": "2026-06-09T04:30:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "福井ブローウィンズのトビンマーカス海舟が退団 信州ブレイブ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2621932",
+    "published": "2026-06-09T00:31:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-17T17:21:25.568413+00:00"
    }
   ]
  }
