@@ -8,14 +8,6 @@
     "detected_at": "2026-10-04T10:23:36.498248+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:9408715426399932812",
-    "team": "UNITED",
-    "title": "AOIドライビングスクール福井校【公式】 on X: \"福井は強い   がんばって       #福井ユナイテッド\" / X",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/aoids_fukui/status/2106539863466234290&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2RvUbcBy27beMZwqjL6qQ2",
-    "published": "2026-10-04T04:21:52Z",
-    "detected_at": "2026-10-04T10:23:36.498285+00:00"
-  },
-  {
     "id": "bing:https://www.yomiuri.co.jp/local/fukui/news/20261004-GYTNT00070/",
     "team": "BLOWINDS",
     "title": "ブローウィンズ ホーム開幕節連勝",
@@ -8233,5 +8225,29 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.sKnu_v6SKkTTHdq7ENwNmg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-18T02:01:12.036269+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13456137912055103013",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、経済効果は右肩上がり！Bリーグ参入で地域経済を活性化",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://xn--eckzax5bza8b6eyera6fte.com/b-league/%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA%25E3%2580%2581%25E7%25B5%258C%25E6%25B8%2588%25E5%258A%25B9%25E6%259E%259C%25E3%2581%25AF%25E5%258F%25B3%25E8%2582%25A9%25E4%25B8%258A%25E3%2581%258C%25E3%2582%258A%25EF%25BC%2581b%25E3%2583%25AA/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0EHMIIpik8v6FYyQZ8lGLn",
+    "published": "2026-11-18T03:32:28Z",
+    "detected_at": "2026-11-18T04:41:12.926692+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:341723041726903421",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ - 敦賀市",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.city.tsuruga.lg.jp/uploaded/attachment/16010.pdf&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2Ob0CVXe2zTecHDutWrhTa",
+    "published": "2026-11-18T00:36:18Z",
+    "detected_at": "2026-11-18T04:41:12.926721+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3938642970571795069",
+    "team": "BLOWINDS",
+    "title": "【試合情報】11/21（土）-11/22（日）新潟アルビレックスBB戦 | 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/lp/game_202601121_20261122/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3e9y3bvysetppqfyCIsrzI",
+    "published": "2026-11-17T23:23:09Z",
+    "detected_at": "2026-11-18T04:41:12.926736+00:00"
   }
 ]
