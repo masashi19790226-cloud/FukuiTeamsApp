@@ -146,16 +146,6 @@
     "detected_at": "2026-10-05T16:00:40.847914+00:00"
   },
   {
-    "id": "bing:https://www.msn.com/ja-jp/sports/%E5%85%A8%E8%88%AC/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E3%81%8C%E3%83%9B%E3%83%BC%E3%83%A0%E9%96%8B%E5%B9%952%E9%80%A3%E5%8B%9D-%E9%80%9A%E7%AE%973%E5%8B%9D1%E6%95%97%E3%81%AB-%E9%87%91%E6%B2%A2%E3%82%B5%E3%83%A0%E3%83%A9%E3%82%A4%E3%82%BA%E3%81%AB2%E6%88%A6%E3%81%A8%E3%82%827%E7%82%B9%E5%B7%AE%E3%81%A7%E5%8B%9D%E5%88%A9-%E6%AC%A1%E7%AF%80%E3%81%AF%E3%82%A2%E3%82%A6%E3%82%A7%E3%83%BC%E3%81%A7%E6%A8%AA%E6%B5%9C%E3%81%A8%E5%AF%BE%E6%88%A6/ar-AA2dzT0G",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズがホーム開幕2連勝、通算3勝1敗に 金沢サム ...",
-    "link": "https://www.msn.com/ja-jp/sports/%E5%85%A8%E8%88%AC/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E3%81%8C%E3%83%9B%E3%83%BC%E3%83%A0%E9%96%8B%E5%B9%952%E9%80%A3%E5%8B%9D-%E9%80%9A%E7%AE%973%E5%8B%9D1%E6%95%97%E3%81%AB-%E9%87%91%E6%B2%A2%E3%82%B5%E3%83%A0%E3%83%A9%E3%82%A4%E3%82%BA%E3%81%AB2%E6%88%A6%E3%81%A8%E3%82%827%E7%82%B9%E5%B7%AE%E3%81%A7%E5%8B%9D%E5%88%A9-%E6%AC%A1%E7%AF%80%E3%81%AF%E3%82%A2%E3%82%A6%E3%82%A7%E3%83%BC%E3%81%A7%E6%A8%AA%E6%B5%9C%E3%81%A8%E5%AF%BE%E6%88%A6/ar-AA2dzT0G",
-    "published": "2026-10-04T18:07:17+00:00",
-    "source": "FNNプライムオンライン",
-    "image": "https://www.bing.com/th?id=ONUT.YftAcsHroEj7mwqrXZIwZQ&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-05T16:00:41.418394+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:17815640316285904458",
     "team": "BLOWINDS",
     "title": "【おじゃスポ】ブローウィンズ ホーム開幕戦は2連勝 金沢との北陸ダービー制す ユナイテッドは2 ...",
@@ -8315,5 +8305,35 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2122991734099705988&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3lcuKsnKcsyoyZlTcXRaTE",
     "published": "2026-11-18T10:02:46Z",
     "detected_at": "2026-11-18T16:39:17.006740+00:00"
+  },
+  {
+    "id": "bing:https://topics.smt.docomo.ne.jp/article/fbc/region/fbc-2026111807311997",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの昨シーズンの経済波及効果は過去最高の43.9億 ...",
+    "link": "https://topics.smt.docomo.ne.jp/article/fbc/region/fbc-2026111807311997",
+    "published": "2026-11-18T03:21:00+00:00",
+    "source": "dメニューニュース",
+    "image": "https://www.bing.com/th?id=ONUT.9jNz_gTsx3cnjAAw-Wgd6w&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-18T18:21:14.847348+00:00"
+  },
+  {
+    "id": "bing:https://news.ntv.co.jp/n/fbc/category/society/fbed56bb0e93e04dc8b87e3d3fcef15ea9",
+    "team": "RAC",
+    "title": "【おじゃスポ】ユナイテッドJFL昇格ならず 1次ラウンド敗退 丸岡RUCK ...",
+    "link": "https://news.ntv.co.jp/n/fbc/category/society/fbed56bb0e93e04dc8b87e3d3fcef15ea9",
+    "published": "2026-11-15T18:07:00+00:00",
+    "source": "日テレNEWS NNN",
+    "image": "",
+    "detected_at": "2026-11-18T18:21:15.825421+00:00"
+  },
+  {
+    "id": "bing:https://topics.smt.docomo.ne.jp/article/chuplus/region/chuplus-1340142",
+    "team": "UNITED",
+    "title": "福井ユナイテッドFC、JFL昇格逃す 痛恨ドローで2次ラウンド進出ならず",
+    "link": "https://topics.smt.docomo.ne.jp/article/chuplus/region/chuplus-1340142",
+    "published": "2026-11-15T12:05:00+00:00",
+    "source": "dメニューニュース",
+    "image": "https://www.bing.com/th?id=ONUT.xIQS6FUReMkvfTlN8IkgUA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-18T18:21:16.816453+00:00"
   }
 ]
