@@ -8293,5 +8293,21 @@
     "source": "Yahoo!ニュース",
     "image": "https://www.bing.com/th?id=ONUT.bZ_jmde_9IaED2qP41GDJw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-18T14:21:21.642563+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9843895953352149562",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ創設3年目の経済効果は43.9億円 昨季から9億円増加 来場者数がBプレミア ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/55d60a6008df9fd8cfd70bad3e6ef110a0f807ac/images/000&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0TYYQT65QjpWCXLXZkXdXr",
+    "published": "2026-11-18T12:32:01Z",
+    "detected_at": "2026-11-18T16:01:17.838167+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15472174907444527879",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの昨シーズンの経済波及効果は過去最高の43.9億円 ... - ｄメニューニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/amp/article/fbc/region/fbc-2026111807311997&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw24_PytvlUt-wfW0F95eqx3",
+    "published": "2026-11-18T11:25:17Z",
+    "detected_at": "2026-11-18T16:01:17.838204+00:00"
   }
 ]
