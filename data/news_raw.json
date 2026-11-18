@@ -56,24 +56,6 @@
     "detected_at": "2026-10-04T10:23:36.498318+00:00"
   },
   {
-    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2714208",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズ、ホーム開幕2連勝 第2節・金沢サムライズ戦",
-    "link": "https://www.fukuishimbun.co.jp/articles/-/2714208",
-    "published": "2026-10-04T01:38:00+00:00",
-    "source": "Fukui Shimbun",
-    "detected_at": "2026-10-04T13:52:12.766099+00:00"
-  },
-  {
-    "id": "bing:https://www.oricon.co.jp/article/3396491/",
-    "team": "UNITED",
-    "title": "福井ユナイテッド、今季最終戦は黒星 サッカー北信越リーグ1部、11 ...",
-    "link": "https://www.oricon.co.jp/article/3396491/",
-    "published": "2026-10-04T01:32:00+00:00",
-    "source": "ORICON NEWS",
-    "detected_at": "2026-10-04T13:52:13.392497+00:00"
-  },
-  {
     "id": "bing:https://www.yomiuri.co.jp/local/fukui/news/20261004-GYTNT00070/",
     "team": "BLOWINDS",
     "title": "ブローウィンズ ホーム開幕節連勝",
@@ -532,16 +514,6 @@
     "detected_at": "2026-10-06T21:23:21.389988+00:00"
   },
   {
-    "id": "bing:https://www.msn.com/ja-jp/sports/soccer/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89-%E4%BB%8A%E5%AD%A3%E6%9C%80%E7%B5%82%E6%88%A6%E3%81%AF%E9%BB%92%E6%98%9F-%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E5%8C%97%E4%BF%A1%E8%B6%8A%E3%83%AA%E3%83%BC%E3%82%B01%E9%83%A8-11%E6%9C%88%E5%9C%B0%E5%9F%9F%E3%83%81%E3%83%A3%E3%83%B3%E3%83%94%E3%82%AA%E3%83%B3%E3%82%BA%E3%83%AA%E3%83%BC%E3%82%B0%E5%87%BA%E5%A0%B4%E3%81%B8/ar-AA2dw0YM",
-    "team": "UNITED",
-    "title": "福井ユナイテッド、今季最終戦は黒星 サッカー北信越リーグ1部、11 ...",
-    "link": "https://www.msn.com/ja-jp/sports/soccer/%E7%A6%8F%E4%BA%95%E3%83%A6%E3%83%8A%E3%82%A4%E3%83%86%E3%83%83%E3%83%89-%E4%BB%8A%E5%AD%A3%E6%9C%80%E7%B5%82%E6%88%A6%E3%81%AF%E9%BB%92%E6%98%9F-%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E5%8C%97%E4%BF%A1%E8%B6%8A%E3%83%AA%E3%83%BC%E3%82%B01%E9%83%A8-11%E6%9C%88%E5%9C%B0%E5%9F%9F%E3%83%81%E3%83%A3%E3%83%B3%E3%83%94%E3%82%AA%E3%83%B3%E3%82%BA%E3%83%AA%E3%83%BC%E3%82%B0%E5%87%BA%E5%A0%B4%E3%81%B8/ar-AA2dw0YM",
-    "published": "2026-10-04T01:30:00+00:00",
-    "source": "福井新聞ONLINE",
-    "image": "https://www.bing.com/th?id=ONUT.lNxmbr-Cbm7oX7Xzb7NMzA&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-07T00:35:27.178461+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:4778118145394544361",
     "team": "BLOWINDS",
     "title": "【福井ブローウィンズ】10月10日（土）・11日（日） アウェイ戦パブリックビューイング開催の ...",
@@ -846,16 +818,6 @@
     "detected_at": "2026-10-11T10:43:52.700393+00:00",
     "source": "ユナイテッド公式",
     "image": "https://fukuiunited.co.jp/img/ogp.jpg"
-  },
-  {
-    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2714194",
-    "team": "UNITED",
-    "title": "福井ユナイテッド、今季最終戦は黒星 サッカー北信越リーグ1部、11 ...",
-    "link": "https://www.fukuishimbun.co.jp/articles/-/2714194",
-    "published": "2026-10-04T01:31:00+00:00",
-    "source": "福井新聞ONLINE",
-    "image": "https://www.bing.com/th?id=ONUT.QgYnze5mD7if_hgHdZ_ttQ&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-11T10:59:27.662270+00:00"
   },
   {
     "id": "tag:google.com,2013:googlealerts/feed:3820931463139574997",
