@@ -1,5 +1,33 @@
 [
   {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2714416",
+    "team": "BLOWINDS",
+    "title": "福井堅守ホーム連勝 金沢に79－72 Bワン 福井ブローウィンズ",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2714416",
+    "published": "2026-10-04T03:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.VekTwm8XxMrRZO6i7gvd0Q&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-04T21:04:28.930051+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2714413",
+    "team": "UNITED",
+    "title": "福井U最終戦飾れず HFLサッカー北信越リーグ1部",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2714413",
+    "published": "2026-10-04T03:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.J1QbRygjZVrhtVKAt63ziQ&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-10-04T21:36:57.206422+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5145771170291586568",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズが今季ホーム初戦で白星 バスケBリーグワン 金沢サムライズと対戦 …",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/873340467e7e8e10037aea83fc2abfa7674cb8c6&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3G4wWW4JeyVheZI3urMW49",
+    "published": "2026-10-04T02:45:10Z",
+    "detected_at": "2026-10-04T05:19:10.371750+00:00"
+  },
+  {
     "id": "bing:https://www.msn.com/ja-jp/news/other/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA-12%E7%82%B9%E3%83%AA%E3%83%BC%E3%83%89%E3%81%8B%E3%82%89%E4%B8%80%E8%BB%A2-%E6%88%91%E6%85%A2%E3%81%AE%E5%B1%95%E9%96%8B-%E3%83%90%E3%82%B9%E3%82%B1b%E3%83%AA%E3%83%BC%E3%82%B0%E3%83%AF%E3%83%B3%E7%AC%AC2%E7%AF%80-%E9%87%91%E6%B2%A2%E3%82%B5%E3%83%A0%E3%83%A9%E3%82%A4%E3%82%BA%E6%88%A6/ar-AA2dwqdJ",
     "team": "BLOWINDS",
     "title": "福井ブローウィンズ、12点リードから一転…我慢の展開 バスケB ...",
