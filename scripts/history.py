@@ -701,6 +701,13 @@ def wfl_all_matches(fetch, old_matches):
     return out
 
 
+def wfl_fixtures(fetch):
+    """女子Fリーグのこれからの試合(どのクラブの試合も。トップページの試合一覧から)。[{"date","time","venue","home","away"}](早い順)"""
+    today = datetime.now(JST).date().isoformat()
+    return [{"date": r["date"], "time": r["time"], "venue": r["venue"], "home": r["home"], "away": r["away"]}
+            for r in standings.wfleague_matches(fetch(f"{WFL_SITE}/")) if r["hs"] is None and r["date"] >= today]
+
+
 def wfl_game_lineups(main_html: str):
     """試合ごとの記録(/modules/php/FlRecordMain.php?gid=)から、両チームの出場選手。
     [[見出しのチーム名, [[名前, 背番号, ポジション, 出場, シュート数, 得点], …]], …](左のチームが先)"""
@@ -1632,6 +1639,76 @@ def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
     return players
 
 
+def bleague_upcoming_items(page: str):
+    """日程のページ(結果/日程 = 試合日程)から、まだ終わっていない試合 [(日付, 試合の番号, [ホームの名前, アウェイの名前], 時刻, 会場)]"""
+    out = []
+    for date, key, item in bleague_schedule_items(page):
+        if "FINAL" in item or not date:
+            continue
+        names = [_wfl_text(x) for x in re.findall(r'<span class="team-name">(.*?)</span>', item, flags=re.S)]
+        if len(names) < 2:
+            continue
+        info = re.findall(r'<div class="info-arena">(.*?)</div>', item, flags=re.S)
+        spans = [_wfl_text(x) for x in re.findall(r"<span[^>]*>(.*?)</span>", info[0], flags=re.S)] if info else []
+        venue = next((x for x in spans if "|" in x), "")
+        venue = venue.split("|")[-1].strip() if venue else ""
+        tm = next((x for x in spans if re.fullmatch(r"\d{1,2}:\d{2}", x)), "")
+        out.append((date, key, names[:2], tm, venue))
+    return out
+
+
+def blowinds_alumni_next(fetch, players, old_players=None):
+    """元選手で、いまBリーグのほかのクラブにいる選手の、そのクラブの次の試合(Bリーグ公式の日程)。
+    p["now_next"] = {"date", "time", "opp", "ha"("H"/"A"), "venue", "url"}。クラブごとに1回だけ読む。
+    どのリーグ(タブ 1=B.PREMIER 2=B.ONE 3=B.NEXT)かは、前回分かったタブ(now_tab)を先に試す"""
+    old = {p.get("pid"): p for p in old_players or [] if p.get("pid")}
+    today = datetime.now(JST).date()
+    year = today.year if today.month >= 7 else today.year - 1
+    by_club, done = {}, {}
+    for p in players:
+        tid = p.get("now_team_id")
+        if p.get("now") is False and tid and tid != BLOWINDS_TEAM_ID:
+            by_club.setdefault(tid, []).append(p)
+    for tid, ps in by_club.items():
+        prev_tab = next((str((old.get(p.get("pid")) or {}).get("now_tab") or "") for p in ps), "")
+        tabs = [prev_tab] + [t for t in ("1", "2", "3") if t != prev_tab] if prev_tab else ["1", "2", "3"]
+        found_tab, nxt = "", None
+        for tab in tabs:
+            q = f"year={year}&mon=all&day=&event=&club={tid}&tab={tab}&ha=&fb=3"
+            try:
+                items = bleague_upcoming_items(fetch(f"{BLEAGUE}/schedule/?{q}"))
+            except Exception as e:
+                print(f"[WARN] 過去の記録: Bリーグの日程を読めませんでした club={tid} tab={tab} {e!r}")
+                continue
+            if not items:
+                continue
+            found_tab = tab
+            # そのクラブの名前(どの試合にも出てくる名前)
+            count = {}
+            for _, _, names, _, _ in items:
+                for n in names:
+                    count[n] = count.get(n, 0) + 1
+            me = max(count, key=count.get)
+            for date, key, names, tm, venue in items:
+                if date < today.isoformat() or me not in names:
+                    continue
+                home = names[0] == me
+                nxt = {"date": date, "time": tm, "opp": names[1] if home else names[0], "ha": "H" if home else "A",
+                       "venue": venue, "url": f"{BLEAGUE}/game_detail/?ScheduleKey={key}"}
+                break
+            break
+        done[tid] = (found_tab, nxt)
+        for p in ps:
+            p["now_tab"] = found_tab
+            if nxt:
+                p["now_next"] = nxt
+            else:
+                p.pop("now_next", None)
+    print(f"[過去の記録] ブローウィンズ: 元選手のいまのクラブの次の試合を{len(done)}クラブ分調べました"
+          f"(分かったもの{sum(1 for _, n in done.values() if n)}クラブ)")
+    return players
+
+
 BLOWINDS_CLUB_SITE = "https://www.fukuiblowinds.com"
 # 「#10 ヒシグバータル・オーギル 選手 モンゴル代表選出のお知らせ」
 BW_NATIONAL_TITLE = re.compile(r"^(?:#\d+\s*)?(.+?)\s*選手\s*(.*?代表(?:候補)?)\s*(?:メンバー)?\s*選出")
@@ -1788,6 +1865,12 @@ def build(fetch, post_json, old, current=None):
                 print(f"[WARN] 過去の記録: 丸岡RUCKの元所属の選手の生年月日の取得に失敗 {e!r}")
             # 丸岡RUCKでプレーした選手の、ほかのクラブでの出場(女子Fリーグ通算に使う)。少しずつ読む
             old_rac = old_teams.get("RAC") or {}
+            # 女子Fリーグのこれからの試合(移籍した元選手の、いまのクラブの次の試合に使う)
+            try:
+                teams["RAC"]["wfl_fixtures"] = wfl_fixtures(fetch)
+                print(f"[過去の記録] 女子Fリーグ: これからの試合 {len(teams['RAC']['wfl_fixtures'])}件")
+            except Exception as e:
+                print(f"[WARN] 過去の記録: 女子Fリーグのこれからの試合を読めませんでした {e!r}")
             try:
                 all_matches = wfl_all_matches(fetch, old_rac.get("wfl_matches"))
                 ruck_keys = {name_key(p["name"]) for p in teams["RAC"]["players"]}
@@ -1855,6 +1938,10 @@ def build(fetch, post_json, old, current=None):
         pending = blowinds_boxes(fetch, bw_matches, old_bw_matches) or pending
         bw_players = blowinds_players(bw_matches, cur_keys.get("BLOWINDS"), bw_players) or bw_players
         bw_players = blowinds_players_now(fetch, bw_players, old_bw.get("players"))
+        try:
+            bw_players = blowinds_alumni_next(fetch, bw_players, old_bw.get("players"))
+        except Exception as e:
+            print(f"[WARN] 過去の記録: ブローウィンズの元選手のいまのクラブの次の試合を読めませんでした {e!r}")
     except Exception as e:
         print(f"[WARN] 過去の記録: ブローウィンズの選手の取得に失敗。前回の分を使います {e!r}")
     # 代表選出(ブローウィンズ公式サイトのお知らせから)
