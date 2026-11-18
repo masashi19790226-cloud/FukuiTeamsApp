@@ -8269,5 +8269,13 @@
     "source": "dメニューニュース",
     "image": "https://www.bing.com/th?id=ONUT.xIQS6FUReMkvfTlN8IkgUA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-18T18:21:16.816453+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6196173987146789174",
+    "team": "BLOWINDS",
+    "title": "20240209 #福井ブローウィンズ #ベンジャミンローソン #志冨田温大 - Instagram",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/Df4kr3WIAp3/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3Fu2lr2XPTfnh8j4TXIrob",
+    "published": "2026-11-18T15:19:37Z",
+    "detected_at": "2026-11-18T21:21:16.294387+00:00"
   }
 ]
