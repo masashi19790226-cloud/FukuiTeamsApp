@@ -8259,5 +8259,37 @@
     "source": "FNNプライムオンライン",
     "image": "https://www.bing.com/th?id=ONUT.gVEW0jgUn2Ll7pSHVIowoA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-18T12:01:15.771755+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1711685724734803235",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの昨シーズンの経済波及効果は過去最高の43.9億円 - Yahoo!ニュース",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/5b51f5cd2289f5914d607842020fd60acd8c7738/images/000&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1U2YJa1Jiwzqp5dAxzCPqJ",
+    "published": "2026-11-18T11:41:17Z",
+    "detected_at": "2026-11-18T13:01:11.500590+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4256325104132620220",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズの昨シーズンの経済波及効果は過去最高の43.9億円 ... - 日テレNEWS NNN",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.ntv.co.jp/category/economy/fb0b2cb6cdf027464bb1b0a6e4a8d26222&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1wwFGa1fkIRwnY_mktEAmU",
+    "published": "2026-11-18T11:31:28Z",
+    "detected_at": "2026-11-18T13:01:11.500625+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13604565509803283250",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ創設3年目の経済効果は43.9億円 昨季から9億円増加 来場者数がBプレミア ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/55d60a6008df9fd8cfd70bad3e6ef110a0f807ac&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2YWBVPVzfGlpjEinfkKe55",
+    "published": "2026-11-18T11:28:47Z",
+    "detected_at": "2026-11-18T13:01:11.500649+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8606394708750904247",
+    "team": "BLOWINDS",
+    "title": "【レポート】ハピラインふくいコラボイベント「福井ブローウィンズ列車」を実施しました！",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51888&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw22MJ2nDQ2QF7UVO0JoS40C",
+    "published": "2026-11-18T07:16:57Z",
+    "detected_at": "2026-11-18T13:01:11.500711+00:00"
   }
 ]
