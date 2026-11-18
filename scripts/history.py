@@ -637,6 +637,155 @@ def ruck_players_from_lineups(matches, current_keys):
     return players
 
 
+# ---------- 丸岡RUCKでプレーした選手の、ほかのクラブでの出場(女子Fリーグ通算) ----------
+
+# ほかのクラブの試合の記録を、1回の自動更新で読む数(全部で数百試合あるので、何回かに分けて読む)
+WFL_OTHERS_PER_RUN = 40
+
+
+def wfl_all_matches(fetch, old_matches):
+    """女子Fリーグの全部の試合(どのクラブの試合も。終わった試合だけ)。[{"gid","date","season","home","away","y"}](古い順)。
+    過去のシーズンは前回の分を使い、今季はトップページの試合一覧から毎回読む。試合の番号(gid)の無い試合は入れない"""
+    old_by_year = {}
+    for m in old_matches or []:
+        if m.get("y"):
+            old_by_year.setdefault(m["y"], []).append(m)
+    top = fetch(f"{WFL_SITE}/archive/")
+    years = sorted({int(y) for y in re.findall(r"href=[\"'](?:https?://w-fleague\.jp)?/archive/(\d{4})/", top)})
+    if not years:
+        raise ValueError("過去の記録の年の一覧が読めません")
+    out, seen = [], set()
+    for y in years:
+        season = _wfl_season(y)
+        if y in old_by_year:
+            for m in old_by_year[y]:
+                if m["gid"] not in seen:
+                    seen.add(m["gid"])
+                    out.append(m)
+            continue
+        try:
+            page = fetch(f"{WFL_SITE}/archive/{y}/score.html?t=0")
+        except Exception as e:
+            print(f"[WARN] 過去の記録: 女子Fリーグ {season} の日程・結果のページの取得に失敗 {e!r}")
+            continue
+        mods = re.findall(r"url:\s*[\"'](/modules/php/[\w.]+\.php)[\"'][^;]*?data:\s*[\"']([^\"']*)[\"']", page, flags=re.S)
+        mods = [(p, d) for p, d in mods if "Ranking" not in p]
+        for path, data in mods:
+            q = data if data.endswith("t=0") else (data + "0" if data.endswith("t=") else data)
+            try:
+                rows = wfl_archive_rows(fetch(f"{WFL_SITE}{path}?{q}",
+                                              {"Referer": f"{WFL_SITE}/archive/{y}/score.html?t=0",
+                                               "X-Requested-With": "XMLHttpRequest"}))
+            except Exception as e:
+                print(f"[WARN] 過去の記録: 女子Fリーグ {season} {path} の取得に失敗 {e!r}")
+                continue
+            for r in rows:
+                if not r["gid"] or r["gid"] in seen:
+                    continue
+                seen.add(r["gid"])
+                out.append({"gid": r["gid"], "date": r["date"], "season": season, "home": r["home"], "away": r["away"], "y": y})
+    # 今季(トップページの試合一覧。終わった試合だけ)
+    try:
+        now = datetime.now(JST)
+        cur = now.year if now.month >= 5 else now.year - 1
+        season = f"{cur}-{(cur + 1) % 100:02d}"
+        for r in standings.wfleague_matches(fetch(f"{WFL_SITE}/")):
+            gid = str(r.get("gid") or "")
+            if r["hs"] is None or not gid or gid in seen or r["date"] < f"{cur}-05-01":
+                continue
+            seen.add(gid)
+            out.append({"gid": gid, "date": r["date"], "season": season, "home": r["home"], "away": r["away"], "y": None})
+    except Exception as e:
+        print(f"[WARN] 過去の記録: 女子Fリーグ 今季の試合の取得に失敗 {e!r}")
+    out.sort(key=lambda x: x["date"])
+    return out
+
+
+def wfl_game_lineups(main_html: str):
+    """試合ごとの記録(/modules/php/FlRecordMain.php?gid=)から、両チームの出場選手。
+    [[見出しのチーム名, [[名前, 背番号, ポジション, 出場, シュート数, 得点], …]], …](左のチームが先)"""
+    heads = [t.strip() for t in re.findall(r"<strong>([^<]*?)\s*メンバー\s*</strong>", main_html)]
+    return [[h, wfl_game_lineup(main_html, h)] for h in heads if h]
+
+
+def ruck_others(fetch, all_matches, ruck_keys, old):
+    """丸岡RUCKでプレーしたことのある選手(ruck_keys:名前の key)の、ほかのクラブでの女子Fリーグの出場。
+    丸岡RUCKの試合以外を試合ごとの記録で読み、その選手の行だけ残す。一度読んだ試合は読み直さない(1回に WFL_OTHERS_PER_RUN 試合まで)。
+    返り値 ({"done": [読んだ試合の番号…], "rows": [[試合の番号, 日付, シーズン, クラブ, 名前, 出場("S"/"B"), 得点], …]}, 読み残しがあるか)"""
+    done = set((old or {}).get("done") or [])
+    rows = list((old or {}).get("rows") or [])
+    today = datetime.now(JST).date().isoformat()
+    fetched, left = 0, 0
+    for m in all_matches:
+        gid = m.get("gid")
+        if not gid or gid in done or RUCK_WORD in m["home"] or RUCK_WORD in m["away"]:
+            continue
+        if fetched >= WFL_OTHERS_PER_RUN:
+            left += 1
+            continue
+        url = f"{WFL_SITE}/score/result.html?gid={gid}"
+        try:
+            html = fetch(f"{WFL_SITE}/modules/php/FlRecordMain.php?gid={gid}", {"Referer": url, "X-Requested-With": "XMLHttpRequest"})
+            fetched += 1
+        except Exception as e:
+            print(f"[WARN] 過去の記録: 女子Fリーグ {m['date']} の試合の記録を読めませんでした {e!r}")
+            continue
+        lineups = wfl_game_lineups(html)
+        if not lineups or not any(lu for _, lu in lineups):
+            # 記録がまだ載っていない試合(終わったばかりなど)は、あとで読み直す。1週間たっても無ければ、無いものとして読んだことにする
+            try:
+                old_enough = (datetime.fromisoformat(today) - datetime.fromisoformat(m["date"])).days >= 7
+            except ValueError:
+                old_enough = True
+            if old_enough:
+                done.add(gid)
+            continue
+        for i, (head, lineup) in enumerate(lineups):
+            # クラブの名前は試合の一覧の名前にそろえる(左のチーム=一覧の左、右のチーム=一覧の右)
+            club = m["home"] if i == 0 else m["away"] if i == 1 else head
+            for name, _num, _pos, app, _sh, goals in lineup:
+                if not app:
+                    continue
+                cur = name_changes.current_name("RAC", name)
+                if name_key(cur) in ruck_keys:
+                    rows.append([gid, m["date"], m["season"], club, cur, app, goals])
+        done.add(gid)
+    rows.sort(key=lambda r: (r[1], r[0]))
+    print(f"[過去の記録] 丸岡RUCKの選手のほかのクラブでの出場: 試合の記録を{fetched}試合分読みました(残り{left}試合・該当{len(rows)}行)")
+    return {"done": sorted(done), "rows": rows}, left > 0
+
+
+def ruck_others_attach(players, others, current_season):
+    """丸岡RUCKでプレーした選手に、ほかのクラブでの女子Fリーグの出場をまとめて付ける(p["others"])。
+    元所属の選手(now が False)は移籍先などでの出場、いまの選手は丸岡RUCKに来る前のクラブでの出場。
+    {"apps", "starts", "goals",
+     "clubs": [{"club", "from", "to", "apps", "goals"}, …](古い順。シーズンは最初と最後),
+     "now": {"season", "club", "apps", "goals"}(元所属の選手の、いまのクラブでの今季。無ければ入れない)}
+    ほかのクラブでの出場が無い選手には付けない"""
+    by = {}
+    for gid, date, season, club, name, app, goals in (others or {}).get("rows") or []:
+        by.setdefault(name_key(name), []).append((date, season, club, app, goals or 0))
+    for p in players:
+        p.pop("others", None)
+        rs = sorted(by.get(name_key(p["name"])) or [])
+        if not rs:
+            continue
+        clubs = []
+        for date, season, club, app, goals in rs:
+            c = clubs[-1] if clubs and clubs[-1]["club"] == club else None
+            if c is None:
+                c = {"club": club, "from": season, "to": season, "apps": 0, "goals": 0}
+                clubs.append(c)
+            c["to"] = season
+            c["apps"] += 1
+            c["goals"] += goals
+        o = {"apps": len(rs), "starts": sum(1 for r in rs if r[3] == "S"), "goals": sum(r[4] for r in rs), "clubs": clubs}
+        cur = [r for r in rs if r[1] == current_season and (not p.get("now_team") or r[2] == p.get("now_team"))]
+        if cur and p.get("now") is False:
+            o["now"] = {"season": current_season, "club": cur[-1][2], "apps": len(cur), "goals": sum(r[4] for r in cur)}
+        p["others"] = o
+
+
 def ruck_former_profiles(fetch, players):
     """丸岡RUCKの元所属の選手(now が False)を、女子Fリーグのほかのクラブの選手名簿(alumni.wfl_rosters)と名前で合わせ、
     生年月日(birthday)・いまのクラブ(now_team)を入れる。名簿にいなければ now_checked だけ付ける"""
@@ -1551,8 +1700,10 @@ def build(fetch, post_json, old, current=None):
     # ヴェルコスタ(あとから加えたチーム)の分がまだ入っていない・読む年の範囲(hjl.PAST_FROM_YEAR)を変えたときは、
     # 今日作り終えていても作り直す
     vercosta_missing = ((old.get("teams") or {}).get("VERCOSTA") or {}).get("from_year") != hjl.PAST_FROM_YEAR
+    # 丸岡RUCKの選手のほかのクラブでの出場(あとから加えた分)がまだ入っていなければ、今日作り終えていても作り直す
+    others_missing = "others" not in ((old.get("teams") or {}).get("RAC") or {})
     if old.get("date") == today and old.get("v") == VERSION and not old.get("pending") and not manual_missing \
-            and not vercosta_missing:
+            and not vercosta_missing and not others_missing:
         return None
     teams = dict(old.get("teams") or {}) if old.get("v") == VERSION else {}
     old_teams = dict(old.get("teams") or {})
@@ -1635,6 +1786,25 @@ def build(fetch, post_json, old, current=None):
                 ruck_former_profiles(fetch, teams["RAC"]["players"])
             except Exception as e:
                 print(f"[WARN] 過去の記録: 丸岡RUCKの元所属の選手の生年月日の取得に失敗 {e!r}")
+            # 丸岡RUCKでプレーした選手の、ほかのクラブでの出場(女子Fリーグ通算に使う)。少しずつ読む
+            old_rac = old_teams.get("RAC") or {}
+            try:
+                all_matches = wfl_all_matches(fetch, old_rac.get("wfl_matches"))
+                ruck_keys = {name_key(p["name"]) for p in teams["RAC"]["players"]}
+                others, pend = ruck_others(fetch, all_matches, ruck_keys, old_rac.get("others"))
+                pending = pending or pend
+                teams["RAC"]["wfl_matches"] = all_matches
+                teams["RAC"]["others"] = others
+            except Exception as e:
+                print(f"[WARN] 過去の記録: 丸岡RUCKの選手のほかのクラブでの出場の取得に失敗。前回の分を使います {e!r}")
+                for k in ("wfl_matches", "others"):
+                    if old_rac.get(k) is not None:
+                        teams["RAC"][k] = old_rac[k]
+            try:
+                seasons = [m["season"] for m in teams["RAC"].get("wfl_matches") or []]
+                ruck_others_attach(teams["RAC"]["players"], teams["RAC"].get("others"), max(seasons) if seasons else "")
+            except Exception as e:
+                print(f"[WARN] 過去の記録: 丸岡RUCKの元所属の選手のほかのクラブでの出場をまとめられませんでした {e!r}")
             teams["RAC"]["awards"] = [dict(a, season=v["season"]) for k, v in sorted(extras["years"].items(), reverse=True)
                                       for a in v.get("awards") or []]
     except Exception as e:
