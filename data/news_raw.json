@@ -1,15 +1,5 @@
 [
   {
-    "id": "bing:https://www.yomiuri.co.jp/local/fukui/news/20261004-GYTNT00070/",
-    "team": "BLOWINDS",
-    "title": "ブローウィンズ ホーム開幕節連勝",
-    "link": "https://www.yomiuri.co.jp/local/fukui/news/20261004-GYTNT00070/",
-    "published": "2026-10-04T08:00:00+00:00",
-    "source": "読売新聞オンライン",
-    "image": "https://www.bing.com/th?id=ONUT.rQREH9cQNxI2SomHFjgcEA&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-04T21:04:28.930026+00:00"
-  },
-  {
     "id": "bing:https://www.fnn.jp/articles/-/1126631",
     "team": "BLOWINDS",
     "title": "福井ブローウィンズがホーム開幕2連勝、通算3勝1敗に 金沢サム ...",
@@ -8235,5 +8225,15 @@
     "source": "dメニューニュース",
     "image": "https://www.bing.com/th?id=ONUT.Ot48MiF3Sicwe3z0ylw1IQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-18T05:01:15.540945+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51888",
+    "team": "BLOWINDS",
+    "title": "【レポート】ハピラインふくいコラボイベント「福井ブローウィンズ列車」を実施しました！",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51888",
+    "published": "2026-11-18T09:00:00+09:00",
+    "detected_at": "2026-11-18T08:01:17.185894+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/IMG_6854.jpeg"
   }
 ]
