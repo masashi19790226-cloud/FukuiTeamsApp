@@ -1,13 +1,5 @@
 [
   {
-    "id": "tag:google.com,2013:googlealerts/feed:1111891269856531",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズがホーム開幕2連勝、通算3勝1敗に 金沢サムライズに2戦とも7点差で勝利 ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/43464f1d801094d2bc34212822efabdacd61b6a6/images/000&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0qCpmNo82PNFuw0FSfJDXY",
-    "published": "2026-10-05T05:50:16Z",
-    "detected_at": "2026-10-05T08:28:21.283737+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:99778185848580785",
     "team": "BLOWINDS",
     "title": "【おじゃスポ】ブローウィンズ ホーム開幕戦は2連勝 金沢との北陸ダービー制す ユナイテッドは2 ...",
@@ -8257,5 +8249,21 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.OVIORWTmJUVCs1i0RWbCaA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-19T05:41:13.517265+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1737790905307582663",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズから初選出 Bリーグオールスターゲーム・イベントにオーギルが出場",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2751072&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0nV9vlplBexl04FMOLnlaa",
+    "published": "2026-11-19T05:36:25Z",
+    "detected_at": "2026-11-19T06:01:06.646304+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:8579436375246270627",
+    "team": "BLOWINDS",
+    "title": "【レポート】ソフトバンク主催イベントに参加しました - 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51901&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3HriTFEEp5U1I_TxSW7Miu",
+    "published": "2026-11-19T05:11:03Z",
+    "detected_at": "2026-11-19T06:01:06.646396+00:00"
   }
 ]
