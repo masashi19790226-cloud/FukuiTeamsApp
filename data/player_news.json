@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-19T14:21:27.417042+00:00",
- "cursor": 5,
+ "updated_at": "2026-11-19T14:41:22.104787+00:00",
+ "cursor": 15,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -86,6 +86,13 @@
    }
   ],
   "BLOWINDS|ヒシグバータルオーギル": [
+   {
+    "title": "ヒシグバータル・オーギル 選手「B.ONE/B.NEXT SELECTED WEST」選出のお ...",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51898",
+    "published": "2026-11-18T16:01:00+00:00",
+    "source": "fukuiblowinds",
+    "detected_at": "2026-11-19T14:41:22.104787+00:00"
+   },
    {
     "title": "福井ブローウィンズのヒシグバータル・オーギルがモンゴル代表 ...",
     "link": "https://news.yahoo.co.jp/articles/7a05a77187c10d484021bec9041ca92f361fd04d",
