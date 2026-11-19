@@ -24,14 +24,6 @@
     "detected_at": "2026-10-05T05:46:25.151698+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:3741000551010824244",
-    "team": "BLOWINDS",
-    "title": "ホーム開幕戦、金沢に勝利 白星で沸かす バスケBリーグワン・福井ブローウィンズ - 47NEWS",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15038514.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3q0_9DgAp-SAuCkc9bXu2d",
-    "published": "2026-10-05T04:33:13Z",
-    "detected_at": "2026-10-05T05:46:25.151714+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:1111891269856531",
     "team": "BLOWINDS",
     "title": "福井ブローウィンズがホーム開幕2連勝、通算3勝1敗に 金沢サムライズに2戦とも7点差で勝利 ...",
@@ -8261,5 +8253,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/Df6BUFZH86D/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1BnH8EFWgsBBZ88_yfzgTy",
     "published": "2026-11-19T02:44:51Z",
     "detected_at": "2026-11-19T04:01:06.657485+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13389570212192059881",
+    "team": "UNITED",
+    "title": "チームスケジュール変更のお知らせ（11/19） - 福井ユナイテッドFC",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://fukuiunited.co.jp/news/detail.php%3Fid%3D7094&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw18XVUAMi8T3pqYdWCSQ_Tg",
+    "published": "2026-11-18T23:24:09Z",
+    "detected_at": "2026-11-19T04:41:08.172485+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51898",
+    "team": "BLOWINDS",
+    "title": "ヒシグバータル・オーギル 選手「B.ONE/B.NEXT SELECTED WEST」選出のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51898",
+    "published": "2026-11-19T09:00:00+09:00",
+    "detected_at": "2026-11-19T04:41:22.264660+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_TOPTEAM.JPG"
   }
 ]
