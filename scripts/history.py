@@ -1598,7 +1598,7 @@ def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
     """元選手の「あの選手は今」:Bリーグ公式の選手ページの道順(パンくず)にある今のクラブ。
     「クラブ > 横浜エクセレンス > 名前」なら横浜エクセレンス、「選手 > 名前」ならBリーグのクラブにはいない。
     一度調べた選手は recheck_days 日たつまで前回の分を使う。
-    福井にいたときの写真が無い選手は、今のクラブの写真(files/user/roster/<TeamID>/<今のシーズン>/<PlayerID>_03.png)を使う"""
+    いまほかのクラブにいる選手は、今のクラブの写真(files/user/roster/<TeamID>/<今のシーズン>/<PlayerID>_03.png)を優先する"""
     old = {p.get("pid"): p for p in old_players or [] if p.get("pid")}
     today = datetime.now(JST).date()
     season_now = _current_season_label(today)
@@ -1630,9 +1630,12 @@ def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
             p["now_team_id"] = m.group(1) if m else ""
             p["now_checked"] = today.isoformat()
             _add_birthday_height(p, page)
-        if not p.get("photo") and p.get("now_team_id") and p["now_team_id"] != BLOWINDS_TEAM_ID:
+        # いまほかのクラブにいる選手は、いまのクラブの写真を優先する(無ければ福井にいたときの写真のまま)
+        if p.get("now_team_id") and p["now_team_id"] != BLOWINDS_TEAM_ID:
             url = f"https://bleague.bl.kuroco-img.app/files/user/roster/{p['now_team_id']}/{season_now}/{pid}_03.png"
-            if _url_exists(url):
+            if p.get("photo") == url or _url_exists(url):
+                if p.get("photo") and p.get("photo") != url and not p.get("photo_now"):
+                    p["photo_fukui"] = p["photo"]
                 p["photo"] = url
                 p["photo_now"] = True
     print(f"[過去の記録] ブローウィンズ: 元選手のいまのクラブを{fetched}人分調べました")
