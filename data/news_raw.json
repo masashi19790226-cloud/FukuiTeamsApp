@@ -40,14 +40,6 @@
     "detected_at": "2026-10-06T15:25:10.126657+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:7121546754325640774",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズ掲示板 - B.LEAGUE(Bリーグ)プロバスケットボール掲示板",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://j-basketball.club/bbs/blowinds/%3Fpage%3D2%26CSID%3Dkvml0i1oasfr6bj2c4aq9khon7&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3eB6_V6k2XWeQXtvVMitG0",
-    "published": "2026-10-05T21:14:17Z",
-    "detected_at": "2026-10-06T17:22:40.747375+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:6866339072688161685",
     "team": "BLOWINDS",
     "title": "NHK福井 على X: \"福井ブローウィンズがホーム開幕2試合で金沢に2連勝 https://t.co/SLxnEtpAuL ...",
@@ -8217,5 +8209,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2123298612524593475&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw1fkbEtnWonSa3Hg1OkC_gr",
     "published": "2026-11-19T18:19:34Z",
     "detected_at": "2026-11-19T21:01:09.267809+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1385205494594839818",
+    "team": "BLOWINDS",
+    "title": "Bリーグオールスターのイベントに福井ブローウィンズのオーギル選出 Bワン・Bネクスト西日本 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2751108&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw38sdFyHoNUsSwHwr3emkWs",
+    "published": "2026-11-19T21:01:21Z",
+    "detected_at": "2026-11-19T21:21:12.574115+00:00"
+  },
+  {
+    "id": "bing:https://www.msn.com/ja-jp/news/other/b%E3%83%AA%E3%83%BC%E3%82%B0%E3%82%AA%E3%83%BC%E3%83%AB%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AE%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%81%AB%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E3%81%AE%E3%82%AA%E3%83%BC%E3%82%AE%E3%83%AB%E9%81%B8%E5%87%BA-b%E3%83%AF%E3%83%B3-b%E3%83%8D%E3%82%AF%E3%82%B9%E3%83%88%E8%A5%BF%E6%97%A5%E6%9C%AC%E9%81%B8%E6%8A%9C%E3%81%A7%E3%83%88%E3%83%BC%E3%83%8A%E3%83%A1%E3%83%B3%E3%83%88%E5%8F%82%E5%8A%A0/ar-AA2hNMrO",
+    "team": "BLOWINDS",
+    "title": "Bリーグオールスターのイベントに福井ブローウィンズのオーギル ...",
+    "link": "https://www.msn.com/ja-jp/news/other/b%E3%83%AA%E3%83%BC%E3%82%B0%E3%82%AA%E3%83%BC%E3%83%AB%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AE%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%81%AB%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA%E3%81%AE%E3%82%AA%E3%83%BC%E3%82%AE%E3%83%AB%E9%81%B8%E5%87%BA-b%E3%83%AF%E3%83%B3-b%E3%83%8D%E3%82%AF%E3%82%B9%E3%83%88%E8%A5%BF%E6%97%A5%E6%9C%AC%E9%81%B8%E6%8A%9C%E3%81%A7%E3%83%88%E3%83%BC%E3%83%8A%E3%83%A1%E3%83%B3%E3%83%88%E5%8F%82%E5%8A%A0/ar-AA2hNMrO",
+    "published": "2026-11-19T13:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.YoRKcr1lW0AHxZmjfdlLyw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-19T21:21:13.033727+00:00"
   }
 ]
