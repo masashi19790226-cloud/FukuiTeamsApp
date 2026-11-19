@@ -32,6 +32,8 @@ JST = timezone(timedelta(hours=9))
 
 # データの形の版。変えたときに上げると、その日のうちに作り直す
 VERSION = 5
+# 写真の決め方の番号(変えたら1つ上げる。上がると、今日作り終えていても1回だけ作り直す)
+PHOTO_RULE = 2
 
 UNITED_SITE = "https://fukuiunited.co.jp"
 UNITED_ASYNC = UNITED_SITE + "/system/async/async.php"
@@ -1782,8 +1784,10 @@ def build(fetch, post_json, old, current=None):
     vercosta_missing = ((old.get("teams") or {}).get("VERCOSTA") or {}).get("from_year") != hjl.PAST_FROM_YEAR
     # 丸岡RUCKの選手のほかのクラブでの出場(あとから加えた分)がまだ入っていなければ、今日作り終えていても作り直す
     others_missing = "others" not in ((old.get("teams") or {}).get("RAC") or {})
+    # 写真の決め方を変えたとき(元選手は今のクラブの写真を優先)は、今日作り終えていても1回だけ作り直す
+    photo_rule_old = old.get("photo_rule") != PHOTO_RULE
     if old.get("date") == today and old.get("v") == VERSION and not old.get("pending") and not manual_missing \
-            and not vercosta_missing and not others_missing:
+            and not vercosta_missing and not others_missing and not photo_rule_old:
         return None
     teams = dict(old.get("teams") or {}) if old.get("v") == VERSION else {}
     old_teams = dict(old.get("teams") or {})
@@ -1965,5 +1969,5 @@ def build(fetch, post_json, old, current=None):
         if key not in teams and val:
             print(f"[過去の記録] {key}: 今回は取れなかったので前回の分を使います")
             teams[key] = val
-    return {"date": today, "v": VERSION, "pending": pending,
+    return {"date": today, "v": VERSION, "pending": pending, "photo_rule": PHOTO_RULE,
             "updated_at": datetime.now(timezone.utc).isoformat(), "teams": teams}
