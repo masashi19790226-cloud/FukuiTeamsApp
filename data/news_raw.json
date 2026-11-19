@@ -8265,5 +8265,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51901&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3HriTFEEp5U1I_TxSW7Miu",
     "published": "2026-11-19T05:11:03Z",
     "detected_at": "2026-11-19T06:01:06.646396+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51901",
+    "team": "BLOWINDS",
+    "title": "【レポート】ソフトバンク主催イベントに参加しました",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51901",
+    "published": "2026-11-19T09:00:00+09:00",
+    "detected_at": "2026-11-19T07:01:21.473648+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/20261114_softbank_eventreport.jpg"
   }
 ]
