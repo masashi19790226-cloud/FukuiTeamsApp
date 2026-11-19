@@ -8253,5 +8253,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=http://www.excite.co.jp/news/article/Fukuishimbun_2751108/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1p9Bcb70tJFgWZ9Bj9k1Fd",
     "published": "2026-11-19T21:15:48Z",
     "detected_at": "2026-11-19T22:21:13.363758+00:00"
+  },
+  {
+    "id": "bing:https://www.47news.jp/15257955.html",
+    "team": "BLOWINDS",
+    "title": "Bリーグオールスターのイベントに福井ブローウィンズのオーギル ...",
+    "link": "https://www.47news.jp/15257955.html",
+    "published": "2026-11-19T02:00:00+00:00",
+    "source": "47NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.P0p8VGBTNj3yct3gRtFFbg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-19T23:01:13.853730+00:00"
   }
 ]
