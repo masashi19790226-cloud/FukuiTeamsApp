@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-19T01:41:18.016232+00:00",
- "cursor": 42,
+ "updated_at": "2026-11-19T02:01:19.384446+00:00",
+ "cursor": 52,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -434,6 +434,27 @@
    }
   ],
   "RAC|荒井一花": [
+   {
+    "title": "丸岡RUCK2026-27日程、ホーム試合が4倍増 新主将に荒井一花【選手一覧】",
+    "link": "https://www.msn.com/ja-jp/sports/%E5%85%A8%E8%88%AC/%E4%B8%B8%E5%B2%A1ruck2026-27%E6%97%A5%E7%A8%8B-%E3%83%9B%E3%83%BC%E3%83%A0%E8%A9%A6%E5%90%88%E3%81%8C4%E5%80%8D%E5%A2%97-%E6%96%B0%E4%B8%BB%E5%B0%86%E3%81%AB%E8%8D%92%E4%BA%95%E4%B8%80%E8%8A%B1-%E9%81%B8%E6%89%8B%E4%B8%80%E8%A6%A7/ar-AA25fReK",
+    "published": "2026-06-27T12:56:00+00:00",
+    "source": "MSN",
+    "detected_at": "2026-11-19T02:01:19.384446+00:00"
+   },
+   {
+    "title": "【女子Fリーグ開幕記念無料記事】福井丸岡ラック #17 荒井一花 ...",
+    "link": "https://note.com/panna_futsal/n/n509904d7ce23",
+    "published": "2026-06-13T14:24:00+00:00",
+    "source": "note",
+    "detected_at": "2026-11-19T02:01:19.384446+00:00"
+   },
+   {
+    "title": "「代表は、憧れの場所。選手を続ける理由。」――福井丸岡ラック ...",
+    "link": "https://note.com/panna_futsal/n/nefa82d6a3d1e",
+    "published": "2026-06-12T15:16:00+00:00",
+    "source": "note",
+    "detected_at": "2026-11-19T02:01:19.384446+00:00"
+   },
    {
     "title": "丸岡RUCK2026-27日程、ホーム試合が4倍増 新主将に荒井一花【選手一覧】",
     "link": "https://www.fukuishimbun.co.jp/articles/-/2622808?page=3",
