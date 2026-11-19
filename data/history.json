@@ -1,9 +1,9 @@
 {
- "date": "2026-11-19",
+ "date": "2026-11-20",
  "v": 5,
  "pending": false,
  "photo_rule": 2,
- "updated_at": "2026-11-19T11:25:18.700291+00:00",
+ "updated_at": "2026-11-19T15:10:14.457536+00:00",
  "teams": {
   "UNITED": {
    "source": "ユナイテッド公式サイトの試合情報",
@@ -64650,7 +64650,7 @@
        0
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "宮本 夏奈",
@@ -65510,7 +65510,7 @@
        6
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "荒井 一花",
@@ -67143,7 +67143,7 @@
        1
       ]
      ],
-     "now_checked": "2026-11-19",
+     "now_checked": "2026-11-20",
      "now_team": "バルドラール浦安ラス・ボニータス",
      "birthday": "2001-10-12",
      "others": {
@@ -71208,7 +71208,7 @@
        3
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "横山 凜花",
@@ -71750,7 +71750,7 @@
        2
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "平田 梨豊",
@@ -72791,7 +72791,7 @@
        1
       ]
      ],
-     "now_checked": "2026-11-19",
+     "now_checked": "2026-11-20",
      "others": {
       "apps": 11,
       "starts": 6,
@@ -73724,7 +73724,7 @@
        10
       ]
      ],
-     "now_checked": "2026-11-19",
+     "now_checked": "2026-11-20",
      "now_team": "SWHレディース西宮",
      "birthday": "1999-03-13",
      "others": {
@@ -75352,7 +75352,7 @@
        3
       ]
      ],
-     "now_checked": "2026-11-19",
+     "now_checked": "2026-11-20",
      "now_team": "SWHレディース西宮",
      "birthday": "2007-12-01",
      "others": {
@@ -75570,7 +75570,7 @@
        2
       ]
      ],
-     "now_checked": "2026-11-19",
+     "now_checked": "2026-11-20",
      "now_team": "アルコ神戸",
      "birthday": "2002-01-11",
      "others": {
@@ -75770,7 +75770,7 @@
        0
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "山本 彩可",
@@ -75924,7 +75924,7 @@
        0
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "西端 円麻",
@@ -76203,7 +76203,7 @@
        0
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "長谷川 詩花",
@@ -76630,7 +76630,7 @@
        4
       ]
      ],
-     "now_checked": "2026-11-19",
+     "now_checked": "2026-11-20",
      "others": {
       "apps": 19,
       "starts": 13,
@@ -76754,7 +76754,7 @@
        0
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "鵜飼 真也子",
@@ -76850,7 +76850,7 @@
        0
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "田中 悠香",
@@ -76932,7 +76932,7 @@
        1
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "小林 心",
@@ -77004,7 +77004,7 @@
        2
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "山口 陽愛",
@@ -77119,7 +77119,7 @@
        1
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "五十嵐 愛海",
@@ -77161,7 +77161,7 @@
        1
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "今村 結里",
@@ -77234,7 +77234,7 @@
        0
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "福田 真悠",
@@ -77266,7 +77266,7 @@
        0
       ]
      ],
-     "now_checked": "2026-11-19"
+     "now_checked": "2026-11-20"
     }
    ],
    "players_from": "lineup",
@@ -144607,7 +144607,7 @@
      "birthday": "1998-06-19",
      "height": "172",
      "bd_checked": true,
-     "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/5100000019_03.png",
+     "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/5100000019_03.png",
      "photo_now": true,
      "now_tab": "2",
      "now_next": {
@@ -144659,14 +144659,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 16,
       "pts": 68,
       "reb": 29,
       "ast": 44,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -152818,7 +152818,7 @@
      "birthday": "1989-10-02",
      "height": "173",
      "bd_checked": true,
-     "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/8712_03.png",
+     "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/8712_03.png",
      "photo_now": true,
      "now_tab": "2",
      "now_next": {
@@ -152890,14 +152890,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 12,
       "pts": 39,
       "reb": 9,
       "ast": 12,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -157601,14 +157601,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 17,
       "pts": 12,
       "reb": 44,
       "ast": 26,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -159016,14 +159016,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 12,
       "pts": 84,
       "reb": 29,
       "ast": 51,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -160335,14 +160335,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 16,
       "pts": 139,
       "reb": 129,
       "ast": 29,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -161506,7 +161506,7 @@
      "birthday": "1992-02-22",
      "height": "198",
      "bd_checked": true,
-     "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/9283_03.png",
+     "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/9283_03.png",
      "photo_now": true,
      "now_tab": "1",
      "now_next": {
@@ -161578,14 +161578,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 5,
       "pts": 3,
       "reb": 3,
       "ast": 0,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -165169,14 +165169,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 17,
       "pts": 332,
       "reb": 133,
       "ast": 38,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -166028,14 +166028,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 18,
       "pts": 104,
       "reb": 19,
       "ast": 14,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -167691,14 +167691,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 18,
       "pts": 64,
       "reb": 47,
       "ast": 9,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -168445,14 +168445,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 16,
       "pts": 505,
       "reb": 66,
       "ast": 79,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -171988,14 +171988,14 @@
        }
       ]
      },
-     "career_date": "2026-11-19",
+     "career_date": "2026-11-20",
      "now_stats": {
       "season": "2026-27",
       "g": 15,
       "pts": 45,
       "reb": 20,
       "ast": 5,
-      "date": "2026-11-19"
+      "date": "2026-11-20"
      }
     },
     {
@@ -187327,7 +187327,7 @@
      "now": false,
      "pid": "1377",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "石田 彪馬",
@@ -187589,7 +187589,7 @@
      "now": false,
      "pid": "858",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "爲國 龍次",
@@ -188329,7 +188329,7 @@
      "now": false,
      "pid": "5121",
      "now_team": "GIFU ASAHI BLUE DEVILS",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "和田 吉広",
@@ -188562,7 +188562,7 @@
      "now": false,
      "pid": "357",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "齊藤 容",
@@ -189396,7 +189396,7 @@
      "now": false,
      "pid": "290",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "野村 行",
@@ -189593,7 +189593,7 @@
      "now": false,
      "pid": "341",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "若槻 翔馬",
@@ -190175,7 +190175,7 @@
      "now": false,
      "pid": "349",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "冨山 誉純",
@@ -190289,7 +190289,7 @@
      "now": false,
      "pid": "342",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "浅川 海音",
@@ -190405,7 +190405,7 @@
      "now": false,
      "pid": "1258",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "渡辺 修一",
@@ -190517,7 +190517,7 @@
      "now": false,
      "pid": "355",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "福田 洸輔",
@@ -190633,7 +190633,7 @@
      "now": false,
      "pid": "2336",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "渡邉 修一",
@@ -190738,7 +190738,7 @@
      "now": false,
      "pid": "355",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "髙島 一将",
@@ -190935,7 +190935,7 @@
      "now": false,
      "pid": "300",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "戸田 大貴",
@@ -191105,7 +191105,7 @@
      "now": false,
      "pid": "1235",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "前田 隆昭",
@@ -191192,7 +191192,7 @@
      "now": false,
      "pid": "338",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "山中 惇生",
@@ -191582,7 +191582,7 @@
      "now": false,
      "pid": "8015",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "谷澤 颯希",
@@ -191799,7 +191799,7 @@
      "now": false,
      "pid": "1103",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "太田 真斗良",
@@ -191931,7 +191931,7 @@
      "now": false,
      "pid": "11695",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "北村 壮平",
@@ -192188,7 +192188,7 @@
      "now": false,
      "pid": "5123",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "永宮 幸樹",
@@ -192268,7 +192268,7 @@
      "now": false,
      "pid": "1361",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "矢田 佑斗",
@@ -192346,7 +192346,7 @@
      "now": false,
      "pid": "1055",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "高松 雄飛",
@@ -192386,7 +192386,7 @@
      "now": false,
      "pid": "1257",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "吉田 敬以",
@@ -192417,7 +192417,7 @@
      "now": false,
      "pid": "5120",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "宮川 直輝",
@@ -192448,7 +192448,7 @@
      "now": false,
      "pid": "8019",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "小林 宏至",
@@ -192479,7 +192479,7 @@
      "now": false,
      "pid": "8020",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "松山 洋輔",
@@ -192510,7 +192510,7 @@
      "now": false,
      "pid": "1365",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "渡部 魁斗",
@@ -192570,7 +192570,7 @@
      "now": false,
      "pid": "7986",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "関野 尚輝",
@@ -192630,7 +192630,7 @@
      "now": false,
      "pid": "1259",
      "now_team": "",
-     "now_checked": "2026-11-13"
+     "now_checked": "2026-11-20"
     },
     {
      "name": "谷口 裕人",
