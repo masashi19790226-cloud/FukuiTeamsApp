@@ -8325,5 +8325,29 @@
     "source": "中日新聞Web",
     "image": "https://www.bing.com/th?id=ONUT.ecZ70oyfbSiR5hmB4cpw5w&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-20T20:41:15.052378+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15668481416686434679",
+    "team": "BLOWINDS",
+    "title": "ブローウィンズ 経済効果２７％増４３．９億円 ２５～２６年シーズン動員１２万人達成 - 中日新聞",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.chunichi.co.jp/article/1342602%3Frct%3D&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2PDuy-uTPRfRg41WwMhAVe",
+    "published": "2026-11-20T20:54:03Z",
+    "detected_at": "2026-11-20T21:01:06.490734+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9931298443544314312",
+    "team": "BLOWINDS",
+    "title": "ブローウィンズ 経済効果２７％増４３．９億円 ２５〜２６年シーズン動員１２万人達成",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/article/chuplus/region/chuplus-1342602&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3TVO-rDragtsANaxrNtJzM",
+    "published": "2026-11-20T20:20:45Z",
+    "detected_at": "2026-11-20T21:01:06.490783+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5077857750463099390",
+    "team": "BLOWINDS",
+    "title": "ブローウィンズ 経済効果２７％増４３．９億円 ２５～２６年シーズン動員１２万人達成 - 47NEWS",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15264188.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1DQvTuSernYUVa1kBhASIu",
+    "published": "2026-11-20T20:18:42Z",
+    "detected_at": "2026-11-20T21:01:06.490812+00:00"
   }
 ]
