@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-20T17:21:20.478008+00:00",
- "cursor": 11,
+ "updated_at": "2026-11-20T17:41:21.859354+00:00",
+ "cursor": 21,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -241,6 +241,13 @@
    }
   ],
   "BLOWINDS|川島聖那": [
+   {
+    "title": "児童がプロの技体感 ブローウィンズ選手指導 南越前・湯尾小",
+    "link": "https://www.chunichi.co.jp/article/1342076",
+    "published": "2026-11-19T12:05:00+00:00",
+    "source": "中日新聞Web",
+    "detected_at": "2026-11-20T17:41:21.859354+00:00"
+   },
    {
     "title": "前半のリード生かせず福井ブローウィンズ逆転負け 新潟 ...",
     "link": "https://www.fukuishimbun.co.jp/articles/-/2725205",
