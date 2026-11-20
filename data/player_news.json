@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-20T08:21:26.773129+00:00",
- "cursor": 9,
+ "updated_at": "2026-11-20T08:41:17.228866+00:00",
+ "cursor": 19,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -131,6 +131,13 @@
   ],
   "BLOWINDS|内藤英真": [
    {
+    "title": "【イベント情報】「FWIチャレンジ応援文化祭+体育祭2026」に選手 ...",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51895",
+    "published": "2026-11-19T16:00:00+00:00",
+    "source": "fukuiblowinds",
+    "detected_at": "2026-11-20T08:41:17.228866+00:00"
+   },
+   {
     "title": "福井ブローウィンズが内藤英真とのプロ契約を発表…練習生 ...",
     "link": "https://basketballking.jp/news/japan/20260924/634260.html",
     "published": "2026-09-24T00:57:00+00:00",
@@ -160,6 +167,13 @@
    }
   ],
   "BLOWINDS|塚本智裕": [
+   {
+    "title": "【イベント情報】「FWIチャレンジ応援文化祭+体育祭2026」に選手 ...",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51895",
+    "published": "2026-11-19T16:00:00+00:00",
+    "source": "fukuiblowinds",
+    "detected_at": "2026-11-20T08:41:17.228866+00:00"
+   },
    {
     "title": "プレーで地元を盛り上げる気持ちがより強く 福井ブローウィンズの ...",
     "link": "https://www.47news.jp/14755543.html",
