@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-20T12:21:16.767890+00:00",
- "cursor": 0,
+ "updated_at": "2026-11-20T12:41:18.318778+00:00",
+ "cursor": 10,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -751,6 +751,13 @@
    }
   ],
   "BLOWINDS|トレイボイド": [
+   {
+    "title": "自分が一番輝ける場所へ（横浜エクセレンス 長谷川比源）",
+    "link": "https://news.yahoo.co.jp/articles/ae30fc5642037f12e860a319ff579137f59d3a3c",
+    "published": "2026-11-20T00:51:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-20T12:41:18.318778+00:00"
+   },
    {
     "title": "トレイ・ボイドが3試合続けて40得点以上、横浜EXが立川と越谷の ...",
     "link": "https://note.com/b_court_record/n/nd880c0452a47",
