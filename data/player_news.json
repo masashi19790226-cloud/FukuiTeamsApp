@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-20T22:01:26.281194+00:00",
- "cursor": 22,
+ "updated_at": "2026-11-20T22:21:19.736577+00:00",
+ "cursor": 32,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -1026,6 +1026,13 @@
    }
   ],
   "BLOWINDS|長谷川智伸": [
+   {
+    "title": "アルビBB 21日から敵地で福井と2連戦 古巣戦となるSG長谷川 ...",
+    "link": "https://mainichi.jp/articles/20261121/spp/sp0/004/001000c",
+    "published": "2026-11-20T02:00:00+00:00",
+    "source": "毎日新聞デジタル",
+    "detected_at": "2026-11-20T22:21:19.736577+00:00"
+   },
    {
     "title": "アルビBB 主力2選手欠くも岩手に快勝 鵜沢監督「全員でやり続ける ...",
     "link": "https://news.infoseek.co.jp/article/sponichin_20261026_0002/",
