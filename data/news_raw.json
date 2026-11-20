@@ -32,14 +32,6 @@
     "detected_at": "2026-10-07T08:28:00.682180+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:11697438659210802647",
-    "team": "BLOWINDS",
-    "title": "第6節 福井ブローウィンズvsさいたまブロンコス 10/24 [B.ONE] - U-NEXT",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://video.unext.jp/live/browse/relation/LIV0000016059/live&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1dMzEjtKV_CHpUK2EDh6nV",
-    "published": "2026-10-06T08:59:46Z",
-    "detected_at": "2026-10-07T08:28:00.682299+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:12906787086747583838",
     "team": "BLOWINDS",
     "title": "岐阜スゥープス vs 福井ブローウィンズ B.LEAGUE ONE（Bリーグワン） 開幕戦へ ... - Instagram",
@@ -8283,5 +8275,13 @@
     "source": "Yahoo!ニュース",
     "image": "https://www.bing.com/th?id=ONUT.1H_cI6AGTPNTWK1fR2fOAg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-20T08:21:09.033311+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12810604732115384192",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"  イベント情報   ／ サッカークリニックinハピテラス開催 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2123612311793598702&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1zs9ECE1Q6Yc-2VJVCG64b",
+    "published": "2026-11-20T05:03:35Z",
+    "detected_at": "2026-11-20T09:01:13.629748+00:00"
   }
 ]
