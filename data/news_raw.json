@@ -8307,5 +8307,23 @@
     "source": "中日新聞Web",
     "image": "",
     "detected_at": "2026-11-20T16:01:16.824808+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5323143895904930587",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 on X: \"    地域貢献活動     小浜市立西津小学校に生晃栄養薬品株式 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2123718000553410599/photo/3&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0hZbVxUbb7qj8u20CDX-K9",
+    "published": "2026-11-20T13:03:27Z",
+    "detected_at": "2026-11-20T20:41:14.611594+00:00"
+  },
+  {
+    "id": "bing:https://www.chunichi.co.jp/article/1342602?rct=f_news",
+    "team": "BLOWINDS",
+    "title": "ブローウィンズ 経済効果27％増43．9億円 25～26年シーズン動員12万人 ...",
+    "link": "https://www.chunichi.co.jp/article/1342602?rct=f_news",
+    "published": "2026-11-20T02:00:00+00:00",
+    "source": "中日新聞Web",
+    "image": "https://www.bing.com/th?id=ONUT.ecZ70oyfbSiR5hmB4cpw5w&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-20T20:41:15.052378+00:00"
   }
 ]
