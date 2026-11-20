@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-20T13:23:30.262401+00:00",
+    "updated_at": "2026-11-20T13:42:49.083541+00:00",
     "players": [
       {
         "number": "1",
@@ -2291,7 +2291,7 @@
       {
         "key": "3FG%",
         "label": "3ポイント成功率",
-        "rank": 21,
+        "rank": 22,
         "value": "29.3",
         "unit": "%"
       },
@@ -2331,7 +2331,7 @@
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年11月17日22:18",
+    "team_stats_updated": "2026年11月20日22:36",
     "league": "B.ONE",
     "league_teams": 25,
     "club_photos": {
@@ -4560,7 +4560,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=695&tab=1",
-    "updated_at": "2026-11-20T13:23:31.535057+00:00",
+    "updated_at": "2026-11-20T13:42:51.643669+00:00",
     "players": [
       {
         "number": "1",
@@ -6303,7 +6303,7 @@
       {
         "key": "RPG",
         "label": "平均リバウンド数",
-        "rank": 5,
+        "rank": 6,
         "value": "41.1",
         "unit": "本"
       },
@@ -6329,7 +6329,7 @@
         "unit": "本"
       }
     ],
-    "team_stats_updated": "2026年11月17日22:18",
+    "team_stats_updated": "2026年11月20日22:36",
     "league": "B.ONE",
     "league_teams": 25,
     "shot_cache": {
