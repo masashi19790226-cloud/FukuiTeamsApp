@@ -560,5 +560,23 @@
     "opponent_score": 0,
     "checked_at": "2026-11-15T14:22:06.409101",
     "source_url": "https://fukuiunited.co.jp/"
+  },
+  "th05": {
+    "my_score": 27,
+    "opponent_score": 31,
+    "checked_at": "2026-11-21T07:01:46.137152",
+    "source_url": "https://leagueh.jp/schedule/511M36/",
+    "periods": [
+      {
+        "label": "前半",
+        "my": 14,
+        "opp": 19
+      },
+      {
+        "label": "後半",
+        "my": 13,
+        "opp": 12
+      }
+    ]
   }
 }
