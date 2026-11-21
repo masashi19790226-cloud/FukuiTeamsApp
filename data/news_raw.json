@@ -8,14 +8,6 @@
     "detected_at": "2026-10-07T17:10:05.298687+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:18399837722879567439",
-    "team": "BLOWINDS",
-    "title": "第5節【10/17, 10/18 イベント情報】 vs 福井ブローウィンズ アウェーでの連戦を経て - Instagram",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DeMBu9MyQ-l/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1xZbMLIFl2rjNHwqNOivPj",
-    "published": "2026-10-07T09:45:25Z",
-    "detected_at": "2026-10-07T17:10:05.298773+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:2356006375431909519",
     "team": "BLOWINDS",
     "title": "2026.10.4福井ブローウィンズ - YouTube",
@@ -8321,5 +8313,29 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2123725618072396010/photo/1&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3ZOEnEHggu1ZdReV_-9VwA",
     "published": "2026-11-20T13:03:28Z",
     "detected_at": "2026-11-21T07:41:06.652355+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:3242791142349970751",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、22点差の快勝 敦賀で新潟戦 連敗ストップ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/reader/2753123&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2BtTEoedxAt0rycdCr8jX7",
+    "published": "2026-11-21T09:42:34Z",
+    "detected_at": "2026-11-21T10:01:08.295256+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14942805107233339224",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、22点差の快勝 敦賀で新潟戦 連敗ストップ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2753123&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0ZvChKipXiLx-QcOpWbXnJ",
+    "published": "2026-11-21T09:31:03Z",
+    "detected_at": "2026-11-21T10:01:08.295279+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10413549040269924950",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                           #ガラクタチャンネル 今シーズン変則 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2123899185846206745&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw2IEEOrqV6lMsHCYkrP203-",
+    "published": "2026-11-21T02:44:34Z",
+    "detected_at": "2026-11-21T10:01:08.524144+00:00"
   }
 ]
