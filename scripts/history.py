@@ -34,6 +34,8 @@ JST = timezone(timedelta(hours=9))
 VERSION = 5
 # 写真の決め方の番号(変えたら1つ上げる。上がると、今日作り終えていても1回だけ作り直す)
 PHOTO_RULE = 2
+# ブローウィンズの試合ごとの記録に細かい成績(シュート成功数・スティールなど)を足したとき、1回だけ作り直す
+LOG_RULE = 2
 
 UNITED_SITE = "https://fukuiunited.co.jp"
 UNITED_ASYNC = UNITED_SITE + "/system/async/async.php"
@@ -1548,10 +1550,13 @@ def blowinds_players(matches, current_keys, old_players=None):
             if pid:
                 pids[name_key(name)] = pid
             # 試合ごとの記録(アプリの「出た試合」・相手別の成績・1試合の最高記録に使う)
-            # [日付, 相手, H/A, 福井の点, 相手の点, 先発か, 得点, 出場秒数, リバウンド, アシスト]
+            # [日付, 相手, H/A, 福井の点, 相手の点, 先発か, 得点, 出場秒数, リバウンド, アシスト,
+            #  2P成功, 2P試投, 3P成功, 3P試投, FT成功, FT試投, スティール, ブロック, ターンオーバー, 貢献度(EFF)]
             if len(row) >= BOX_ROW_LEN:
                 logs.setdefault(name_key(name), []).append([m["date"], m.get("opp", ""), m.get("ha", ""), m.get("my"), m.get("their"),
-                                                            bool(started), points, row[6], row[13], row[14]])
+                                                            bool(started), points, row[6], row[13], row[14],
+                                                            row[7], row[8], row[9], row[10], row[11], row[12],
+                                                            row[15], row[16], row[17], row[18]])
             if len(row) >= BOX_ROW_LEN:
                 d = detail.setdefault(name_key(name), {}).setdefault(m.get("season"), dict.fromkeys(("g", "pts") + keys, 0))
                 d["g"] += 1
@@ -1786,8 +1791,9 @@ def build(fetch, post_json, old, current=None):
     others_missing = "others" not in ((old.get("teams") or {}).get("RAC") or {})
     # 写真の決め方を変えたとき(元選手は今のクラブの写真を優先)は、今日作り終えていても1回だけ作り直す
     photo_rule_old = old.get("photo_rule") != PHOTO_RULE
+    log_rule_old = old.get("log_rule") != LOG_RULE
     if old.get("date") == today and old.get("v") == VERSION and not old.get("pending") and not manual_missing \
-            and not vercosta_missing and not others_missing and not photo_rule_old:
+            and not vercosta_missing and not others_missing and not photo_rule_old and not log_rule_old:
         return None
     teams = dict(old.get("teams") or {}) if old.get("v") == VERSION else {}
     old_teams = dict(old.get("teams") or {})
@@ -1969,5 +1975,5 @@ def build(fetch, post_json, old, current=None):
         if key not in teams and val:
             print(f"[過去の記録] {key}: 今回は取れなかったので前回の分を使います")
             teams[key] = val
-    return {"date": today, "v": VERSION, "pending": pending, "photo_rule": PHOTO_RULE,
+    return {"date": today, "v": VERSION, "pending": pending, "photo_rule": PHOTO_RULE, "log_rule": LOG_RULE,
             "updated_at": datetime.now(timezone.utc).isoformat(), "teams": teams}
