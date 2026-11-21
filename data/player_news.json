@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-21T15:21:18.375797+00:00",
- "cursor": 6,
+ "updated_at": "2026-11-21T15:41:13.701997+00:00",
+ "cursor": 16,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -219,6 +219,13 @@
   ],
   "BLOWINDS|岡本飛竜": [
    {
+    "title": "福井ブローウィンズが攻守で圧倒、連敗ストップ Bリーグワン第11節 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2753144",
+    "published": "2026-11-21T02:20:00+00:00",
+    "source": "福井新聞ONLINE",
+    "detected_at": "2026-11-21T15:41:13.701997+00:00"
+   },
+   {
     "title": "米子市出身の岡本飛竜、Bワン福井へ移籍 昨季スサマジでプレー",
     "link": "https://www.sanin-chuo.co.jp/articles/-/1090748",
     "published": "2026-10-02T21:00:00+00:00",
@@ -241,10 +248,24 @@
    },
    {
     "title": "【島根スサノオマジック】#1 コティ・クラーク選手、#24 岡本飛竜 ...",
+    "link": "https://www.jiji.com/jc/article?k=000000097.000082117&g=prt",
+    "published": "2026-05-07T06:46:00+00:00",
+    "source": "時事ドットコム",
+    "detected_at": "2026-11-21T15:41:13.701997+00:00"
+   },
+   {
+    "title": "【島根スサノオマジック】#1 コティ・クラーク選手、#24 岡本飛竜 ...",
     "link": "https://www.sanin-chuo.co.jp/articles/-/999181",
     "published": "2026-05-07T05:02:00+00:00",
     "source": "山陰中央新報デジタル",
     "detected_at": "2026-11-21T11:01:20.046920+00:00"
+   },
+   {
+    "title": "島根スサノオマジックがコティ・クラーク、ダマ ムッサ、岡本飛竜 ...",
+    "link": "https://news.yahoo.co.jp/articles/1b15b8a51611ce0b9ff76b80c762c5095a51580e",
+    "published": "2026-05-06T20:52:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-21T15:41:13.701997+00:00"
    }
   ],
   "BLOWINDS|川島聖那": [
