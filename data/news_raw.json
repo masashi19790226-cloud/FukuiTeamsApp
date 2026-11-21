@@ -1,13 +1,5 @@
 [
   {
-    "id": "tag:google.com,2013:googlealerts/feed:12906787086747583838",
-    "team": "BLOWINDS",
-    "title": "岐阜スゥープス vs 福井ブローウィンズ B.LEAGUE ONE（Bリーグワン） 開幕戦へ ... - Instagram",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DeL9gWBk7Dd/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0BsJ2p1W1lMLtSvbT_Mpmn",
-    "published": "2026-10-07T13:45:33Z",
-    "detected_at": "2026-10-07T17:10:05.298687+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:2356006375431909519",
     "team": "BLOWINDS",
     "title": "2026.10.4福井ブローウィンズ - YouTube",
@@ -8357,5 +8349,13 @@
     "source": "ORICON NEWS",
     "image": "https://www.bing.com/th?id=ONUT.qhyIh9Nn00h2oUMkmnC7RQ&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-21T11:21:15.231134+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:10204418135132813329",
+    "team": "RAC",
+    "title": "丸岡ラックさんの試合見に行きました。 - YouTube",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/shorts/nu4LRc25WNk&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw0KMJADggnahiM3jrPf-1Ay",
+    "published": "2026-11-21T06:55:32Z",
+    "detected_at": "2026-11-21T14:01:07.386803+00:00"
   }
 ]
