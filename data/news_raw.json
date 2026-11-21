@@ -4532,16 +4532,6 @@
     "detected_at": "2026-11-04T02:21:09.053828+00:00"
   },
   {
-    "id": "bing:https://www.fnn.jp/articles/-/1128605",
-    "team": "THUNDER",
-    "title": "プレーオフ進出目指し本番へ ハンドボール福井永平寺ブルー ...",
-    "link": "https://www.fnn.jp/articles/-/1128605",
-    "published": "2026-10-07T02:45:00+00:00",
-    "source": "FNNプライムオンライン",
-    "image": "https://www.bing.com/th?id=ONUT.AoKcUXAbQgrrPnUt3enOnQ&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-11-04T02:21:12.118688+00:00"
-  },
-  {
     "id": "bing:https://www.msn.com/ja-jp/news/other/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA-%E3%83%9E%E3%83%86%E3%82%AA-%E3%83%AB%E3%83%93%E3%82%AAhc%E5%A5%91%E7%B4%84%E8%A7%A3%E9%99%A4-%E5%BE%8C%E4%BB%BB%E3%81%AF%E7%A6%8F%E4%BA%95%E5%B8%82%E5%87%BA%E8%BA%AB%E3%81%AE%E4%B8%AD%E5%A0%80%E7%B4%94%E5%B8%8C%E6%B0%8F-4%E6%97%A5%E3%81%AE%E9%B9%BF%E5%85%90%E5%B3%B6%E6%88%A6%E3%81%8B%E3%82%89%E6%8C%87%E6%8F%AE/ar-AA2gHMA1",
     "team": "BLOWINDS",
     "title": "「福井ブローウィンズ」マテオ・ルビオHC契約解除 後任は福井市 ...",
@@ -8355,5 +8345,21 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/amp/article/chuplus/region/chuplus-1342602&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0j-FOaLDO2rSLwN99Q-ieR",
     "published": "2026-11-20T20:18:44Z",
     "detected_at": "2026-11-20T23:01:14.456517+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6999641675618539033",
+    "team": "BLOWINDS",
+    "title": "公式戦試合トップ｜ 福井ブローウィンズvs新潟アルビレックスBB 2026年11月22日【スパイア】",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://spaia.jp/basketball/bleague/b2/game-detail%3Fgame_id%3D507382&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0PuahhwJKs3qFzENf49yeB",
+    "published": "2026-11-21T01:44:18Z",
+    "detected_at": "2026-11-21T03:01:08.890350+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:832957184487563471",
+    "team": "BLOWINDS",
+    "title": "応援しよう   26日（木）おじゃまっテレ ブローウィンズLIVEは 気になる！ファンクラブBWZRS ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/FBC_PR/status/2123754622695481616/video/1&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw15aXZ7p67ClQ6nqUroseTB",
+    "published": "2026-11-20T16:58:18Z",
+    "detected_at": "2026-11-21T03:01:08.890407+00:00"
   }
 ]
