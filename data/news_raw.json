@@ -8485,5 +8485,25 @@
     "source": "news.web",
     "image": "",
     "detected_at": "2026-11-22T11:41:08.089757+00:00"
+  },
+  {
+    "id": "bing:https://www.msn.com/ja-jp/news/other/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA-%E4%BB%8A%E5%AD%A3%E5%94%AF%E4%B8%80%E3%81%AE%E5%B6%BA%E5%8D%97%E9%96%8B%E5%82%AC%E3%81%A72%E9%80%A3%E5%8B%9D-%E6%96%B0%E6%BD%9F%E3%82%A2%E3%83%AB%E3%83%93%E3%83%AC%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E5%BF%AB%E5%8B%9D-b%E3%83%AA%E3%83%BC%E3%82%B0%E3%83%AF%E3%83%B3%E7%AC%AC11%E7%AF%80/ar-AA2hYeYd",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季唯一の嶺南開催で2連勝 新潟 ...",
+    "link": "https://www.msn.com/ja-jp/news/other/%E7%A6%8F%E4%BA%95%E3%83%96%E3%83%AD%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%82%BA-%E4%BB%8A%E5%AD%A3%E5%94%AF%E4%B8%80%E3%81%AE%E5%B6%BA%E5%8D%97%E9%96%8B%E5%82%AC%E3%81%A72%E9%80%A3%E5%8B%9D-%E6%96%B0%E6%BD%9F%E3%82%A2%E3%83%AB%E3%83%93%E3%83%AC%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E5%BF%AB%E5%8B%9D-b%E3%83%AA%E3%83%BC%E3%82%B0%E3%83%AF%E3%83%B3%E7%AC%AC11%E7%AF%80/ar-AA2hYeYd",
+    "published": "2026-11-22T03:32:34+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.sFZT-piZc5NfBqXhec4IBw&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-22T12:01:13.072096+00:00"
+  },
+  {
+    "id": "bing:https://note.com/daai/n/naca5559a1b74",
+    "team": "BLOWINDS",
+    "title": "初めてのBリーグ観戦！娘と福井ブローウィンズを見に行ってきた",
+    "link": "https://note.com/daai/n/naca5559a1b74",
+    "published": "2026-11-22T03:05:00+00:00",
+    "source": "note",
+    "image": "https://www.bing.com/th?id=ONUT.aVdJO6bsTGZxuit8vCJpNA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-22T12:01:13.072114+00:00"
   }
 ]
