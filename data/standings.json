@@ -1393,17 +1393,17 @@
       ],
       "photo_report": {
         "福井丸岡ラック": "ok",
-        "エスポラーダ北海道イルネーヴェ": "8人(前回の分)・得点表に8人",
-        "バルドラール浦安ラス・ボニータス": "10人(前回の分)・得点表に10人",
-        "立川アスレティックFCレディース": "10人(前回の分)・得点表に10人",
-        "SWHレディース西宮": "13人(前回の分)・得点表に13人",
-        "アルコ神戸": "12人(前回の分)・得点表に12人",
-        "ミネルバ宇部": "5人(前回の分)・得点表に5人",
-        "フウガドールすみだレディース": "18人(前回の分)・得点表に11人"
+        "エスポラーダ北海道イルネーヴェ": "8人・得点表に8人",
+        "バルドラール浦安ラス・ボニータス": "10人・得点表に10人",
+        "立川アスレティックFCレディース": "10人・得点表に10人",
+        "SWHレディース西宮": "13人・得点表に13人",
+        "アルコ神戸": "12人・得点表に12人",
+        "ミネルバ宇部": "5人・得点表に5人",
+        "フウガドールすみだレディース": "18人・得点表に11人"
       },
       "club_photo_cache": {
         "エスポラーダ北海道イルネーヴェ": {
-          "date": "2026-11-22",
+          "date": "2026-11-23",
           "photos": {
             "矢津田明莉": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/43100d2d48fab57d3435a4fad3f0bd43.jpg",
             "伊藤沙莉": "https://espolada.com/wp-espolada/wp-content/uploads/2026/04/d942d9d60f6954af06f23785cd842a48.jpg",
@@ -1416,7 +1416,7 @@
           }
         },
         "バルドラール浦安ラス・ボニータス": {
-          "date": "2026-11-22",
+          "date": "2026-11-23",
           "photos": {
             "塚本夏希": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/TSUKAMOTO_Natsuki.jpg",
             "中村美月": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/NAKAMURA_Mizuki.jpg",
@@ -1431,7 +1431,7 @@
           }
         },
         "立川アスレティックFCレディース": {
-          "date": "2026-11-22",
+          "date": "2026-11-23",
           "photos": {
             "平井成美": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg",
             "尾田緩奈": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
@@ -1446,7 +1446,7 @@
           }
         },
         "SWHレディース西宮": {
-          "date": "2026-11-22",
+          "date": "2026-11-23",
           "photos": {
             "高尾茜利": "https://www.swh2003.com/img/202627-13.jpg",
             "尾川奈穂": "https://www.swh2003.com/img/202627-14.jpg",
@@ -1464,7 +1464,7 @@
           }
         },
         "アルコ神戸": {
-          "date": "2026-11-22",
+          "date": "2026-11-23",
           "photos": {
             "高橋京花": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02934-2-768x512.jpg",
             "鈴木心菜": "https://arco-kobe.com/wp-content/uploads/2024/06/DSC02914-768x512.jpg",
@@ -1481,7 +1481,7 @@
           }
         },
         "ミネルバ宇部": {
-          "date": "2026-11-22",
+          "date": "2026-11-23",
           "photos": {
             "浜田莉那": "https://www.minerva-ube.jp/image/2026_minervaube_20.png",
             "田中夢": "https://www.minerva-ube.jp/image/2026_minervaube_19.png",
@@ -1491,7 +1491,7 @@
           }
         },
         "フウガドールすみだレディース": {
-          "date": "2026-11-22",
+          "date": "2026-11-23",
           "photos": {
             "蔀萌香": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1340x2010_v-frms_webp_f83c1416-bd26-4caa-87cb-cc5c6d1fd86f.jpg",
             "庄子彩": "https://storage.googleapis.com/studio-design-asset-files/projects/BVqXYzv8aR/s-1327x1991_v-frms_webp_9482903a-6bac-46fc-a156-a4421cceb0ef.jpg",
@@ -1515,7 +1515,7 @@
         }
       },
       "number_cache": {
-        "date": "2026-11-22",
+        "date": "2026-11-23",
         "numbers": {
           "伊藤唯": "2",
           "齊藤日向子": "3",
@@ -1698,7 +1698,7 @@
         }
       }
     },
-    "updated_at": "2026-11-22T14:43:10.627916+00:00"
+    "updated_at": "2026-11-22T15:10:14.452378+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3440,13 +3440,13 @@
         }
       ]
     },
-    "updated_at": "2026-11-22T14:43:10.627916+00:00"
+    "updated_at": "2026-11-22T15:10:14.452378+00:00"
   },
   "BIRTHDAYS": {
-    "date": "2026-11-22",
+    "date": "2026-11-23",
     "v": 9,
     "manual": "d8535a448782",
-    "updated_at": "2026-11-21T15:09:41.523787+00:00",
+    "updated_at": "2026-11-22T15:10:14.452378+00:00",
     "players": [
       {
         "team": "UNITED",
@@ -6761,7 +6761,7 @@
         "school": "東海大学",
         "position": "",
         "high_school": "北陸高等学校",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:51000439": {
         "team": "BLOWINDS",
@@ -6776,7 +6776,7 @@
         "school": "大東文化大学",
         "position": "",
         "high_school": "北陸学院高等学校",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:8839": {
         "team": "BLOWINDS",
@@ -6791,7 +6791,7 @@
         "school": "",
         "position": "",
         "high_school": "",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:51000579": {
         "team": "BLOWINDS",
@@ -6806,7 +6806,7 @@
         "school": "京都産業大学",
         "position": "",
         "high_school": "明徳義塾高等学校",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:51000471": {
         "team": "BLOWINDS",
@@ -6821,7 +6821,7 @@
         "school": "IMGアカデミー",
         "position": "",
         "high_school": "",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:30468": {
         "team": "BLOWINDS",
@@ -6836,7 +6836,7 @@
         "school": "専修大学",
         "position": "",
         "high_school": "近畿大学附属高等学校",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:51000115": {
         "team": "BLOWINDS",
@@ -6851,7 +6851,7 @@
         "school": "法政大学",
         "position": "",
         "high_school": "福岡大学付属大濠高等学校",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:51000494": {
         "team": "BLOWINDS",
@@ -6866,7 +6866,7 @@
         "school": "アリゾナ大学",
         "position": "",
         "high_school": "Sunrise Christian Academy",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:51000417": {
         "team": "BLOWINDS",
@@ -6881,7 +6881,7 @@
         "school": "ミシガン大学",
         "position": "",
         "high_school": "The First Academy(ザ ファースト アカデミ",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:5100000040": {
         "team": "BLOWINDS",
@@ -6896,7 +6896,7 @@
         "school": "明治大学",
         "position": "",
         "high_school": "正智深谷高等学校",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:10844": {
         "team": "BLOWINDS",
@@ -6911,7 +6911,7 @@
         "school": "筑波大学",
         "position": "",
         "high_school": "",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:51000668": {
         "team": "BLOWINDS",
@@ -6926,7 +6926,7 @@
         "school": "ウェストバージニア大学",
         "position": "",
         "high_school": "Withrow high school",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:8571": {
         "team": "BLOWINDS",
@@ -6941,7 +6941,7 @@
         "school": "筑波大学",
         "position": "",
         "high_school": "京北高等学校(現・東洋大学京北高等学校)",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "blowinds:40142": {
         "team": "BLOWINDS",
@@ -6956,7 +6956,7 @@
         "school": "天理大学",
         "position": "",
         "high_school": "桜宮高等学校",
-        "checked": "2026-10-24"
+        "checked": "2026-11-23"
       },
       "united:82": {
         "team": "UNITED",
@@ -9642,7 +9642,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-22T14:43:10.627916+00:00"
+    "updated_at": "2026-11-22T15:10:14.452378+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -12212,12 +12212,12 @@
         }
       }
     },
-    "updated_at": "2026-11-22T14:43:10.627916+00:00"
+    "updated_at": "2026-11-22T15:10:14.452378+00:00"
   },
   "ALUMNI": {
-    "date": "2026-11-22",
+    "date": "2026-11-23",
     "v": 5,
-    "updated_at": "2026-11-21T15:09:41.523787+00:00",
+    "updated_at": "2026-11-22T15:10:14.452378+00:00",
     "players": [
       {
         "team": "RAC",
@@ -12379,9 +12379,9 @@
     ]
   },
   "PHOTOS": {
-    "date": "2026-11-22",
+    "date": "2026-11-23",
     "v": 2,
-    "updated_at": "2026-11-21T15:09:41.523787+00:00",
+    "updated_at": "2026-11-22T15:10:14.452378+00:00",
     "teams": {
       "RAC": [
         {
@@ -14909,7 +14909,7 @@
       }
     },
     "roster": {
-      "date": "2026-11-22",
+      "date": "2026-11-23",
       "source_url": "https://hjl-hockey.tv/teams?teamID=4&teamYear=2026",
       "players": [
         {
@@ -15720,6 +15720,6 @@
         }
       ]
     },
-    "updated_at": "2026-11-22T14:43:10.627916+00:00"
+    "updated_at": "2026-11-22T15:10:14.452378+00:00"
   }
 }
