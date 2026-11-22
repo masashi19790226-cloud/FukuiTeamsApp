@@ -8,14 +8,6 @@
     "detected_at": "2026-10-08T23:02:26.819764+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:7152956393392738059",
-    "team": "UNITED",
-    "title": "地域貢献活動レポート（9月） | お知らせ | 福井ユナイテッドFCオフィシャルサイト ｜ FUKUI ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://fukuiunited.co.jp/news/detail.php%3Fid%3D7022&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw10udH-MskqCGI835Qa2pca",
-    "published": "2026-10-08T12:42:54Z",
-    "detected_at": "2026-10-08T23:02:26.819804+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:18256192349632810029",
     "team": "BLOWINDS",
     "title": "福井ブローウィンズ vs 新潟アルビレックスBB - チケット流通センター",
@@ -8513,5 +8505,37 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://note.com/daai/n/naca5559a1b74&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2jcc7Qe5TNjCCyQ6E73D9N",
     "published": "2026-11-22T11:15:41Z",
     "detected_at": "2026-11-22T12:21:12.696675+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13988292160691901084",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季唯一の嶺南開催で2連勝 新潟アルビレックに快勝 Bリーグワン第11節",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.47news.jp/15270844.html&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3qBcU-gdTnTnmt-wt3HUYD",
+    "published": "2026-11-22T12:16:48Z",
+    "detected_at": "2026-11-22T13:01:08.438697+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15594797525895225801",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季唯一の嶺南開催で2連勝 新潟アルビレックに快勝 Bリーグワン第11節",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://portal.uqmobile.jp/detail/1/2/5/10211_5_r_20261122_1795342831855283&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2QXsPXmAT19jDcCAhh0wV3",
+    "published": "2026-11-22T11:20:03Z",
+    "detected_at": "2026-11-22T13:01:08.438740+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:14376190422474821115",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季唯一の嶺南開催で2連勝 新潟アルビレックに快勝 Bリーグワン第11節",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://article.auone.jp/04cc653d-8517-4a3c-9460-07e918c397c0&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1Ru7uMBI5qTPMsZiOkAPMY",
+    "published": "2026-11-22T10:21:10Z",
+    "detected_at": "2026-11-22T13:01:08.438776+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15160650013585479805",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、嶺南開催2連勝 新潟アルビレックに快勝 Bワン第11節 | スポーツ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/-/2753647&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2z30nZ8Dbalgex3ytAIXwh",
+    "published": "2026-11-22T10:06:53Z",
+    "detected_at": "2026-11-22T13:01:08.438795+00:00"
   }
 ]
