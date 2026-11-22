@@ -8475,5 +8475,15 @@
     "source": "ORICON NEWS",
     "image": "https://www.bing.com/th?id=ONUT.rj0Tuwc5_kVBllr9kS3_5Q&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-22T11:01:08.443437+00:00"
+  },
+  {
+    "id": "bing:https://news.web.nhk/newsweb/na/nd-20261122de80065",
+    "team": "BLOWINDS",
+    "title": "バスケットボール 福井ブローウィンズ 新潟に連勝",
+    "link": "https://news.web.nhk/newsweb/na/nd-20261122de80065",
+    "published": "2026-11-21T21:51:00+00:00",
+    "source": "news.web",
+    "image": "",
+    "detected_at": "2026-11-22T11:41:08.089757+00:00"
   }
 ]
