@@ -8547,5 +8547,23 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.jglWt4vPnXl-MjiEGNwapA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-22T16:21:15.107974+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2704521572888502844",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 - X",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2124412568139886982/photo/1&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2M3k6xepj6-oY6VpHb5WrD",
+    "published": "2026-11-22T15:24:23Z",
+    "detected_at": "2026-11-22T16:41:08.188760+00:00"
+  },
+  {
+    "id": "bing:https://www.47news.jp/15270844.html",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季唯一の嶺南開催で2連勝 新潟 ...",
+    "link": "https://www.47news.jp/15270844.html",
+    "published": "2026-11-22T02:15:00+00:00",
+    "source": "47NEWS",
+    "image": "https://www.bing.com/th?id=ONUT.qWKUDUB1lapo7WCTfYnA1Q&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-22T16:41:08.672405+00:00"
   }
 ]
