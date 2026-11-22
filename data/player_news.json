@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-22T08:53:55.733896+00:00",
- "cursor": 0,
+ "updated_at": "2026-11-22T09:01:11.778583+00:00",
+ "cursor": 10,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -1215,6 +1215,13 @@
     "published": "2026-06-09T00:31:00+00:00",
     "source": "Fukui Shimbun",
     "detected_at": "2026-11-17T17:21:25.568413+00:00"
+   },
+   {
+    "title": "福井ブローウィンズのトビンマーカス海舟が退団 信州ブレイブ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2621932?page=1",
+    "published": "2026-06-08T17:00:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-22T09:01:11.778583+00:00"
    }
   ],
   "UNITED|前田稜太": [
