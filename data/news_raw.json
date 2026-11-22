@@ -8395,5 +8395,25 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fu_ei_bluethun/status/2124311100846129205&ct=ga&cd=CAIyGjBmMWI2NGY4ZGE4ZjBlOTI6Y29tOmphOlVT&usg=AOvVaw1IL76w_u53l7ruiXLHtbWp",
     "published": "2026-11-22T02:49:23Z",
     "detected_at": "2026-11-22T04:41:07.507852+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2753682",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、今季唯一の嶺南開催で2連勝 新潟アルビ ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2753682",
+    "published": "2026-11-22T02:15:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.jglWt4vPnXl-MjiEGNwapA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-22T10:21:08.974194+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2753647",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ、嶺南開催2連勝 新潟アルビレックに快勝 Bワン ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2753647",
+    "published": "2026-11-22T02:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.jglWt4vPnXl-MjiEGNwapA&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-22T10:21:08.974213+00:00"
   }
 ]
