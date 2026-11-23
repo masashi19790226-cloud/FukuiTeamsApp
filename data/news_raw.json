@@ -8591,5 +8591,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/article/fbc/region/fbc-2026112307553943&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2SoH5JuFRCcFJivefQtmtx",
     "published": "2026-11-23T10:05:15Z",
     "detected_at": "2026-11-23T10:41:07.385377+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:12269618850265837777",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズは敦賀で2連勝 前回連敗の新潟に快勝 GAME2は高橋が3ポイント ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://topics.smt.docomo.ne.jp/amp/article/fbc/region/fbc-2026112307553943&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw25VT-JNGMnw3NDwZ6lGfOG",
+    "published": "2026-11-23T10:05:16Z",
+    "detected_at": "2026-11-23T11:41:08.568167+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51904",
+    "team": "BLOWINDS",
+    "title": "【FANCLUB】BWZRS会員限定イベントの必要ポイント数改定のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51904",
+    "published": "2026-11-23T09:00:00+09:00",
+    "detected_at": "2026-11-23T11:41:15.894644+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_FANCLUB.jpg"
   }
 ]
