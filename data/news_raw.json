@@ -8737,5 +8737,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/reader/2754266&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw00AWzgEzXCKYQyD3upkJVi",
     "published": "2026-11-23T20:48:41Z",
     "detected_at": "2026-11-23T21:21:08.572727+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2754320",
+    "team": "THUNDER",
+    "title": "福井永平寺待望初勝利 ハンドボールリーグH",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2754320",
+    "published": "2026-11-23T02:00:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "https://www.bing.com/th?id=ONUT.WoVB5EaVKLHIBCJJDGIbGg&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-23T21:41:16.160650+00:00"
   }
 ]
