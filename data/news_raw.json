@@ -8601,5 +8601,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://tver.jp/episodes/epn6fk12gy&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1vLliUklUuzkg5iguOeHuD",
     "published": "2026-11-23T11:41:34Z",
     "detected_at": "2026-11-23T12:41:06.662516+00:00"
+  },
+  {
+    "id": "bing:https://www.chunichi.co.jp/article/1336811",
+    "team": "THUNDER",
+    "title": "ハンドボール・ブルーサンダーの選手がファンをおもてなし 永平寺 ...",
+    "link": "https://www.chunichi.co.jp/article/1336811",
+    "published": "2026-11-07T12:05:00+00:00",
+    "source": "中日新聞",
+    "image": "",
+    "detected_at": "2026-11-23T13:21:10.732380+00:00"
   }
 ]
