@@ -8555,5 +8555,15 @@
     "source": "中日新聞",
     "image": "",
     "detected_at": "2026-11-23T09:01:11.072984+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2754160",
+    "team": "THUNDER",
+    "title": "福井永平寺ブルーサンダーが今シーズン初勝利 ハンドボールのリーグH",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2754160",
+    "published": "2026-11-23T01:49:00+00:00",
+    "source": "Fukui Shimbun",
+    "image": "https://www.bing.com/th?id=ONUT.RMaP8hQsI222FFtzFpDN4Q&pid=News&w=160&h=160&c=7",
+    "detected_at": "2026-11-23T10:01:18.733749+00:00"
   }
 ]
