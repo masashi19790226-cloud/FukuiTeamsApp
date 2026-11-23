@@ -1,8 +1,15 @@
 {
- "updated_at": "2026-11-23T11:41:13.393026+00:00",
- "cursor": 135,
+ "updated_at": "2026-11-23T12:01:22.416619+00:00",
+ "cursor": 6,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
+   {
+    "title": "【おじゃスポ】ブローウィンズは敦賀で2連勝 前回連敗の新潟に ...",
+    "link": "https://news.ntv.co.jp/n/fbc/category/society/fbb46c5154da42460f9a059b50061c2506",
+    "published": "2026-11-22T17:56:00+00:00",
+    "source": "日テレNEWS NNN",
+    "detected_at": "2026-11-23T12:01:22.416619+00:00"
+   },
    {
     "title": "岡山に連敗 69－85",
     "link": "https://www.chunichi.co.jp/article/1337146",
@@ -49,6 +56,13 @@
    }
   ],
   "BLOWINDS|ドゥシャンリスティッチ": [
+   {
+    "title": "【おじゃスポ】ブローウィンズは敦賀で2連勝 前回連敗の新潟に ...",
+    "link": "https://news.yahoo.co.jp/articles/623441652f65ad9a9ed102a1c09e8255bedee240/images/000",
+    "published": "2026-11-23T01:56:00+00:00",
+    "source": "Yahoo!ニュース",
+    "detected_at": "2026-11-23T12:01:22.416619+00:00"
+   },
    {
     "title": "鹿児島破り3連勝 中堀HC初陣飾る",
     "link": "https://www.chunichi.co.jp/article/1335000",
