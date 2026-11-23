@@ -8611,5 +8611,13 @@
     "source": "中日新聞",
     "image": "",
     "detected_at": "2026-11-23T13:21:10.732380+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7102211908203997332",
+    "team": "BLOWINDS",
+    "title": "【おじゃスポ】ブローウィンズは敦賀で2連勝 前回連敗の新潟に快勝 GAME2は高橋が3ポイント ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/articles/623441652f65ad9a9ed102a1c09e8255bedee240%3Fsource%3Drss&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3nCUicHS-Psf--nZa5mKmG",
+    "published": "2026-11-23T10:16:19Z",
+    "detected_at": "2026-11-23T16:41:07.270573+00:00"
   }
 ]
