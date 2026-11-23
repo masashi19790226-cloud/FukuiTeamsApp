@@ -8553,5 +8553,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/search%3Fp%3D%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA%2520%25E3%2582%25A4%25E3%2583%25B3%25E3%2583%2595%25E3%2583%25AD%25E3%2583%258B%25E3%2582%25A2&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1wbYcEVKRcGZE154D6_ZAs",
     "published": "2026-11-22T18:29:26Z",
     "detected_at": "2026-11-22T21:41:07.370796+00:00"
+  },
+  {
+    "id": "bing:https://www.chunichi.co.jp/article/1336811?rct=fukui",
+    "team": "THUNDER",
+    "title": "ハンドボール・ブルーサンダーの選手がファンをおもてなし 永平寺 ...",
+    "link": "https://www.chunichi.co.jp/article/1336811?rct=fukui",
+    "published": "2026-11-07T12:05:00+00:00",
+    "source": "中日新聞",
+    "image": "",
+    "detected_at": "2026-11-23T09:01:11.072984+00:00"
   }
 ]

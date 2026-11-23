@@ -1698,7 +1698,7 @@
         }
       }
     },
-    "updated_at": "2026-11-23T08:43:27.862114+00:00"
+    "updated_at": "2026-11-23T09:03:29.271433+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3440,7 +3440,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-23T08:43:27.862114+00:00"
+    "updated_at": "2026-11-23T09:03:29.271433+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-23",
@@ -9642,7 +9642,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-23T08:43:27.862114+00:00"
+    "updated_at": "2026-11-23T09:03:29.271433+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -9765,6 +9765,20 @@
         },
         {
           "rank": 9,
+          "team": "琉球コラソン",
+          "slug": "corazon",
+          "points": 5,
+          "played": 7,
+          "win": 2,
+          "draw": 1,
+          "lose": 4,
+          "gf": 217,
+          "ga": 221,
+          "gd": -4,
+          "record": "2勝4敗1分"
+        },
+        {
+          "rank": 10,
           "team": "トヨタ自動車東日本レガロッソ宮城",
           "slug": "toyotaej",
           "points": 4,
@@ -9778,7 +9792,7 @@
           "record": "2勝4敗"
         },
         {
-          "rank": 10,
+          "rank": 11,
           "team": "富山ドリームス",
           "slug": "dreams",
           "points": 4,
@@ -9790,20 +9804,6 @@
           "ga": 174,
           "gd": -16,
           "record": "2勝4敗"
-        },
-        {
-          "rank": 11,
-          "team": "琉球コラソン",
-          "slug": "corazon",
-          "points": 3,
-          "played": 6,
-          "win": 1,
-          "draw": 1,
-          "lose": 4,
-          "gf": 176,
-          "ga": 195,
-          "gd": -19,
-          "record": "1勝4敗1分"
         },
         {
           "rank": 12,
@@ -9853,14 +9853,14 @@
           "team": "アースフレンズBM東京・神奈川",
           "slug": "earthfriends",
           "points": 0,
-          "played": 6,
+          "played": 7,
           "win": 0,
           "draw": 0,
-          "lose": 6,
-          "gf": 129,
-          "ga": 214,
-          "gd": -85,
-          "record": "0勝6敗"
+          "lose": 7,
+          "gf": 155,
+          "ga": 255,
+          "gd": -100,
+          "record": "0勝7敗"
         }
       ]
     },
@@ -11182,97 +11182,97 @@
         {
           "name": "神谷 弘平",
           "team": "アースフレンズBM東京・神奈川",
-          "goals": 36,
-          "shots": 73,
-          "games": 6,
+          "goals": 40,
+          "shots": 84,
+          "games": 7,
           "number": "88",
           "position": "CB",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31266.jpg",
           "rank": 1
         },
         {
-          "name": "笠原 謙哉",
+          "name": "畑中 大翔",
           "team": "アースフレンズBM東京・神奈川",
-          "goals": 16,
-          "shots": 22,
-          "games": 6,
-          "number": "3",
-          "position": "PV",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p30197.jpg",
+          "goals": 19,
+          "shots": 33,
+          "games": 5,
+          "number": "19",
+          "position": "CB",
+          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31931.jpg",
           "rank": 2
         },
         {
           "name": "原田 廉太郎",
           "team": "アースフレンズBM東京・神奈川",
-          "goals": 15,
-          "shots": 23,
-          "games": 6,
+          "goals": 18,
+          "shots": 26,
+          "games": 7,
           "number": "28",
           "position": "PV",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31938.jpg",
           "rank": 3
         },
         {
-          "name": "畑中 大翔",
+          "name": "笠原 謙哉",
           "team": "アースフレンズBM東京・神奈川",
-          "goals": 11,
-          "shots": 21,
-          "games": 4,
-          "number": "19",
-          "position": "CB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31931.jpg",
-          "rank": 4
+          "goals": 18,
+          "shots": 25,
+          "games": 7,
+          "number": "3",
+          "position": "PV",
+          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p30197.jpg",
+          "rank": 3
+        },
+        {
+          "name": "西村 友希",
+          "team": "アースフレンズBM東京・神奈川",
+          "goals": 10,
+          "shots": 31,
+          "games": 7,
+          "number": "27",
+          "position": "LB",
+          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31937.jpg",
+          "rank": 5
         },
         {
           "name": "朝比奈 秀",
           "team": "アースフレンズBM東京・神奈川",
           "goals": 10,
           "shots": 23,
-          "games": 6,
+          "games": 7,
           "number": "29",
           "position": "RB",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31939.jpg",
           "rank": 5
         },
         {
-          "name": "熊野 大雅",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 8,
-          "shots": 18,
-          "games": 5,
-          "number": "17",
-          "position": "LB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31673.jpg",
-          "rank": 6
-        },
-        {
           "name": "谷口 瑠已",
           "team": "アースフレンズBM東京・神奈川",
-          "goals": 8,
-          "shots": 11,
-          "games": 6,
+          "goals": 9,
+          "shots": 13,
+          "games": 7,
           "number": "20",
           "position": "RW",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31932.jpg",
-          "rank": 6
+          "rank": 7
         },
         {
-          "name": "西村 友希",
+          "name": "熊野 大雅",
           "team": "アースフレンズBM東京・神奈川",
-          "goals": 7,
-          "shots": 24,
+          "goals": 8,
+          "shots": 20,
           "games": 6,
-          "number": "27",
+          "number": "17",
           "position": "LB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31937.jpg",
+          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31673.jpg",
           "rank": 8
         },
         {
           "name": "三輪 颯馬",
           "team": "アースフレンズBM東京・神奈川",
-          "goals": 4,
-          "shots": 9,
-          "games": 6,
+          "goals": 7,
+          "shots": 13,
+          "games": 7,
           "number": "18",
           "position": "LW",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p30985.jpg",
@@ -11281,24 +11281,24 @@
         {
           "name": "山磨 彰仁",
           "team": "アースフレンズBM東京・神奈川",
-          "goals": 4,
-          "shots": 9,
-          "games": 6,
+          "goals": 5,
+          "shots": 10,
+          "games": 7,
           "number": "26",
           "position": "RB",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31936.jpg",
-          "rank": 9
+          "rank": 10
         },
         {
           "name": "原 圭彌",
           "team": "アースフレンズBM東京・神奈川",
           "goals": 4,
-          "shots": 4,
-          "games": 2,
+          "shots": 5,
+          "games": 3,
           "number": "13",
           "position": "LW",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31930.jpg",
-          "rank": 9
+          "rank": 11
         },
         {
           "name": "鹿島 諄",
@@ -11316,7 +11316,7 @@
           "team": "アースフレンズBM東京・神奈川",
           "goals": 1,
           "shots": 2,
-          "games": 3,
+          "games": 4,
           "number": "15",
           "position": "CB",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31838.jpg",
@@ -11327,7 +11327,7 @@
           "team": "アースフレンズBM東京・神奈川",
           "goals": 1,
           "shots": 1,
-          "games": 6,
+          "games": 7,
           "number": "8",
           "position": "PV",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31755.jpg",
@@ -11338,10 +11338,21 @@
           "team": "アースフレンズBM東京・神奈川",
           "goals": 1,
           "shots": 1,
-          "games": 6,
+          "games": 7,
           "number": "24",
           "position": "GK",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p30837.jpg",
+          "rank": 13
+        },
+        {
+          "name": "藤田 櫂成",
+          "team": "アースフレンズBM東京・神奈川",
+          "goals": 1,
+          "shots": 1,
+          "games": 1,
+          "number": "14",
+          "position": "RW",
+          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31972.jpg",
           "rank": 13
         },
         {
@@ -11353,18 +11364,18 @@
           "number": "25",
           "position": "LB",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31935.jpg",
-          "rank": 16
+          "rank": 17
         },
         {
           "name": "遠藤 輝",
           "team": "アースフレンズBM東京・神奈川",
           "goals": 0,
           "shots": 0,
-          "games": 6,
+          "games": 7,
           "number": "99",
           "position": "GK",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31839.jpg",
-          "rank": 16
+          "rank": 17
         },
         {
           "name": "二階堂 恭世",
@@ -11375,18 +11386,7 @@
           "number": "22",
           "position": "GK",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31933.jpg",
-          "rank": 16
-        },
-        {
-          "name": "藤田 櫂成",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 0,
-          "shots": 0,
-          "games": 0,
-          "number": "14",
-          "position": "RW",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31972.jpg",
-          "rank": 16
+          "rank": 17
         },
         {
           "name": "谷口 俊",
@@ -11397,7 +11397,7 @@
           "number": "35",
           "position": "GK",
           "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31269.jpg",
-          "rank": 16
+          "rank": 17
         }
       ]
     },
@@ -12323,10 +12323,175 @@
               "pid": "31839"
             }
           ]
+        },
+        "511M46": {
+          "date": "2026-11-23",
+          "players": [
+            {
+              "name": "笠原 謙哉",
+              "number": "3",
+              "position": "PV",
+              "goals": 2,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30197"
+            },
+            {
+              "name": "出村 龍",
+              "number": "8",
+              "position": "PV",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31755"
+            },
+            {
+              "name": "原 圭彌",
+              "number": "13",
+              "position": "LW",
+              "goals": 0,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31930"
+            },
+            {
+              "name": "藤田 櫂成",
+              "number": "14",
+              "position": "RW",
+              "goals": 1,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31972"
+            },
+            {
+              "name": "河村 優",
+              "number": "15",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31838"
+            },
+            {
+              "name": "熊野 大雅",
+              "number": "17",
+              "position": "LB",
+              "goals": 0,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31673"
+            },
+            {
+              "name": "三輪 颯馬",
+              "number": "18",
+              "position": "LW",
+              "goals": 3,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30985"
+            },
+            {
+              "name": "畑中 大翔",
+              "number": "19",
+              "position": "CB",
+              "goals": 8,
+              "shots": 12,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31931"
+            },
+            {
+              "name": "谷口 瑠已",
+              "number": "20",
+              "position": "RW",
+              "goals": 1,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31932"
+            },
+            {
+              "name": "山﨑 智之",
+              "number": "24",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 9,
+              "save_total": 38,
+              "pid": "30837"
+            },
+            {
+              "name": "山磨 彰仁",
+              "number": "26",
+              "position": "RB",
+              "goals": 1,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31936"
+            },
+            {
+              "name": "西村 友希",
+              "number": "27",
+              "position": "LB",
+              "goals": 3,
+              "shots": 7,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31937"
+            },
+            {
+              "name": "原田 廉太郎",
+              "number": "28",
+              "position": "PV",
+              "goals": 3,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31938"
+            },
+            {
+              "name": "朝比奈 秀",
+              "number": "29",
+              "position": "RB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31939"
+            },
+            {
+              "name": "神谷 弘平",
+              "number": "88",
+              "position": "CB",
+              "goals": 4,
+              "shots": 11,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31266"
+            },
+            {
+              "name": "遠藤 輝",
+              "number": "99",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 1,
+              "save_total": 13,
+              "pid": "31839"
+            }
+          ]
         }
       }
     },
-    "updated_at": "2026-11-23T08:43:27.862114+00:00"
+    "updated_at": "2026-11-23T09:03:29.271433+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-23",
