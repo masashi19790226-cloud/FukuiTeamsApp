@@ -1,5 +1,25 @@
 [
   {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51705",
+    "team": "BLOWINDS",
+    "title": "【第4節】会場アクセス・駐車場情報について",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51705",
+    "published": "2026-10-09T09:00:00+09:00",
+    "detected_at": "2026-10-09T08:27:48.130280+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
+  },
+  {
+    "id": "official-news:https://fukuiunited.co.jp/news/detail.php?id=7026",
+    "team": "UNITED",
+    "title": "「2026福井ユナイテッドFCの梨」予約販売開始のお知らせ",
+    "link": "https://fukuiunited.co.jp/news/detail.php?id=7026",
+    "published": "2026-10-09T09:00:00+09:00",
+    "detected_at": "2026-10-09T09:01:28.424385+00:00",
+    "source": "ユナイテッド公式",
+    "image": "https://fukuiunited.co.jp/img/ogp.jpg"
+  },
+  {
     "id": "tag:google.com,2013:googlealerts/feed:18256192349632810029",
     "team": "BLOWINDS",
     "title": "福井ブローウィンズ vs 新潟アルビレックスBB - チケット流通センター",
