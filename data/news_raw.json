@@ -8683,5 +8683,21 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.RMaP8hQsI222FFtzFpDN4Q&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-24T16:21:12.325517+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:7370008958406037239",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズ｜爆サイ.com北陸版",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://bakusai.com/thr_res_show/acode%3D6/ctgid%3D104/bid%3D272/tid%3D13498677/rid%3D1767213326/word%3D%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2c_G_JW6kGGglsr0Bb4SuI",
+    "published": "2026-11-24T15:05:43Z",
+    "detected_at": "2026-11-24T17:41:07.310020+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:6222242829993200111",
+    "team": "BLOWINDS",
+    "title": "試合情報 福井ブローウィンズ/福井永平寺ブルーサンダー/福井丸岡ＲＵＣＫ | スポーツ - 福井新聞",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuishimbun.co.jp/articles/reader/2754263&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0cm5CsZc8kKDTNkKbYOwTS",
+    "published": "2026-11-24T01:51:08Z",
+    "detected_at": "2026-11-24T17:41:07.310164+00:00"
   }
 ]
