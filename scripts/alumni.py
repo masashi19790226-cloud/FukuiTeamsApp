@@ -155,7 +155,9 @@ def wfl_rosters(fetch):
             bd = re.match(r"(\d{4})\.(\d{1,2})\.(\d{1,2})", tds[4]) if len(tds) >= 5 else None
             out[_key(tds[2])] = {"club": name, "number": tds[1], "name": tds[2], "url": club_url,
                                  # 生年月日(歴代の選手の元所属の選手に出す。読めなければ "")
-                                 "birthday": "%04d-%02d-%02d" % tuple(int(x) for x in bd.groups()) if bd else ""}
+                                 "birthday": "%04d-%02d-%02d" % tuple(int(x) for x in bd.groups()) if bd else "",
+                                 # 出身(歴代の選手の元所属の選手に出す。読めなければ "")
+                                 "hometown": tds[5].strip() if len(tds) >= 6 and not re.search(r"\d", tds[5]) else ""}
     print(f"[あの選手は今] 女子Fリーグ: {len(slugs)}クラブ・{len(out)}人の名簿")
     return out
 

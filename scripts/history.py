@@ -820,6 +820,8 @@ def ruck_former_profiles(fetch, players):
             p["now_team"] = r.get("club", "")
             if r.get("birthday"):
                 p["birthday"] = r["birthday"]
+            if r.get("hometown"):
+                p["hometown"] = r["hometown"]
             found += 1
     print(f"[過去の記録] 丸岡RUCK: 元所属の選手のうち、いま女子Fリーグのほかのクラブにいる選手 {found}人")
 
@@ -942,17 +944,22 @@ def thunder_players(matches, current_keys):
 
 
 def _add_birthday_height(p, page: str):
-    """選手ページ(Bリーグ公式・リーグH公式)の「生年月日」「身長」を、元選手の記録に入れる(読めなければ入れない)。
+    """選手ページ(Bリーグ公式・リーグH公式)の「生年月日」「身長」「出身地」を、元選手の記録に入れる(読めなければ入れない)。
     読み方は誕生日のデータ(birthdays.py)と同じ"""
     import birthdays
     text = birthdays._text(page)
     bd = birthdays._birthday_in(text)
     if bd:
         p["birthday"] = bd
-    h = birthdays._profile(text).get("height")
+    prof = birthdays._profile(text)
+    h = prof.get("height")
     if h:
         p["height"] = h
+    # 出身地(移籍した選手の選手ページにも出す)
+    if prof.get("hometown"):
+        p["hometown"] = prof["hometown"]
     p["bd_checked"] = True
+    p["hm_checked"] = True
 
 
 def vercosta_players_now(fetch, players, old_players=None, recheck_days=7):
@@ -1023,9 +1030,10 @@ def thunder_players_now(fetch, players, old_players=None, recheck_days=7):
         except ValueError:
             fresh = False
         # 生年月日・身長をまだ調べていない(2026年10月より前に調べた)選手は読み直す
-        fresh = fresh and o.get("bd_checked")
+        # 出身地をまだ調べていない(2026年11月より前に調べた)選手も読み直す
+        fresh = fresh and o.get("bd_checked") and o.get("hm_checked")
         if fresh:
-            for k in ("now_team", "now_checked", "photo", "birthday", "height", "bd_checked"):
+            for k in ("now_team", "now_checked", "photo", "birthday", "height", "hometown", "bd_checked", "hm_checked"):
                 if k in o:
                     p[k] = o[k]
             continue
@@ -1620,9 +1628,10 @@ def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
         except ValueError:
             fresh = False
         # 生年月日・身長をまだ調べていない(2026年10月より前に調べた)選手は読み直す
-        fresh = fresh and o.get("bd_checked")
+        # 出身地をまだ調べていない(2026年11月より前に調べた)選手も読み直す
+        fresh = fresh and o.get("bd_checked") and o.get("hm_checked")
         if fresh:
-            for k in ("now_team", "now_team_id", "now_checked", "birthday", "height", "bd_checked"):
+            for k in ("now_team", "now_team_id", "now_checked", "birthday", "height", "hometown", "bd_checked", "hm_checked"):
                 if k in o:
                     p[k] = o[k]
         else:
