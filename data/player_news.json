@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-24T15:41:26.322900+00:00",
- "cursor": 42,
+ "updated_at": "2026-11-24T16:01:19.474948+00:00",
+ "cursor": 52,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -580,6 +580,13 @@
     "published": "2026-06-10T00:15:00+00:00",
     "source": "Fukui Shimbun",
     "detected_at": "2026-11-16T14:21:20.452059+00:00"
+   },
+   {
+    "title": "丸岡RUCK2026-27日程、ホーム試合が4倍増 新主将に荒井一花【選手一覧】",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2622808",
+    "published": "2026-06-10T00:15:00+00:00",
+    "source": "Fukui Shimbun",
+    "detected_at": "2026-11-24T16:01:19.474948+00:00"
    }
   ],
   "RAC|足立紗菜": [
