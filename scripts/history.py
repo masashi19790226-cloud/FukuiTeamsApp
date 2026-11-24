@@ -7,7 +7,7 @@ build_previews.py から1日1回だけ呼び、data/history.json に書き出す
 - ブルーサンダー: リーグH公式の星取表(シーズンごと。2024-25〜今季)の福井永平寺の行 → 試合ごとのページ。
                   終わった試合のページは変わらないので、一度読んだ試合は前回の分(history.json)を使う。
                   1回に読む試合のページは THUNDER_MAX_PAGES まで(残りは次の実行で読む)
-- 丸岡RUCK      : 女子Fリーグ公式の「過去の記録」(/archive/年/score.html の日程・結果。2017-18〜)と、
+- 丸岡RUCK      : 女子Fリーグ公式の「過去の記録」(/archive/年/score.html の日程・結果。2016年のプレ大会は /archive/2016/index.html)と、
                   今季の分はトップページの試合一覧(standings.wfleague_matches)。
                   過去のシーズンは変わらないので、一度読んだシーズンは前回の分(history.json)を使う
 - ヴェルコスタ  : ホッケージャパンリーグ公式の日程・結果の表(今年の分)の福井の行 → 試合詳細のページ(hjl.py)。
@@ -437,6 +437,32 @@ def _ruck_match(m, season, stage):
     }
 
 
+def _wfl_in_year(date: str, y: int) -> bool:
+    """その年の過去の記録の試合として使ってよいか。
+    2016年のプレ大会のページ(/archive/2016/index.html)は、ほかの年の日程・結果も読み込んでいるので、
+    2016年10月〜2017年4月の試合だけ使う(いちばん先に読むので、ほかの年の試合を2016年として取ってしまわないように)。
+    ほかの年は今まで通り(次の年のページに載る前の年の試合は、先に読んだ年で入る)"""
+    if y != 2016:
+        return True
+    return "2016-04-01" <= (date or "") <= "2017-04-30"
+
+
+def _wfl_year_page(fetch, y: int):
+    """過去の記録の年の日程・結果のページ。(ページ, そのURL)。
+    ふつうは /archive/<年>/score.html。2016年のプレ大会だけは /archive/2016/index.html が日程・結果のページ"""
+    last = None
+    for name in ("score.html?t=0", "index.html?t=0"):
+        url = f"{WFL_SITE}/archive/{y}/{name}"
+        try:
+            page = fetch(url)
+        except Exception as e:
+            last = e
+            continue
+        if re.search(r"url:\s*[\"']/modules/php/[\w.]+\.php", page):
+            return page, url
+    raise last or ValueError(f"{y}年の日程・結果の部品が見つかりません")
+
+
 def _wfl_season(y: int) -> str:
     """女子Fリーグの過去の記録の年 → シーズンの呼び方(2019年までは「2019」、2020年からは「2020-21」)"""
     return str(y) if y <= 2019 else f"{y}-{(y + 1) % 100:02d}"
@@ -455,14 +481,15 @@ def ruck_archive_extras(fetch, old=None):
     out, used_tids = {}, set()
     for y in years:
         season = _wfl_season(y)
-        if y in old_years and y != years[-1]:
+        # 前に読めなかった年(部品の番号が空。2016年のプレ大会など)は読み直す
+        if y in old_years and y != years[-1] and old_years[y].get("tids"):
             out[y] = old_years[y]
             used_tids.update(old_years[y].get("tids") or [])
             continue
         ref = {"Referer": f"{WFL_SITE}/archive/{y}/goalrank.html", "X-Requested-With": "XMLHttpRequest"}
         entry = {"season": season, "scorers": [], "awards": [], "tids": []}
         try:
-            page = fetch(f"{WFL_SITE}/archive/{y}/score.html?t=0")
+            page, _url = _wfl_year_page(fetch, y)
             tids = []
             for t in re.findall(r"url:\s*[\"']/modules/php/[\w.]+\.php[\"'][^;]*?data:\s*[\"'][^\"']*?tid=(\d+)", page, flags=re.S):
                 if t not in tids and t not in used_tids:
@@ -668,7 +695,7 @@ def wfl_all_matches(fetch, old_matches):
                     out.append(m)
             continue
         try:
-            page = fetch(f"{WFL_SITE}/archive/{y}/score.html?t=0")
+            page, page_url = _wfl_year_page(fetch, y)
         except Exception as e:
             print(f"[WARN] 過去の記録: 女子Fリーグ {season} の日程・結果のページの取得に失敗 {e!r}")
             continue
@@ -678,13 +705,13 @@ def wfl_all_matches(fetch, old_matches):
             q = data if data.endswith("t=0") else (data + "0" if data.endswith("t=") else data)
             try:
                 rows = wfl_archive_rows(fetch(f"{WFL_SITE}{path}?{q}",
-                                              {"Referer": f"{WFL_SITE}/archive/{y}/score.html?t=0",
+                                              {"Referer": page_url,
                                                "X-Requested-With": "XMLHttpRequest"}))
             except Exception as e:
                 print(f"[WARN] 過去の記録: 女子Fリーグ {season} {path} の取得に失敗 {e!r}")
                 continue
             for r in rows:
-                if not r["gid"] or r["gid"] in seen:
+                if not r["gid"] or r["gid"] in seen or not _wfl_in_year(r["date"], y):
                     continue
                 seen.add(r["gid"])
                 out.append({"gid": r["gid"], "date": r["date"], "season": season, "home": r["home"], "away": r["away"], "y": y})
@@ -872,7 +899,7 @@ def ruck_matches(fetch, old_matches):
                     out.append(m)
             continue
         try:
-            page = fetch(f"{WFL_SITE}/archive/{y}/score.html?t=0")
+            page, page_url = _wfl_year_page(fetch, y)
         except Exception as e:
             print(f"[WARN] 過去の記録: 丸岡RUCK {season} の日程・結果のページの取得に失敗 {e!r}")
             continue
@@ -884,15 +911,18 @@ def ruck_matches(fetch, old_matches):
             try:
                 # この部品は、元のページ(Referer)が無いと「情報が入るまでしばらくお待ちください」しか返さない
                 rows = wfl_archive_rows(fetch(f"{WFL_SITE}{path}?{q}",
-                                              {"Referer": f"{WFL_SITE}/archive/{y}/score.html?t=0",
+                                              {"Referer": page_url,
                                                "X-Requested-With": "XMLHttpRequest"}))
             except Exception as e:
                 print(f"[WARN] 過去の記録: 丸岡RUCK {season} {path} の取得に失敗 {e!r}")
                 continue
-            # 2つ目からの部品は、レギュラーシーズンの後の「ファイナルシーズン」(上位・下位リーグ)
-            stage = "ファイナルシーズン" if i > 0 else ""
+            # 2つ目からの部品は、レギュラーシーズンの後の「ファイナルシーズン」(上位・下位リーグ)。2016年はプレ大会
+            stage = "プレ大会" if y == 2016 else "ファイナルシーズン" if i > 0 else ""
             for r in rows:
                 if RUCK_WORD not in r["home"] and RUCK_WORD not in r["away"]:
+                    continue
+                # 2016年のページに載るほかの年の試合は、その年で入れる
+                if not _wfl_in_year(r["date"], y):
                     continue
                 r["y"] = y
                 m = _ruck_match(r, season, stage)
