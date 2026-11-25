@@ -8681,5 +8681,21 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DgKaRL5Tzid/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1oFWf84hRLBIYGS0qkk-S4",
     "published": "2026-11-25T12:25:31Z",
     "detected_at": "2026-11-25T19:41:12.620178+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5321300189745982135",
+    "team": "UNITED",
+    "title": "「福井ユナイテッド j4」のYahoo!リアルタイム検索 - X（旧Twitter）をリアルタイム検索",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://search.yahoo.co.jp/realtime/search%3Fei%3DUTF-8%26rkf%3D1%26ifr%3Dtl_unit%26p%3D%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%25A6%25E3%2583%258A%25E3%2582%25A4%25E3%2583%2586%25E3%2583%2583%25E3%2583%2589%2520j4&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw3b09MrKof8FmME2UCDUhKR",
+    "published": "2026-11-25T19:39:47Z",
+    "detected_at": "2026-11-25T20:21:11.302030+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:13280314263407647537",
+    "team": "UNITED",
+    "title": "第47回全日本エスキーテニス選手権熊本大会 - 福井ユナイテッドFC",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://fukuiunited.co.jp/news/detail.php%3Fpost_id%3D7114&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw28uyb_FXMaBgt40SlsC6aN",
+    "published": "2026-11-25T06:52:48Z",
+    "detected_at": "2026-11-25T20:21:11.302066+00:00"
   }
 ]
