@@ -8725,5 +8725,13 @@
     "source": "福井新聞ONLINE",
     "image": "",
     "detected_at": "2026-11-26T21:01:13.707693+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:15572316295929206124",
+    "team": "UNITED",
+    "title": "福井ユナイテッド【公式】 - X",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fkiutd_official/status/2125892332616663390&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0mB8YWF9r37s_3y-Vig4rr",
+    "published": "2026-11-26T17:43:37Z",
+    "detected_at": "2026-11-26T22:01:11.092665+00:00"
   }
 ]
