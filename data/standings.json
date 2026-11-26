@@ -297,6 +297,7 @@
           "pk": 0,
           "shots": 50,
           "games": 11,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg",
           "number": "18"
         },
         {
@@ -373,6 +374,7 @@
           "pk": 0,
           "shots": 55,
           "games": 11,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
           "number": "19"
         },
         {
@@ -624,6 +626,7 @@
           "pk": 0,
           "shots": 76,
           "games": 11,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l08.jpg",
           "number": "8"
         },
         {
@@ -645,6 +648,7 @@
           "pk": 0,
           "shots": 13,
           "games": 5,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l23.jpg",
           "number": "23"
         },
         {
@@ -900,7 +904,8 @@
           "goals": 2,
           "pk": 0,
           "shots": 12,
-          "games": 6
+          "games": 6,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l10.jpg"
         },
         {
           "rank": 55,
@@ -1017,6 +1022,7 @@
           "pk": 0,
           "shots": 25,
           "games": 11,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l05.jpg",
           "number": "5"
         },
         {
@@ -1027,6 +1033,7 @@
           "pk": 0,
           "shots": 26,
           "games": 11,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l04.jpg",
           "number": "4"
         },
         {
@@ -1070,6 +1077,7 @@
           "pk": 0,
           "shots": 2,
           "games": 11,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l25.jpg",
           "number": "25"
         },
         {
@@ -1184,6 +1192,7 @@
           "pk": 0,
           "shots": 6,
           "games": 6,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l33.jpg",
           "number": "33"
         },
         {
@@ -1259,6 +1268,7 @@
           "pk": 0,
           "shots": 13,
           "games": 11,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l07.jpg",
           "number": "7"
         },
         {
@@ -1385,7 +1395,7 @@
         "福井丸岡ラック": "ok",
         "エスポラーダ北海道イルネーヴェ": "8人(前回の分)・得点表に8人",
         "バルドラール浦安ラス・ボニータス": "10人(前回の分)・得点表に10人",
-        "立川アスレティックFCレディース": "0人・得点表に0人",
+        "立川アスレティックFCレディース": "10人・得点表に10人",
         "SWHレディース西宮": "13人(前回の分)・得点表に13人",
         "アルコ神戸": "12人(前回の分)・得点表に12人",
         "ミネルバ宇部": "5人(前回の分)・得点表に5人",
@@ -1422,7 +1432,18 @@
         },
         "立川アスレティックFCレディース": {
           "date": "2026-11-27",
-          "photos": {}
+          "photos": {
+            "平井成美": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg",
+            "尾田緩奈": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
+            "中村みづき": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l08.jpg",
+            "小倉杏梨沙": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l23.jpg",
+            "松木里緒": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l10.jpg",
+            "鈴木里歩": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l05.jpg",
+            "米山涼美": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l04.jpg",
+            "愛沢南": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l25.jpg",
+            "宮下みのり": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l33.jpg",
+            "勝又野乃花": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l07.jpg"
+          }
         },
         "SWHレディース西宮": {
           "date": "2026-11-27",
@@ -1677,7 +1698,7 @@
         }
       }
     },
-    "updated_at": "2026-11-26T15:42:36.663984+00:00"
+    "updated_at": "2026-11-26T16:02:35.992748+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3419,7 +3440,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-26T15:42:36.663984+00:00"
+    "updated_at": "2026-11-26T16:02:35.992748+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-27",
@@ -9621,7 +9642,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-26T15:42:36.663984+00:00"
+    "updated_at": "2026-11-26T16:02:35.992748+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -12470,7 +12491,7 @@
         }
       }
     },
-    "updated_at": "2026-11-26T15:42:36.663984+00:00"
+    "updated_at": "2026-11-26T16:02:35.992748+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-27",
@@ -15978,6 +15999,6 @@
         }
       ]
     },
-    "updated_at": "2026-11-26T15:42:36.663984+00:00"
+    "updated_at": "2026-11-26T16:02:35.992748+00:00"
   }
 }
