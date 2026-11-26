@@ -8681,5 +8681,23 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://news.yahoo.co.jp/search%3Fei%3DUTF-8%26p%3D%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA%2520%25E8%25A9%25A6%25E5%2590%2588&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw13nRmo3CetkG2uTDYiW5mC",
     "published": "2026-11-25T22:12:01Z",
     "detected_at": "2026-11-25T22:41:13.378121+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:4008668421368727808",
+    "team": "BLOWINDS",
+    "title": "＼ 三丹本店は福井ブローウィンズをサポートしています ／ 選手のみなさんに「応援弁当」を定期 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DgJkvBskUDn/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0e-FNd6cp-BPQ5koTxNslF",
+    "published": "2026-11-26T01:55:21Z",
+    "detected_at": "2026-11-26T02:21:15.160295+00:00"
+  },
+  {
+    "id": "bing:https://prtimes.jp/main/html/rd/p/000000785.000043111.html",
+    "team": "BLOWINDS",
+    "title": "B.LEAGUE 2026-27シーズン ATOM CUP開催！福井ブローウィンズ冠試合を実施",
+    "link": "https://prtimes.jp/main/html/rd/p/000000785.000043111.html",
+    "published": "2026-10-30T04:00:00+00:00",
+    "source": "PR TIMES",
+    "image": "",
+    "detected_at": "2026-11-26T02:21:16.118139+00:00"
   }
 ]
