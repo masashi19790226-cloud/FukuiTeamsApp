@@ -8715,5 +8715,15 @@
     "source": "47NEWS",
     "image": "https://www.bing.com/th?id=ONUT.zCLQEaCSsVw3Wf69SdqNIA&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-26T17:01:07.651562+00:00"
+  },
+  {
+    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2744181",
+    "team": "UNITED",
+    "title": "JFL昇格懸けて福井ユナイテッド、全国地域CL挑む 強敵ぞろいの1次 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2744181",
+    "published": "2026-11-11T13:01:00+00:00",
+    "source": "福井新聞ONLINE",
+    "image": "",
+    "detected_at": "2026-11-26T21:01:13.707693+00:00"
   }
 ]
