@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-26T06:41:19.602403+00:00",
- "cursor": 1,
+ "updated_at": "2026-11-26T07:01:20.674379+00:00",
+ "cursor": 11,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -145,6 +145,13 @@
   ],
   "BLOWINDS|内藤英真": [
    {
+    "title": "【レポート】「FWIチャレンジ応援文化祭＋体育祭2026」に参加しました",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51907",
+    "published": "2026-11-25T16:00:00+00:00",
+    "source": "fukuiblowinds",
+    "detected_at": "2026-11-26T07:01:20.674379+00:00"
+   },
+   {
     "title": "【イベント情報】「FWIチャレンジ応援文化祭+体育祭2026」に選手 ...",
     "link": "https://www.fukuiblowinds.com/news/detail/id=51895",
     "published": "2026-11-19T16:00:00+00:00",
@@ -181,6 +188,13 @@
    }
   ],
   "BLOWINDS|塚本智裕": [
+   {
+    "title": "【レポート】「FWIチャレンジ応援文化祭＋体育祭2026」に参加しました",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51907",
+    "published": "2026-11-25T16:00:00+00:00",
+    "source": "fukuiblowinds",
+    "detected_at": "2026-11-26T07:01:20.674379+00:00"
+   },
    {
     "title": "【イベント情報】「FWIチャレンジ応援文化祭+体育祭2026」に選手 ...",
     "link": "https://www.fukuiblowinds.com/news/detail/id=51895",
