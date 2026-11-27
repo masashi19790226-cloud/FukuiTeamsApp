@@ -1,13 +1,5 @@
 [
   {
-    "id": "tag:google.com,2013:googlealerts/feed:8779459476003110313",
-    "team": "BLOWINDS",
-    "title": "福井ブローウィンズ 藤澤尚之 缶バッジ ホワイトデー ガチャガチャ バスケットボール Bリーグ",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://paypayfleamarket.yahoo.co.jp/item/z703796282&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0LSb2GIBo-Y1r4pCw9p9Z0",
-    "published": "2026-10-13T12:54:21Z",
-    "detected_at": "2026-10-13T13:11:19.966994+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:8874217870922955998",
     "team": "BLOWINDS",
     "title": "第5節【10/17/, 10/18 イベント情報】 vs 福井ブローウィンズ - 新潟アルビレックスBB",
@@ -1322,16 +1314,6 @@
     "source": "中日新聞Web",
     "image": "https://www.bing.com/th?id=ONUT.A9_-14S_NgCwMkNwmJT_Tg&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-10-20T18:46:33.892577+00:00"
-  },
-  {
-    "id": "bing:https://www.fukuishimbun.co.jp/articles/-/2721270",
-    "team": "THUNDER",
-    "title": "福井永平寺ブルーサンダー 地元福井初戦、会場青一色に 20日先着2 ...",
-    "link": "https://www.fukuishimbun.co.jp/articles/-/2721270",
-    "published": "2026-10-13T13:00:00+00:00",
-    "source": "福井新聞ONLINE",
-    "image": "https://www.bing.com/th?id=ONUT.oQ66a7B1YJpUOGiJMIvX8g&pid=News&w=160&h=160&c=7",
-    "detected_at": "2026-10-20T18:46:33.892595+00:00"
   },
   {
     "id": "bing:https://www.fukuishimbun.co.jp/articles/reader/2727230",
