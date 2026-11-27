@@ -8739,5 +8739,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://fukuiunited.co.jp/news/detail.php%3Fpost_id%3D7115&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw1EWTRvor_LmFGh_3IOzOgu",
     "published": "2026-11-26T10:02:09Z",
     "detected_at": "2026-11-27T02:41:07.836778+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51920",
+    "team": "BLOWINDS",
+    "title": "【第13節/横浜EX戦】試合会場アクセス情報のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51920",
+    "published": "2026-11-27T09:00:00+09:00",
+    "detected_at": "2026-11-27T03:21:23.917173+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_GAME.JPG"
   }
 ]
