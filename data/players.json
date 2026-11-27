@@ -2,7 +2,7 @@
   "BLOWINDS": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=2891&tab=1",
-    "updated_at": "2026-11-27T18:42:42.239003+00:00",
+    "updated_at": "2026-11-27T19:03:34.926654+00:00",
     "players": [
       {
         "number": "1",
@@ -1098,7 +1098,7 @@
         "ft_pct": "44.1%",
         "eff": "20.8",
         "fgm": "74",
-        "fga": "138",
+        "fga": "139",
         "three_m": "16",
         "three_a": "41",
         "ftm": "15",
@@ -1370,14 +1370,14 @@
           "league": {
             "g": 76,
             "pts": 1409,
-            "reb": 420,
-            "ast": 186
+            "reb": 419,
+            "ast": 187
           },
           "all": {
             "g": 76,
             "pts": 1409,
-            "reb": 420,
-            "ast": 186
+            "reb": 419,
+            "ast": 187
           },
           "from": "2024-25",
           "path": [
@@ -3117,7 +3117,7 @@
         "g": "13",
         "v": {
           "fgm": "74",
-          "fga": "138",
+          "fga": "139",
           "three_m": "16",
           "three_a": "41",
           "ftm": "15",
@@ -4293,14 +4293,14 @@
           "league": {
             "g": 76,
             "pts": 1409,
-            "reb": 420,
-            "ast": 186
+            "reb": 419,
+            "ast": 187
           },
           "all": {
             "g": 76,
             "pts": 1409,
-            "reb": 420,
-            "ast": 186
+            "reb": 419,
+            "ast": 187
           },
           "from": "2024-25",
           "path": [
@@ -4560,7 +4560,7 @@
   "BLOWINDS_OPP": {
     "season": "2026-27",
     "source_url": "https://www.bleague.jp/club_detail/?TeamID=1637&tab=1",
-    "updated_at": "2026-11-27T18:42:43.531835+00:00",
+    "updated_at": "2026-11-27T19:04:10.796520+00:00",
     "players": [
       {
         "number": "0",
