@@ -16,14 +16,6 @@
     "detected_at": "2026-10-13T16:04:14.617908+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:12838147593345293658",
-    "team": "UNITED",
-    "title": "福井ユナイテッド【公式】 | ・ ⁡ Today's Training   1週間のオフを挟み、昨日よりトレーニング ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DebvX3RlO3t/&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw2Dz5wylo7m-ZUIMCXVkeif",
-    "published": "2026-10-13T11:51:18Z",
-    "detected_at": "2026-10-13T16:04:14.617959+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:8874217870922955998",
     "team": "BLOWINDS",
     "title": "第5節【10/17/, 10/18 イベント情報】 vs 福井ブローウィンズ - 新潟アルビレックスBB",
@@ -8763,5 +8755,13 @@
     "source": "dメニューニュース",
     "image": "",
     "detected_at": "2026-11-27T11:41:08.026102+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:2784763937807888637",
+    "team": "BLOWINDS",
+    "title": "福井ブローウィンズクイズ  もっと詳しくなっちゃおう    合同経営会計グループは福井 ... - YouTube",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/shorts/lARFuovx0Uw&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw2LGjNO-JlqrrCnFsTzLFr-",
+    "published": "2026-11-27T09:26:42Z",
+    "detected_at": "2026-11-27T12:01:08.531887+00:00"
   }
 ]
