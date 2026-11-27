@@ -40,14 +40,6 @@
     "detected_at": "2026-10-13T16:04:14.617959+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:11002306000162793382",
-    "team": "RAC",
-    "title": "\"福井丸岡RUCK後期ポスター完成‼️ いつもRUCKのポスターを目立つところに貼ってくださる ...",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/fukuiruck/status/2109844284535193749&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw0uKsleRTGXbL9I7bgM0Arj",
-    "published": "2026-10-13T10:37:50Z",
-    "detected_at": "2026-10-13T19:57:09.485522+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:8874217870922955998",
     "team": "BLOWINDS",
     "title": "第5節【10/17/, 10/18 イベント情報】 vs 福井ブローウィンズ - 新潟アルビレックスBB",
@@ -8761,5 +8753,13 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/ushitetu_913/status/2126204099523940801&ct=ga&cd=CAIyGjM5ODkzMzVkMGRkMjgyYTI6Y29tOmphOlVT&usg=AOvVaw0RC_5FJ1FRSVX5cSXy2f8v",
     "published": "2026-11-27T07:44:09Z",
     "detected_at": "2026-11-27T09:41:14.369465+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16509863983808114942",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                           #ガラクタチャンネル 今シーズン変則 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/ruck_pr/status/2126243296720683283&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw3lVVkQq6QQJvB_CyYK-OzZ",
+    "published": "2026-11-27T09:51:57Z",
+    "detected_at": "2026-11-27T10:41:14.243568+00:00"
   }
 ]
