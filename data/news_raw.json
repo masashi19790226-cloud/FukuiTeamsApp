@@ -8759,5 +8759,23 @@
     "source": "紀伊民報AGARA",
     "image": "",
     "detected_at": "2026-11-27T05:01:07.035001+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:17207917769334555656",
+    "team": "BLOWINDS",
+    "title": "【レポート】「FWIチャレンジ応援文化祭＋体育祭2026」に参加しました | 福井ブローウィンズ",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.fukuiblowinds.com/news/detail/id%3D51907&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0kRU-4Y1S35DuKGiZ66XR8",
+    "published": "2026-11-26T16:33:55Z",
+    "detected_at": "2026-11-27T08:01:12.856729+00:00"
+  },
+  {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51921",
+    "team": "BLOWINDS",
+    "title": "【レポート】福井県指導農業士会50周年記念企画「農業の魅力を伝える動画コンテスト」審査員として参加しました",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51921",
+    "published": "2026-11-27T09:00:00+09:00",
+    "detected_at": "2026-11-27T08:01:19.160230+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/Eventreport_20261124.jpg"
   }
 ]
