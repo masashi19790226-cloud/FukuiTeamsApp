@@ -18,6 +18,7 @@ build_previews.py から1日1回だけ呼び、data/history.json に書き出す
 """
 
 import json
+import os
 import re
 from datetime import datetime, timedelta, timezone
 
@@ -36,6 +37,8 @@ VERSION = 5
 PHOTO_RULE = 2
 # ブローウィンズの試合ごとの記録に細かい成績(シュート成功数・スティールなど)を足したとき、1回だけ作り直す
 LOG_RULE = 2
+# 元所属の選手のアルファベットの読み(reading)を入れ始めた(この版の前に今日の分を作っていても、1回だけ作り直す)
+READING_RULE = 1
 
 UNITED_SITE = "https://fukuiunited.co.jp"
 UNITED_ASYNC = UNITED_SITE + "/system/async/async.php"
@@ -849,6 +852,10 @@ def ruck_former_profiles(fetch, players):
                 p["birthday"] = r["birthday"]
             if r.get("hometown"):
                 p["hometown"] = r["hometown"]
+            # 名前のアルファベットの読み(女子Fリーグの名簿のローマ字。「Kato Haruna」の形にそろえる)
+            if r.get("reading"):
+                import birthdays
+                p["reading"] = birthdays._romaji(r["reading"])
             found += 1
     print(f"[過去の記録] 丸岡RUCK: 元所属の選手のうち、いま女子Fリーグのほかのクラブにいる選手 {found}人")
 
@@ -1041,6 +1048,58 @@ def vercosta_players_now(fetch, players, old_players=None, recheck_days=7):
             p["now_checked"] = today.isoformat()
     print(f"[過去の記録] ヴェルコスタ: 元選手{len(formers)}人のうち、いまほかのチームにいる選手 {found}人" + (f"(読めなかったチーム {failed})" if failed else ""))
     return players
+
+
+def vercosta_readings(fetch, players, old_players=None):
+    """ヴェルコスタの元選手のアルファベットの読み:ホッケージャパンリーグ公式のヴェルコスタの選手の一覧(その年の分)の英語の名前。
+    一度読めた選手は前回の分を使う(まだの選手がいるときだけ、その選手がいた年の一覧を読む)"""
+    old = {p.get("pid"): p for p in old_players or [] if p.get("pid")}
+    formers = [p for p in players if p.get("pid") and p.get("now") is False]
+    for p in formers:
+        rd = (old.get(p["pid"]) or {}).get("reading")
+        if rd:
+            p["reading"] = rd
+    missing = [p for p in formers if not p.get("reading")]
+    years = sorted({int(s) for p in missing for s in p.get("seasons") or [] if str(s).isdigit()}, reverse=True)
+    found = {}
+    for y in years:
+        if all(p["pid"] in found for p in missing):
+            break
+        try:
+            for r in hjl.roster(fetch(hjl.team_url(y))):
+                if r.get("pid") and r.get("reading"):
+                    found.setdefault(r["pid"], r["reading"])
+        except Exception as e:
+            print(f"[WARN] 過去の記録: ヴェルコスタの{y}年の選手の一覧を読めませんでした {e!r}")
+    for p in missing:
+        if found.get(p["pid"]):
+            p["reading"] = found[p["pid"]]
+    print(f"[過去の記録] ヴェルコスタ: 元選手{len(formers)}人のうち、アルファベットの読みがある選手 {sum(1 for p in formers if p.get('reading'))}人")
+    return players
+
+
+def former_readings(teams):
+    """manual_profiles.json に手で書いた reading(アルファベットの読み)を、元所属の選手にも入れる
+    (公式から読めない元選手:ユナイテッド・引退した丸岡RUCKの選手など。公式から読めた分より手で書いた分を優先する)"""
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "manual_profiles.json"), encoding="utf-8") as f:
+            manual = json.load(f)
+    except Exception as e:
+        print(f"[WARN] 過去の記録: manual_profiles.json を読めませんでした {e!r}")
+        return
+    n = 0
+    for team, val in (teams or {}).items():
+        book = manual.get(team) if isinstance(manual, dict) else None
+        if not isinstance(book, dict):
+            continue
+        by_key = {name_key(k): v for k, v in book.items() if isinstance(v, dict) and v.get("reading")}
+        for p in val.get("players") or []:
+            m = by_key.get(name_key(p.get("name", "")))
+            if p.get("now") is False and m:
+                p["reading"] = str(m["reading"]).strip()
+                n += 1
+    if n:
+        print(f"[過去の記録] 手で書いた元所属の選手のアルファベットの読み {n}人")
 
 
 def thunder_players_now(fetch, players, old_players=None, recheck_days=7):
@@ -1639,6 +1698,19 @@ def _current_season_label(today=None) -> str:
     return f"{y}-{(y + 1) % 100:02d}"
 
 
+def bleague_reading(page: str) -> str:
+    """Bリーグ公式の選手ページの、背番号(#0 など)のすぐ下にあるアルファベットの名前(「Masashi Hosoya」)。読めなければ空"""
+    import birthdays
+    lines = [ln.strip() for ln in birthdays._text(page).split("\n")]
+    for i, ln in enumerate(lines):
+        if not re.fullmatch(r"#\s*\d{1,3}", ln):
+            continue
+        for nxt in lines[i + 1:i + 3]:
+            if re.fullmatch(rf"{birthdays._LATIN_WORD}(?: {birthdays._LATIN_WORD})+", nxt):
+                return birthdays._romaji(nxt)
+    return ""
+
+
 def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
     """元選手の「あの選手は今」:Bリーグ公式の選手ページの道順(パンくず)にある今のクラブ。
     「クラブ > 横浜エクセレンス > 名前」なら横浜エクセレンス、「選手 > 名前」ならBリーグのクラブにはいない。
@@ -1660,8 +1732,11 @@ def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
         # 生年月日・身長をまだ調べていない(2026年10月より前に調べた)選手は読み直す
         # 出身地をまだ調べていない(2026年11月より前に調べた)選手も読み直す
         fresh = fresh and o.get("bd_checked") and o.get("hm_checked")
+        # アルファベットの読みをまだ調べていない(2026年11月より前に調べた)選手も読み直す
+        fresh = fresh and o.get("rd_checked")
         if fresh:
-            for k in ("now_team", "now_team_id", "now_checked", "birthday", "height", "hometown", "bd_checked", "hm_checked"):
+            for k in ("now_team", "now_team_id", "now_checked", "birthday", "height", "hometown", "bd_checked", "hm_checked",
+                      "reading", "rd_checked"):
                 if k in o:
                     p[k] = o[k]
         else:
@@ -1676,6 +1751,11 @@ def blowinds_players_now(fetch, players, old_players=None, recheck_days=7):
             p["now_team_id"] = m.group(1) if m else ""
             p["now_checked"] = today.isoformat()
             _add_birthday_height(p, page)
+            # 選手ページの背番号のすぐ下の「Masashi Hosoya」(アルファベットの読み)
+            rd = bleague_reading(page)
+            if rd:
+                p["reading"] = rd
+            p["rd_checked"] = True
         # いまほかのクラブにいる選手は、いまのクラブの写真を優先する(無ければ福井にいたときの写真のまま)
         if p.get("now_team_id") and p["now_team_id"] != BLOWINDS_TEAM_ID:
             url = f"https://bleague.bl.kuroco-img.app/files/user/roster/{p['now_team_id']}/{season_now}/{pid}_03.png"
@@ -1831,8 +1911,9 @@ def build(fetch, post_json, old, current=None):
     # 写真の決め方を変えたとき(元選手は今のクラブの写真を優先)は、今日作り終えていても1回だけ作り直す
     photo_rule_old = old.get("photo_rule") != PHOTO_RULE
     log_rule_old = old.get("log_rule") != LOG_RULE
+    reading_rule_old = old.get("reading_rule") != READING_RULE
     if old.get("date") == today and old.get("v") == VERSION and not old.get("pending") and not manual_missing \
-            and not vercosta_missing and not others_missing and not photo_rule_old and not log_rule_old:
+            and not vercosta_missing and not others_missing and not photo_rule_old and not log_rule_old and not reading_rule_old:
         return None
     teams = dict(old.get("teams") or {}) if old.get("v") == VERSION else {}
     old_teams = dict(old.get("teams") or {})
@@ -1877,6 +1958,10 @@ def build(fetch, post_json, old, current=None):
                 players = vercosta_players_now(fetch, players, (old_teams.get("VERCOSTA") or {}).get("players"))
             except Exception as e:
                 print(f"[WARN] 過去の記録: ヴェルコスタの元選手のいまのチームの取得に失敗 {e!r}")
+            try:
+                players = vercosta_readings(fetch, players, (old_teams.get("VERCOSTA") or {}).get("players"))
+            except Exception as e:
+                print(f"[WARN] 過去の記録: ヴェルコスタの元選手のアルファベットの読みの取得に失敗 {e!r}")
             teams["VERCOSTA"] = {"source": "ホッケージャパンリーグ公式の日程・結果と試合詳細", "source_url": hjl.SCHEDULE_URL,
                                  "matches": got, "players": players, "from_year": hjl.PAST_FROM_YEAR}
             print(f"[過去の記録] ヴェルコスタ: 選手{len(players)}人")
@@ -2014,5 +2099,6 @@ def build(fetch, post_json, old, current=None):
         if key not in teams and val:
             print(f"[過去の記録] {key}: 今回は取れなかったので前回の分を使います")
             teams[key] = val
-    return {"date": today, "v": VERSION, "pending": pending, "photo_rule": PHOTO_RULE, "log_rule": LOG_RULE,
+    former_readings(teams)
+    return {"date": today, "v": VERSION, "pending": pending, "photo_rule": PHOTO_RULE, "log_rule": LOG_RULE, "reading_rule": READING_RULE,
             "updated_at": datetime.now(timezone.utc).isoformat(), "teams": teams}
