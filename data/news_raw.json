@@ -8,14 +8,6 @@
     "detected_at": "2026-10-13T13:11:19.966994+00:00"
   },
   {
-    "id": "tag:google.com,2013:googlealerts/feed:14575531441607013930",
-    "team": "BLOWINDS",
-    "title": "第4節 #福井ブローウィンズ 戦欠場選手のお知らせ 10/14(水)開催の第4節 #福井ブロー ... - Instagram",
-    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/Debcl1rpYoQ/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1PwuaeC9f0UCBGp_wxKlw1",
-    "published": "2026-10-13T11:25:23Z",
-    "detected_at": "2026-10-13T13:11:19.967030+00:00"
-  },
-  {
     "id": "tag:google.com,2013:googlealerts/feed:12312484781833701627",
     "team": "UNITED",
     "title": "福井ユナイテッド【公式】 on X: \"【トップチーム】 サポーターの方より必勝祈願として選手1人 ...",
@@ -8761,5 +8753,15 @@
     "link": "https://www.google.com/url?rct=j&sa=t&url=https://bakusai.com/thr_res_show/acode%3D6/ctgid%3D104/bid%3D272/tid%3D13498677/rid%3D1768652184/word%3D%25E7%25A6%258F%25E4%25BA%2595/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw3P-5k1OqLrRckQayjXxjJ-",
     "published": "2026-11-26T21:14:20Z",
     "detected_at": "2026-11-27T11:01:07.768015+00:00"
+  },
+  {
+    "id": "bing:https://topics.smt.docomo.ne.jp/article/fbc/region/fbc-2026111309513553",
+    "team": "UNITED",
+    "title": "JFL昇格へ 福井ユナイテッドFCが好発進 関西代表チームに1対0 貴重な ...",
+    "link": "https://topics.smt.docomo.ne.jp/article/fbc/region/fbc-2026111309513553",
+    "published": "2026-11-13T02:43:00+00:00",
+    "source": "dメニューニュース",
+    "image": "",
+    "detected_at": "2026-11-27T11:41:08.026102+00:00"
   }
 ]
