@@ -1,5 +1,15 @@
 [
   {
+    "id": "official-news:https://www.fukuiblowinds.com/news/detail/id=51713",
+    "team": "BLOWINDS",
+    "title": "クラブ組織体制およびトップチーム強化体制変更のお知らせ",
+    "link": "https://www.fukuiblowinds.com/news/detail/id=51713",
+    "published": "2026-10-13T09:00:00+09:00",
+    "detected_at": "2026-10-13T07:48:22.789969+00:00",
+    "source": "ブローウィンズ公式",
+    "image": "https://www.fukuiblowinds.com/files/user/common/%E3%82%B5%E3%83%A0%E3%83%8D%E3%82%A4%E3%83%AB_INFORMATION.jpg"
+  },
+  {
     "id": "tag:google.com,2013:googlealerts/feed:8481744798726851093",
     "team": "BLOWINDS",
     "title": "【おじゃスポ】ブローウィンズ連敗 横浜に2戦連続の100点ゲームで苦杯 GAME2は前半 ... - TVer",
