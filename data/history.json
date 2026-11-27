@@ -4,7 +4,8 @@
  "pending": false,
  "photo_rule": 2,
  "log_rule": 2,
- "updated_at": "2026-11-26T15:09:48.616824+00:00",
+ "reading_rule": 1,
+ "updated_at": "2026-11-27T12:26:08.929806+00:00",
  "teams": {
   "UNITED": {
    "source": "ユナイテッド公式サイトの試合情報",
@@ -68529,6 +68530,7 @@
      "now_team": "バルドラール浦安ラス・ボニータス",
      "birthday": "2001-10-12",
      "hometown": "福井県",
+     "reading": "Ikeuchi Aki",
      "others": {
       "apps": 22,
       "starts": 2,
@@ -75207,6 +75209,7 @@
      "now_team": "SWHレディース西宮",
      "birthday": "1999-03-13",
      "hometown": "福井県",
+     "reading": "Takao Akari",
      "others": {
       "apps": 58,
       "starts": 25,
@@ -76866,6 +76869,7 @@
      "now_team": "アルコ神戸",
      "birthday": "2002-01-11",
      "hometown": "福井県",
+     "reading": "Yamakawa Rikako",
      "others": {
       "apps": 74,
       "starts": 53,
@@ -77327,6 +77331,7 @@
      "now_team": "SWHレディース西宮",
      "birthday": "2007-12-01",
      "hometown": "広島県",
+     "reading": "Kato Suzuna",
      "others": {
       "apps": 8,
       "starts": 0,
@@ -152799,12 +152804,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/724/2026-27/5100000019_03.png",
      "now_team": "熊本ヴォルターズ",
      "now_team_id": "724",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1998-06-19",
      "height": "172",
      "hometown": "京都府",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Naoyuki Fujisawa",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/5100000019_03.png",
      "photo_now": true,
      "now_tab": "2",
@@ -156686,12 +156693,13 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/22522_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1993-09-14",
      "height": "202",
      "hometown": "アメリカ合衆国",
      "bd_checked": true,
      "hm_checked": true,
+     "rd_checked": true,
      "career": {
       "league": {
        "g": 246,
@@ -163490,12 +163498,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/725/2026-27/8712_03.png",
      "now_team": "鹿児島レブナイズ",
      "now_team_id": "725",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1989-10-02",
      "height": "173",
      "hometown": "神奈川県",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Masashi Hosoya",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/8712_03.png",
      "photo_now": true,
      "now_tab": "2",
@@ -169281,12 +169291,13 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/18398_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1991-04-09",
      "height": "211",
      "hometown": "アメリカ合衆国",
      "bd_checked": true,
      "hm_checked": true,
+     "rd_checked": true,
      "career": {
       "league": {
        "g": 345,
@@ -171839,12 +171850,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/699/2026-27/9329_03.png",
      "now_team": "京都ハンナリーズ",
      "now_team_id": "699",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1994-08-24",
      "height": "189",
      "hometown": "沖縄県",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Ryunosuke Watanabe",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/9329_03.png",
      "photo_now": true,
      "now_tab": "1",
@@ -174296,12 +174309,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/695/2026-27/8577_03.png",
      "now_team": "新潟アルビレックスBB",
      "now_team_id": "695",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1990-11-09",
      "height": "183",
      "hometown": "島根県",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Tomonobu Hasegawa",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/8577_03.png",
      "photo_now": true,
      "now_tab": "2",
@@ -176577,12 +176592,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/18442_03.png",
      "now_team": "横浜エクセレンス",
      "now_team_id": "714",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1995-06-12",
      "height": "216",
      "hometown": "イギリス",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Benjamin Lawson",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/18442_03.png",
      "photo_now": true,
      "now_tab": "2",
@@ -178702,12 +178719,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/728/2026-27/9283_03.png",
      "now_team": "シーホース三河",
      "now_team_id": "728",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1992-02-22",
      "height": "198",
      "hometown": "大阪府",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Akihisa Kosaka",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/9283_03.png",
      "photo_now": true,
      "now_tab": "1",
@@ -183607,12 +183626,13 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/51000150_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "2001-12-05",
      "height": "193",
      "hometown": "埼玉県",
      "bd_checked": true,
      "hm_checked": true,
+     "rd_checked": true,
      "career": {
       "league": {
        "g": 155,
@@ -185073,12 +185093,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2890/2026-27/51000272_03.png",
      "now_team": "徳島ガンバロウズ",
      "now_team_id": "2890",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1998-02-15",
      "height": "208",
      "hometown": "リトアニア",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Rapolas Ivanauskas",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/51000272_03.png",
      "photo_now": true,
      "now_tab": "2",
@@ -186536,12 +186558,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/718/2026-27/5100000066_03.png",
      "now_team": "神戸ストークス",
      "now_team_id": "718",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "2000-11-08",
      "height": "188",
      "hometown": "東京都",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Keigo Kimura",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/5100000066_03.png",
      "photo_now": true,
      "now_tab": "1",
@@ -188007,12 +188031,13 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2024-25/9456_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1984-08-07",
      "height": "206",
      "hometown": "アメリカ合衆国",
      "bd_checked": true,
      "hm_checked": true,
+     "rd_checked": true,
      "career": {
       "league": {
        "g": 495,
@@ -189373,12 +189398,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/716/2026-27/5100000087_03.png",
      "now_team": "信州ブレイブウォリアーズ",
      "now_team_id": "716",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "2001-03-07",
      "height": "198",
      "hometown": "アメリカ合衆国",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Marcus Kaishu Tobin",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/5100000087_03.png",
      "photo_now": true,
      "now_tab": "1",
@@ -190668,12 +190695,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/714/2026-27/43445_03.png",
      "now_team": "横浜エクセレンス",
      "now_team_id": "714",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1998-12-08",
      "height": "193",
      "hometown": "アメリカ合衆国",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Tray Boyd",
+     "rd_checked": true,
      "photo_now": true,
      "now_tab": "2",
      "now_next": {
@@ -192914,12 +192943,13 @@
      "photo": "",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "2000-05-03",
      "height": "185",
      "hometown": "滋賀県",
      "bd_checked": true,
      "hm_checked": true,
+     "rd_checked": true,
      "career": {
       "league": {
        "g": 83,
@@ -193954,12 +193984,13 @@
      "photo": "",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1994-05-06",
      "height": "182",
      "hometown": "北海道",
      "bd_checked": true,
      "hm_checked": true,
+     "rd_checked": true,
      "career": {
       "league": {
        "g": 128,
@@ -194496,12 +194527,13 @@
      "photo": "",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1982-08-09",
      "height": "204",
      "hometown": "アメリカ",
      "bd_checked": true,
      "hm_checked": true,
+     "rd_checked": true,
      "career": {
       "league": {
        "g": 218,
@@ -197176,12 +197208,14 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/695/2026-27/51000556_03.png",
      "now_team": "新潟アルビレックスBB",
      "now_team_id": "695",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "1990-11-05",
      "height": "205",
      "hometown": "韓国",
      "bd_checked": true,
      "hm_checked": true,
+     "reading": "Minwook Kim",
+     "rd_checked": true,
      "photo_fukui": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/51000556_03.png",
      "photo_now": true,
      "now_tab": "2",
@@ -197871,12 +197905,13 @@
      "photo": "https://bleague.bl.kuroco-img.app/files/user/roster/2891/2025-26/51000580_03.png",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "2004-05-17",
      "height": "184",
      "hometown": "石川県",
      "bd_checked": true,
      "hm_checked": true,
+     "rd_checked": true,
      "career": {
       "league": {
        "g": 1,
@@ -197983,12 +198018,13 @@
      "photo": "",
      "now_team": "",
      "now_team_id": "",
-     "now_checked": "2026-11-25",
+     "now_checked": "2026-11-27",
      "birthday": "2006-04-05",
      "height": "188",
      "hometown": "千葉県",
      "bd_checked": true,
      "hm_checked": true,
+     "rd_checked": true,
      "career": {
       "league": {
        "g": 1,
@@ -212589,7 +212625,8 @@
      "now": false,
      "pid": "1377",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Watanabe Renya"
     },
     {
      "name": "石田 彪馬",
@@ -212851,7 +212888,8 @@
      "now": false,
      "pid": "858",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Ishida Hyouma"
     },
     {
      "name": "爲國 龍次",
@@ -213591,7 +213629,8 @@
      "now": false,
      "pid": "5121",
      "now_team": "GIFU ASAHI BLUE DEVILS",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Hanayama Shota"
     },
     {
      "name": "和田 吉広",
@@ -213824,7 +213863,8 @@
      "now": false,
      "pid": "357",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Wada Yoshihiro"
     },
     {
      "name": "齊藤 容",
@@ -214658,7 +214698,8 @@
      "now": false,
      "pid": "290",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Aoyama Masanari"
     },
     {
      "name": "野村 行",
@@ -214855,7 +214896,8 @@
      "now": false,
      "pid": "341",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Nomura Ko"
     },
     {
      "name": "若槻 翔馬",
@@ -215437,7 +215479,8 @@
      "now": false,
      "pid": "349",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Wakuri Hirotaka"
     },
     {
      "name": "冨山 誉純",
@@ -215551,7 +215594,8 @@
      "now": false,
      "pid": "342",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Tomiyama Takazumi"
     },
     {
      "name": "浅川 海音",
@@ -215667,7 +215711,8 @@
      "now": false,
      "pid": "1258",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Asakawa Umito"
     },
     {
      "name": "渡辺 修一",
@@ -215779,7 +215824,8 @@
      "now": false,
      "pid": "355",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Watanabe Shuichi"
     },
     {
      "name": "福田 洸輔",
@@ -215895,7 +215941,8 @@
      "now": false,
      "pid": "2336",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Kosuke Fukuda"
     },
     {
      "name": "渡邉 修一",
@@ -216000,7 +216047,8 @@
      "now": false,
      "pid": "355",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Watanabe Shuichi"
     },
     {
      "name": "髙島 一将",
@@ -216197,7 +216245,8 @@
      "now": false,
      "pid": "300",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Tamekuni Ryuji"
     },
     {
      "name": "戸田 大貴",
@@ -216367,7 +216416,8 @@
      "now": false,
      "pid": "1235",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Nakagami Hiroki"
     },
     {
      "name": "前田 隆昭",
@@ -216454,7 +216504,8 @@
      "now": false,
      "pid": "338",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Maeda Takaaki"
     },
     {
      "name": "山中 惇生",
@@ -217061,7 +217112,8 @@
      "now": false,
      "pid": "1103",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Miyakoshi Daisuke"
     },
     {
      "name": "太田 真斗良",
@@ -217450,7 +217502,8 @@
      "now": false,
      "pid": "5123",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Shibata Yuki"
     },
     {
      "name": "永宮 幸樹",
@@ -217530,7 +217583,8 @@
      "now": false,
      "pid": "1361",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Taki Masasi"
     },
     {
      "name": "矢田 佑斗",
@@ -217608,7 +217662,8 @@
      "now": false,
      "pid": "1055",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Nomura Takeru"
     },
     {
      "name": "高松 雄飛",
@@ -217648,7 +217703,8 @@
      "now": false,
      "pid": "1257",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Takamatsu Yuhi"
     },
     {
      "name": "吉田 敬以",
@@ -217679,7 +217735,8 @@
      "now": false,
      "pid": "5120",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Yoshida Kei"
     },
     {
      "name": "宮川 直輝",
@@ -217710,7 +217767,8 @@
      "now": false,
      "pid": "8019",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Miyagawa Naoki"
     },
     {
      "name": "小林 宏至",
@@ -217741,7 +217799,8 @@
      "now": false,
      "pid": "8020",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Kobayashi Hiroyuki"
     },
     {
      "name": "松山 洋輔",
@@ -217772,7 +217831,8 @@
      "now": false,
      "pid": "1365",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Matsuyama Yosuke"
     },
     {
      "name": "渡部 魁斗",
@@ -217832,7 +217892,8 @@
      "now": false,
      "pid": "7986",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Ishida Yuma"
     },
     {
      "name": "関野 尚輝",
@@ -217892,7 +217953,8 @@
      "now": false,
      "pid": "1259",
      "now_team": "",
-     "now_checked": "2026-11-27"
+     "now_checked": "2026-11-27",
+     "reading": "Komano Takumi"
     },
     {
      "name": "谷口 裕人",
