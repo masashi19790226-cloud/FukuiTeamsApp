@@ -4,13 +4,13 @@
     "team": "BLOWINDS",
     "my": {
       "label": "福井",
-      "record": "9勝9敗",
+      "record": "9勝10敗",
       "form": "●●○○●",
       "rank": "中地区 3位"
     },
     "opp": {
       "label": "静岡",
-      "record": "10勝9敗",
+      "record": "11勝9敗",
       "rank": "西地区 4位",
       "form": "●●○○○"
     },
@@ -29,7 +29,7 @@
         "stat": "平均6.2アシスト"
       }
     ],
-    "players_note": "今季19試合の成績から",
+    "players_note": "今季20試合の成績から",
     "opp_link": "https://www.bleague.jp/club_detail/?TeamID=1637",
     "h2h_checked": true,
     "my_key_players": [
@@ -52,10 +52,10 @@
         "stat": "平均3.3アシスト"
       }
     ],
-    "my_players_note": "今季18試合の成績から",
+    "my_players_note": "今季19試合の成績から",
     "opp_team_id": "1637",
-    "summary": "福井は直近5試合で2勝3敗。静岡は10勝9敗。前回対戦は11/28 ●60-80。静岡は#2 トレダリアス・マカラム(平均16.5点)に注意。",
-    "updated_at": "2026-11-28T11:23:31.315273+00:00"
+    "summary": "福井は直近5試合で2勝3敗。静岡は11勝9敗。前回対戦は11/28 ●60-80。静岡は#2 トレダリアス・マカラム(平均16.5点)に注意。",
+    "updated_at": "2026-11-28T11:42:33.498452+00:00"
   },
   "rc13": {
     "game_id": "rc13",
@@ -96,7 +96,7 @@
     "players_note": "女子Fリーグ公式の得点ランキングから",
     "opp_link": "https://w-fleague.jp/club/kobe/",
     "summary": "丸岡は直近2試合で0勝1敗1分。アルコ神戸は0勝1敗。前回対戦は7/19 ●1-3。アルコ神戸は#32 高橋 京花(今季10得点)に注意。",
-    "updated_at": "2026-11-28T11:23:31.315439+00:00"
+    "updated_at": "2026-11-28T11:42:33.498642+00:00"
   },
   "th08": {
     "game_id": "th08",
@@ -118,7 +118,7 @@
     "players_note": "",
     "opp_link": "https://leagueh.jp/team/toyotaej/profile/",
     "summary": "11位の福井永平寺と9位のトヨタ自動車東日本レガロッソ宮城の対戦。福井永平寺は直近5試合で2勝3敗。トヨタ自動車東日本レガロッソ宮城は3勝4敗。",
-    "updated_at": "2026-11-28T11:23:31.315592+00:00"
+    "updated_at": "2026-11-28T11:42:33.498840+00:00"
   },
   "vc08": {
     "game_id": "vc08",
@@ -127,19 +127,41 @@
       "label": "ヴェルコスタ",
       "record": "2勝5敗",
       "form": "●●○●○",
-      "rank": ""
+      "rank": "7位(勝ち点6)"
     },
     "opp": {
       "label": "BlueSticks SHIGA",
-      "record": "",
-      "rank": "",
+      "record": "0勝7敗",
+      "rank": "8位(勝ち点0)",
       "form": ""
     },
     "last_meeting": "5/30 ○2-1",
-    "key_players": [],
-    "players_note": "",
-    "opp_link": null,
-    "summary": "ヴェルコスタは直近5試合で2勝3敗。前回対戦は5/30 ○2-1。",
-    "updated_at": "2026-11-28T11:23:31.315642+00:00"
+    "key_players": [
+      {
+        "number": "",
+        "name": "山堀 裕陽",
+        "position": "",
+        "stat": "今季2得点(リーグ19位)",
+        "photo": "https://hjl-hockey.tv/wordpress/wp-content/themes/hjl2017/images/players/2026/13/2026_13_p10.jpg"
+      },
+      {
+        "number": "",
+        "name": "渡辺 奎太",
+        "position": "",
+        "stat": "今季2得点(リーグ19位)",
+        "photo": "https://hjl-hockey.tv/wordpress/wp-content/themes/hjl2017/images/players/2026/13/2026_13_p05.jpg"
+      },
+      {
+        "number": "",
+        "name": "山下 翼",
+        "position": "",
+        "stat": "今季1得点(リーグ34位)",
+        "photo": "https://hjl-hockey.tv/wordpress/wp-content/themes/hjl2017/images/players/2026/13/2026_13_p30.jpg"
+      }
+    ],
+    "players_note": "ホッケージャパンリーグ公式の得点ランキングから",
+    "opp_link": "https://hjl-hockey.tv/teams?teamID=13&teamYear=2026",
+    "summary": "7位のヴェルコスタと8位のBlueSticks SHIGAの対戦。ヴェルコスタは直近5試合で2勝3敗。BlueSticks SHIGAは0勝7敗。前回対戦は5/30 ○2-1。BlueSticks SHIGAは山堀 裕陽(今季2得点)に注意。",
+    "updated_at": "2026-11-28T11:42:33.498941+00:00"
   }
 }
