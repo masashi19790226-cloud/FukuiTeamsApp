@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-28T08:21:17.870351+00:00",
- "cursor": 2,
+ "updated_at": "2026-11-28T08:41:16.442210+00:00",
+ "cursor": 12,
  "players": {
   "BLOWINDS|チョンディーブラウンジュニア": [
    {
@@ -63,6 +63,13 @@
    }
   ],
   "BLOWINDS|ドゥシャンリスティッチ": [
+   {
+    "title": "中盤まで互角、終盤シュート精度落ち…福井ブローウィンズ3連勝 ...",
+    "link": "https://www.fukuishimbun.co.jp/articles/-/2758582",
+    "published": "2026-11-28T00:30:00+00:00",
+    "source": "福井新聞ONLINE",
+    "detected_at": "2026-11-28T08:41:16.442210+00:00"
+   },
    {
     "title": "【おじゃスポ】ブローウィンズは敦賀で2連勝 前回連敗の新潟に ...",
     "link": "https://news.yahoo.co.jp/articles/623441652f65ad9a9ed102a1c09e8255bedee240/images/000",
