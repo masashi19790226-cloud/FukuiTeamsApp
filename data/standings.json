@@ -208,6 +208,34 @@
           "rank": 3
         },
         {
+          "team": "福井丸岡ラック",
+          "played": 2,
+          "win": 0,
+          "draw": 1,
+          "lose": 1,
+          "gf": 1,
+          "ga": 2,
+          "points": 1,
+          "gd": -1,
+          "form": "●△",
+          "record": "0勝1敗1分",
+          "rank": 4
+        },
+        {
+          "team": "立川アスレティックFCレディース",
+          "played": 2,
+          "win": 0,
+          "draw": 1,
+          "lose": 1,
+          "gf": 3,
+          "ga": 6,
+          "points": 1,
+          "gd": -3,
+          "form": "●△",
+          "record": "0勝1敗1分",
+          "rank": 5
+        },
+        {
           "team": "アルコ神戸",
           "played": 1,
           "win": 0,
@@ -217,34 +245,6 @@
           "ga": 4,
           "points": 0,
           "gd": -1,
-          "form": "●",
-          "record": "0勝1敗",
-          "rank": 4
-        },
-        {
-          "team": "福井丸岡ラック",
-          "played": 1,
-          "win": 0,
-          "draw": 0,
-          "lose": 1,
-          "gf": 1,
-          "ga": 2,
-          "points": 0,
-          "gd": -1,
-          "form": "●",
-          "record": "0勝1敗",
-          "rank": 5
-        },
-        {
-          "team": "立川アスレティックFCレディース",
-          "played": 1,
-          "win": 0,
-          "draw": 0,
-          "lose": 1,
-          "gf": 3,
-          "ga": 6,
-          "points": 0,
-          "gd": -3,
           "form": "●",
           "record": "0勝1敗",
           "rank": 6
@@ -295,8 +295,8 @@
           "team": "立川アスレティックFCレディース",
           "goals": 11,
           "pk": 0,
-          "shots": 50,
-          "games": 11,
+          "shots": 51,
+          "games": 12,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l18.jpg",
           "number": "18"
         },
@@ -393,8 +393,8 @@
           "team": "立川アスレティックFCレディース",
           "goals": 7,
           "pk": 0,
-          "shots": 55,
-          "games": 11,
+          "shots": 60,
+          "games": 12,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l19.jpg",
           "number": "19"
         },
@@ -518,18 +518,6 @@
         },
         {
           "rank": 23,
-          "name": "平田 梨豊",
-          "team": "福井丸岡ラック",
-          "goals": 5,
-          "pk": 0,
-          "shots": 27,
-          "games": 11,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-10-150x150.jpg",
-          "number": "10",
-          "position": "FP"
-        },
-        {
-          "rank": 23,
           "name": "高畠 早奈恵",
           "team": "アルコ神戸",
           "goals": 5,
@@ -546,9 +534,21 @@
           "goals": 5,
           "pk": 0,
           "shots": 28,
-          "games": 11,
+          "games": 12,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-17-150x150.jpg",
           "number": "17",
+          "position": "FP"
+        },
+        {
+          "rank": 23,
+          "name": "平田 梨豊",
+          "team": "福井丸岡ラック",
+          "goals": 5,
+          "pk": 0,
+          "shots": 28,
+          "games": 12,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-10-150x150.jpg",
+          "number": "10",
           "position": "FP"
         },
         {
@@ -579,8 +579,8 @@
           "team": "福井丸岡ラック",
           "goals": 5,
           "pk": 0,
-          "shots": 36,
-          "games": 11,
+          "shots": 37,
+          "games": 12,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-09-150x150.jpg",
           "number": "9",
           "position": "FP"
@@ -624,8 +624,8 @@
           "team": "立川アスレティックFCレディース",
           "goals": 5,
           "pk": 0,
-          "shots": 76,
-          "games": 11,
+          "shots": 81,
+          "games": 12,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l08.jpg",
           "number": "8"
         },
@@ -646,8 +646,8 @@
           "team": "立川アスレティックFCレディース",
           "goals": 4,
           "pk": 0,
-          "shots": 13,
-          "games": 5,
+          "shots": 14,
+          "games": 6,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l23.jpg",
           "number": "23"
         },
@@ -731,8 +731,8 @@
           "team": "福井丸岡ラック",
           "goals": 4,
           "pk": 0,
-          "shots": 28,
-          "games": 11,
+          "shots": 30,
+          "games": 12,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-06-150x150.jpg",
           "number": "6",
           "position": "FP"
@@ -929,18 +929,6 @@
         },
         {
           "rank": 56,
-          "name": "足立 紗菜",
-          "team": "福井丸岡ラック",
-          "goals": 2,
-          "pk": 0,
-          "shots": 16,
-          "games": 11,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-11-150x150.jpg",
-          "number": "11",
-          "position": "FP"
-        },
-        {
-          "rank": 56,
           "name": "青木 友梨香",
           "team": "さいたまサイコロ",
           "goals": 2,
@@ -962,14 +950,14 @@
         },
         {
           "rank": 56,
-          "name": "横川 四葉",
+          "name": "足立 紗菜",
           "team": "福井丸岡ラック",
           "goals": 2,
           "pk": 0,
-          "shots": 21,
-          "games": 10,
-          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-04-150x150.jpg",
-          "number": "4",
+          "shots": 20,
+          "games": 12,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-11-150x150.jpg",
+          "number": "11",
           "position": "FP"
         },
         {
@@ -996,6 +984,18 @@
         },
         {
           "rank": 56,
+          "name": "横川 四葉",
+          "team": "福井丸岡ラック",
+          "goals": 2,
+          "pk": 0,
+          "shots": 22,
+          "games": 11,
+          "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-04-150x150.jpg",
+          "number": "4",
+          "position": "FP"
+        },
+        {
+          "rank": 56,
           "name": "稲垣 遙",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 2,
@@ -1011,7 +1011,7 @@
           "goals": 2,
           "pk": 0,
           "shots": 23,
-          "games": 11,
+          "games": 12,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-01-150x150.jpg",
           "number": "1",
           "position": "GK"
@@ -1051,8 +1051,8 @@
           "team": "立川アスレティックFCレディース",
           "goals": 2,
           "pk": 0,
-          "shots": 25,
-          "games": 11,
+          "shots": 26,
+          "games": 12,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l05.jpg",
           "number": "5"
         },
@@ -1063,7 +1063,7 @@
           "goals": 2,
           "pk": 0,
           "shots": 26,
-          "games": 11,
+          "games": 12,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l04.jpg",
           "number": "4"
         },
@@ -1127,7 +1127,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 2,
-          "games": 11,
+          "games": 12,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l25.jpg",
           "number": "25"
         },
@@ -1191,7 +1191,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 5,
-          "games": 11,
+          "games": 12,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-19-150x150.jpg",
           "number": "19",
           "position": "FP"
@@ -1242,7 +1242,7 @@
           "goals": 1,
           "pk": 0,
           "shots": 6,
-          "games": 6,
+          "games": 7,
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l33.jpg",
           "number": "33"
         },
@@ -1303,17 +1303,6 @@
         },
         {
           "rank": 80,
-          "name": "勝又 野乃花",
-          "team": "立川アスレティックFCレディース",
-          "goals": 1,
-          "pk": 0,
-          "shots": 13,
-          "games": 11,
-          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l07.jpg",
-          "number": "7"
-        },
-        {
-          "rank": 80,
           "name": "太田 涼日",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 1,
@@ -1346,6 +1335,17 @@
         },
         {
           "rank": 80,
+          "name": "勝又 野乃花",
+          "team": "立川アスレティックFCレディース",
+          "goals": 1,
+          "pk": 0,
+          "shots": 17,
+          "games": 12,
+          "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l07.jpg",
+          "number": "7"
+        },
+        {
+          "rank": 80,
           "name": "大西 紗瑛",
           "team": "アニージャ湘南",
           "goals": 1,
@@ -1371,8 +1371,8 @@
           "team": "福井丸岡ラック",
           "goals": 1,
           "pk": 0,
-          "shots": 18,
-          "games": 11,
+          "shots": 20,
+          "games": 12,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-05-150x150.jpg",
           "number": "5",
           "position": "FP"
@@ -1383,8 +1383,8 @@
           "team": "福井丸岡ラック",
           "goals": 1,
           "pk": 0,
-          "shots": 24,
-          "games": 11,
+          "shots": 25,
+          "games": 12,
           "photo": "https://ruck-fukui.com/wp2018/wp-content/uploads/2026/05/profile2026-07-150x150.jpg",
           "number": "7",
           "position": "FP"
@@ -1728,7 +1728,7 @@
         }
       }
     },
-    "updated_at": "2026-11-28T09:02:33.828355+00:00"
+    "updated_at": "2026-11-28T09:22:45.709789+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3470,7 +3470,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-28T09:02:33.828355+00:00"
+    "updated_at": "2026-11-28T09:22:45.709789+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-28",
@@ -9672,7 +9672,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-28T09:02:33.828355+00:00"
+    "updated_at": "2026-11-28T09:22:45.709789+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -12807,7 +12807,7 @@
         }
       }
     },
-    "updated_at": "2026-11-28T09:02:33.828355+00:00"
+    "updated_at": "2026-11-28T09:22:45.709789+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-28",
@@ -16315,6 +16315,6 @@
         }
       ]
     },
-    "updated_at": "2026-11-28T09:02:33.828355+00:00"
+    "updated_at": "2026-11-28T09:22:45.709789+00:00"
   }
 }

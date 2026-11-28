@@ -632,5 +632,11 @@
     "opponent_score": 80,
     "checked_at": "2026-11-28T07:41:56.964664",
     "source_url": "https://www.bleague.jp/game_detail/?ScheduleKey=507405"
+  },
+  "rc12": {
+    "my_score": 0,
+    "opponent_score": 0,
+    "checked_at": "2026-11-28T09:21:42.603289",
+    "source_url": "https://w-fleague.jp/club/maruoka/schedule.html"
   }
 }
