@@ -346,6 +346,16 @@
         },
         {
           "rank": 9,
+          "name": "アナ シュルハ",
+          "team": "ミネルバ宇部",
+          "goals": 7,
+          "pk": 0,
+          "shots": 39,
+          "games": 9,
+          "number": "21"
+        },
+        {
+          "rank": 9,
           "name": "岩崎 裕加",
           "team": "フウガドールすみだレディース",
           "goals": 7,
@@ -389,7 +399,7 @@
           "number": "4"
         },
         {
-          "rank": 13,
+          "rank": 14,
           "name": "新垣 杏奈",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 6,
@@ -399,7 +409,7 @@
           "number": "17"
         },
         {
-          "rank": 13,
+          "rank": 14,
           "name": "若尾 和美",
           "team": "フウガドールすみだレディース",
           "goals": 6,
@@ -410,7 +420,7 @@
           "number": "24"
         },
         {
-          "rank": 13,
+          "rank": 14,
           "name": "木村 美桜",
           "team": "アルコ神戸",
           "goals": 6,
@@ -421,7 +431,7 @@
           "number": "20"
         },
         {
-          "rank": 13,
+          "rank": 14,
           "name": "倉持 杏子",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 6,
@@ -432,17 +442,7 @@
           "number": "23"
         },
         {
-          "rank": 13,
-          "name": "アナ シュルハ",
-          "team": "ミネルバ宇部",
-          "goals": 6,
-          "pk": 0,
-          "shots": 28,
-          "games": 8,
-          "number": "21"
-        },
-        {
-          "rank": 13,
+          "rank": 14,
           "name": "高橋 菜津希",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 6,
@@ -452,7 +452,7 @@
           "number": "5"
         },
         {
-          "rank": 13,
+          "rank": 14,
           "name": "井口 優",
           "team": "SWHレディース西宮",
           "goals": 6,
@@ -463,7 +463,7 @@
           "number": "11"
         },
         {
-          "rank": 13,
+          "rank": 14,
           "name": "江川 涼",
           "team": "SWHレディース西宮",
           "goals": 6,
@@ -474,7 +474,7 @@
           "number": "9"
         },
         {
-          "rank": 13,
+          "rank": 14,
           "name": "川村 このは",
           "team": "アニージャ湘南",
           "goals": 6,
@@ -484,7 +484,7 @@
           "number": "77"
         },
         {
-          "rank": 13,
+          "rank": 14,
           "name": "飯干 絵里",
           "team": "SWHレディース西宮",
           "goals": 6,
@@ -711,7 +711,7 @@
           "goals": 4,
           "pk": 0,
           "shots": 26,
-          "games": 11,
+          "games": 12,
           "number": "17"
         },
         {
@@ -758,6 +758,16 @@
           "games": 10,
           "photo": "https://www.bardral-urayasu.com/wp/wp-content/uploads/2026/05/YAMAMOTO_Nanami.jpg",
           "number": "25"
+        },
+        {
+          "rank": 46,
+          "name": "後藤 穂香",
+          "team": "さいたまサイコロ",
+          "goals": 3,
+          "pk": 0,
+          "shots": 10,
+          "games": 12,
+          "number": "7"
         },
         {
           "rank": 46,
@@ -844,7 +854,7 @@
           "number": "7"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "庄子 彩",
           "team": "フウガドールすみだレディース",
           "goals": 2,
@@ -855,7 +865,17 @@
           "number": "2"
         },
         {
-          "rank": 55,
+          "rank": 56,
+          "name": "外村 美空",
+          "team": "さいたまサイコロ",
+          "goals": 2,
+          "pk": 0,
+          "shots": 5,
+          "games": 12,
+          "number": "3"
+        },
+        {
+          "rank": 56,
           "name": "岡部 茉帆",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 2,
@@ -866,17 +886,7 @@
           "number": "5"
         },
         {
-          "rank": 55,
-          "name": "後藤 穂香",
-          "team": "さいたまサイコロ",
-          "goals": 2,
-          "pk": 0,
-          "shots": 8,
-          "games": 11,
-          "number": "7"
-        },
-        {
-          "rank": 55,
+          "rank": 56,
           "name": "島田 有嘉",
           "team": "アルコ神戸",
           "goals": 2,
@@ -887,7 +897,7 @@
           "number": "17"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "野口 はな",
           "team": "ミネルバ宇部",
           "goals": 2,
@@ -898,7 +908,7 @@
           "number": "87"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "松木 里緒",
           "team": "立川アスレティックFCレディース",
           "goals": 2,
@@ -908,7 +918,17 @@
           "photo": "https://tachikawa-athletic.jp/wp-content/uploads/2026/05/l10.jpg"
         },
         {
-          "rank": 55,
+          "rank": 56,
+          "name": "笠井 美里",
+          "team": "さいたまサイコロ",
+          "goals": 2,
+          "pk": 0,
+          "shots": 13,
+          "games": 7,
+          "number": "14"
+        },
+        {
+          "rank": 56,
           "name": "足立 紗菜",
           "team": "福井丸岡ラック",
           "goals": 2,
@@ -920,7 +940,17 @@
           "position": "FP"
         },
         {
-          "rank": 55,
+          "rank": 56,
+          "name": "青木 友梨香",
+          "team": "さいたまサイコロ",
+          "goals": 2,
+          "pk": 0,
+          "shots": 17,
+          "games": 12,
+          "number": "36"
+        },
+        {
+          "rank": 56,
           "name": "三宅 怜",
           "team": "アルコ神戸",
           "goals": 2,
@@ -931,7 +961,7 @@
           "number": "5"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "横川 四葉",
           "team": "福井丸岡ラック",
           "goals": 2,
@@ -943,7 +973,7 @@
           "position": "FP"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "加藤 鈴菜",
           "team": "SWHレディース西宮",
           "goals": 2,
@@ -954,27 +984,7 @@
           "number": "39"
         },
         {
-          "rank": 55,
-          "name": "タイス デリマ オリベイラ",
-          "team": "ミネルバ宇部",
-          "goals": 2,
-          "pk": 1,
-          "shots": 21,
-          "games": 6,
-          "number": "8"
-        },
-        {
-          "rank": 55,
-          "name": "パオラ ニコリ レオン アラウジョ",
-          "team": "ミネルバ宇部",
-          "goals": 2,
-          "pk": 1,
-          "shots": 21,
-          "games": 6,
-          "number": "10"
-        },
-        {
-          "rank": 55,
+          "rank": 56,
           "name": "稲垣 遙",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 2,
@@ -984,7 +994,7 @@
           "number": "2"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "小林 望月",
           "team": "福井丸岡ラック",
           "goals": 2,
@@ -996,7 +1006,7 @@
           "position": "GK"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "倉元 美鈴",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 2,
@@ -1006,7 +1016,7 @@
           "number": "10"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "原田 絢未",
           "team": "さいたまサイコロ",
           "goals": 2,
@@ -1015,7 +1025,17 @@
           "games": 10
         },
         {
-          "rank": 55,
+          "rank": 56,
+          "name": "パオラ ニコリ レオン アラウジョ",
+          "team": "ミネルバ宇部",
+          "goals": 2,
+          "pk": 1,
+          "shots": 25,
+          "games": 7,
+          "number": "10"
+        },
+        {
+          "rank": 56,
           "name": "鈴木 里歩",
           "team": "立川アスレティックFCレディース",
           "goals": 2,
@@ -1026,7 +1046,7 @@
           "number": "5"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "米山 涼美",
           "team": "立川アスレティックFCレディース",
           "goals": 2,
@@ -1037,7 +1057,7 @@
           "number": "4"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "山本 想",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 2,
@@ -1048,7 +1068,17 @@
           "number": "9"
         },
         {
-          "rank": 55,
+          "rank": 56,
+          "name": "タイス デリマ オリベイラ",
+          "team": "ミネルバ宇部",
+          "goals": 2,
+          "pk": 1,
+          "shots": 30,
+          "games": 7,
+          "number": "8"
+        },
+        {
+          "rank": 56,
           "name": "長木 希果",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 2,
@@ -1059,7 +1089,7 @@
           "number": "42"
         },
         {
-          "rank": 55,
+          "rank": 56,
           "name": "山川 里佳子",
           "team": "アルコ神戸",
           "goals": 2,
@@ -1070,7 +1100,17 @@
           "number": "19"
         },
         {
-          "rank": 76,
+          "rank": 79,
+          "name": "小森 胡璃",
+          "team": "ミネルバ宇部",
+          "goals": 1,
+          "pk": 0,
+          "shots": 1,
+          "games": 2,
+          "number": "17"
+        },
+        {
+          "rank": 79,
           "name": "愛沢 南",
           "team": "立川アスレティックFCレディース",
           "goals": 1,
@@ -1081,7 +1121,7 @@
           "number": "25"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "塚本 明日香",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1092,17 +1132,7 @@
           "number": "2"
         },
         {
-          "rank": 76,
-          "name": "外村 美空",
-          "team": "さいたまサイコロ",
-          "goals": 1,
-          "pk": 0,
-          "shots": 3,
-          "games": 11,
-          "number": "3"
-        },
-        {
-          "rank": 76,
+          "rank": 79,
           "name": "原川 菜々子",
           "team": "フウガドールすみだレディース",
           "goals": 1,
@@ -1113,7 +1143,7 @@
           "number": "19"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "秋原 美優",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1124,7 +1154,7 @@
           "number": "17"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "小笹 璃緒",
           "team": "アニージャ湘南",
           "goals": 1,
@@ -1134,7 +1164,7 @@
           "number": "8"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "小林 愛心",
           "team": "福井丸岡ラック",
           "goals": 1,
@@ -1146,7 +1176,7 @@
           "position": "FP"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "大濱 あみ",
           "team": "流経大メニーナ龍ケ崎",
           "goals": 1,
@@ -1156,18 +1186,18 @@
           "number": "15"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "西澤 結菜",
           "team": "ミネルバ宇部",
           "goals": 1,
           "pk": 0,
           "shots": 5,
-          "games": 6,
+          "games": 7,
           "photo": "https://www.minerva-ube.jp/image/2026_minervaube_29.png",
           "number": "29"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "児島 希里子",
           "team": "ミネルバ宇部",
           "goals": 1,
@@ -1176,7 +1206,7 @@
           "games": 3
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "鎮守 遥",
           "team": "ミネルバ宇部",
           "goals": 1,
@@ -1185,7 +1215,7 @@
           "games": 3
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "宮下 みのり",
           "team": "立川アスレティックFCレディース",
           "goals": 1,
@@ -1196,7 +1226,7 @@
           "number": "33"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "岡野 未央",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1207,7 +1237,7 @@
           "number": "18"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "見矢 明日香",
           "team": "アルコ神戸",
           "goals": 1,
@@ -1218,7 +1248,7 @@
           "number": "1"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "本間 桃",
           "team": "フウガドールすみだレディース",
           "goals": 1,
@@ -1229,7 +1259,7 @@
           "number": "7"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "齊藤 日向子",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 1,
@@ -1240,17 +1270,7 @@
           "number": "3"
         },
         {
-          "rank": 76,
-          "name": "笠井 美里",
-          "team": "さいたまサイコロ",
-          "goals": 1,
-          "pk": 0,
-          "shots": 11,
-          "games": 6,
-          "number": "14"
-        },
-        {
-          "rank": 76,
+          "rank": 79,
           "name": "伊藤 かの果",
           "team": "ミネルバ宇部",
           "goals": 1,
@@ -1261,7 +1281,7 @@
           "number": "77"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "勝又 野乃花",
           "team": "立川アスレティックFCレディース",
           "goals": 1,
@@ -1272,27 +1292,7 @@
           "number": "7"
         },
         {
-          "rank": 76,
-          "name": "青木 友梨香",
-          "team": "さいたまサイコロ",
-          "goals": 1,
-          "pk": 0,
-          "shots": 14,
-          "games": 11,
-          "number": "36"
-        },
-        {
-          "rank": 76,
-          "name": "山田 ひかる",
-          "team": "さいたまサイコロ",
-          "goals": 1,
-          "pk": 0,
-          "shots": 14,
-          "games": 11,
-          "number": "15"
-        },
-        {
-          "rank": 76,
+          "rank": 79,
           "name": "太田 涼日",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 1,
@@ -1303,7 +1303,7 @@
           "number": "17"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "井戸 里咲",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1314,7 +1314,17 @@
           "number": "6"
         },
         {
-          "rank": 76,
+          "rank": 79,
+          "name": "山田 ひかる",
+          "team": "さいたまサイコロ",
+          "goals": 1,
+          "pk": 0,
+          "shots": 17,
+          "games": 12,
+          "number": "15"
+        },
+        {
+          "rank": 79,
           "name": "大西 紗瑛",
           "team": "アニージャ湘南",
           "goals": 1,
@@ -1324,7 +1334,7 @@
           "number": "13"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "池内 天紀",
           "team": "バルドラール浦安ラス・ボニータス",
           "goals": 1,
@@ -1335,7 +1345,7 @@
           "number": "10"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "加藤 はるな",
           "team": "福井丸岡ラック",
           "goals": 1,
@@ -1347,7 +1357,7 @@
           "position": "FP"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "宮崎 愛",
           "team": "SWHレディース西宮",
           "goals": 1,
@@ -1358,7 +1368,7 @@
           "number": "7"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "加藤 ほのか",
           "team": "福井丸岡ラック",
           "goals": 1,
@@ -1370,7 +1380,7 @@
           "position": "FP"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "白戸 愛華",
           "team": "アニージャ湘南",
           "goals": 1,
@@ -1380,7 +1390,7 @@
           "number": "5"
         },
         {
-          "rank": 76,
+          "rank": 79,
           "name": "武井 柚香",
           "team": "エスポラーダ北海道イルネーヴェ",
           "goals": 1,
@@ -1389,6 +1399,16 @@
           "games": 11,
           "photo": "https://espolada.com/wp-espolada/wp-content/uploads/2025/06/ab0081e78f58eb95dcf61c057666b79e-1.jpg",
           "number": "25"
+        },
+        {
+          "rank": 79,
+          "name": "後藤 伊史",
+          "team": "さいたまサイコロ",
+          "goals": 1,
+          "pk": 0,
+          "shots": 31,
+          "games": 12,
+          "number": "11"
         }
       ],
       "photo_report": {
@@ -1698,7 +1718,7 @@
         }
       }
     },
-    "updated_at": "2026-11-28T06:42:42.015423+00:00"
+    "updated_at": "2026-11-28T07:03:07.039568+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3440,7 +3460,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-28T06:42:42.015423+00:00"
+    "updated_at": "2026-11-28T07:03:07.039568+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-28",
@@ -9642,7 +9662,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-28T06:42:42.015423+00:00"
+    "updated_at": "2026-11-28T07:03:07.039568+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -9807,6 +9827,21 @@
         },
         {
           "rank": 12,
+          "team": "福井永平寺ブルーサンダー",
+          "slug": "bluethunder",
+          "points": 4,
+          "played": 7,
+          "win": 2,
+          "draw": 0,
+          "lose": 5,
+          "gf": 202,
+          "ga": 215,
+          "gd": -13,
+          "record": "2勝5敗",
+          "form": "●●●○○"
+        },
+        {
+          "rank": 13,
           "team": "堺リエゾン",
           "slug": "liaison",
           "points": 3,
@@ -9818,21 +9853,6 @@
           "ga": 213,
           "gd": -38,
           "record": "1勝4敗1分"
-        },
-        {
-          "rank": 13,
-          "team": "福井永平寺ブルーサンダー",
-          "slug": "bluethunder",
-          "points": 2,
-          "played": 6,
-          "win": 1,
-          "draw": 0,
-          "lose": 5,
-          "gf": 169,
-          "ga": 187,
-          "gd": -18,
-          "record": "1勝5敗",
-          "form": "●●●●○"
         },
         {
           "rank": 14,
@@ -9853,14 +9873,14 @@
           "team": "アースフレンズBM東京・神奈川",
           "slug": "earthfriends",
           "points": 0,
-          "played": 7,
+          "played": 8,
           "win": 0,
           "draw": 0,
-          "lose": 7,
-          "gf": 155,
-          "ga": 255,
-          "gd": -100,
-          "record": "0勝7敗"
+          "lose": 8,
+          "gf": 183,
+          "ga": 288,
+          "gd": -105,
+          "record": "0勝8敗"
         }
       ]
     },
@@ -10952,19 +10972,203 @@
           }
         ],
         "url": "https://leagueh.jp/schedule/511M47/"
+      },
+      "511M51": {
+        "date": "2026-11-28",
+        "time": "14:00",
+        "venue": "北陸電力福井体育館フレア",
+        "is_home": true,
+        "opponent": "アースフレンズBM東京・神奈川",
+        "my": 33,
+        "opp": 28,
+        "periods": [
+          {
+            "label": "前半",
+            "my": 14,
+            "opp": 15
+          },
+          {
+            "label": "後半",
+            "my": 19,
+            "opp": 13
+          }
+        ],
+        "players": [
+          {
+            "name": "熊谷 友也",
+            "number": "2",
+            "position": "RW",
+            "goals": 5,
+            "shots": 5,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31390"
+          },
+          {
+            "name": "朝野 翔一朗",
+            "number": "4",
+            "position": "PV",
+            "goals": 2,
+            "shots": 2,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31172"
+          },
+          {
+            "name": "玉井 康仁",
+            "number": "5",
+            "position": "LB",
+            "goals": 2,
+            "shots": 6,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31509"
+          },
+          {
+            "name": "エファディ アグバグロ",
+            "number": "8",
+            "position": "LB",
+            "goals": 0,
+            "shots": 0,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31943"
+          },
+          {
+            "name": "下倉 佑真",
+            "number": "9",
+            "position": "RB",
+            "goals": 2,
+            "shots": 5,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31349"
+          },
+          {
+            "name": "伊藤 博諒",
+            "number": "14",
+            "position": "PV",
+            "goals": 0,
+            "shots": 0,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31882"
+          },
+          {
+            "name": "松本 大昌",
+            "number": "15",
+            "position": "LB",
+            "goals": 2,
+            "shots": 3,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31508"
+          },
+          {
+            "name": "水谷 祐空",
+            "number": "18",
+            "position": "PV",
+            "goals": 0,
+            "shots": 0,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31674"
+          },
+          {
+            "name": "安川 大地",
+            "number": "25",
+            "position": "LW",
+            "goals": 3,
+            "shots": 4,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31729"
+          },
+          {
+            "name": "平野 凌斗",
+            "number": "26",
+            "position": "CB",
+            "goals": 1,
+            "shots": 2,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31853"
+          },
+          {
+            "name": "谷前 知優",
+            "number": "27",
+            "position": "RB",
+            "goals": 3,
+            "shots": 7,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31628"
+          },
+          {
+            "name": "家田 幹太",
+            "number": "29",
+            "position": "GK",
+            "goals": 0,
+            "shots": 0,
+            "saves": 4,
+            "save_total": 13,
+            "pid": "30761"
+          },
+          {
+            "name": "境 駿太",
+            "number": "33",
+            "position": "GK",
+            "goals": 1,
+            "shots": 1,
+            "saves": 15,
+            "save_total": 34,
+            "pid": "31501"
+          },
+          {
+            "name": "中村 権一",
+            "number": "36",
+            "position": "LB",
+            "goals": 6,
+            "shots": 7,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31502"
+          },
+          {
+            "name": "田代 健流",
+            "number": "38",
+            "position": "RW",
+            "goals": 3,
+            "shots": 5,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31265"
+          },
+          {
+            "name": "フノール ヘルマン",
+            "number": "88",
+            "position": "LB",
+            "goals": 3,
+            "shots": 3,
+            "saves": 0,
+            "save_total": 0,
+            "pid": "31944"
+          }
+        ],
+        "url": "https://leagueh.jp/schedule/511M51/"
       }
     },
     "scorers": {
       "label": "今季の得点",
-      "note": "リーグH公式の試合ごとの記録(6試合)から数えた数字です。得点・シュートは7mスローを含みます。",
+      "note": "リーグH公式の試合ごとの記録(7試合)から数えた数字です。得点・シュートは7mスローを含みます。",
       "source_url": "https://leagueh.jp/rankings/matrix/",
       "rows": [
         {
           "name": "田代 健流",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 44,
-          "shots": 55,
-          "games": 6,
+          "goals": 47,
+          "shots": 60,
+          "games": 7,
           "number": "38",
           "position": "RW",
           "rank": 1
@@ -10972,9 +11176,9 @@
         {
           "name": "松本 大昌",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 19,
-          "shots": 35,
-          "games": 6,
+          "goals": 21,
+          "shots": 38,
+          "games": 7,
           "number": "15",
           "position": "LB",
           "rank": 2
@@ -10982,9 +11186,9 @@
         {
           "name": "谷前 知優",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 16,
-          "shots": 29,
-          "games": 5,
+          "goals": 19,
+          "shots": 36,
+          "games": 6,
           "number": "27",
           "position": "RB",
           "rank": 3
@@ -10992,62 +11196,72 @@
         {
           "name": "安川 大地",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 16,
-          "shots": 27,
-          "games": 6,
+          "goals": 19,
+          "shots": 31,
+          "games": 7,
           "number": "25",
           "position": "LW",
           "rank": 3
         },
         {
+          "name": "中村 権一",
+          "team": "福井永平寺ブルーサンダー",
+          "goals": 14,
+          "shots": 22,
+          "games": 7,
+          "number": "36",
+          "position": "LB",
+          "rank": 5
+        },
+        {
           "name": "平野 凌斗",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 11,
-          "shots": 26,
-          "games": 6,
+          "goals": 12,
+          "shots": 28,
+          "games": 7,
           "number": "26",
           "position": "CB",
-          "rank": 5
+          "rank": 6
         },
         {
           "name": "玉井 康仁",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 10,
-          "shots": 17,
-          "games": 3,
+          "goals": 12,
+          "shots": 23,
+          "games": 4,
           "number": "5",
           "position": "LB",
           "rank": 6
         },
         {
-          "name": "中村 権一",
+          "name": "熊谷 友也",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 8,
-          "shots": 15,
+          "goals": 10,
+          "shots": 25,
           "games": 6,
-          "number": "36",
-          "position": "LB",
-          "rank": 7
+          "number": "2",
+          "position": "RW",
+          "rank": 8
         },
         {
           "name": "朝野 翔一朗",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 8,
-          "shots": 11,
-          "games": 6,
+          "goals": 10,
+          "shots": 13,
+          "games": 7,
           "number": "4",
           "position": "PV",
-          "rank": 7
+          "rank": 8
         },
         {
           "name": "伊藤 博諒",
           "team": "福井永平寺ブルーサンダー",
           "goals": 8,
           "shots": 10,
-          "games": 5,
+          "games": 6,
           "number": "14",
           "position": "PV",
-          "rank": 7
+          "rank": 10
         },
         {
           "name": "フェリシアーノ ヌネス コヴェイロ",
@@ -11057,7 +11271,7 @@
           "games": 3,
           "number": "22",
           "position": "RB",
-          "rank": 10
+          "rank": 11
         },
         {
           "name": "重藤 駿介",
@@ -11067,24 +11281,14 @@
           "games": 5,
           "number": "31",
           "position": "LB",
-          "rank": 10
-        },
-        {
-          "name": "熊谷 友也",
-          "team": "福井永平寺ブルーサンダー",
-          "goals": 5,
-          "shots": 20,
-          "games": 5,
-          "number": "2",
-          "position": "RW",
-          "rank": 12
+          "rank": 11
         },
         {
           "name": "フノール ヘルマン",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 3,
-          "shots": 7,
-          "games": 5,
+          "goals": 6,
+          "shots": 10,
+          "games": 6,
           "number": "88",
           "position": "LB",
           "rank": 13
@@ -11092,9 +11296,9 @@
         {
           "name": "下倉 佑真",
           "team": "福井永平寺ブルーサンダー",
-          "goals": 2,
-          "shots": 5,
-          "games": 2,
+          "goals": 4,
+          "shots": 10,
+          "games": 3,
           "number": "9",
           "position": "RB",
           "rank": 14
@@ -11104,10 +11308,20 @@
           "team": "福井永平寺ブルーサンダー",
           "goals": 2,
           "shots": 2,
-          "games": 6,
+          "games": 7,
           "number": "8",
           "position": "LB",
-          "rank": 14
+          "rank": 15
+        },
+        {
+          "name": "境 駿太",
+          "team": "福井永平寺ブルーサンダー",
+          "goals": 2,
+          "shots": 2,
+          "games": 7,
+          "number": "33",
+          "position": "GK",
+          "rank": 15
         },
         {
           "name": "髙橋 友朗",
@@ -11117,7 +11331,7 @@
           "games": 4,
           "number": "17",
           "position": "RB",
-          "rank": 16
+          "rank": 17
         },
         {
           "name": "新井 駿佑",
@@ -11127,17 +11341,7 @@
           "games": 1,
           "number": "19",
           "position": "CB",
-          "rank": 16
-        },
-        {
-          "name": "境 駿太",
-          "team": "福井永平寺ブルーサンダー",
-          "goals": 1,
-          "shots": 1,
-          "games": 6,
-          "number": "33",
-          "position": "GK",
-          "rank": 16
+          "rank": 17
         },
         {
           "name": "清水 大地",
@@ -11154,7 +11358,7 @@
           "team": "福井永平寺ブルーサンダー",
           "goals": 0,
           "shots": 1,
-          "games": 4,
+          "games": 5,
           "number": "29",
           "position": "GK",
           "rank": 19
@@ -11170,6 +11374,16 @@
           "rank": 19
         },
         {
+          "name": "水谷 祐空",
+          "team": "福井永平寺ブルーサンダー",
+          "goals": 0,
+          "shots": 0,
+          "games": 1,
+          "number": "18",
+          "position": "PV",
+          "rank": 19
+        },
+        {
           "name": "落田 駿兵",
           "team": "福井永平寺ブルーサンダー",
           "goals": 0,
@@ -11180,1318 +11394,1245 @@
           "rank": 19
         },
         {
-          "name": "神谷 弘平",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 40,
-          "shots": 84,
-          "games": 7,
-          "number": "88",
-          "position": "CB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31266.jpg",
+          "name": "藤川 翔大",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 38,
+          "shots": 61,
+          "games": 6,
+          "number": "15",
+          "position": "LB",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31179.jpg",
           "rank": 1
         },
         {
-          "name": "畑中 大翔",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 19,
-          "shots": 33,
-          "games": 5,
-          "number": "19",
+          "name": "首藤 大輝",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 29,
+          "shots": 45,
+          "games": 6,
+          "number": "30",
           "position": "CB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31931.jpg",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31889.jpg",
           "rank": 2
         },
         {
-          "name": "原田 廉太郎",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 18,
-          "shots": 26,
-          "games": 7,
-          "number": "28",
-          "position": "PV",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31938.jpg",
+          "name": "後藤 隼",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 25,
+          "shots": 38,
+          "games": 6,
+          "number": "24",
+          "position": "LW",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31460.jpg",
           "rank": 3
         },
         {
-          "name": "笠原 謙哉",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 18,
-          "shots": 25,
-          "games": 7,
+          "name": "谷藤 要",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 24,
+          "shots": 33,
+          "games": 6,
           "number": "3",
-          "position": "PV",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p30197.jpg",
-          "rank": 3
+          "position": "RW",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31170.jpg",
+          "rank": 4
         },
         {
-          "name": "西村 友希",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 10,
-          "shots": 31,
-          "games": 7,
-          "number": "27",
-          "position": "LB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31937.jpg",
-          "rank": 5
-        },
-        {
-          "name": "朝比奈 秀",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 10,
-          "shots": 23,
-          "games": 7,
-          "number": "29",
+          "name": "中川 翔太",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 20,
+          "shots": 35,
+          "games": 6,
+          "number": "17",
           "position": "RB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31939.jpg",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30939.jpg",
           "rank": 5
         },
         {
-          "name": "谷口 瑠已",
-          "team": "アースフレンズBM東京・神奈川",
+          "name": "佐藤 歩",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 11,
+          "shots": 17,
+          "games": 6,
+          "number": "22",
+          "position": "LB",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31604.jpg",
+          "rank": 6
+        },
+        {
+          "name": "中島 遼也",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
           "goals": 9,
           "shots": 13,
-          "games": 7,
-          "number": "20",
-          "position": "RW",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31932.jpg",
+          "games": 6,
+          "number": "13",
+          "position": "CB",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31664.jpg",
           "rank": 7
         },
         {
-          "name": "熊野 大雅",
-          "team": "アースフレンズBM東京・神奈川",
+          "name": "藤村 勇希",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
           "goals": 8,
-          "shots": 20,
+          "shots": 17,
           "games": 6,
-          "number": "17",
-          "position": "LB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31673.jpg",
+          "number": "20",
+          "position": "PV",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30756.jpg",
           "rank": 8
         },
         {
-          "name": "三輪 颯馬",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 7,
-          "shots": 13,
-          "games": 7,
-          "number": "18",
-          "position": "LW",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p30985.jpg",
+          "name": "吉原 悠馬",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 6,
+          "shots": 6,
+          "games": 6,
+          "number": "10",
+          "position": "RW",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31638.jpg",
           "rank": 9
         },
         {
-          "name": "山磨 彰仁",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 5,
-          "shots": 10,
-          "games": 7,
+          "name": "立花 志友",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 3,
+          "shots": 4,
+          "games": 5,
           "number": "26",
-          "position": "RB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31936.jpg",
+          "position": "LB",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31107.jpg",
           "rank": 10
         },
         {
-          "name": "原 圭彌",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 4,
-          "shots": 5,
+          "name": "村井 駿祐",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 3,
+          "shots": 3,
           "games": 3,
-          "number": "13",
-          "position": "LW",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31930.jpg",
-          "rank": 11
+          "number": "23",
+          "position": "CB",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31605.jpg",
+          "rank": 10
         },
         {
-          "name": "鹿島 諄",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 3,
-          "shots": 9,
+          "name": "細田 啓輔",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 2,
+          "shots": 4,
           "games": 6,
-          "number": "23",
-          "position": "LW",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31934.jpg",
+          "number": "25",
+          "position": "PV",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31459.jpg",
           "rank": 12
         },
         {
-          "name": "河村 優",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 1,
+          "name": "阿部 奎太",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 2,
           "shots": 2,
-          "games": 4,
-          "number": "15",
-          "position": "CB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31838.jpg",
-          "rank": 13
-        },
-        {
-          "name": "出村 龍",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 1,
-          "shots": 1,
-          "games": 7,
+          "games": 6,
           "number": "8",
-          "position": "PV",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31755.jpg",
-          "rank": 13
+          "position": "CB",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30938.jpg",
+          "rank": 12
         },
         {
-          "name": "山﨑 智之",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 1,
-          "shots": 1,
-          "games": 7,
-          "number": "24",
-          "position": "GK",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p30837.jpg",
-          "rank": 13
-        },
-        {
-          "name": "藤田 櫂成",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 1,
-          "shots": 1,
-          "games": 1,
-          "number": "14",
-          "position": "RW",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31972.jpg",
-          "rank": 13
-        },
-        {
-          "name": "杉田 悠人",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 0,
+          "name": "西原 雄聖",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 2,
           "shots": 2,
+          "games": 5,
+          "number": "21",
+          "position": "GK",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31453.jpg",
+          "rank": 12
+        },
+        {
+          "name": "佐藤 立盛",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 1,
+          "shots": 3,
+          "games": 5,
+          "number": "14",
+          "position": "CB",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30744.jpg",
+          "rank": 15
+        },
+        {
+          "name": "鈴木 雄大",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 1,
+          "shots": 1,
+          "games": 6,
+          "number": "16",
+          "position": "GK",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31178.jpg",
+          "rank": 15
+        },
+        {
+          "name": "川島 豪",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 0,
+          "shots": 0,
+          "games": 5,
+          "number": "1",
+          "position": "GK",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31303.jpg",
+          "rank": 17
+        },
+        {
+          "name": "浅川 律樹",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 0,
+          "shots": 0,
           "games": 1,
-          "number": "25",
-          "position": "LB",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31935.jpg",
+          "number": "27",
+          "position": "PV",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31108.jpg",
           "rank": 17
         },
         {
-          "name": "遠藤 輝",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 0,
-          "shots": 0,
-          "games": 7,
-          "number": "99",
-          "position": "GK",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31839.jpg",
-          "rank": 17
-        },
-        {
-          "name": "二階堂 恭世",
-          "team": "アースフレンズBM東京・神奈川",
-          "goals": 0,
-          "shots": 0,
-          "games": 2,
-          "number": "22",
-          "position": "GK",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31933.jpg",
-          "rank": 17
-        },
-        {
-          "name": "谷口 俊",
-          "team": "アースフレンズBM東京・神奈川",
+          "name": "山田 隼也",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
           "goals": 0,
           "shots": 0,
           "games": 0,
-          "number": "35",
-          "position": "GK",
-          "photo": "https://leagueh.jp/files/2026/player/earthfriends/p31269.jpg",
+          "number": "7",
+          "position": "RB",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30409.jpg",
+          "rank": 17
+        },
+        {
+          "name": "廣川 功介",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 0,
+          "shots": 0,
+          "games": 0,
+          "number": "9",
+          "position": "LW",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30940.jpg",
+          "rank": 17
+        },
+        {
+          "name": "藤原 芳輝",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 0,
+          "shots": 0,
+          "games": 0,
+          "number": "18",
+          "position": "RW",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30859.jpg",
+          "rank": 17
+        },
+        {
+          "name": "矢作 宙",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 0,
+          "shots": 0,
+          "games": 0,
+          "number": "29",
+          "position": "RB",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31656.jpg",
           "rank": 17
         }
       ]
     },
     "opp_cache": {
-      "slug": "earthfriends",
+      "slug": "toyotaej",
       "games": {
         "511M01": {
           "date": "2026-10-12",
           "players": [
             {
-              "name": "笠原 謙哉",
+              "name": "川島 豪",
+              "number": "1",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 4,
+              "save_total": 5,
+              "pid": "31303"
+            },
+            {
+              "name": "谷藤 要",
               "number": "3",
-              "position": "PV",
-              "goals": 3,
+              "position": "RW",
+              "goals": 2,
               "shots": 3,
               "saves": 0,
               "save_total": 0,
-              "pid": "30197"
+              "pid": "31170"
             },
             {
-              "name": "出村 龍",
+              "name": "阿部 奎太",
               "number": "8",
-              "position": "PV",
-              "goals": 0,
-              "shots": 0,
+              "position": "CB",
+              "goals": 1,
+              "shots": 1,
               "saves": 0,
               "save_total": 0,
-              "pid": "31755"
+              "pid": "30938"
             },
             {
-              "name": "熊野 大雅",
-              "number": "17",
-              "position": "LB",
-              "goals": 3,
-              "shots": 6,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31673"
-            },
-            {
-              "name": "三輪 颯馬",
-              "number": "18",
-              "position": "LW",
-              "goals": 0,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30985"
-            },
-            {
-              "name": "谷口 瑠已",
-              "number": "20",
+              "name": "吉原 悠馬",
+              "number": "10",
               "position": "RW",
               "goals": 1,
               "shots": 1,
               "saves": 0,
               "save_total": 0,
-              "pid": "31932"
+              "pid": "31638"
             },
             {
-              "name": "鹿島 諄",
-              "number": "23",
-              "position": "LW",
+              "name": "中島 遼也",
+              "number": "13",
+              "position": "CB",
+              "goals": 1,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31664"
+            },
+            {
+              "name": "佐藤 立盛",
+              "number": "14",
+              "position": "CB",
               "goals": 0,
               "shots": 0,
               "saves": 0,
               "save_total": 0,
-              "pid": "31934"
+              "pid": "30744"
             },
             {
-              "name": "山﨑 智之",
+              "name": "藤川 翔大",
+              "number": "15",
+              "position": "LB",
+              "goals": 5,
+              "shots": 7,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31179"
+            },
+            {
+              "name": "鈴木 雄大",
+              "number": "16",
+              "position": "GK",
+              "goals": 1,
+              "shots": 1,
+              "saves": 1,
+              "save_total": 3,
+              "pid": "31178"
+            },
+            {
+              "name": "中川 翔太",
+              "number": "17",
+              "position": "RB",
+              "goals": 5,
+              "shots": 6,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30939"
+            },
+            {
+              "name": "藤村 勇希",
+              "number": "20",
+              "position": "PV",
+              "goals": 1,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30756"
+            },
+            {
+              "name": "西原 雄聖",
+              "number": "21",
+              "position": "GK",
+              "goals": 2,
+              "shots": 2,
+              "saves": 12,
+              "save_total": 28,
+              "pid": "31453"
+            },
+            {
+              "name": "佐藤 歩",
+              "number": "22",
+              "position": "LB",
+              "goals": 6,
+              "shots": 7,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31604"
+            },
+            {
+              "name": "村井 駿祐",
+              "number": "23",
+              "position": "CB",
+              "goals": 3,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31605"
+            },
+            {
+              "name": "後藤 隼",
               "number": "24",
+              "position": "LW",
+              "goals": 3,
+              "shots": 5,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31460"
+            },
+            {
+              "name": "細田 啓輔",
+              "number": "25",
+              "position": "PV",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31459"
+            },
+            {
+              "name": "首藤 大輝",
+              "number": "30",
+              "position": "CB",
+              "goals": 9,
+              "shots": 9,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31889"
+            }
+          ]
+        },
+        "511M22": {
+          "date": "2026-10-31",
+          "players": [
+            {
+              "name": "川島 豪",
+              "number": "1",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 2,
+              "save_total": 4,
+              "pid": "31303"
+            },
+            {
+              "name": "谷藤 要",
+              "number": "3",
+              "position": "RW",
+              "goals": 3,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31170"
+            },
+            {
+              "name": "阿部 奎太",
+              "number": "8",
+              "position": "CB",
+              "goals": 1,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30938"
+            },
+            {
+              "name": "吉原 悠馬",
+              "number": "10",
+              "position": "RW",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31638"
+            },
+            {
+              "name": "中島 遼也",
+              "number": "13",
+              "position": "CB",
+              "goals": 0,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31664"
+            },
+            {
+              "name": "佐藤 立盛",
+              "number": "14",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30744"
+            },
+            {
+              "name": "藤川 翔大",
+              "number": "15",
+              "position": "LB",
+              "goals": 6,
+              "shots": 16,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31179"
+            },
+            {
+              "name": "鈴木 雄大",
+              "number": "16",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 3,
+              "save_total": 13,
+              "pid": "31178"
+            },
+            {
+              "name": "中川 翔太",
+              "number": "17",
+              "position": "RB",
+              "goals": 4,
+              "shots": 7,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30939"
+            },
+            {
+              "name": "藤村 勇希",
+              "number": "20",
+              "position": "PV",
+              "goals": 0,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30756"
+            },
+            {
+              "name": "西原 雄聖",
+              "number": "21",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 7,
+              "save_total": 22,
+              "pid": "31453"
+            },
+            {
+              "name": "佐藤 歩",
+              "number": "22",
+              "position": "LB",
+              "goals": 2,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31604"
+            },
+            {
+              "name": "後藤 隼",
+              "number": "24",
+              "position": "LW",
+              "goals": 9,
+              "shots": 10,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31460"
+            },
+            {
+              "name": "細田 啓輔",
+              "number": "25",
+              "position": "PV",
+              "goals": 1,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31459"
+            },
+            {
+              "name": "立花 志友",
+              "number": "26",
+              "position": "LB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31107"
+            },
+            {
+              "name": "首藤 大輝",
+              "number": "30",
+              "position": "CB",
+              "goals": 3,
+              "shots": 7,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31889"
+            }
+          ]
+        },
+        "511M17": {
+          "date": "2026-10-25",
+          "players": [
+            {
+              "name": "谷藤 要",
+              "number": "3",
+              "position": "RW",
+              "goals": 4,
+              "shots": 5,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31170"
+            },
+            {
+              "name": "阿部 奎太",
+              "number": "8",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30938"
+            },
+            {
+              "name": "吉原 悠馬",
+              "number": "10",
+              "position": "RW",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31638"
+            },
+            {
+              "name": "中島 遼也",
+              "number": "13",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31664"
+            },
+            {
+              "name": "佐藤 立盛",
+              "number": "14",
+              "position": "CB",
+              "goals": 1,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30744"
+            },
+            {
+              "name": "藤川 翔大",
+              "number": "15",
+              "position": "LB",
+              "goals": 9,
+              "shots": 14,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31179"
+            },
+            {
+              "name": "鈴木 雄大",
+              "number": "16",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 3,
+              "save_total": 11,
+              "pid": "31178"
+            },
+            {
+              "name": "中川 翔太",
+              "number": "17",
+              "position": "RB",
+              "goals": 1,
+              "shots": 6,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30939"
+            },
+            {
+              "name": "藤村 勇希",
+              "number": "20",
+              "position": "PV",
+              "goals": 3,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30756"
+            },
+            {
+              "name": "西原 雄聖",
+              "number": "21",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 11,
+              "save_total": 32,
+              "pid": "31453"
+            },
+            {
+              "name": "佐藤 歩",
+              "number": "22",
+              "position": "LB",
+              "goals": 1,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31604"
+            },
+            {
+              "name": "村井 駿祐",
+              "number": "23",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31605"
+            },
+            {
+              "name": "後藤 隼",
+              "number": "24",
+              "position": "LW",
+              "goals": 3,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31460"
+            },
+            {
+              "name": "細田 啓輔",
+              "number": "25",
+              "position": "PV",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31459"
+            },
+            {
+              "name": "立花 志友",
+              "number": "26",
+              "position": "LB",
+              "goals": 1,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31107"
+            },
+            {
+              "name": "首藤 大輝",
+              "number": "30",
+              "position": "CB",
+              "goals": 3,
+              "shots": 8,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31889"
+            }
+          ]
+        },
+        "511M43": {
+          "date": "2026-11-23",
+          "players": [
+            {
+              "name": "川島 豪",
+              "number": "1",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 5,
+              "save_total": 30,
+              "pid": "31303"
+            },
+            {
+              "name": "谷藤 要",
+              "number": "3",
+              "position": "RW",
+              "goals": 7,
+              "shots": 9,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31170"
+            },
+            {
+              "name": "阿部 奎太",
+              "number": "8",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30938"
+            },
+            {
+              "name": "吉原 悠馬",
+              "number": "10",
+              "position": "RW",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31638"
+            },
+            {
+              "name": "中島 遼也",
+              "number": "13",
+              "position": "CB",
+              "goals": 3,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31664"
+            },
+            {
+              "name": "藤川 翔大",
+              "number": "15",
+              "position": "LB",
+              "goals": 7,
+              "shots": 7,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31179"
+            },
+            {
+              "name": "鈴木 雄大",
+              "number": "16",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 3,
+              "save_total": 13,
+              "pid": "31178"
+            },
+            {
+              "name": "中川 翔太",
+              "number": "17",
+              "position": "RB",
+              "goals": 4,
+              "shots": 6,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30939"
+            },
+            {
+              "name": "藤村 勇希",
+              "number": "20",
+              "position": "PV",
+              "goals": 1,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30756"
+            },
+            {
+              "name": "佐藤 歩",
+              "number": "22",
+              "position": "LB",
+              "goals": 1,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31604"
+            },
+            {
+              "name": "村井 駿祐",
+              "number": "23",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31605"
+            },
+            {
+              "name": "後藤 隼",
+              "number": "24",
+              "position": "LW",
+              "goals": 1,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31460"
+            },
+            {
+              "name": "細田 啓輔",
+              "number": "25",
+              "position": "PV",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31459"
+            },
+            {
+              "name": "立花 志友",
+              "number": "26",
+              "position": "LB",
+              "goals": 2,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31107"
+            },
+            {
+              "name": "浅川 律樹",
+              "number": "27",
+              "position": "PV",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31108"
+            },
+            {
+              "name": "首藤 大輝",
+              "number": "30",
+              "position": "CB",
+              "goals": 7,
+              "shots": 10,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31889"
+            }
+          ]
+        },
+        "511M33": {
+          "date": "2026-11-14",
+          "players": [
+            {
+              "name": "川島 豪",
+              "number": "1",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31303"
+            },
+            {
+              "name": "谷藤 要",
+              "number": "3",
+              "position": "RW",
+              "goals": 0,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31170"
+            },
+            {
+              "name": "阿部 奎太",
+              "number": "8",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30938"
+            },
+            {
+              "name": "吉原 悠馬",
+              "number": "10",
+              "position": "RW",
+              "goals": 5,
+              "shots": 5,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31638"
+            },
+            {
+              "name": "中島 遼也",
+              "number": "13",
+              "position": "CB",
+              "goals": 5,
+              "shots": 5,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31664"
+            },
+            {
+              "name": "佐藤 立盛",
+              "number": "14",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30744"
+            },
+            {
+              "name": "藤川 翔大",
+              "number": "15",
+              "position": "LB",
+              "goals": 4,
+              "shots": 7,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31179"
+            },
+            {
+              "name": "鈴木 雄大",
+              "number": "16",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 1,
+              "save_total": 14,
+              "pid": "31178"
+            },
+            {
+              "name": "中川 翔太",
+              "number": "17",
+              "position": "RB",
+              "goals": 4,
+              "shots": 7,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30939"
+            },
+            {
+              "name": "藤村 勇希",
+              "number": "20",
+              "position": "PV",
+              "goals": 1,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30756"
+            },
+            {
+              "name": "西原 雄聖",
+              "number": "21",
               "position": "GK",
               "goals": 0,
               "shots": 0,
               "saves": 5,
               "save_total": 25,
-              "pid": "30837"
+              "pid": "31453"
             },
             {
-              "name": "杉田 悠人",
-              "number": "25",
-              "position": "LB",
-              "goals": 0,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31935"
-            },
-            {
-              "name": "山磨 彰仁",
-              "number": "26",
-              "position": "RB",
-              "goals": 0,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31936"
-            },
-            {
-              "name": "西村 友希",
-              "number": "27",
-              "position": "LB",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31937"
-            },
-            {
-              "name": "原田 廉太郎",
-              "number": "28",
-              "position": "PV",
-              "goals": 3,
-              "shots": 5,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31938"
-            },
-            {
-              "name": "朝比奈 秀",
-              "number": "29",
-              "position": "RB",
-              "goals": 3,
-              "shots": 6,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31939"
-            },
-            {
-              "name": "神谷 弘平",
-              "number": "88",
-              "position": "CB",
-              "goals": 5,
-              "shots": 20,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31266"
-            },
-            {
-              "name": "遠藤 輝",
-              "number": "99",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 2,
-              "save_total": 22,
-              "pid": "31839"
-            }
-          ]
-        },
-        "511M15": {
-          "date": "2026-10-24",
-          "players": [
-            {
-              "name": "笠原 謙哉",
-              "number": "3",
-              "position": "PV",
-              "goals": 5,
-              "shots": 6,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30197"
-            },
-            {
-              "name": "出村 龍",
-              "number": "8",
-              "position": "PV",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31755"
-            },
-            {
-              "name": "熊野 大雅",
-              "number": "17",
-              "position": "LB",
-              "goals": 1,
-              "shots": 5,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31673"
-            },
-            {
-              "name": "三輪 颯馬",
-              "number": "18",
-              "position": "LW",
-              "goals": 1,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30985"
-            },
-            {
-              "name": "畑中 大翔",
-              "number": "19",
-              "position": "CB",
-              "goals": 2,
-              "shots": 5,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31931"
-            },
-            {
-              "name": "谷口 瑠已",
-              "number": "20",
-              "position": "RW",
-              "goals": 1,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31932"
-            },
-            {
-              "name": "鹿島 諄",
-              "number": "23",
-              "position": "LW",
-              "goals": 2,
-              "shots": 5,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31934"
-            },
-            {
-              "name": "山﨑 智之",
-              "number": "24",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 5,
-              "save_total": 23,
-              "pid": "30837"
-            },
-            {
-              "name": "山磨 彰仁",
-              "number": "26",
-              "position": "RB",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31936"
-            },
-            {
-              "name": "西村 友希",
-              "number": "27",
-              "position": "LB",
-              "goals": 0,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31937"
-            },
-            {
-              "name": "原田 廉太郎",
-              "number": "28",
-              "position": "PV",
-              "goals": 3,
-              "shots": 3,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31938"
-            },
-            {
-              "name": "朝比奈 秀",
-              "number": "29",
-              "position": "RB",
-              "goals": 2,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31939"
-            },
-            {
-              "name": "神谷 弘平",
-              "number": "88",
-              "position": "CB",
-              "goals": 11,
-              "shots": 16,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31266"
-            },
-            {
-              "name": "遠藤 輝",
-              "number": "99",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 7,
-              "save_total": 24,
-              "pid": "31839"
-            }
-          ]
-        },
-        "511M09": {
-          "date": "2026-10-17",
-          "players": [
-            {
-              "name": "笠原 謙哉",
-              "number": "3",
-              "position": "PV",
-              "goals": 5,
-              "shots": 7,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30197"
-            },
-            {
-              "name": "出村 龍",
-              "number": "8",
-              "position": "PV",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31755"
-            },
-            {
-              "name": "原 圭彌",
-              "number": "13",
-              "position": "LW",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31930"
-            },
-            {
-              "name": "河村 優",
-              "number": "15",
-              "position": "CB",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31838"
-            },
-            {
-              "name": "三輪 颯馬",
-              "number": "18",
-              "position": "LW",
-              "goals": 2,
-              "shots": 3,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30985"
-            },
-            {
-              "name": "畑中 大翔",
-              "number": "19",
-              "position": "CB",
-              "goals": 2,
-              "shots": 4,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31931"
-            },
-            {
-              "name": "谷口 瑠已",
-              "number": "20",
-              "position": "RW",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31932"
-            },
-            {
-              "name": "二階堂 恭世",
+              "name": "佐藤 歩",
               "number": "22",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 4,
-              "pid": "31933"
-            },
-            {
-              "name": "鹿島 諄",
-              "number": "23",
-              "position": "LW",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31934"
-            },
-            {
-              "name": "山﨑 智之",
-              "number": "24",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 4,
-              "save_total": 28,
-              "pid": "30837"
-            },
-            {
-              "name": "山磨 彰仁",
-              "number": "26",
-              "position": "RB",
-              "goals": 2,
-              "shots": 4,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31936"
-            },
-            {
-              "name": "西村 友希",
-              "number": "27",
               "position": "LB",
               "goals": 1,
-              "shots": 7,
+              "shots": 2,
               "saves": 0,
               "save_total": 0,
-              "pid": "31937"
+              "pid": "31604"
             },
             {
-              "name": "原田 廉太郎",
-              "number": "28",
+              "name": "後藤 隼",
+              "number": "24",
+              "position": "LW",
+              "goals": 4,
+              "shots": 6,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31460"
+            },
+            {
+              "name": "細田 啓輔",
+              "number": "25",
               "position": "PV",
-              "goals": 4,
-              "shots": 7,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31938"
-            },
-            {
-              "name": "朝比奈 秀",
-              "number": "29",
-              "position": "RB",
               "goals": 0,
-              "shots": 1,
+              "shots": 0,
               "saves": 0,
               "save_total": 0,
-              "pid": "31939"
+              "pid": "31459"
             },
             {
-              "name": "神谷 弘平",
-              "number": "88",
+              "name": "立花 志友",
+              "number": "26",
+              "position": "LB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31107"
+            },
+            {
+              "name": "首藤 大輝",
+              "number": "30",
               "position": "CB",
-              "goals": 4,
+              "goals": 3,
               "shots": 5,
               "saves": 0,
               "save_total": 0,
-              "pid": "31266"
-            },
-            {
-              "name": "遠藤 輝",
-              "number": "99",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 1,
-              "save_total": 13,
-              "pid": "31839"
+              "pid": "31889"
             }
           ]
         },
-        "511M37": {
+        "511M42": {
           "date": "2026-11-21",
           "players": [
             {
-              "name": "笠原 謙哉",
-              "number": "3",
-              "position": "PV",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30197"
-            },
-            {
-              "name": "出村 龍",
-              "number": "8",
-              "position": "PV",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31755"
-            },
-            {
-              "name": "河村 優",
-              "number": "15",
-              "position": "CB",
-              "goals": 1,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31838"
-            },
-            {
-              "name": "熊野 大雅",
-              "number": "17",
-              "position": "LB",
-              "goals": 0,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31673"
-            },
-            {
-              "name": "三輪 颯馬",
-              "number": "18",
-              "position": "LW",
-              "goals": 1,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30985"
-            },
-            {
-              "name": "谷口 瑠已",
-              "number": "20",
-              "position": "RW",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31932"
-            },
-            {
-              "name": "鹿島 諄",
-              "number": "23",
-              "position": "LW",
-              "goals": 0,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31934"
-            },
-            {
-              "name": "山﨑 智之",
-              "number": "24",
+              "name": "川島 豪",
+              "number": "1",
               "position": "GK",
               "goals": 0,
               "shots": 0,
-              "saves": 1,
-              "save_total": 22,
-              "pid": "30837"
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31303"
             },
             {
-              "name": "山磨 彰仁",
-              "number": "26",
-              "position": "RB",
+              "name": "谷藤 要",
+              "number": "3",
+              "position": "RW",
+              "goals": 8,
+              "shots": 10,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31170"
+            },
+            {
+              "name": "阿部 奎太",
+              "number": "8",
+              "position": "CB",
               "goals": 0,
               "shots": 0,
               "saves": 0,
               "save_total": 0,
-              "pid": "31936"
+              "pid": "30938"
             },
             {
-              "name": "西村 友希",
-              "number": "27",
+              "name": "吉原 悠馬",
+              "number": "10",
+              "position": "RW",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31638"
+            },
+            {
+              "name": "中島 遼也",
+              "number": "13",
+              "position": "CB",
+              "goals": 0,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31664"
+            },
+            {
+              "name": "佐藤 立盛",
+              "number": "14",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30744"
+            },
+            {
+              "name": "藤川 翔大",
+              "number": "15",
               "position": "LB",
-              "goals": 3,
+              "goals": 7,
+              "shots": 10,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31179"
+            },
+            {
+              "name": "鈴木 雄大",
+              "number": "16",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 10,
+              "save_total": 44,
+              "pid": "31178"
+            },
+            {
+              "name": "中川 翔太",
+              "number": "17",
+              "position": "RB",
+              "goals": 2,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30939"
+            },
+            {
+              "name": "藤村 勇希",
+              "number": "20",
+              "position": "PV",
+              "goals": 2,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30756"
+            },
+            {
+              "name": "西原 雄聖",
+              "number": "21",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31453"
+            },
+            {
+              "name": "佐藤 歩",
+              "number": "22",
+              "position": "LB",
+              "goals": 0,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31604"
+            },
+            {
+              "name": "後藤 隼",
+              "number": "24",
+              "position": "LW",
+              "goals": 5,
               "shots": 9,
               "saves": 0,
               "save_total": 0,
-              "pid": "31937"
+              "pid": "31460"
             },
             {
-              "name": "原田 廉太郎",
-              "number": "28",
+              "name": "細田 啓輔",
+              "number": "25",
               "position": "PV",
-              "goals": 2,
-              "shots": 3,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31938"
-            },
-            {
-              "name": "朝比奈 秀",
-              "number": "29",
-              "position": "RB",
-              "goals": 2,
-              "shots": 5,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31939"
-            },
-            {
-              "name": "神谷 弘平",
-              "number": "88",
-              "position": "CB",
-              "goals": 8,
-              "shots": 14,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31266"
-            },
-            {
-              "name": "遠藤 輝",
-              "number": "99",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 5,
-              "save_total": 21,
-              "pid": "31839"
-            }
-          ]
-        },
-        "511M26": {
-          "date": "2026-10-31",
-          "players": [
-            {
-              "name": "笠原 謙哉",
-              "number": "3",
-              "position": "PV",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30197"
-            },
-            {
-              "name": "出村 龍",
-              "number": "8",
-              "position": "PV",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31755"
-            },
-            {
-              "name": "熊野 大雅",
-              "number": "17",
-              "position": "LB",
-              "goals": 3,
-              "shots": 5,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31673"
-            },
-            {
-              "name": "三輪 颯馬",
-              "number": "18",
-              "position": "LW",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30985"
-            },
-            {
-              "name": "畑中 大翔",
-              "number": "19",
-              "position": "CB",
-              "goals": 6,
-              "shots": 8,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31931"
-            },
-            {
-              "name": "谷口 瑠已",
-              "number": "20",
-              "position": "RW",
-              "goals": 3,
-              "shots": 4,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31932"
-            },
-            {
-              "name": "二階堂 恭世",
-              "number": "22",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 2,
-              "pid": "31933"
-            },
-            {
-              "name": "鹿島 諄",
-              "number": "23",
-              "position": "LW",
               "goals": 1,
               "shots": 3,
               "saves": 0,
               "save_total": 0,
-              "pid": "31934"
+              "pid": "31459"
             },
             {
-              "name": "山﨑 智之",
-              "number": "24",
-              "position": "GK",
-              "goals": 1,
-              "shots": 1,
-              "saves": 11,
-              "save_total": 32,
-              "pid": "30837"
-            },
-            {
-              "name": "山磨 彰仁",
+              "name": "立花 志友",
               "number": "26",
-              "position": "RB",
+              "position": "LB",
               "goals": 0,
               "shots": 1,
               "saves": 0,
               "save_total": 0,
-              "pid": "31936"
+              "pid": "31107"
             },
             {
-              "name": "西村 友希",
-              "number": "27",
-              "position": "LB",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31937"
-            },
-            {
-              "name": "原田 廉太郎",
-              "number": "28",
-              "position": "PV",
-              "goals": 3,
-              "shots": 5,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31938"
-            },
-            {
-              "name": "朝比奈 秀",
-              "number": "29",
-              "position": "RB",
-              "goals": 2,
-              "shots": 3,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31939"
-            },
-            {
-              "name": "神谷 弘平",
-              "number": "88",
-              "position": "CB",
-              "goals": 3,
-              "shots": 6,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31266"
-            },
-            {
-              "name": "遠藤 輝",
-              "number": "99",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 4,
-              "save_total": 14,
-              "pid": "31839"
-            }
-          ]
-        },
-        "511M30": {
-          "date": "2026-11-14",
-          "players": [
-            {
-              "name": "笠原 謙哉",
-              "number": "3",
-              "position": "PV",
-              "goals": 1,
-              "shots": 4,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30197"
-            },
-            {
-              "name": "出村 龍",
-              "number": "8",
-              "position": "PV",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31755"
-            },
-            {
-              "name": "原 圭彌",
-              "number": "13",
-              "position": "LW",
-              "goals": 3,
-              "shots": 3,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31930"
-            },
-            {
-              "name": "河村 優",
-              "number": "15",
-              "position": "CB",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31838"
-            },
-            {
-              "name": "熊野 大雅",
-              "number": "17",
-              "position": "LB",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31673"
-            },
-            {
-              "name": "三輪 颯馬",
-              "number": "18",
-              "position": "LW",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30985"
-            },
-            {
-              "name": "畑中 大翔",
-              "number": "19",
-              "position": "CB",
-              "goals": 1,
-              "shots": 4,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31931"
-            },
-            {
-              "name": "谷口 瑠已",
-              "number": "20",
-              "position": "RW",
-              "goals": 1,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31932"
-            },
-            {
-              "name": "鹿島 諄",
-              "number": "23",
-              "position": "LW",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31934"
-            },
-            {
-              "name": "山﨑 智之",
-              "number": "24",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 13,
-              "save_total": 39,
-              "pid": "30837"
-            },
-            {
-              "name": "山磨 彰仁",
-              "number": "26",
-              "position": "RB",
-              "goals": 2,
-              "shots": 3,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31936"
-            },
-            {
-              "name": "西村 友希",
-              "number": "27",
-              "position": "LB",
-              "goals": 2,
-              "shots": 5,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31937"
-            },
-            {
-              "name": "原田 廉太郎",
-              "number": "28",
-              "position": "PV",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31938"
-            },
-            {
-              "name": "朝比奈 秀",
-              "number": "29",
-              "position": "RB",
-              "goals": 1,
-              "shots": 6,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31939"
-            },
-            {
-              "name": "神谷 弘平",
-              "number": "88",
-              "position": "CB",
-              "goals": 5,
-              "shots": 12,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31266"
-            },
-            {
-              "name": "遠藤 輝",
-              "number": "99",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 3,
-              "pid": "31839"
-            }
-          ]
-        },
-        "511M46": {
-          "date": "2026-11-23",
-          "players": [
-            {
-              "name": "笠原 謙哉",
-              "number": "3",
-              "position": "PV",
-              "goals": 2,
-              "shots": 3,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30197"
-            },
-            {
-              "name": "出村 龍",
-              "number": "8",
-              "position": "PV",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31755"
-            },
-            {
-              "name": "原 圭彌",
-              "number": "13",
-              "position": "LW",
-              "goals": 0,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31930"
-            },
-            {
-              "name": "藤田 櫂成",
-              "number": "14",
-              "position": "RW",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31972"
-            },
-            {
-              "name": "河村 優",
-              "number": "15",
-              "position": "CB",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31838"
-            },
-            {
-              "name": "熊野 大雅",
-              "number": "17",
-              "position": "LB",
-              "goals": 0,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31673"
-            },
-            {
-              "name": "三輪 颯馬",
-              "number": "18",
-              "position": "LW",
-              "goals": 3,
-              "shots": 4,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "30985"
-            },
-            {
-              "name": "畑中 大翔",
-              "number": "19",
-              "position": "CB",
-              "goals": 8,
-              "shots": 12,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31931"
-            },
-            {
-              "name": "谷口 瑠已",
-              "number": "20",
-              "position": "RW",
-              "goals": 1,
-              "shots": 2,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31932"
-            },
-            {
-              "name": "山﨑 智之",
-              "number": "24",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 9,
-              "save_total": 38,
-              "pid": "30837"
-            },
-            {
-              "name": "山磨 彰仁",
-              "number": "26",
-              "position": "RB",
-              "goals": 1,
-              "shots": 1,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31936"
-            },
-            {
-              "name": "西村 友希",
-              "number": "27",
-              "position": "LB",
-              "goals": 3,
-              "shots": 7,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31937"
-            },
-            {
-              "name": "原田 廉太郎",
-              "number": "28",
-              "position": "PV",
-              "goals": 3,
-              "shots": 3,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31938"
-            },
-            {
-              "name": "朝比奈 秀",
-              "number": "29",
-              "position": "RB",
-              "goals": 0,
-              "shots": 0,
-              "saves": 0,
-              "save_total": 0,
-              "pid": "31939"
-            },
-            {
-              "name": "神谷 弘平",
-              "number": "88",
+              "name": "首藤 大輝",
+              "number": "30",
               "position": "CB",
               "goals": 4,
-              "shots": 11,
+              "shots": 6,
               "saves": 0,
               "save_total": 0,
-              "pid": "31266"
-            },
-            {
-              "name": "遠藤 輝",
-              "number": "99",
-              "position": "GK",
-              "goals": 0,
-              "shots": 0,
-              "saves": 1,
-              "save_total": 13,
-              "pid": "31839"
+              "pid": "31889"
             }
           ]
         }
       }
     },
-    "updated_at": "2026-11-28T06:42:42.015423+00:00"
+    "updated_at": "2026-11-28T07:03:07.039568+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-28",
@@ -15999,6 +16140,6 @@
         }
       ]
     },
-    "updated_at": "2026-11-28T06:42:42.015423+00:00"
+    "updated_at": "2026-11-28T07:03:07.039568+00:00"
   }
 }

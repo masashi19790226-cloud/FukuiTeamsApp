@@ -608,5 +608,23 @@
         "opp": 16
       }
     ]
+  },
+  "th07": {
+    "my_score": 33,
+    "opponent_score": 28,
+    "checked_at": "2026-11-28T07:01:54.548423",
+    "source_url": "https://leagueh.jp/schedule/511M51/",
+    "periods": [
+      {
+        "label": "前半",
+        "my": 14,
+        "opp": 15
+      },
+      {
+        "label": "後半",
+        "my": 19,
+        "opp": 13
+      }
+    ]
   }
 }
