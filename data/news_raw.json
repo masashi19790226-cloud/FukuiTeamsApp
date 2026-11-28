@@ -8757,5 +8757,29 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.C89KnScrAM8U3-8dJh74hw&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-28T10:01:13.943954+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9790049321156112979",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                       MATCH DAY REPO ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2126571318841835950&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw0ir229L3k4LCIpEcTW5mpB",
+    "published": "2026-11-28T07:01:22Z",
+    "detected_at": "2026-11-28T11:21:05.414569+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:80846556287707437",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                 第13節 MIP賞   #日本 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2126474313482268952&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw0whIe65hTul8LKWXUQRWLJ",
+    "published": "2026-11-28T07:01:22Z",
+    "detected_at": "2026-11-28T11:21:05.414600+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:1880120554140122561",
+    "team": "RAC",
+    "title": "福井丸岡RUCK【公式】 on X: \"                 MATCH DAY   本日 ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://x.com/RUCK_PR/status/2126474181663666226&ct=ga&cd=CAIyGjliYmQ0ZDNmYTQ2MzZhNjg6Y29tOmphOlVT&usg=AOvVaw0ern7Ir-hfPCUItTrGYfeF",
+    "published": "2026-11-28T07:01:22Z",
+    "detected_at": "2026-11-28T11:21:05.414618+00:00"
   }
 ]
