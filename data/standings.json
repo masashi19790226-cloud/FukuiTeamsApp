@@ -1718,7 +1718,7 @@
         }
       }
     },
-    "updated_at": "2026-11-28T07:43:04.030381+00:00"
+    "updated_at": "2026-11-28T08:02:46.159214+00:00"
   },
   "UNITED": {
     "league": "北信越リーグ1部",
@@ -3460,7 +3460,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-28T07:43:04.030381+00:00"
+    "updated_at": "2026-11-28T08:02:46.159214+00:00"
   },
   "BIRTHDAYS": {
     "date": "2026-11-28",
@@ -9662,7 +9662,7 @@
         }
       ]
     },
-    "updated_at": "2026-11-28T07:43:04.030381+00:00"
+    "updated_at": "2026-11-28T08:02:46.159214+00:00"
   },
   "THUNDER": {
     "league": "リーグH(男子)",
@@ -9785,48 +9785,34 @@
         },
         {
           "rank": 9,
-          "team": "琉球コラソン",
-          "slug": "corazon",
-          "points": 5,
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "slug": "toyotaej",
+          "points": 6,
           "played": 7,
-          "win": 2,
-          "draw": 1,
+          "win": 3,
+          "draw": 0,
           "lose": 4,
-          "gf": 217,
-          "ga": 221,
-          "gd": -4,
-          "record": "2勝4敗1分"
+          "gf": 216,
+          "ga": 198,
+          "gd": 18,
+          "record": "3勝4敗"
         },
         {
           "rank": 10,
-          "team": "トヨタ自動車東日本レガロッソ宮城",
-          "slug": "toyotaej",
-          "points": 4,
-          "played": 6,
+          "team": "琉球コラソン",
+          "slug": "corazon",
+          "points": 5,
+          "played": 8,
           "win": 2,
-          "draw": 0,
-          "lose": 4,
-          "gf": 184,
-          "ga": 177,
-          "gd": 7,
-          "record": "2勝4敗"
+          "draw": 1,
+          "lose": 5,
+          "gf": 238,
+          "ga": 253,
+          "gd": -15,
+          "record": "2勝5敗1分"
         },
         {
           "rank": 11,
-          "team": "富山ドリームス",
-          "slug": "dreams",
-          "points": 4,
-          "played": 6,
-          "win": 2,
-          "draw": 0,
-          "lose": 4,
-          "gf": 158,
-          "ga": 174,
-          "gd": -16,
-          "record": "2勝4敗"
-        },
-        {
-          "rank": 12,
           "team": "福井永平寺ブルーサンダー",
           "slug": "bluethunder",
           "points": 4,
@@ -9839,6 +9825,20 @@
           "gd": -13,
           "record": "2勝5敗",
           "form": "●●●○○"
+        },
+        {
+          "rank": 12,
+          "team": "富山ドリームス",
+          "slug": "dreams",
+          "points": 4,
+          "played": 6,
+          "win": 2,
+          "draw": 0,
+          "lose": 4,
+          "gf": 158,
+          "ga": 174,
+          "gd": -16,
+          "record": "2勝4敗"
         },
         {
           "rank": 13,
@@ -11396,9 +11396,9 @@
         {
           "name": "藤川 翔大",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 38,
-          "shots": 61,
-          "games": 6,
+          "goals": 42,
+          "shots": 68,
+          "games": 7,
           "number": "15",
           "position": "LB",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31179.jpg",
@@ -11407,9 +11407,9 @@
         {
           "name": "首藤 大輝",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 29,
-          "shots": 45,
-          "games": 6,
+          "goals": 33,
+          "shots": 53,
+          "games": 7,
           "number": "30",
           "position": "CB",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31889.jpg",
@@ -11418,9 +11418,9 @@
         {
           "name": "後藤 隼",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 25,
-          "shots": 38,
-          "games": 6,
+          "goals": 32,
+          "shots": 47,
+          "games": 7,
           "number": "24",
           "position": "LW",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31460.jpg",
@@ -11429,9 +11429,9 @@
         {
           "name": "谷藤 要",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 24,
-          "shots": 33,
-          "games": 6,
+          "goals": 25,
+          "shots": 37,
+          "games": 7,
           "number": "3",
           "position": "RW",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31170.jpg",
@@ -11440,9 +11440,9 @@
         {
           "name": "中川 翔太",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 20,
-          "shots": 35,
-          "games": 6,
+          "goals": 22,
+          "shots": 37,
+          "games": 7,
           "number": "17",
           "position": "RB",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30939.jpg",
@@ -11451,42 +11451,42 @@
         {
           "name": "佐藤 歩",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 11,
-          "shots": 17,
-          "games": 6,
+          "goals": 13,
+          "shots": 19,
+          "games": 7,
           "number": "22",
           "position": "LB",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31604.jpg",
           "rank": 6
         },
         {
+          "name": "藤村 勇希",
+          "team": "トヨタ自動車東日本レガロッソ宮城",
+          "goals": 12,
+          "shots": 22,
+          "games": 7,
+          "number": "20",
+          "position": "PV",
+          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30756.jpg",
+          "rank": 7
+        },
+        {
           "name": "中島 遼也",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 9,
-          "shots": 13,
-          "games": 6,
+          "goals": 12,
+          "shots": 16,
+          "games": 7,
           "number": "13",
           "position": "CB",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31664.jpg",
           "rank": 7
         },
         {
-          "name": "藤村 勇希",
-          "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 8,
-          "shots": 17,
-          "games": 6,
-          "number": "20",
-          "position": "PV",
-          "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30756.jpg",
-          "rank": 8
-        },
-        {
           "name": "吉原 悠馬",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 6,
-          "shots": 6,
-          "games": 6,
+          "goals": 7,
+          "shots": 10,
+          "games": 7,
           "number": "10",
           "position": "RW",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31638.jpg",
@@ -11495,9 +11495,9 @@
         {
           "name": "立花 志友",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 3,
-          "shots": 4,
-          "games": 5,
+          "goals": 6,
+          "shots": 8,
+          "games": 6,
           "number": "26",
           "position": "LB",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31107.jpg",
@@ -11506,20 +11506,20 @@
         {
           "name": "村井 駿祐",
           "team": "トヨタ自動車東日本レガロッソ宮城",
-          "goals": 3,
-          "shots": 3,
-          "games": 3,
+          "goals": 4,
+          "shots": 5,
+          "games": 4,
           "number": "23",
           "position": "CB",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31605.jpg",
-          "rank": 10
+          "rank": 11
         },
         {
           "name": "細田 啓輔",
           "team": "トヨタ自動車東日本レガロッソ宮城",
           "goals": 2,
           "shots": 4,
-          "games": 6,
+          "games": 7,
           "number": "25",
           "position": "PV",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31459.jpg",
@@ -11530,7 +11530,7 @@
           "team": "トヨタ自動車東日本レガロッソ宮城",
           "goals": 2,
           "shots": 2,
-          "games": 6,
+          "games": 7,
           "number": "8",
           "position": "CB",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30938.jpg",
@@ -11551,8 +11551,8 @@
           "name": "佐藤 立盛",
           "team": "トヨタ自動車東日本レガロッソ宮城",
           "goals": 1,
-          "shots": 3,
-          "games": 5,
+          "shots": 4,
+          "games": 6,
           "number": "14",
           "position": "CB",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p30744.jpg",
@@ -11563,7 +11563,7 @@
           "team": "トヨタ自動車東日本レガロッソ宮城",
           "goals": 1,
           "shots": 1,
-          "games": 6,
+          "games": 7,
           "number": "16",
           "position": "GK",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31178.jpg",
@@ -11574,7 +11574,7 @@
           "team": "トヨタ自動車東日本レガロッソ宮城",
           "goals": 0,
           "shots": 0,
-          "games": 5,
+          "games": 6,
           "number": "1",
           "position": "GK",
           "photo": "https://leagueh.jp/files/2026/player/toyotaej/p31303.jpg",
@@ -12629,10 +12629,175 @@
               "pid": "31889"
             }
           ]
+        },
+        "511M56": {
+          "date": "2026-11-28",
+          "players": [
+            {
+              "name": "川島 豪",
+              "number": "1",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 9,
+              "save_total": 25,
+              "pid": "31303"
+            },
+            {
+              "name": "谷藤 要",
+              "number": "3",
+              "position": "RW",
+              "goals": 1,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31170"
+            },
+            {
+              "name": "阿部 奎太",
+              "number": "8",
+              "position": "CB",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30938"
+            },
+            {
+              "name": "吉原 悠馬",
+              "number": "10",
+              "position": "RW",
+              "goals": 1,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31638"
+            },
+            {
+              "name": "中島 遼也",
+              "number": "13",
+              "position": "CB",
+              "goals": 3,
+              "shots": 3,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31664"
+            },
+            {
+              "name": "佐藤 立盛",
+              "number": "14",
+              "position": "CB",
+              "goals": 0,
+              "shots": 1,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30744"
+            },
+            {
+              "name": "藤川 翔大",
+              "number": "15",
+              "position": "LB",
+              "goals": 4,
+              "shots": 7,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31179"
+            },
+            {
+              "name": "鈴木 雄大",
+              "number": "16",
+              "position": "GK",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 5,
+              "pid": "31178"
+            },
+            {
+              "name": "中川 翔太",
+              "number": "17",
+              "position": "RB",
+              "goals": 2,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30939"
+            },
+            {
+              "name": "藤村 勇希",
+              "number": "20",
+              "position": "PV",
+              "goals": 4,
+              "shots": 5,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "30756"
+            },
+            {
+              "name": "佐藤 歩",
+              "number": "22",
+              "position": "LB",
+              "goals": 2,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31604"
+            },
+            {
+              "name": "村井 駿祐",
+              "number": "23",
+              "position": "CB",
+              "goals": 1,
+              "shots": 2,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31605"
+            },
+            {
+              "name": "後藤 隼",
+              "number": "24",
+              "position": "LW",
+              "goals": 7,
+              "shots": 9,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31460"
+            },
+            {
+              "name": "細田 啓輔",
+              "number": "25",
+              "position": "PV",
+              "goals": 0,
+              "shots": 0,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31459"
+            },
+            {
+              "name": "立花 志友",
+              "number": "26",
+              "position": "LB",
+              "goals": 3,
+              "shots": 4,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31107"
+            },
+            {
+              "name": "首藤 大輝",
+              "number": "30",
+              "position": "CB",
+              "goals": 4,
+              "shots": 8,
+              "saves": 0,
+              "save_total": 0,
+              "pid": "31889"
+            }
+          ]
         }
       }
     },
-    "updated_at": "2026-11-28T07:43:04.030381+00:00"
+    "updated_at": "2026-11-28T08:02:46.159214+00:00"
   },
   "ALUMNI": {
     "date": "2026-11-28",
@@ -16140,6 +16305,6 @@
         }
       ]
     },
-    "updated_at": "2026-11-28T07:43:04.030381+00:00"
+    "updated_at": "2026-11-28T08:02:46.159214+00:00"
   }
 }
