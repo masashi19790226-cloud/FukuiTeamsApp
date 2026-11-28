@@ -8735,5 +8735,29 @@
     "source": "福井新聞ONLINE",
     "image": "https://www.bing.com/th?id=ONUT.0uA6QyaLxSqMmzI8uB1E5Q&pid=News&w=160&h=160&c=7",
     "detected_at": "2026-11-28T11:41:07.455478+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:5520203677748038005",
+    "team": "BLOWINDS",
+    "title": "GAME PHOTO 🗓️11月28日(土) 14:05 TIPOFF #福井ブローウィンズ このはなアリーナ（静岡）",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.facebook.com/veltexshizuoka/posts/game-photo-11%25E6%259C%258828%25E6%2597%25A5%25E5%259C%259F-1405-tipoff-%25E7%25A6%258F%25E4%25BA%2595%25E3%2583%2596%25E3%2583%25AD%25E3%2583%25BC%25E3%2582%25A6%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25BA-%25E3%2581%2593%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%25AA%25E3%2582%25A2%25E3%2583%25AA%25E3%2583%25BC%25E3%2583%258A%25E9%259D%2599%25E5%25B2%25A1-%25E3%2583%2599%25E3%2583%25AB%25E3%2583%2586%25E3%2583%2583%25E3%2582%25AF%25E3%2582%25B9%25E9%259D%2599%25E5%25B2%25A1-b%25E3%2583%25AA%25E3%2583%25BC%25E3%2582%25B0-allshizuoka/1791598699636604/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw1D4mGDc6vXyyCy8JUccz06",
+    "published": "2026-11-28T13:02:04Z",
+    "detected_at": "2026-11-28T14:21:06.585560+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:16411032247333410627",
+    "team": "BLOWINDS",
+    "title": "GAME PHOTO 🗓️11月28日(土) 14:05 TIPOFF #福井ブローウィンズ このはなアリーナ ...",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DgSF5stnUfv/&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0dCC4g_Dit8iFWhN9MoIIV",
+    "published": "2026-11-28T11:07:23Z",
+    "detected_at": "2026-11-28T14:21:06.585595+00:00"
+  },
+  {
+    "id": "tag:google.com,2013:googlealerts/feed:9736712855544145468",
+    "team": "BLOWINDS",
+    "title": "【ハイライト】ベルテックス静岡vs福井ブローウィンズ｜りそなグループ B.LEAGUE 2026-27",
+    "link": "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DtjM10ZBBP_8&ct=ga&cd=CAIyGjIwMjUyYmU1N2VmNTdlY2I6Y29tOmphOlVT&usg=AOvVaw0cK33ys-Cz-BD38eBUUe2y",
+    "published": "2026-11-28T10:54:45Z",
+    "detected_at": "2026-11-28T14:21:06.585622+00:00"
   }
 ]
